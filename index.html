@@ -59,10 +59,8 @@ a{color:inherit}
 .blk{
  font-family:'Archivo Black',Impact,sans-serif;
  text-transform:uppercase;line-height:.86;letter-spacing:-.02em;
- /* anaglyph — signature on display type only; lighter than before */
- text-shadow:
- -0.04em 0 0 rgba(228,42,32,.78),
- 0.04em 0 0 rgba(0,196,214,.78);
+ /* anaglyph text-shadow removed — leftover from full-page 3D glasses experiment */
+ text-shadow:none;
 }
 .blk.plain,.price-amt{
  text-shadow:none;
@@ -71,19 +69,10 @@ a{color:inherit}
 .stamp{
  font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;
  text-transform:uppercase;letter-spacing:.18em;
+ text-shadow:none;
 }
-/* light anaglyph on accent stamps only — not every mono label */
 .note .stamp,.cap,.pin-cap,.hero-cap,.stamp.chromatic{
- text-shadow:
- -0.03em 0 0 rgba(228,42,32,.7),
- 0.03em 0 0 rgba(0,196,214,.7);
-}
-@media (max-width:700px){
- .blk{
-  text-shadow:
-   -0.028em 0 0 rgba(228,42,32,.65),
-   0.028em 0 0 rgba(0,196,214,.65);
- }
+ text-shadow:none;
 }
 
 /* ===== paste-up primitives ===== */
@@ -120,9 +109,7 @@ a{color:inherit}
  line-height:.78;letter-spacing:-.035em;text-transform:uppercase;
  text-align:center;
  /* keep anaglyph on the giant title */
- text-shadow:
- -0.04em 0 0 rgba(228,42,32,.9),
- 0.04em 0 0 rgba(0,196,214,.9);
+ text-shadow:none;
 }
 
 .nameplate h1 .brand-main,.nameplate h1 .brand-route{display:inline;}
@@ -392,7 +379,7 @@ footer{background:var(--ink);color:var(--paper);padding:44px 0 38px}
 /* ===== FINAL VISUAL PASS: balanced desktop/mobile + unified anaglyph ===== */
 .bb-root h1,.bb-root h2,.bb-root h3,.bb-root h4,
 .bb-root .stamp,.bb-root .go,.bb-root .pass-n,.bb-root .blk {
- text-shadow:-0.036em 0 0 rgba(228,42,32,.88),0.036em 0 0 rgba(0,196,214,.88);
+ text-shadow:none;
 }
 
 /* masthead: one blocky identity, never an inline URL-looking suffix */
@@ -416,7 +403,7 @@ footer{background:var(--ink);color:var(--paper);padding:44px 0 38px}
  color:var(--paper);
  letter-spacing:.045em!important;
  vertical-align:baseline!important;
- text-shadow:-0.045em 0 0 rgba(228,42,32,.86),0.045em 0 0 rgba(0,196,214,.86)!important;
+ text-shadow:none;
 }
 
 /* big, but not billboard-big */
