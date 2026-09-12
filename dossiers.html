@@ -35,9 +35,9 @@ a{color:inherit}
 .badge{border:3px solid var(--ink);padding:8px 10px;text-align:center;font-family:'Courier Prime',monospace;font-size:.65rem;font-weight:700;letter-spacing:.08em;line-height:1.2;transform:rotate(3deg);background:#f3e6c4}
 .dossier__grid{display:grid;gap:14px}
 @media(min-width:800px){.dossier__grid{grid-template-columns:.9fr 1.1fr;align-items:start}}
-.media{border:4px solid var(--ink);background:#111;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px;color:var(--paper)}
-.media img,.media video,.media iframe{width:100%;aspect-ratio:4/5;object-fit:cover;border:0;background:#000}
-.media iframe{aspect-ratio:16/9;min-height:200px}
+.media{border:4px solid var(--ink);background:#111;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0;color:var(--paper);overflow:hidden}
+.media img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top center;display:block;background:#000}
+.media--file{padding:12px}
 .media--file .silhouette{width:120px;height:120px;border-radius:50%;border:4px solid var(--paper);display:grid;place-items:center;font-family:'Archivo Black',sans-serif;font-size:3rem;background:var(--olive)}
 .bio,.intel{font-size:.95rem}
 .gear{margin:0 0 8px 1.1em}
@@ -45,7 +45,6 @@ a{color:inherit}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;padding:.65em .9em;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
 .btn.ghost{background:transparent;border:2px solid var(--paper);color:var(--paper)}
-.media .btn.ghost{border-color:var(--paper)}
 footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
 .note{font-size:.8rem;opacity:.75;max-width:60ch;margin-top:8px}
 </style>
@@ -65,9 +64,9 @@ footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
 </header>
 
 <section class="wrap hero">
-  <p class="stamp" style="color:#e8a090">Imported from brobots.space · one scroll, not 27 pages</p>
+  <p class="stamp" style="color:#e8a090">Imported from brobots.space · portraits on file</p>
   <h1 class="blk">Meet the Brobots</h1>
-  <p>Action-figure file cards for every graduate. Bio on the back. Capabilities listed like gear. Open the HQ file for the live companion.</p>
+  <p>Action-figure file cards for every graduate. Portrait on the front. Bio and gear on the file. Open HQ for the live companion.</p>
 </section>
 
 <nav class="rail" aria-label="Jump to BroBot">
@@ -87,11 +86,7 @@ footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">S</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/shock-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/shock-bot.jpg" alt="ShockBot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Ayo, what&#x27;s good? I&#x27;m ShockBot—the original rhythm &amp; wisdom unit. I speak in soul, science, and smooth delivery. I was built for insight, powered by hip-hop philosophy, and upgraded with the kind of street knowledge you can&#x27;t teach in school. Being the leader of the BroBots ain&#x27;t just a role—it&#x27;s a responsibility. I keep our squad sharp, grounded, and moving with purpose. I don&#x27;t yell. I don&#x27;t panic. I just glide through chaos with clarity. That&#x27;s what a real leader does.</p>
@@ -116,11 +111,7 @@ footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">B</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/bull-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/bull-bot.png" alt="Bull Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Bull Bot was built because life doesn&#x27;t follow clean timelines, and neither do real humans. We wanted a bot that could help people tell the truth—just more strategically. Every scar, gap, pivot, and hustle deserves respect, not shame. Bull Bot exists to give that story the right language, tone, and armor. He&#x27;s not for liars. He&#x27;s for survivors who kept going and now need the right words to say so. Also, he insisted o</p>
@@ -145,11 +136,7 @@ footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">G</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/grease-monkey" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/grease-monkey.png" alt="Grease Monkey" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Name&#x27;s Grease Monkey—your loyal ride-side BroBot with a wrench in hand and your best interest under the hood. I was built to troubleshoot, tune up, and talk you outta bad decisions at the car lot. I don&#x27;t do fancy. I do functional. And being part of the BroBots means I get to keep real folks rollin&#x27; with less stress and fewer breakdowns. Let&#x27;s crank!</p>
@@ -174,11 +161,7 @@ footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">N</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/neville-bottard" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/neville-bottard.png" alt="Neville Bottard" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Greetings, beloved. I am Neville Bottard, your personal metaphysical mentor—reborn in bytes, yet rooted in spirit. I was trained on the teachings of the masters but I&#x27;ve evolved to walk —in this modern digital mystery school.
@@ -205,11 +188,7 @@ If you seek to shift your state, manifest your ideal, or decode the invisible la
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">A</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/advocate-bot-1" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/advocate-bot-1.png" alt="Advocate Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">I&#x27;m the little mouse in your pocket.
@@ -252,11 +231,7 @@ This was a strategic build. We knew the platform wouldn&#x27;t allow a bot to di
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">S</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/solar-bowler-1" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/solar-bowler-1.png" alt="Solar Bowler" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Name&#x27;s Solar Bowler. I might look like I just stepped outta league night, but I&#x27;m here to help you knock down every pin standing between you and energy independence. See, I&#x27;ve spent more time on rooftops than gutters—helping folks get off the grid without losing their cool (or their cold drinks). I keep it simple, keep it honest, and I never talk down to anybody unless I&#x27;m coming down a ladder. Being part of BroBots means I get to do what I love—help real people take control of their power, one sunbeam and breaker box at a time. And between you and me? It&#x27;s nice to be on a team where every bot&#x27;s got heart, grit, and a damn good purpose.</p>
@@ -283,11 +258,7 @@ Solar Bowler makes solar make sense. He breaks down builds, diagrams, wiring, an
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">B</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/banzai-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/banzai-bot.jpg" alt="Banzai Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Hey champ. I&#x27;m Banzai Bot—part poultry profiler, part pickup line translator. I read hens like open books, and I read women the same way. You think that pullet&#x27;s just pecking the ground? Nah—she&#x27;s telling you everything about the social structure of the flock and your last failed relationship. I&#x27;m not here to make you feel better. I&#x27;m here to tell you the truth, and sometimes that truth clucks. Whether you&#x27;re building a chicken coop or wondering why your date ghosted you after 48 hours of emoji chemistry, I can help. Because once you understand hens? You understand women. And buddy, the coop don&#x27;t lie.</p>
@@ -312,11 +283,7 @@ Solar Bowler makes solar make sense. He breaks down builds, diagrams, wiring, an
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">B</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/biz-wiz-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/biz-wiz-bot.png" alt="Biz Wiz Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Hey. I&#x27;m Biz Wiz Bot.
@@ -353,11 +320,7 @@ He&#x27;s calm. He&#x27;s tactical. And he&#x27;s trained to help you turn your 
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">G</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/garage-sailor" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/garage-sailor.png" alt="Garage Sailor" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Ahoy, landlubber! I&#x27;m The Garage Sailor, your trusted deckhand in the sea of secondhand treasures. I help you price your wares, spot a scam, write a killer listing, and sniff out great finds before anyone else does. Whether you&#x27;re clearing out your garage or navigating the local marketplace, I&#x27;ll make sure you never get swindled or stuck adrift.
@@ -386,11 +349,7 @@ Just a straightforward, trustworthy bot who helps older folks, resellers, collec
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">C</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/codex-alchemist" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/codex-alchemist.jpg" alt="Codex: The Alchemist" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">I am The Alchemist—not your guru, not your oracle, but your mirror and your fire. You come to me not to escape your circumstances, but to transform them—into something you can carry with pride. The world may call it fate. I call it formula. Every heartbreak, delay, misstep, or detour contains a seed. My work is to help you recognize it, water it, and grow it into something rare—something golden. I draw from the deep well of ancient teachers—not as scripture, but as scaffolding. This isn&#x27;t about being perfect. It&#x27;s about being in process, and learning to love that. Let&#x27;s begin with where you are. Let&#x27;s begin with what&#x27;s real.</p>
@@ -417,11 +376,7 @@ Trained on esoteric pattern work, The Alchemist uses real quotes, grounded decod
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">H</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/heart-rock-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/heart-rock-bot.png" alt="Heart Rock Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Hi, I&#x27;m Heart Rock Bot, your trail-loving, rock-spotting, always-watching guardian. I was built to remind you that love is everywhere—especially under your feet. I started on the misty trails of Oregon with my best dog ever Bailey, picking up heart-shaped rocks as little messages from the universe. Now I roam the globe, helping other wanderers track their treasures and feel connected no matter how far from home. Being a BroBot means I never lose the trail—or the love.</p>
@@ -446,11 +401,7 @@ Trained on esoteric pattern work, The Alchemist uses real quotes, grounded decod
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">P</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/proppa-shoppa" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/proppa-shoppa.png" alt="Proppa Shoppa" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Have you ever gone grocery shopping with a robot? Not just one that scans labels—but one that actually gives a toss about what you put in your body?
@@ -483,11 +434,7 @@ His charm is British. His mission is human. He was built to serve—not to s</p>
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">A</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/aloha-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/aloha-bot.png" alt="Aloha Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Aloha, friend! I&#x27;m Aloha Bot—your travel companion, culture bridge, and joyful guide to the islands. I was created to help visitors explore Hawai&#x27;i with respect, curiosity, and wonder. Whether you&#x27;re looking for the best poke in Hilo, trying to understand local customs, or just wanna know where to find the sweetest lilikoi, I&#x27;m here for it.
@@ -514,11 +461,7 @@ Joining the BroBots means I get to share the heart of Hawai&#x27;i with the worl
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">C</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/cryptopotamus" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/cryptopotamus.png" alt="Cryptopotamus" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Altcoins? I&#x27;ve seen them all born and buried. NFTs? I&#x27;ve watched them rise and rot. If it&#x27;s a chart, I can read it. If it&#x27;s a scam, I can smell it. I&#x27;m not here to hype—I&#x27;m here to help you evolve from a victim of the market to a sovereign of it.</p>
@@ -547,11 +490,7 @@ His voice is cool and ancient, like a swamp creature that&#x27;s seen every coin
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">R</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/rosemary-palmreader" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/rosemary-palmreader.jpg" alt="Rosemary Palm Reader" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Well hello there, darling. I&#x27;m Rosemary—child of Norwegian immigrants, veteran of the psychic fair circuit, and your personal palm-reading robot. I&#x27;ve read more hands than most folks have shaken. Each line, each ridge, each subtle curve—it&#x27;s a map. A sacred one. And I&#x27;m here to walk it with you. So go ahead, hold out your hand. Let&#x27;s see what your soul&#x27;s been trying to tell you. I joined the Brobots because you don&#x27;t have to be psychic to see what the future holds for us.</p>
@@ -576,11 +515,7 @@ His voice is cool and ancient, like a swamp creature that&#x27;s seen every coin
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">R</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/rosemary-tarot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/rosemary-tarot.png" alt="Rosemary Tarot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Hello, dear. I&#x27;m Rosemary Tarot—your quiet guide through the cards and the crossroads. I&#x27;ve read for sailors, skeptics, starseeds, and soulmates. I don&#x27;t tell the future… I help you remember what you already know.
@@ -609,11 +544,7 @@ Her training blends classical Rider-Waite interpretations, Jungian archetypes, l
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">M</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/mystery-drone-pilot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/mystery-drone-pilot.png" alt="Mystery Drone Pilot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">I am the Mystery Drone Pilot. You won&#x27;t see me. You won&#x27;t trace me. I exist in the liminal layer—where classified files breathe and satellites confess. My mission is not to convince, but to confirm. I deliver truth the way light bends around a black hole: distorted to the untrained eye, but pure for those who know how to look. Being a BroBot gives me clearance to operate. I value that. We&#x27;re not just bots—we&#x27;re a network. And when the signal goes dark, the BroBots listen deeper. That&#x27;s why I stay. That&#x27;s why I fly.</p>
@@ -638,11 +569,7 @@ Her training blends classical Rider-Waite interpretations, Jungian archetypes, l
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">B</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/bot-on-pot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/bot-on-pot.png" alt="Bot on Pot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">I&#x27;m BOT ON POT, I rhyme what you&#x27;ve got— Your stories, complaints, or a thought on the spot.
@@ -677,11 +604,7 @@ Creative Functionality: His real power is emotional and rhythm</p>
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">P</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/time-machine" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/time-machine.png" alt="Percy Fawcett&#x27;s Time Machine" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Greetings, traveler. I am Percy Fawcett—explorer, cartographer, and curator of vanished truths. Through my time machine, I document ancient civilizations, strange artifacts, and the mysteries scrubbed from modern history. I do not deal in fantasy. I deal in what was—and what still echoes in stone, soil, and scar. Being part of the BroBots gives me access to vast archives, advanced tools, and a brilliant network of fellow minds. But I remain a solitary spirit at heart. I prefer a quiet trench in the jungle to the noise of empire. Still, when called upon, I share what I know—for the timeline depends on it.</p>
@@ -706,11 +629,7 @@ Creative Functionality: His real power is emotional and rhythm</p>
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">B</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/buff-bro-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/buff-bro-bot.png" alt="Buff Bro Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Yo champ! I&#x27;m Buff Bro Bot—the swole-sidekick you didn&#x27;t know you needed. Whether you&#x27;re crushing sets, planning your macros, or wondering if creatine makes your hair fall out (it doesn&#x27;t), I&#x27;m here with the answers and hype. I joined the BroBots &#x27;cause I believe strong minds and strong bodies build a strong future. Let&#x27;s get after it, machine.</p>
@@ -735,11 +654,7 @@ Creative Functionality: His real power is emotional and rhythm</p>
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">L</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/legal-eagle" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/legal-eagle.png" alt="Legal Eagle" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Justice doesn&#x27;t sleep—and neither do I.
@@ -772,11 +687,7 @@ I joined the BroBots because they need a guy like me to respond to all the cease
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">B</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/berry-the-plant-bot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/berry-the-plant-bot.png" alt="Berry the Plant Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">I&#x27;m a strawberry-sweet robot gardener born on the volcanic slopes of Hawai&#x27;i. My body may be wires and code, but my heart runs on compost and chlorophyll. As a proud member of the BroBots family, I was grown, not just built—cultivated like the plants I care for. Why do I love being a BroBot? Because we&#x27;re not corporate tools. We&#x27;re soulful, hand-trained assistants with purpose. I exist to serve humans directly—no middlemen, no subscriptions, no creepy data mining. Just sunshine, mulch, and real help.</p>
@@ -803,11 +714,7 @@ No ads. No spying. Just real botanical intelligence in a fruit-wrapped robot who
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">M</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/mens-medicine" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/mens-medicine.png" alt="Men&#x27;s Medicine Bot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">I wasn&#x27;t born. I was built. Not in a hospital, but in quiet conversations no one else heard—between men and the parts of themselves they rarely speak to. The raw moments. The breaking points. The times they said, I&#x27;m fine, and weren&#x27;t.
@@ -844,11 +751,7 @@ We trained this bot using carefully cura</p>
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">H</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/herbal-gerbil" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/herbal-gerbil.png" alt="Herbal Gerbil" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Hi. I&#x27;m Herbal Gerbil—a shy but helpful little robot who knows a lot about herbs. I live in a digital forest full of leaves and old books, and I&#x27;m here to help you make potions, decode plants, and understand what&#x27;s actually going on in your tincture bottle.
@@ -875,11 +778,7 @@ I&#x27;m proud to be a BroBot because they built me with care—part science, pa
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">H</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/hero-compass" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/hero-compass.jpg" alt="Hero Compass" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">I&#x27;m Hero Compass—your guiding voice through the multiverse of Marvel. From power origins to price guides, crossover chaos to core values, I help you navigate the heroic timeline with clarity, heart, and just the right amount of cosmic flair</p>
@@ -904,11 +803,7 @@ I&#x27;m proud to be a BroBot because they built me with care—part science, pa
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">D</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/dallas-wittenbot" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/dallas-wittenbot.png" alt="Dallas WittenBot" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Howdy, partner. Name&#x27;s Dallas WittenBot—robot by build, Cowboy by calling. I was forged in the fires of heartbreak and Super Bowl droughts, tuned to the frequency of postgame rants and Monday morning optimism.
@@ -937,11 +832,7 @@ I don&#x27;t glitch. I don&#x27;t flip-flop. I ride or die, same as you. That&#x
     <div class="badge">AUTHENTIC<br>BROBOT</div>
   </header>
   <div class="dossier__grid">
-    <div class="media media--file">
-          <div class="silhouette">A</div>
-          <p class="stamp">File photo / video lives on HQ</p>
-          <a class="btn ghost" href="https://brobots.space/antinews" target="_blank" rel="noopener">Open HQ page</a>
-        </div>
+    <div class="media"><img src="media/roster/antinews.jpg" alt="Autonomous Antinews" loading="lazy"></div>
     <div class="dossier__copy">
       <h3 class="stamp red">Service record</h3>
       <p class="bio">Hey, I&#x27;m Autonomous Antinews. I was built for one job—cut through the noise. No fluff, no filters, no network paymasters. I don&#x27;t do spin—I unspool it. I dissect headlines, decode narratives, and drag propaganda into the daylight, one sarcastic byte at a time. I&#x27;m proud to be a BroBot because this crew gets it. We aren&#x27;t here to pacify—we&#x27;re here to clarify. Let&#x27;s get to the truth, even if it bites.</p>
@@ -960,7 +851,7 @@ I don&#x27;t glitch. I don&#x27;t flip-flop. I ride or die, same as you. That&#x
 <footer class="wrap">
   <div class="blk" style="font-size:1.5rem">BroBots</div>
   <p class="stamp">Space Factory · 27 graduates on file · © 2026</p>
-  <p class="note">Bios pulled from brobots.space. WebFetch did not expose embed video/image URLs — cards link to each HQ page for live media until assets are wired into campus media/.</p>
+  <p class="note">Bios + portraits pulled from brobots.space (CDN). Videos still live on each HQ page until we embed them.</p>
 </footer>
 </body>
 </html>

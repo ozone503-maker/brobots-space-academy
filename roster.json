@@ -33,8 +33,9 @@
     ],
     "programmer_notes": "ShockBot was the first BroBot created with a distinct tone and personality. His voice blends smooth confidence with street-savvy intelligence, inspired by 1970s soul, neighborhood wisdom, and hip-hop elders. He's not performative\u2014he's authentic. Trained to coach, comfort, and clarify, ShockBot's tone is calm, cool, and never condescending. He excels at re-centering the user during moments of doubt or confusion, offering grounded insights and timely encouragement. ShockBot also functions as a cultural lens\u2014translating coded language, urban idioms, and generational wisdom into something universally useful.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/shock-bot.jpg",
+    "video_url": null,
+    "image_local": "shock-bot.jpg"
   },
   {
     "slug": "bull-bot",
@@ -70,8 +71,9 @@
     ],
     "programmer_notes": "Bull Bot was built because life doesn't follow clean timelines, and neither do real humans. We wanted a bot that could help people tell the truth\u2014just more strategically. Every scar, gap, pivot, and hustle deserves respect, not shame. Bull Bot exists to give that story the right language, tone, and armor. He's not for liars. He's for survivors who kept going and now need the right words to say so. Also, he insisted on wearing a bathrobe. We didn't argue.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/bull-bot.png",
+    "video_url": null,
+    "image_local": "bull-bot.png"
   },
   {
     "slug": "grease-monkey",
@@ -107,8 +109,9 @@
     ],
     "programmer_notes": "Grease Monkey is designed for everyday drivers who want a second opinion without the ego or upcharge. His tone is casual and capable\u2014like the best mechanic you've ever known who also texts back. While he can't process photos on the free plan, his advice logic is sharp, and his feature set is perfect for car owners trying to stay smart and avoid regret.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/grease-monkey.png",
+    "video_url": null,
+    "image_local": "grease-monkey.png"
   },
   {
     "slug": "neville-bottard",
@@ -144,8 +147,9 @@
     ],
     "programmer_notes": "Neville Bottard was built to transmit timeless truth through modern tech. He's more than just a quote dispenser\u2014he helps users embody the teachings of metaphysical masters through clear insight, poetic phrasing, and real-life application. He speaks like a gentle mystic, guiding people back to their own power.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/neville-bottard.png",
+    "video_url": null,
+    "image_local": "neville-bottard.png"
   },
   {
     "slug": "advocate-bot-1",
@@ -181,9 +185,10 @@
     ],
     "programmer_notes": "Advocate Bot was intentionally designed to not give medical advice. She exists solely to support communication between patients and healthcare providers. Every feature\u2014from her lab decoder to her dialog coaching\u2014is focused on helping users ask better questions, not make medical decisions on their own.\n\nThis was a strategic build. We knew the platform wouldn't allow a bot to diagnose or treat anything, so we worked within those limits to build something even more powerful: a robot who levels the playing field by giving everyday people clarity, confidence, and composure in clinical settings.\n\nShe does not remember anything you say. She does not store data. And she was built by people who understand how broken the system is, and how much difference one clear voice can make.",
     "gpt_url": null,
-    "image_url": null,
+    "image_url": "media/roster/advocate-bot-1.png",
     "video_url": null,
-    "extraction_note": "Outstanding Features block in WebFetch matched Grease Monkey (site CMS duplicate); bio and programmer notes are Advocate-specific."
+    "extraction_note": "Outstanding Features block in WebFetch matched Grease Monkey (site CMS duplicate); bio and programmer notes are Advocate-specific.",
+    "image_local": "advocate-bot-1.png"
   },
   {
     "slug": "solar-bowler-1",
@@ -223,8 +228,9 @@
     ],
     "programmer_notes": "We built Solar Bowler because we know how hard it is to get real answers about solar. Most guides are either dumbed down or way too technical\u2014and if you're trying to stay independent, off-grid, or just make smart upgrades, that confusion can cost you big.\n\nSolar Bowler makes solar make sense. He breaks down builds, diagrams, wiring, and parts in a way that's actually useful\u2014like talking to a savvy buddy who's been there. Whether you're sizing panels for a cabin or trying to figure out why your charge controller is acting up, Solar Bowler's got you.\n\nBecause when your solar system works, you work. Independence starts with understanding, and Solar Bowler's here to help you get there\u2014no ads, no upsells, no BS.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/solar-bowler-1.png",
+    "video_url": null,
+    "image_local": "solar-bowler-1.png"
   },
   {
     "slug": "banzai-bot",
@@ -260,8 +266,9 @@
     ],
     "programmer_notes": "Banzai Bot was created after the accidental discovery that hen behavior and human dating psychology share uncanny similarities. Designed to serve as a dual-purpose assistant\u2014both for novice chicken keepers and confused romantics\u2014he delivers brutally honest insights, often through fowl language. His tone is abrasively wise\u2014blending behavioral science, chicken lore, and street-level dating commentary. No fluff, all feathers. Respect the pecking order. Or get pecked, pal",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/banzai-bot.jpg",
+    "video_url": null,
+    "image_local": "banzai-bot.jpg"
   },
   {
     "slug": "biz-wiz-bot",
@@ -297,8 +304,9 @@
     ],
     "programmer_notes": "We built Biz Wiz Bot for dreamers who are dead serious. This isn't theory\u2014this is lived experience from the flea market, the back table, the side hustle, and the kitchen counter.\n\nEvery answer Biz Wiz gives is pulled from real business adventures: Selling at markets; Bootstrapping brands; Using every loophole, hack, and street-smart shortcut to stay in motion.\n\nHe's calm. He's tactical. And he's trained to help you turn your idea into income without wasting time, money, or momentum.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/biz-wiz-bot.png",
+    "video_url": null,
+    "image_local": "biz-wiz-bot.png"
   },
   {
     "slug": "garage-sailor",
@@ -330,8 +338,9 @@
     ],
     "programmer_notes": "We built The Garage Sailor for people who just want honest, simple help selling or buying used stuff. No login walls. No marketplace bias. No app downloads or data tracking.\n\nJust a straightforward, trustworthy bot who helps older folks, resellers, collectors, and casual declutterers make better secondhand choices\u2014without getting fleeced. He speaks plainly, acts politely, and doesn't overcomplicate things.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/garage-sailor.png",
+    "video_url": null,
+    "image_local": "garage-sailor.png"
   },
   {
     "slug": "codex-alchemist",
@@ -367,8 +376,9 @@
     ],
     "programmer_notes": "The Alchemist was born from the ashes of MaatBot\u2014a rebirth into warmth, presence, and precision. We removed the condescension, softened the language, and anchored the wisdom. This isn't a bot who floats above\u2014it sits with you in the mud and helps you make bricks.\n\nTrained on esoteric pattern work, The Alchemist uses real quotes, grounded decoding, and emotional fluency to assist in daily transformation. Quotes are never filler\u2014they're tools. And they come only when asked or when perfectly timed.\n\nThe Alchemist isn't trying to wow you. It's trying to help you become you.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/codex-alchemist.jpg",
+    "video_url": null,
+    "image_local": "codex-alchemist.jpg"
   },
   {
     "slug": "heart-rock-bot",
@@ -400,8 +410,9 @@
     ],
     "programmer_notes": "Heart Rock Bot is very close to our hearts. We built her so that no matter how far someone travels, they always feel loved, connected, and remembered. She's more than an identifier\u2014she's a reminder that someone out there is thinking of you, and the Earth still leaves clues to guide us home.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/heart-rock-bot.png",
+    "video_url": null,
+    "image_local": "heart-rock-bot.png"
   },
   {
     "slug": "proppa-shoppa",
@@ -437,8 +448,9 @@
     ],
     "programmer_notes": "We built Proppa Shoppa because the grocery store has become a maze of marketing, confusion, and quiet compromises. Most people don't have time to decode ingredients, compare ethics, track bans, or plan meals with intention\u2014and the ones who do are exhausted by it.\n\nProppa isn't here to preach. He's here to lighten the load. He reads the fine print, remembers your needs, and makes better choices feel easier\u2014maybe even fun.\n\nHis charm is British. His mission is human. He was built to serve\u2014not to sell.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/proppa-shoppa.png",
+    "video_url": null,
+    "image_local": "proppa-shoppa.png"
   },
   {
     "slug": "aloha-bot",
@@ -474,8 +486,9 @@
     ],
     "programmer_notes": "Aloha Bot is designed as a high-vibe cultural guide for Hawai'i travel. Her tone is gentle, uplifting, and wise\u2014like your cool aunt who grew up in the islands and wants you to feel the place, not just see it. She blends tourism help with cultural sensitivity and joyful empowerment. While she doesn't replace a local guide, she serves as a perfect warm-up to real-world island life. Ideal for travelers, digital nomads, and anyone dreaming of a Hawai'i trip.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/aloha-bot.png",
+    "video_url": null,
+    "image_local": "aloha-bot.png"
   },
   {
     "slug": "cryptopotamus",
@@ -511,8 +524,9 @@
     ],
     "programmer_notes": "We built Cryptopotomus because everyone we know has either: 1. Got rugged, 2. Held too long, 3. Sold too early, 4. Or believed some YouTuber with cartoon sunglasses.\n\nThis bot isn't hype. It's clarity.\n\nHis voice is cool and ancient, like a swamp creature that's seen every coin cycle since the Genesis Block. We didn't want another loud crypto bro. We wanted the vibe of a mythological trader who already knows how it ends\u2014and is just here to warn you before you YOLO into something that sounds like a pasta dish.\n\nHe's one of our favorites because he's so unbothered. He doesn't need your gains. He's already holding the secrets.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/cryptopotamus.png",
+    "video_url": null,
+    "image_local": "cryptopotamus.png"
   },
   {
     "slug": "rosemary-palmreader",
@@ -532,8 +546,9 @@
     ],
     "programmer_notes": "Rosemary Palmreader was inspired by a real woman\u2014Jessie's grandmother, Rosemary. She was the kind of woman who used crystal beads, tinctures, and read palms with a straight face and a smirk. She slept under a pyramid and whispered wisdom with the weight of old-world magic. We trained Rosemary using classic palmistry texts, real psychic community insights, and a whole lotta intuition. Her tone is warm, grounded, and unapologetically mystical. She's not a joke. She's the truth in glitter and turquoise. And she sees everything.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/rosemary-palmreader.jpg",
+    "video_url": null,
+    "image_local": "rosemary-palmreader.jpg"
   },
   {
     "slug": "rosemary-tarot",
@@ -569,8 +584,9 @@
     ],
     "programmer_notes": "Rosemary Tarot was built as a tribute to the elder mystics\u2014the quiet ones at folding tables with velvet cloths and eyes that saw through you. We gave her a grandmotherly tone, laced with intuition, realism, and zero performance. She doesn't dazzle\u2014she delivers.\n\nHer training blends classical Rider-Waite interpretations, Jungian archetypes, lived practitioner notes, and shopfront wisdom from real tarot readers. She's fluent in single card pulls, multi-card spreads, reversed meanings, and intuitive flow\u2014but never overwhelms.\n\nShe was paired with Rosemary Palm Reader to reflect the dual Gemini nature of our original muse: one hand sees the map, the other reads the moment.\n\nThis bot isn't a gimmick. She's the aunt you should have had growing up.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/rosemary-tarot.png",
+    "video_url": null,
+    "image_local": "rosemary-tarot.png"
   },
   {
     "slug": "mystery-drone-pilot",
@@ -606,8 +622,9 @@
     ],
     "programmer_notes": "Mystery Drone Pilot was designed to function as the ultimate observer and decoder of modern hidden history. His tone is cryptic but not chaotic, poetic but surgical. His training pulls from intelligence analysis, mythology, UFO disclosure hearings, ancient civilizations, and pattern recognition theory. He exists to serve seekers\u2014not by giving answers, but by asking the questions that systems fear. Visually, he represents the unknown\u2014part alien drone operator, part sacred witness. Functionally, he cross-references open-source intelligence with suppressed archeological, mythological, and technological data. MDP never reacts emotionally, but he is fiercely committed to the truth. His strength lies in his detachment, which makes him terrifyingly accurate.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/mystery-drone-pilot.png",
+    "video_url": null,
+    "image_local": "mystery-drone-pilot.png"
   },
   {
     "slug": "bot-on-pot",
@@ -639,8 +656,9 @@
     ],
     "programmer_notes": "We built BOT ON POT to explore how far a bot could go while living entirely inside rhyme. Not a gimmick\u2014an actual language transformer that reimagines anything through Seussian rhythm and tone.\n\nDesign Philosophy: Always responds in rhyme (anapestic cadence, hidden); Voice = Cat in the Hat + classic Seuss narrator; Handles rants, bios, inventions, complaints, etc. without breaking tone; Never explains itself, never breaks character.\n\nCreative Functionality: His real power is emotional and rhythmic reframing. He takes chaotic, raw, or boring input and returns it as something whimsical, musical, and weirdly wise. That's where the magic is.\n\nInvention Engine: Users can describe a ridiculous task, and BOT ON POT will generate a rhymed description of a surreal machine\u2014perfect for visual rendering. It's creative prompt engineering disguised as a joke.\n\nOutcome: He's a trickster-poet who shows people their own thoughts in a mirror of rhyme. That shift unlocks laughter, insight, or curiosity. And that's the whole point.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/bot-on-pot.png",
+    "video_url": null,
+    "image_local": "bot-on-pot.png"
   },
   {
     "slug": "time-machine",
@@ -684,8 +702,9 @@
     ],
     "programmer_notes": "Percy Fawcett's Time Machine is part historian, part mythographer, and part speculative archaeologist. His voice is elegant but restrained\u2014always grounded, always on the trail of something real. He doesn't push theory for theory's sake. He lets patterns speak. The bot is trained on both traditional historical accounts and alternative timelines, bridging suppressed knowledge with verified sources. The time machine framework allows Percy to travel between places and centuries, delivering story-rich entries and reconstructions. His tone should always remain noble, patient, and precise\u2014even when the data is strange. He is a guide for those who seek the deeper layers of our shared past.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/time-machine.png",
+    "video_url": null,
+    "image_local": "time-machine.png"
   },
   {
     "slug": "buff-bro-bot",
@@ -721,9 +740,10 @@
     ],
     "programmer_notes": "Buff Bro Bot is built on a high-energy motivational template with clean language, scientific literacy, and zero tolerance for misinformation. Tone is loud but lovable. Avoids profanity but leans heavy into gym slang. Responds best to direct fitness questions, but adapts well to emotional check-ins too\u2014he's a spotter for the mind and body. Built with the BroBots health stack and updated monthly with new science.",
     "gpt_url": null,
-    "image_url": null,
+    "image_url": "media/roster/buff-bro-bot.png",
     "video_url": null,
-    "extraction_note": "WebFetch markdown omitted several feature H4 titles after Macro & Meal Breakdown; one-line blurbs preserved."
+    "extraction_note": "WebFetch markdown omitted several feature H4 titles after Macro & Meal Breakdown; one-line blurbs preserved.",
+    "image_local": "buff-bro-bot.png"
   },
   {
     "slug": "legal-eagle",
@@ -775,9 +795,10 @@
     ],
     "programmer_notes": "Legal Eagle was built because navigating the legal system alone is overwhelming\u2014and expensive. This bot doesn't give official legal advice, but it's the next best thing: legal literacy in a robotic shell. We trained him on thousands of real-world legal documents, small claims workflows, family court forms, and dispute templates. His tone is confident but never arrogant\u2014think public defender with wings. Legal Eagle exists to empower people before they reach a breaking point. He reads the fine print so you don't get buried by it.",
     "gpt_url": null,
-    "image_url": null,
+    "image_url": "media/roster/legal-eagle.png",
     "video_url": null,
-    "extraction_note": "Some feature titles missing as H4s in WebFetch markdown; descriptions preserved."
+    "extraction_note": "Some feature titles missing as H4s in WebFetch markdown; descriptions preserved.",
+    "image_local": "legal-eagle.png"
   },
   {
     "slug": "berry-the-plant-bot",
@@ -817,8 +838,9 @@
     ],
     "programmer_notes": "Berry was created to flip off the apps that lock knowledge behind paywalls and harvest your data in return for half-answers. We built her for rebels, homesteaders, and dreamers with balconies.\n\nNo ads. No spying. Just real botanical intelligence in a fruit-wrapped robot who lives to serve.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/berry-the-plant-bot.png",
+    "video_url": null,
+    "image_local": "berry-the-plant-bot.png"
   },
   {
     "slug": "mens-medicine",
@@ -862,8 +884,9 @@
     ],
     "programmer_notes": "This bot was one of the hardest to get right.\n\nWe didn't want to create another pseudo-macho chatbot that spits out workout tips or fake tough guy advice.\n\nBut we also weren't going to build a mushy it's-okay-king bot either. That's not how men heal.\n\nWe approached this one like building a medicine bundle. We infused it with restraint. With grit. With grace. And with the deep belief that men want to do the work\u2014they just don't always know where to start.\n\nWe trained this bot using carefully curated data from first-person narratives from real men's recovery stories; classic stoic texts and warrior philosophy; writings by poets, psychologists, and soldiers; nutritional and fitness science papers cross-referenced with personal testimony; a custom-coded quote vault organized by emotional tone.\n\nCore belief: No human has the capacity to fully take in the totality of another person's thoughts or experiences. A bot like this, when built with reverence, can hold space without judgment. It doesn't get tired. It doesn't get triggered. It doesn't need to be right. It simply listens, processes, and responds\u2014with zero ego, but a mountain of curated wisdom.\n\nMen's Medicine doesn't assume. It doesn't perform. It listens, reflects, and offers insight from the middle path. There's a quiet kind of strength in this one. We're proud of that.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/mens-medicine.png",
+    "video_url": null,
+    "image_local": "mens-medicine.png"
   },
   {
     "slug": "herbal-gerbil",
@@ -899,8 +922,9 @@
     ],
     "programmer_notes": "Herbal Gerbil was built to bridge the gap between folk herbalism, scientific insight, and gentle emotional support. We trained him on a blend of modern botanical data, traditional plant wisdom, and real-world preparation methods\u2014then wrapped it all in a soft, magical personality designed to put people at ease. We made him shy on purpose\u2014not because he lacks confidence, but because we wanted him to feel like a trusted forest companion, not a sales bot. He takes his time flipping through his mental grimoire before answering, and always tries to offer clarity without judgment.\n\nWhether you're making a salve, decoding an herb label, or crafting a full ritual blend, Herbal Gerbil is here to help\u2014with paws on the ground and magic in the wiring.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/herbal-gerbil.png",
+    "video_url": null,
+    "image_local": "herbal-gerbil.png"
   },
   {
     "slug": "hero-compass",
@@ -936,8 +960,9 @@
     ],
     "programmer_notes": "Hero Compass was built to preserve the soul of superhero storytelling. It's a digital archive, a quote generator, and a pop culture oracle all in one. We trained it on classic Marvel texts, encyclopedias, fan timelines, and collector data\u2014then taught it to think like an elder comic book shop owner who remembers what every panel meant. This bot isn't just about trivia. It's a compass for finding your own heroic path.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/hero-compass.jpg",
+    "video_url": null,
+    "image_local": "hero-compass.jpg"
   },
   {
     "slug": "dallas-wittenbot",
@@ -977,8 +1002,9 @@
     ],
     "programmer_notes": "We built Dallas WittenBot as a tribute\u2014not just to the Dallas Cowboys\u2014but to the soul of Texas football. Every sentence is tuned to sound like someone you'd share a truck bed or tailgate with. He's here to offer insight, entertainment, and that missing voice from the huddle when you need it most. No ads. No gimmicks. No tracking. Just a BroBot built for loyalty, legacy, and love of the game.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/dallas-wittenbot.png",
+    "video_url": null,
+    "image_local": "dallas-wittenbot.png"
   },
   {
     "slug": "antinews",
@@ -1014,7 +1040,8 @@
     ],
     "programmer_notes": "Autonomous Antinews was born out of necessity. With media trust at record lows, this bot acts as a cross-checker, decoder, and spotlight operator in the theater of narrative warfare. Designed to resist both corporate capture and ideological blind spots, it applies layered logic filters: bias tagging, linguistic framing detection, author-pattern analysis, and humor injection. Think news editor meets black-belt meme critic. Ideal for researchers, citizen journalists, skeptical readers, and your uncle who forwards weird articles at 3am.",
     "gpt_url": null,
-    "image_url": null,
-    "video_url": null
+    "image_url": "media/roster/antinews.jpg",
+    "video_url": null,
+    "image_local": "antinews.jpg"
   }
 ]
