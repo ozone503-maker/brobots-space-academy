@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROBOTS — Multimedia Center</title>
+<meta name="description" content="Creation tools for people. Audio, video, paste-up design, AI render — in one Brobots room.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+:root{--paper:#E8E1D0;--paper-2:#DFD6C1;--ink:#14140F;--red:#B8321E;--ok:#2F6B3A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;line-height:1.5}
+a{color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px}
+.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.9;letter-spacing:-.02em}
+.stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}
+.mono{font-family:'Courier Prime',monospace}
+.mast{display:flex;justify-content:space-between;gap:14px;align-items:flex-end;padding:20px 0;border-bottom:4px solid var(--ink);flex-wrap:wrap}
+.mast-nav{display:flex;gap:14px;flex-wrap:wrap}
+.mast-nav a{text-decoration:none;border-bottom:1px solid transparent}
+.mast-nav a:hover{border-bottom-color:var(--ink)}
+.hero{margin:28px 0;padding:22px;border:4px solid var(--ink);background:var(--paper-2)}
+.hero h1{font-size:clamp(2rem,7vw,3.6rem);margin:.35em 0 .4em}
+.hero p{max-width:54ch}
+.stations{display:grid;gap:12px;margin:28px 0}
+@media(min-width:760px){.stations{grid-template-columns:1fr 1fr}}
+.station{display:block;border:4px solid var(--ink);padding:18px;text-decoration:none;background:var(--paper);transition:background .15s}
+.station:hover{background:#efe6d2}
+.station b{display:block;font-size:1.2rem;margin:.25em 0}
+.station span{display:block;color:#444;font-size:.92rem}
+.station em{display:inline-block;margin-top:10px;font-style:normal;color:var(--red);font-family:'Courier Prime',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.panel{display:none;margin:24px 0 60px;border:4px solid var(--ink);background:var(--paper)}
+.panel.on{display:block}
+.panel__head{padding:16px 18px;border-bottom:4px solid var(--ink);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;background:var(--paper-2)}
+.panel__body{padding:18px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.btn,.toolbtn{appearance:none;border:3px solid var(--ink);background:var(--ink);color:var(--paper);padding:.55em .85em;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;cursor:pointer}
+.toolbtn.ghost,.btn.ghost{background:transparent;color:var(--ink)}
+.toolbtn.hot{background:var(--red);border-color:var(--red);color:#fff}
+.toolbtn:disabled{opacity:.4;cursor:not-allowed}
+label.file{display:inline-flex;align-items:center;gap:8px}
+input[type=file]{max-width:220px}
+input[type=text],input[type=number],textarea,select{border:3px solid var(--ink);background:#fff;padding:.5em .6em;font:inherit;width:100%;max-width:420px}
+textarea{min-height:90px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.canvas-wrap{border:3px solid var(--ink);background:#fff;overflow:auto;max-width:100%}
+canvas#paste{display:block;max-width:100%;touch-action:none}
+.hint{font-size:.85rem;color:#555;margin-top:10px}
+.meter{width:100%;height:10px;background:#ddd;border:2px solid var(--ink);margin:8px 0}
+.meter>i{display:block;height:100%;width:0;background:var(--red)}
+.vid{width:100%;max-width:720px;background:#111;border:3px solid var(--ink)}
+.fun{display:grid;gap:10px;margin-top:12px}
+@media(min-width:600px){.fun{grid-template-columns:1fr 1fr}}
+.chip{border:3px solid var(--ink);padding:14px;background:#fff}
+.chip strong{display:block;margin-bottom:6px}
+footer{margin-top:40px;padding:28px 0;background:var(--ink);color:var(--paper)}
+footer a{color:var(--paper)}
+.foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.badge{display:inline-block;border:2px solid var(--ink);padding:.15em .45em;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-family:'Courier Prime',monospace}
+.badge.live{background:var(--ok);color:#fff;border-color:var(--ok)}
+.badge.beta{background:var(--red);color:#fff;border-color:var(--red)}
+</style>
+</head>
+<body>
+<header class="wrap mast">
+  <div>
+    <div class="stamp" style="color:var(--red)">BroBots · Space Factory</div>
+    <div class="blk" style="font-size:1.55rem;margin-top:4px">Multimedia Center</div>
+  </div>
+  <nav class="mast-nav stamp">
+    <a href="index.html">Campus</a>
+    <a href="retail.html">Retail</a>
+    <a href="#stations">Stations</a>
+    <a href="mailto:hello@brobots.space">Email</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="stamp" style="color:var(--red)">Bring the tech to the people</span>
+    <h1 class="blk">One room. The tools that matter.</h1>
+    <p>No scavenger hunt across a dozen apps. Open a station, make the thing, take it with you. Built for humans who would rather create than configure.</p>
+  </section>
+
+  <div id="stations" class="stations">
+    <a class="station" href="#paste" data-open="paste">
+      <span class="badge live">Live</span>
+      <b class="blk">Paste-Up Desk</b>
+      <span>Fake Canva, only the important parts: text, image, color, stamp, download PNG.</span>
+      <em>Open desk →</em>
+    </a>
+    <a class="station" href="#audio" data-open="audio">
+      <span class="badge live">Live</span>
+      <b class="blk">Audio Lab</b>
+      <span>Upload a clip, trim the ends, download. No timeline PhD required.</span>
+      <em>Open lab →</em>
+    </a>
+    <a class="station" href="#video" data-open="video">
+      <span class="badge beta">Beta</span>
+      <b class="blk">Video Bench</b>
+      <span>Drop a video, preview it, grab a still. Deeper cut tools come next.</span>
+      <em>Open bench →</em>
+    </a>
+    <a class="station" href="#render" data-open="render">
+      <span class="badge beta">Beta</span>
+      <b class="blk">Render Bay</b>
+      <span>AI render queue — write what you need, we stage the ask for Flow / factory render.</span>
+      <em>Open bay →</em>
+    </a>
+    <a class="station" href="#fun" data-open="fun">
+      <span class="badge live">Live</span>
+      <b class="blk">Fun Locker</b>
+      <span>Papaya stamp generator + name-plate maker. Silly on purpose.</span>
+      <em>Open locker →</em>
+    </a>
+  </div>
+
+  <!-- PASTE-UP -->
+  <section class="panel" id="paste">
+    <div class="panel__head">
+      <div>
+        <div class="stamp" style="color:var(--red)">Station 01</div>
+        <div class="blk" style="font-size:1.4rem;margin-top:4px">Paste-Up Desk</div>
+      </div>
+      <button type="button" class="toolbtn ghost" data-close>Close</button>
+    </div>
+    <div class="panel__body">
+      <div class="toolbar">
+        <button type="button" class="toolbtn" id="p-text">Add text</button>
+        <label class="file toolbtn ghost">Image<input type="file" id="p-img" accept="image/*" hidden></label>
+        <input type="color" id="p-color" value="#B8321E" title="Ink color">
+        <button type="button" class="toolbtn" id="p-stamp">Red stamp</button>
+        <button type="button" class="toolbtn" id="p-clear">Clear</button>
+        <button type="button" class="toolbtn hot" id="p-dl">Download PNG</button>
+      </div>
+      <div class="canvas-wrap"><canvas id="paste" width="900" height="1200"></canvas></div>
+      <p class="hint">Click to place. Drag after placing. Only the important bits — not a thousand Canva menus.</p>
+    </div>
+  </section>
+
+  <!-- AUDIO -->
+  <section class="panel" id="audio">
+    <div class="panel__head">
+      <div>
+        <div class="stamp" style="color:var(--red)">Station 02</div>
+        <div class="blk" style="font-size:1.4rem;margin-top:4px">Audio Lab</div>
+      </div>
+      <button type="button" class="toolbtn ghost" data-close>Close</button>
+    </div>
+    <div class="panel__body">
+      <div class="row">
+        <label class="file toolbtn ghost">Load audio<input type="file" id="a-file" accept="audio/*" hidden></label>
+        <button type="button" class="toolbtn" id="a-play">Play</button>
+        <button type="button" class="toolbtn" id="a-stop">Stop</button>
+        <button type="button" class="toolbtn hot" id="a-export" disabled>Download trim (WAV)</button>
+      </div>
+      <div class="row">
+        <label class="mono" style="font-size:.8rem">Start (s) <input type="number" id="a-start" min="0" step="0.1" value="0" style="width:100px"></label>
+        <label class="mono" style="font-size:.8rem">End (s) <input type="number" id="a-end" min="0" step="0.1" value="0" style="width:100px"></label>
+        <span class="mono" id="a-dur" style="font-size:.8rem"></span>
+      </div>
+      <div class="meter"><i id="a-meter"></i></div>
+      <p class="hint">Upload → set start/end → download the trimmed WAV. Browser-only; nothing leaves your machine.</p>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="panel" id="video">
+    <div class="panel__head">
+      <div>
+        <div class="stamp" style="color:var(--red)">Station 03</div>
+        <div class="blk" style="font-size:1.4rem;margin-top:4px">Video Bench</div>
+      </div>
+      <button type="button" class="toolbtn ghost" data-close>Close</button>
+    </div>
+    <div class="panel__body">
+      <div class="row">
+        <label class="file toolbtn ghost">Load video<input type="file" id="v-file" accept="video/*" hidden></label>
+        <button type="button" class="toolbtn" id="v-still">Grab still PNG</button>
+      </div>
+      <video class="vid" id="v-el" controls playsinline></video>
+      <p class="hint">Beta: preview + still grab now. Full friendly cut/export lands next without the 59MB baggage.</p>
+    </div>
+  </section>
+
+  <!-- RENDER -->
+  <section class="panel" id="render">
+    <div class="panel__head">
+      <div>
+        <div class="stamp" style="color:var(--red)">Station 04</div>
+        <div class="blk" style="font-size:1.4rem;margin-top:4px">Render Bay</div>
+      </div>
+      <button type="button" class="toolbtn ghost" data-close>Close</button>
+    </div>
+    <div class="panel__body">
+      <p style="margin-bottom:12px;max-width:54ch">Tell the factory what to render. We keep this simple on purpose — you write the ask; Brobots routes it to the render lane (Flow / factory) without making you hunt accounts.</p>
+      <div class="row"><input type="text" id="r-title" placeholder="Working title"></div>
+      <div class="row"><textarea id="r-prompt" placeholder="What should we see / hear? Style, length, must-haves…"></textarea></div>
+      <div class="row">
+        <select id="r-kind">
+          <option value="still">Still image</option>
+          <option value="clip">Short clip</option>
+          <option value="audio">Audio bed</option>
+          <option value="other">Other</option>
+        </select>
+        <button type="button" class="toolbtn hot" id="r-send">Email the bay</button>
+      </div>
+      <p class="hint" id="r-note">Opens a prefilled email to hello@brobots.space. Direct in-page render hooks up when Jessie authorizes the pipe.</p>
+    </div>
+  </section>
+
+  <!-- FUN -->
+  <section class="panel" id="fun">
+    <div class="panel__head">
+      <div>
+        <div class="stamp" style="color:var(--red)">Station 05</div>
+        <div class="blk" style="font-size:1.4rem;margin-top:4px">Fun Locker</div>
+      </div>
+      <button type="button" class="toolbtn ghost" data-close>Close</button>
+    </div>
+    <div class="panel__body">
+      <div class="fun">
+        <div class="chip">
+          <strong class="blk">Papaya stamp</strong>
+          <p style="font-size:.9rem;margin-bottom:10px">Random factory stamp for stories / thumbnails.</p>
+          <canvas id="fun-stamp" width="480" height="480" style="width:100%;border:3px solid var(--ink);background:#fff"></canvas>
+          <div class="row" style="margin-top:10px">
+            <button type="button" class="toolbtn" id="fun-roll">Roll stamp</button>
+            <button type="button" class="toolbtn hot" id="fun-dl">Download</button>
+          </div>
+        </div>
+        <div class="chip">
+          <strong class="blk">Name plate</strong>
+          <p style="font-size:.9rem;margin-bottom:10px">Instant Brobot door sign.</p>
+          <input type="text" id="fun-name" placeholder="Your Brobot name" value="Dean Mayhem">
+          <canvas id="fun-plate" width="720" height="240" style="width:100%;margin-top:10px;border:3px solid var(--ink);background:var(--paper)"></canvas>
+          <div class="row" style="margin-top:10px">
+            <button type="button" class="toolbtn" id="fun-draw">Make plate</button>
+            <button type="button" class="toolbtn hot" id="fun-plate-dl">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="hero" style="margin-top:8px">
+    <span class="stamp">Mall note</span>
+    <p style="margin-top:8px">Outlet Mall <b>brobots-multimedia</b> should funnel here:
+      <span class="mono">https://brobots-space-academy.vercel.app/multimedia.html</span>
+      — image door only, all tools live on Brobots.</p>
+  </aside>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="blk" style="font-size:1.7rem;margin-bottom:6px">BroBots</div>
+      <div class="stamp">Multimedia Center · tech for people · © 2026</div>
+    </div>
+    <div class="mast-nav stamp">
+      <a href="index.html">Campus</a>
+      <a href="retail.html">Retail</a>
+      <a href="mailto:hello@brobots.space">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function $(id){return document.getElementById(id)}
+  function openPanel(id){
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on', p.id===id)});
+    var el=$(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  document.querySelectorAll('[data-open]').forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); openPanel(a.getAttribute('data-open')); });
+  });
+  document.querySelectorAll('[data-close]').forEach(function(b){
+    b.addEventListener('click', function(){ document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')}); });
+  });
+  if(location.hash){ var h=location.hash.slice(1); if($(h)) openPanel(h); }
+
+  /* ---- Paste-Up ---- */
+  var canvas=$('paste'), ctx=canvas.getContext('2d');
+  var items=[], drag=null, color=$('p-color');
+  function paper(){
+    ctx.fillStyle='#E8E1D0'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle='#14140F'; ctx.lineWidth=8; ctx.strokeRect(4,4,canvas.width-8,canvas.height-8);
+  }
+  function draw(){
+    paper();
+    items.forEach(function(it){
+      if(it.type==='text'){
+        ctx.fillStyle=it.color; ctx.font='700 54px Archivo Black, Impact, sans-serif';
+        ctx.fillText(it.text, it.x, it.y);
+      } else if(it.type==='img' && it.img){
+        ctx.drawImage(it.img, it.x, it.y, it.w, it.h);
+      } else if(it.type==='stamp'){
+        ctx.save();
+        ctx.translate(it.x, it.y); ctx.rotate(it.rot||-.2);
+        ctx.strokeStyle=it.color; ctx.lineWidth=6; ctx.strokeRect(-90,-34,180,68);
+        ctx.fillStyle=it.color; ctx.font='700 28px Courier Prime, monospace';
+        ctx.textAlign='center'; ctx.fillText(it.text,0,10);
+        ctx.restore();
+      }
+    });
+  }
+  paper();
+  canvas.addEventListener('pointerdown', function(e){
+    var r=canvas.getBoundingClientRect();
+    var x=(e.clientX-r.left)*(canvas.width/r.width);
+    var y=(e.clientY-r.top)*(canvas.height/r.height);
+    for(var i=items.length-1;i>=0;i--){
+      var it=items[i];
+      var hit=false;
+      if(it.type==='text') hit=x>it.x-10 && x<it.x+300 && y>it.y-50 && y<it.y+20;
+      if(it.type==='img') hit=x>it.x && x<it.x+it.w && y>it.y && y<it.y+it.h;
+      if(it.type==='stamp') hit=Math.hypot(x-it.x,y-it.y)<110;
+      if(hit){ drag={it:it, ox:x-it.x, oy:y-it.y}; canvas.setPointerCapture(e.pointerId); return; }
+    }
+  });
+  canvas.addEventListener('pointermove', function(e){
+    if(!drag) return;
+    var r=canvas.getBoundingClientRect();
+    drag.it.x=(e.clientX-r.left)*(canvas.width/r.width)-drag.ox;
+    drag.it.y=(e.clientY-r.top)*(canvas.height/r.height)-drag.oy;
+    draw();
+  });
+  canvas.addEventListener('pointerup', function(){ drag=null; });
+  $('p-text').onclick=function(){
+    var t=prompt('Text for the paste-up','BROBOTS'); if(!t) return;
+    items.push({type:'text', text:t.toUpperCase(), x:80, y:200, color:color.value}); draw();
+  };
+  $('p-img').onchange=function(e){
+    var f=e.target.files&&e.target.files[0]; if(!f) return;
+    var img=new Image();
+    img.onload=function(){
+      var w=Math.min(520, img.width), h=w*(img.height/img.width);
+      items.push({type:'img', img:img, x:80, y:260, w:w, h:h}); draw();
+    };
+    img.src=URL.createObjectURL(f);
+  };
+  $('p-stamp').onclick=function(){
+    items.push({type:'stamp', text:'FACTORY', x:450, y:900, color:color.value, rot:-0.18}); draw();
+  };
+  $('p-clear').onclick=function(){ items=[]; draw(); };
+  $('p-dl').onclick=function(){
+    var a=document.createElement('a'); a.download='brobots-pasteup.png'; a.href=canvas.toDataURL('image/png'); a.click();
+  };
+
+  /* ---- Audio ---- */
+  var audioBuf=null, audioCtx=null, srcNode=null, objectUrl=null;
+  $('a-file').onchange=async function(e){
+    var f=e.target.files&&e.target.files[0]; if(!f) return;
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    var arr=await f.arrayBuffer();
+    audioBuf=await audioCtx.decodeAudioData(arr.slice(0));
+    $('a-start').value=0;
+    $('a-end').value=audioBuf.duration.toFixed(2);
+    $('a-dur').textContent='Length: '+audioBuf.duration.toFixed(2)+'s';
+    $('a-export').disabled=false;
+    $('a-meter').style.width='100%';
+  };
+  $('a-play').onclick=function(){
+    if(!audioBuf||!audioCtx) return;
+    if(srcNode){ try{srcNode.stop()}catch(_){}}
+    var start=parseFloat($('a-start').value)||0;
+    var end=parseFloat($('a-end').value)||audioBuf.duration;
+    srcNode=audioCtx.createBufferSource(); srcNode.buffer=audioBuf;
+    srcNode.connect(audioCtx.destination);
+    var dur=Math.max(0.05, end-start);
+    srcNode.start(0, start, dur);
+  };
+  $('a-stop').onclick=function(){ if(srcNode){ try{srcNode.stop()}catch(_){}} };
+  $('a-export').onclick=function(){
+    if(!audioBuf||!audioCtx) return;
+    var start=parseFloat($('a-start').value)||0;
+    var end=parseFloat($('a-end').value)||audioBuf.duration;
+    start=Math.max(0,Math.min(start, audioBuf.duration));
+    end=Math.max(start+0.05, Math.min(end, audioBuf.duration));
+    var sampleRate=audioBuf.sampleRate;
+    var s0=Math.floor(start*sampleRate), s1=Math.floor(end*sampleRate);
+    var len=s1-s0;
+    var out=audioCtx.createBuffer(audioBuf.numberOfChannels, len, sampleRate);
+    for(var c=0;c<audioBuf.numberOfChannels;c++){
+      out.getChannelData(c).set(audioBuf.getChannelData(c).subarray(s0,s1));
+    }
+    var wav=bufferToWav(out);
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([wav],{type:'audio/wav'}));
+    a.download='brobots-trim.wav'; a.click();
+  };
+  function bufferToWav(buffer){
+    var numCh=buffer.numberOfChannels, sr=buffer.sampleRate, len=buffer.length;
+    var dataLen=len*numCh*2;
+    var ab=new ArrayBuffer(44+dataLen); var v=new DataView(ab);
+    function ws(o,s){ for(var i=0;i<s.length;i++) v.setUint8(o+i,s.charCodeAt(i)); }
+    ws(0,'RIFF'); v.setUint32(4,36+dataLen,true); ws(8,'WAVE'); ws(12,'fmt ');
+    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,numCh,true);
+    v.setUint32(24,sr,true); v.setUint32(28,sr*numCh*2,true); v.setUint16(32,numCh*2,true);
+    v.setUint16(34,16,true); ws(36,'data'); v.setUint32(40,dataLen,true);
+    var offset=44;
+    for(var i=0;i<len;i++){
+      for(var c=0;c<numCh;c++){
+        var s=Math.max(-1,Math.min(1, buffer.getChannelData(c)[i]));
+        v.setInt16(offset, s<0?s*0x8000:s*0x7FFF, true); offset+=2;
+      }
+    }
+    return ab;
+  }
+
+  /* ---- Video ---- */
+  var v=$('v-el');
+  $('v-file').onchange=function(e){
+    var f=e.target.files&&e.target.files[0]; if(!f) return;
+    if(objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl=URL.createObjectURL(f); v.src=objectUrl; v.play().catch(function(){});
+  };
+  $('v-still').onclick=function(){
+    if(!v.videoWidth){ alert('Load a video first'); return; }
+    var c=document.createElement('canvas'); c.width=v.videoWidth; c.height=v.videoHeight;
+    c.getContext('2d').drawImage(v,0,0);
+    var a=document.createElement('a'); a.download='brobots-still.png'; a.href=c.toDataURL('image/png'); a.click();
+  };
+
+  /* ---- Render ---- */
+  $('r-send').onclick=function(){
+    var title=$('r-title').value||'Untitled render';
+    var prompt=$('r-prompt').value||'(no prompt)';
+    var kind=$('r-kind').value;
+    var body='Render Bay request%0A%0ATitle: '+encodeURIComponent(title)+'%0AKind: '+encodeURIComponent(kind)+'%0A%0A'+encodeURIComponent(prompt);
+    location.href='mailto:hello@brobots.space?subject='+encodeURIComponent('Render Bay: '+title)+'&body='+body;
+  };
+
+  /* ---- Fun ---- */
+  function rollStamp(){
+    var c=$('fun-stamp'), g=c.getContext('2d');
+    g.fillStyle='#E8E1D0'; g.fillRect(0,0,480,480);
+    g.strokeStyle='#14140F'; g.lineWidth=10; g.strokeRect(12,12,456,456);
+    var words=['PAPAYA','FACTORY','GHOST','BROBOT','VOLCANO','GRADUATE','JUNGLE','CLUNKER'];
+    var w=words[Math.floor(Math.random()*words.length)];
+    g.save(); g.translate(240,240); g.rotate((Math.random()-.5)*.5);
+    g.strokeStyle='#B8321E'; g.lineWidth=8; g.strokeRect(-150,-50,300,100);
+    g.fillStyle='#B8321E'; g.font='700 42px Courier Prime, monospace';
+    g.textAlign='center'; g.textBaseline='middle'; g.fillText(w,0,0);
+    g.restore();
+    g.fillStyle='#14140F'; g.font='700 16px Courier Prime, monospace';
+    g.fillText('BROBOTS SPACE FACTORY', 24, 450);
+  }
+  function drawPlate(){
+    var c=$('fun-plate'), g=c.getContext('2d');
+    var name=($('fun-name').value||'BROBOT').toUpperCase();
+    g.fillStyle='#E8E1D0'; g.fillRect(0,0,720,240);
+    g.fillStyle='#B8321E'; g.fillRect(0,0,18,240);
+    g.strokeStyle='#14140F'; g.lineWidth=8; g.strokeRect(4,4,712,232);
+    g.fillStyle='#14140F'; g.font='700 18px Courier Prime, monospace';
+    g.fillText('SPACE FACTORY · DOOR PLATE', 40, 48);
+    g.font='700 64px Archivo Black, Impact, sans-serif';
+    g.fillText(name.slice(0,22), 40, 150);
+  }
+  $('fun-roll').onclick=rollStamp;
+  $('fun-dl').onclick=function(){ var a=document.createElement('a'); a.download='papaya-stamp.png'; a.href=$('fun-stamp').toDataURL(); a.click(); };
+  $('fun-draw').onclick=drawPlate;
+  $('fun-plate-dl').onclick=function(){ var a=document.createElement('a'); a.download='name-plate.png'; a.href=$('fun-plate').toDataURL(); a.click(); };
+  rollStamp(); drawPlate();
+})();
+</script>
+</body>
+</html>
