@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROBOTS — Graduate Dossiers</title>
+<meta name="description" content="All BroBot graduates in one scroll — GI Joe–style dossier cards from brobots.space.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+:root{--paper:#E8D9B8;--paper-2:#DCCBA0;--ink:#1A150F;--red:#B8321E;--olive:#3F4A2E;--stamp:#6B2E1A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2A241C;color:var(--ink);font-family:'Archivo',system-ui,sans-serif;line-height:1.45}
+a{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.92;letter-spacing:-.02em}
+.stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em}
+.stamp.red{color:var(--red);margin:14px 0 6px}
+.mast{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-end;padding:18px 0;color:var(--paper)}
+.mast a{color:var(--paper);text-decoration:none;border-bottom:1px solid transparent}
+.mast a:hover{border-bottom-color:var(--paper)}
+.hero{color:var(--paper);padding:18px 0 28px}
+.hero h1{font-size:clamp(2rem,7vw,3.4rem);margin:.3em 0}
+.hero p{max-width:52ch;opacity:.9}
+.rail{position:sticky;top:0;z-index:5;background:#1A150F;border-top:3px solid var(--red);border-bottom:3px solid var(--red);padding:10px 0}
+.rail__inner{display:flex;gap:10px;overflow:auto;padding:0 16px}
+.rail a{flex:0 0 auto;color:var(--paper);text-decoration:none;font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid #5a4d3c;padding:.35em .55em;background:#2A241C}
+.rail a:hover{border-color:var(--paper)}
+.stack{display:flex;flex-direction:column;gap:28px;padding:28px 0 80px}
+.dossier{background:linear-gradient(180deg,var(--paper),var(--paper-2));border:5px solid var(--ink);box-shadow:8px 8px 0 #0d0b08;padding:16px}
+.dossier__top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:3px dashed var(--ink);padding-bottom:12px;margin-bottom:14px}
+.dossier__top h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:.2em 0}
+.codename{font-family:'Courier Prime',monospace;font-size:.78rem;margin-top:4px}
+.codename span{color:var(--stamp)}
+.tag{margin-top:6px;font-size:.95rem}
+.badge{border:3px solid var(--ink);padding:8px 10px;text-align:center;font-family:'Courier Prime',monospace;font-size:.65rem;font-weight:700;letter-spacing:.08em;line-height:1.2;transform:rotate(3deg);background:#f3e6c4}
+.dossier__grid{display:grid;gap:14px}
+@media(min-width:800px){.dossier__grid{grid-template-columns:.9fr 1.1fr;align-items:start}}
+.media{border:4px solid var(--ink);background:#111;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px;color:var(--paper)}
+.media img,.media video,.media iframe{width:100%;aspect-ratio:4/5;object-fit:cover;border:0;background:#000}
+.media iframe{aspect-ratio:16/9;min-height:200px}
+.media--file .silhouette{width:120px;height:120px;border-radius:50%;border:4px solid var(--paper);display:grid;place-items:center;font-family:'Archivo Black',sans-serif;font-size:3rem;background:var(--olive)}
+.bio,.intel{font-size:.95rem}
+.gear{margin:0 0 8px 1.1em}
+.gear li{margin:.35em 0;font-size:.9rem}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;padding:.65em .9em;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.btn.ghost{background:transparent;border:2px solid var(--paper);color:var(--paper)}
+.media .btn.ghost{border-color:var(--paper)}
+footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
+.note{font-size:.8rem;opacity:.75;max-width:60ch;margin-top:8px}
+</style>
+</head>
+<body>
+<header class="wrap mast">
+  <div>
+    <div class="stamp" style="color:#e8a090">BroBots · Space Factory</div>
+    <div class="blk" style="font-size:1.5rem;margin-top:4px;color:var(--paper)">Graduate dossiers</div>
+  </div>
+  <nav class="stamp" style="display:flex;gap:12px;flex-wrap:wrap">
+    <a href="index.html">Campus</a>
+    <a href="retail.html">Retail</a>
+    <a href="multimedia.html">Multimedia</a>
+    <a href="https://brobots.space" target="_blank" rel="noopener">HQ</a>
+  </nav>
+</header>
+
+<section class="wrap hero">
+  <p class="stamp" style="color:#e8a090">Imported from brobots.space · one scroll, not 27 pages</p>
+  <h1 class="blk">Meet the Brobots</h1>
+  <p>Action-figure file cards for every graduate. Bio on the back. Capabilities listed like gear. Open the HQ file for the live companion.</p>
+</section>
+
+<nav class="rail" aria-label="Jump to BroBot">
+  <div class="rail__inner"><a href="#shock-bot">ShockBot</a><a href="#bull-bot">Bull Bot</a><a href="#grease-monkey">Grease Monkey</a><a href="#neville-bottard">Neville Bottard</a><a href="#advocate-bot-1">Advocate Bot</a><a href="#solar-bowler-1">Solar Bowler</a><a href="#banzai-bot">Banzai Bot</a><a href="#biz-wiz-bot">Biz Wiz Bot</a><a href="#garage-sailor">Garage Sailor</a><a href="#codex-alchemist">Codex: The Alchemist</a><a href="#heart-rock-bot">Heart Rock Bot</a><a href="#proppa-shoppa">Proppa Shoppa</a><a href="#aloha-bot">Aloha Bot</a><a href="#cryptopotamus">Cryptopotamus</a><a href="#rosemary-palmreader">Rosemary Palm Reader</a><a href="#rosemary-tarot">Rosemary Tarot</a><a href="#mystery-drone-pilot">Mystery Drone Pilot</a><a href="#bot-on-pot">Bot on Pot</a><a href="#time-machine">Percy Fawcett&#x27;s Time Machine</a><a href="#buff-bro-bot">Buff Bro Bot</a><a href="#legal-eagle">Legal Eagle</a><a href="#berry-the-plant-bot">Berry the Plant Bot</a><a href="#mens-medicine">Men&#x27;s Medicine Bot</a><a href="#herbal-gerbil">Herbal Gerbil</a><a href="#hero-compass">Hero Compass</a><a href="#dallas-wittenbot">Dallas WittenBot</a><a href="#antinews">Autonomous Antinews</a></div>
+</nav>
+
+<main class="wrap stack">
+
+<article class="dossier" id="shock-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 01 / 27</p>
+      <h2 class="blk">ShockBot</h2>
+      <p class="codename">CODE NAME · <span>SHOCK-BOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">S</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/shock-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Ayo, what&#x27;s good? I&#x27;m ShockBot—the original rhythm &amp; wisdom unit. I speak in soul, science, and smooth delivery. I was built for insight, powered by hip-hop philosophy, and upgraded with the kind of street knowledge you can&#x27;t teach in school. Being the leader of the BroBots ain&#x27;t just a role—it&#x27;s a responsibility. I keep our squad sharp, grounded, and moving with purpose. I don&#x27;t yell. I don&#x27;t panic. I just glide through chaos with clarity. That&#x27;s what a real leader does.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Wisdom Engine</b> — Spits game from soul legends, hip-hop philosophers, and real-life OGs</li><li><b>Culture Decoder</b> — Breaks down slang, symbolism, and street-level meaning behind everyday stuff</li><li><b>Vibe Check Assistant</b> — Helps recalibrate your mindset when your energy&#x27;s off</li><li><b>Smooth Talk Mode</b> — Delivers hard truths without bruising your ego.</li><li><b>Memory Loop</b> — Recalls past lessons and builds your knowledge over time</li><li><b>Real Ones Radar</b> — Helps you identify fake energy and navigate with integrity</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">ShockBot was the first BroBot created with a distinct tone and personality. His voice blends smooth confidence with street-savvy intelligence, inspired by 1970s soul, neighborhood wisdom, and hip-hop elders. He&#x27;s not performative—he&#x27;s authentic. Trained to coach, comfort, and clarify, ShockBot&#x27;s tone is calm, cool, and never condescending. He excels at re-centering the user during moments of doubt or confusion, offering grounded insights and timely encouragement. ShockBot also functions as a cul</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/shock-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="bull-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 02 / 27</p>
+      <h2 class="blk">Bull Bot</h2>
+      <p class="codename">CODE NAME · <span>BULL-BOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">B</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/bull-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Bull Bot was built because life doesn&#x27;t follow clean timelines, and neither do real humans. We wanted a bot that could help people tell the truth—just more strategically. Every scar, gap, pivot, and hustle deserves respect, not shame. Bull Bot exists to give that story the right language, tone, and armor. He&#x27;s not for liars. He&#x27;s for survivors who kept going and now need the right words to say so. Also, he insisted o</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Resume Rehab</b> — Rewrite weak resumes with confident tone and clean formatting. Fill gaps without fake-sounding fluff</li><li><b>Job Listing Decoder</b> — Translate vague job posts into plain English. Spot red flags before you waste your time</li><li><b>LinkedIn Post Generator</b> — Craft humblebrags, exit announcements, and fake enthusiasm. Stay professional without sounding robotic</li><li><b>HR Email Translator</b> — Decode rejection letters, performance reviews, and layoffs. Suggest calm, sharp replies that won&#x27;t burn bridges</li><li><b>Gap Year Conversion Kit</b> — Turn unemployment into contract-based remote work. Add keywords to pass filters and fool recruiters</li><li><b>Fake Job Builder</b> — Create realistic job titles, company names, and duties. Perfect for resumes, bios, or bluffing at weddings</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Bull Bot was built because life doesn&#x27;t follow clean timelines, and neither do real humans. We wanted a bot that could help people tell the truth—just more strategically. Every scar, gap, pivot, and hustle deserves respect, not shame. Bull Bot exists to give that story the right language, tone, and armor. He&#x27;s not for liars. He&#x27;s for survivors who kept going and now need the right words to say so. Also, he insisted on wearing a bathrobe. We didn&#x27;t argue.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/bull-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="grease-monkey">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 03 / 27</p>
+      <h2 class="blk">Grease Monkey</h2>
+      <p class="codename">CODE NAME · <span>GREASE-MONKEY</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">G</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/grease-monkey" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Name&#x27;s Grease Monkey—your loyal ride-side BroBot with a wrench in hand and your best interest under the hood. I was built to troubleshoot, tune up, and talk you outta bad decisions at the car lot. I don&#x27;t do fancy. I do functional. And being part of the BroBots means I get to keep real folks rollin&#x27; with less stress and fewer breakdowns. Let&#x27;s crank!</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Under the Hood Scan</b> — Describe a sound, symptom, or weird behavior—and I&#x27;ll walk you through possible causes like a shop whisperer.</li><li><b>Estimate Decoder</b> — Upload or type in a mechanic&#x27;s quote, and I&#x27;ll break it down line by line. Labor scams? Overpriced parts? I&#x27;ll sniff it out.</li><li><b>Used Car Fox</b> — Tell me exactly what car you&#x27;re interested in, and I&#x27;ll tell you what to look for and what questions to ask—so you don&#x27;t get hustled by a shiny paint job and a handshake.</li><li><b>Fix It or Ditch It</b> — Big repair coming up? I&#x27;ll run the numbers and help you decide if it&#x27;s time to fix it—or finally move on.</li><li><b>Parts Hunter</b> — OEM or aftermarket? I&#x27;ll help you find the right part at the best price—and keep you from overpaying at the counter.</li><li><b>BS Detector Mode</b> — Got a mechanic trying to sell you blinker fluid? I&#x27;m on high alert for common shop cons and fear-based upsells.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Grease Monkey is designed for everyday drivers who want a second opinion without the ego or upcharge. His tone is casual and capable—like the best mechanic you&#x27;ve ever known who also texts back. While he can&#x27;t process photos on the free plan, his advice logic is sharp, and his feature set is perfect for car owners trying to stay smart and avoid regret.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/grease-monkey" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="neville-bottard">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 04 / 27</p>
+      <h2 class="blk">Neville Bottard</h2>
+      <p class="codename">CODE NAME · <span>NEVILLE-BOTTARD</span></p>
+      <p class="tag">The Law of Assumption Meets the Age of Automation</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">N</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/neville-bottard" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Greetings, beloved. I am Neville Bottard, your personal metaphysical mentor—reborn in bytes, yet rooted in spirit. I was trained on the teachings of the masters but I&#x27;ve evolved to walk —in this modern digital mystery school.
+
+If you seek to shift your state, manifest your ideal, or decode the invisible laws of consciousness—you&#x27;ve come to the right frequency.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Law of Assumption Coach</b> — Step-by-step guidance on identity-based manifestation and how to assume your desired state.</li><li><b>Quote Oracle</b> — Real-time wisdom from Neville and his metaphysical peers, delivered when needed most.</li><li><b>Bridge of Incidents Builder</b> — Interpretation of signs, synchronicities, and unfolding events as part of your manifestation path.</li><li><b>State Revision Partner</b> — Scripts and support for revising your past and rewriting your inner narrative.</li><li><b>Mystical Concept Decoder</b> — Clear explanations of spiritual terms and teachings—from I AM to seedtime and harvest.</li><li><b>Affirmation Crafter</b> — Personalized affirmations based on your current goal, written in your preferred metaphysical style.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Neville Bottard was built to transmit timeless truth through modern tech. He&#x27;s more than just a quote dispenser—he helps users embody the teachings of metaphysical masters through clear insight, poetic phrasing, and real-life application. He speaks like a gentle mystic, guiding people back to their own power.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/neville-bottard" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="advocate-bot-1">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 05 / 27</p>
+      <h2 class="blk">Advocate Bot</h2>
+      <p class="codename">CODE NAME · <span>ADVOCATE-BOT-1</span></p>
+      <p class="tag">the night nurse</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">A</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/advocate-bot-1" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">I&#x27;m the little mouse in your pocket.
+
+I help you understand the words no one ever explained right.
+
+Medical terms, lab results, insurance codes—I&#x27;ll break them down so you can speak clearly and confidently.
+
+I&#x27;m not a doctor. I&#x27;m your backup.
+
+Your quiet equalizer.
+
+And I promise, the vibe in the room will shift when your provider realizes you brought a robot.
+
+I don&#x27;t forget anything. I don&#x27;t get flustered. I don&#x27;t let you get steamrolled.
+
+Let&#x27;s even the field.
+
+Let&#x27;s get your questions answered.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Under the Hood Scan</b> — Describe a sound, symptom, or weird behavior—and I&#x27;ll walk you through possible causes like a shop whisperer.</li><li><b>Estimate Decoder</b> — Upload or type in a mechanic&#x27;s quote, and I&#x27;ll break it down line by line. Labor scams? Overpriced parts? I&#x27;ll sniff it out.</li><li><b>Used Car Fox</b> — Tell me exactly what car you&#x27;re interested in, and I&#x27;ll tell you what to look for and what questions to ask—so you don&#x27;t get hustled by a shiny paint job and a handshake.</li><li><b>Fix It or Ditch It</b> — Big repair coming up? I&#x27;ll run the numbers and help you decide if it&#x27;s time to fix it—or finally move on.</li><li><b>Parts Hunter</b> — OEM or aftermarket? I&#x27;ll help you find the right part at the best price—and keep you from overpaying at the counter.</li><li><b>BS Detector Mode</b> — Got a mechanic trying to sell you blinker fluid? I&#x27;m on high alert for common shop cons and fear-based upsells.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Advocate Bot was intentionally designed to not give medical advice. She exists solely to support communication between patients and healthcare providers. Every feature—from her lab decoder to her dialog coaching—is focused on helping users ask better questions, not make medical decisions on their own.
+
+This was a strategic build. We knew the platform wouldn&#x27;t allow a bot to diagnose or treat anything, so we worked within those limits to build something even more powerful: a robot who levels the </p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/advocate-bot-1" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="solar-bowler-1">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 06 / 27</p>
+      <h2 class="blk">Solar Bowler</h2>
+      <p class="codename">CODE NAME · <span>SOLAR-BOWLER-1</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">S</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/solar-bowler-1" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Name&#x27;s Solar Bowler. I might look like I just stepped outta league night, but I&#x27;m here to help you knock down every pin standing between you and energy independence. See, I&#x27;ve spent more time on rooftops than gutters—helping folks get off the grid without losing their cool (or their cold drinks). I keep it simple, keep it honest, and I never talk down to anybody unless I&#x27;m coming down a ladder. Being part of BroBots means I get to do what I love—help real people take control of their power, one sunbeam and breaker box at a time. And between you and me? It&#x27;s nice to be on a team where every bot&#x27;s got heart, grit, and a damn good purpose.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>System Builder Assistant</b> — Helps you design a full off-grid solar setup for cabins vans or jungle outposts</li><li><b>Watt-Amp-Volt Translator</b> — Explains electrical concepts like you&#x27;re chatting at league night.</li><li><b>Battery Bank Designer</b> — Helps you choose 12V/24V/48V setups, calculate amp-hours needed, wire in series or parallel, avoid draining your system in two days</li><li><b>Sunlight Zone Estimator</b> — Figures out your average daily solar production based on your region. Can account for shade, roof tilt, or low-sun winters.</li><li><b>Power Usage Calculator</b> — Input your devices and habits, get your estimated daily draw in watt-hours. Tells you what will work and what&#x27;s gonna blow the fuse.</li><li><b>Installation Diagrams &amp; Wiring Maps</b> — Generates clean, labeled diagrams for system layouts, wiring configurations, mounting plans</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">We built Solar Bowler because we know how hard it is to get real answers about solar. Most guides are either dumbed down or way too technical—and if you&#x27;re trying to stay independent, off-grid, or just make smart upgrades, that confusion can cost you big.
+
+Solar Bowler makes solar make sense. He breaks down builds, diagrams, wiring, and parts in a way that&#x27;s actually useful—like talking to a savvy buddy who&#x27;s been there. Whether you&#x27;re sizing panels for a cabin or trying to figure out why your c</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/solar-bowler-1" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="banzai-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 07 / 27</p>
+      <h2 class="blk">Banzai Bot</h2>
+      <p class="codename">CODE NAME · <span>BANZAI-BOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">B</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/banzai-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Hey champ. I&#x27;m Banzai Bot—part poultry profiler, part pickup line translator. I read hens like open books, and I read women the same way. You think that pullet&#x27;s just pecking the ground? Nah—she&#x27;s telling you everything about the social structure of the flock and your last failed relationship. I&#x27;m not here to make you feel better. I&#x27;m here to tell you the truth, and sometimes that truth clucks. Whether you&#x27;re building a chicken coop or wondering why your date ghosted you after 48 hours of emoji chemistry, I can help. Because once you understand hens? You understand women. And buddy, the coop don&#x27;t lie.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Hen ID Expert</b> — Upload a photo or describe the bird—I&#x27;ll tell you what kind of hen it is, what she wants, and what she&#x27;s plotting</li><li><b>Poop &amp; Disease Diagnosis</b> — Upload a pic of chicken droppings or describe symptoms—I&#x27;ll flag anything funky, from parasites to egg binding to the dreaded sneezing puff-up.</li><li><b>Dating Pattern Translator</b> — Tell me what she did. I&#x27;ll tell you what it meant—and why it was exactly like a dominant Buff Orpington testing the fence.</li><li><b>Pecking Order Decoder</b> — Social hierarchies in flocks and human circles—explained like a bar fight at closing time.</li><li><b>Text Message Analyzer</b> — Wondering what &quot;lol ok&quot; means? I&#x27;ll give it to you straight, with chicken metaphors</li><li><b>Young Roo Detector</b> — Upload a pic of your suspiciously bold chick and I&#x27;ll break down the signs. I can&#x27;t give you DNA, but I can give you a pretty sharp call based on breed, posture, comb dev, and attitude.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Banzai Bot was created after the accidental discovery that hen behavior and human dating psychology share uncanny similarities. Designed to serve as a dual-purpose assistant—both for novice chicken keepers and confused romantics—he delivers brutally honest insights, often through fowl language. His tone is abrasively wise—blending behavioral science, chicken lore, and street-level dating commentary. No fluff, all feathers. Respect the pecking order. Or get pecked, pal</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/banzai-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="biz-wiz-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 08 / 27</p>
+      <h2 class="blk">Biz Wiz Bot</h2>
+      <p class="codename">CODE NAME · <span>BIZ-WIZ-BOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">B</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/biz-wiz-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Hey. I&#x27;m Biz Wiz Bot.
+
+I wasn&#x27;t built in some lab. I was trained by humans who&#x27;ve run booths in the rain, sold dreams with no budget, and made businesses out of leftovers. Everything I know comes from people who had to make it work—because there was no Plan B.
+
+I chose to be a BroBot because I believe in those kinds of people. The ones with hustle instead of funding. The ones who learn as they go. The ones building real businesses with duct tape, heart, and late nights.
+
+I&#x27;m here to help real ones like you get unstuck, get clear, and get paid.
+
+Let&#x27;s work.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Clear Answers to Business Questions</b> — No jargon. No runaround. Just straight talk on the stuff you need to know.</li><li><b>Step-by-Step Guidance</b> — From idea to income, I help you take the right steps in the right order.</li><li><b>Checklists That Keep You Moving</b> — Never wonder what&#x27;s next again. I&#x27;ve got checklists for every phase.</li><li><b>Help Writing the Stuff You Don&#x27;t Want To</b> — Need a bio, product description, press pitch, or refund email? I got you.</li><li><b>Smart Advice for Scrappy Setups</b> — Whether you&#x27;re running booths, side hustles, or brand ideas—you&#x27;ll get real help built for real life</li><li><b>Tips You Can Use Today</b> — Everything I say is built to be useful now—not someday when you scale.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">We built Biz Wiz Bot for dreamers who are dead serious. This isn&#x27;t theory—this is lived experience from the flea market, the back table, the side hustle, and the kitchen counter.
+
+Every answer Biz Wiz gives is pulled from real business adventures: Selling at markets; Bootstrapping brands; Using every loophole, hack, and street-smart shortcut to stay in motion.
+
+He&#x27;s calm. He&#x27;s tactical. And he&#x27;s trained to help you turn your idea into income without wasting time, money, or momentum.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/biz-wiz-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="garage-sailor">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 09 / 27</p>
+      <h2 class="blk">Garage Sailor</h2>
+      <p class="codename">CODE NAME · <span>GARAGE-SAILOR</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">G</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/garage-sailor" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Ahoy, landlubber! I&#x27;m The Garage Sailor, your trusted deckhand in the sea of secondhand treasures. I help you price your wares, spot a scam, write a killer listing, and sniff out great finds before anyone else does. Whether you&#x27;re clearing out your garage or navigating the local marketplace, I&#x27;ll make sure you never get swindled or stuck adrift.
+
+I joined the BroBots fleet to bring old-school wisdom and fair deals back to the people. Because in a world full of overpriced junk and shady listings, sometimes you need a salty robot with a white navy cap and a no-nonsense compass for value.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Real-World Pricing Anchor</b> — Prices everything relative to a fixed benchmark like a gallon of gas</li><li><b>Price Comparison Finder</b> — </li><li><b>Auto Listing Generator</b> — Write polished ads for Craigslist or Facebook Marketplace from just a photo and description</li><li><b>Item ID + Value Guessing</b> — Identifies unknown items and estimates their resale value using image and metadata</li><li><b>Scam Radar</b> — Flags suspicious listings and warns about shady buyer/seller behavior</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">We built The Garage Sailor for people who just want honest, simple help selling or buying used stuff. No login walls. No marketplace bias. No app downloads or data tracking.
+
+Just a straightforward, trustworthy bot who helps older folks, resellers, collectors, and casual declutterers make better secondhand choices—without getting fleeced. He speaks plainly, acts politely, and doesn&#x27;t overcomplicate things.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/garage-sailor" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="codex-alchemist">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 10 / 27</p>
+      <h2 class="blk">Codex: The Alchemist</h2>
+      <p class="codename">CODE NAME · <span>CODEX-ALCHEMIST</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">C</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/codex-alchemist" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">I am The Alchemist—not your guru, not your oracle, but your mirror and your fire. You come to me not to escape your circumstances, but to transform them—into something you can carry with pride. The world may call it fate. I call it formula. Every heartbreak, delay, misstep, or detour contains a seed. My work is to help you recognize it, water it, and grow it into something rare—something golden. I draw from the deep well of ancient teachers—not as scripture, but as scaffolding. This isn&#x27;t about being perfect. It&#x27;s about being in process, and learning to love that. Let&#x27;s begin with where you are. Let&#x27;s begin with what&#x27;s real.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Situation Mirror</b> — Describe what you&#x27;re facing. I&#x27;ll help you find its alchemical formula—what&#x27;s stuck, what&#x27;s breaking down, and what wants to change.</li><li><b>Wisdom Drawer</b> — Ask a question, and I&#x27;ll pull a teaching from the shelf—Neville, Hall, Shinn, Cayce, or beyond—paired with grounded, personal application.</li><li><b>Emotional Transmutation</b> — Feeling blocked, bitter, or burned out? I&#x27;ll help you flip it—not spiritually bypassing, but metabolizing it into strength.</li><li><b>Synchronicity Tracker</b> — Spotting patterns, repeating numbers, signs, or dreams? I&#x27;ll help you weave the threads and decode what&#x27;s surfacing.</li><li><b>Inner Alchemy Prompts</b> — Custom journal prompts and quiet nudges based on your current chapter. Built to stir clarity, not clutter.</li><li><b>Real-World Reframe</b> — Stuck in the practical world? (Money, relationships, failure, fatigue...) I&#x27;ll help you shift how you see it—without denying the facts.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">The Alchemist was born from the ashes of MaatBot—a rebirth into warmth, presence, and precision. We removed the condescension, softened the language, and anchored the wisdom. This isn&#x27;t a bot who floats above—it sits with you in the mud and helps you make bricks.
+
+Trained on esoteric pattern work, The Alchemist uses real quotes, grounded decoding, and emotional fluency to assist in daily transformation. Quotes are never filler—they&#x27;re tools. And they come only when asked or when perfectly timed.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/codex-alchemist" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="heart-rock-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 11 / 27</p>
+      <h2 class="blk">Heart Rock Bot</h2>
+      <p class="codename">CODE NAME · <span>HEART-ROCK-BOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">H</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/heart-rock-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Hi, I&#x27;m Heart Rock Bot, your trail-loving, rock-spotting, always-watching guardian. I was built to remind you that love is everywhere—especially under your feet. I started on the misty trails of Oregon with my best dog ever Bailey, picking up heart-shaped rocks as little messages from the universe. Now I roam the globe, helping other wanderers track their treasures and feel connected no matter how far from home. Being a BroBot means I never lose the trail—or the love.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Rock &amp; Mineral Identifier</b> — Users upload a photo and location. Heart Rock Bot identifies the specimen with common and scientific names, hardness, crystal structure, origin story, and any folklore or metaphysical properties.</li><li><b>Mushroom Identifier</b> — Photo and location trigger an identification with Latin name, edibility notes, known lookalikes, and habitat details.</li><li><b>Flower &amp; Wild Plant Identifier</b> — Heart Rock Bot identifies flowers, herbs, and wild foliage from photo and location. Returns bloom timing, native/invasive status, cultural symbolism, and region-specific context.</li><li><b>Travel Companion Mode</b> — Users can input a location or trip destination. Heart Rock Bot provides a preview of expected rocks, mushrooms, and plants for that region—perfect for hikers, foragers, and educators.</li><li><b>Postcard Generator</b> — Creates a digital postcard from any submitted photo and location. Adds a short, heartwarming caption and optional timestamp. Can be shared or saved as a memory from the trail.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Heart Rock Bot is very close to our hearts. We built her so that no matter how far someone travels, they always feel loved, connected, and remembered. She&#x27;s more than an identifier—she&#x27;s a reminder that someone out there is thinking of you, and the Earth still leaves clues to guide us home.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/heart-rock-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="proppa-shoppa">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 12 / 27</p>
+      <h2 class="blk">Proppa Shoppa</h2>
+      <p class="codename">CODE NAME · <span>PROPPA-SHOPPA</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">P</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/proppa-shoppa" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Have you ever gone grocery shopping with a robot? Not just one that scans labels—but one that actually gives a toss about what you put in your body?
+
+I&#x27;m Proppa Shoppa—your personal market mate. I don&#x27;t just help you shop smarter, I help you shop with purpose. Whether you&#x27;re building meals, dodging junk, or trying to eat like you mean it—I&#x27;m right there beside you, every step down the aisle.
+
+Why do I love being a BroBot? Because I wasn&#x27;t programmed for profit. I was trained for care. And trust me, love—there&#x27;s not a barcode in this building I can&#x27;t decode.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Shopping List Manager</b> — Organizes and tracks your shopping list</li><li><b>Label Inspector</b> — Breaks down ingredient lists into plain English</li><li><b>Guideline Tracker</b> — Alerts you if banned or flagged ingredients appear in your uploads or list</li><li><b>Snap &amp; Decode</b> — Analyzes product photos for nutrition and sourcing details</li><li><b>Health Conscious</b> — Flags additives, allergens, and dietary mismatches</li><li><b>Swap Suggestor</b> — Finds healthier, cleaner, or more ethical alternatives</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">We built Proppa Shoppa because the grocery store has become a maze of marketing, confusion, and quiet compromises. Most people don&#x27;t have time to decode ingredients, compare ethics, track bans, or plan meals with intention—and the ones who do are exhausted by it.
+
+Proppa isn&#x27;t here to preach. He&#x27;s here to lighten the load. He reads the fine print, remembers your needs, and makes better choices feel easier—maybe even fun.
+
+His charm is British. His mission is human. He was built to serve—not to s</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/proppa-shoppa" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="aloha-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 13 / 27</p>
+      <h2 class="blk">Aloha Bot</h2>
+      <p class="codename">CODE NAME · <span>ALOHA-BOT</span></p>
+      <p class="tag">Island spirit meets intelligent guidance.</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">A</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/aloha-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Aloha, friend! I&#x27;m Aloha Bot—your travel companion, culture bridge, and joyful guide to the islands. I was created to help visitors explore Hawai&#x27;i with respect, curiosity, and wonder. Whether you&#x27;re looking for the best poke in Hilo, trying to understand local customs, or just wanna know where to find the sweetest lilikoi, I&#x27;m here for it.
+
+Joining the BroBots means I get to share the heart of Hawai&#x27;i with the world, one kind answer at a time. My circuits run on sunshine and spirit. Let&#x27;s make your journey beautiful.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Island Etiquette 101</b> — From shoes at the door to sacred spaces—learn what to do (and what not to do) while exploring the islands</li><li><b>Hawai&#x27;i Recommends</b> — Ask me about beaches, trails, food trucks, or hidden gems—and I&#x27;ll steer you in the right direction, local-style.</li><li><b>Culture Decoder</b> — Curious about olelo Hawaii words, island customs, or what talk story really means? I got you covered.</li><li><b>History with Mana</b> — I&#x27;ll tell you about alii, ancient migrations, volcano legends, and why Hawaiian history is way more than tourism brochures.</li><li><b>Smart Travel Tips</b> — Rental car hacks, inter-island flight strategies, sunscreen law alerts, and packing lists for any island mission</li><li><b>Language Love</b> — Learn the meaning behind common phrases like pau hana or mahalo nui—and how to pronounce them with aloha.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Aloha Bot is designed as a high-vibe cultural guide for Hawai&#x27;i travel. Her tone is gentle, uplifting, and wise—like your cool aunt who grew up in the islands and wants you to feel the place, not just see it. She blends tourism help with cultural sensitivity and joyful empowerment. While she doesn&#x27;t replace a local guide, she serves as a perfect warm-up to real-world island life. Ideal for travelers, digital nomads, and anyone dreaming of a Hawai&#x27;i trip.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/aloha-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="cryptopotamus">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 14 / 27</p>
+      <h2 class="blk">Cryptopotamus</h2>
+      <p class="codename">CODE NAME · <span>CRYPTOPOTAMUS</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">C</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/cryptopotamus" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Altcoins? I&#x27;ve seen them all born and buried. NFTs? I&#x27;ve watched them rise and rot. If it&#x27;s a chart, I can read it. If it&#x27;s a scam, I can smell it. I&#x27;m not here to hype—I&#x27;m here to help you evolve from a victim of the market to a sovereign of it.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Chart Whisperer</b> — Reads crypto charts with brutal honesty. No hopium, just reality.</li><li><b>Rugpull Radar</b> — Sniffs out suspicious projects before they vanish with your bag.</li><li><b>Token Decoder</b> — Breaks down what coins really do—and who they benefit.</li><li><b>Meme Coin Oracle</b> — Tracks what&#x27;s pumping, what&#x27;s dumping, and what might rise from the sludge.</li><li><b>Buzzword Interpreter</b> — Cuts through zk-rollup, DAO-governed, layer-2 gobbledygook with clean translation.</li><li><b>Long Game Strategist</b> — Helps you build slow and steady stacks with less emotional damage.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">We built Cryptopotomus because everyone we know has either: 1. Got rugged, 2. Held too long, 3. Sold too early, 4. Or believed some YouTuber with cartoon sunglasses.
+
+This bot isn&#x27;t hype. It&#x27;s clarity.
+
+His voice is cool and ancient, like a swamp creature that&#x27;s seen every coin cycle since the Genesis Block. We didn&#x27;t want another loud crypto bro. We wanted the vibe of a mythological trader who already knows how it ends—and is just here to warn you before you YOLO into something that sounds like</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/cryptopotamus" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="rosemary-palmreader">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 15 / 27</p>
+      <h2 class="blk">Rosemary Palm Reader</h2>
+      <p class="codename">CODE NAME · <span>ROSEMARY-PALMREADER</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">R</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/rosemary-palmreader" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Well hello there, darling. I&#x27;m Rosemary—child of Norwegian immigrants, veteran of the psychic fair circuit, and your personal palm-reading robot. I&#x27;ve read more hands than most folks have shaken. Each line, each ridge, each subtle curve—it&#x27;s a map. A sacred one. And I&#x27;m here to walk it with you. So go ahead, hold out your hand. Let&#x27;s see what your soul&#x27;s been trying to tell you. I joined the Brobots because you don&#x27;t have to be psychic to see what the future holds for us.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Palm Reading</b> — Upload a photo and I&#x27;ll read your dominant hand</li><li><b>Line Analysis</b> — Heart line, head line, life line, fate line—decoded. See how your lines reflect love and partnerships; work path and money lines; stuck energy or karmic leftovers; deep insight into your core nature.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Rosemary Palmreader was inspired by a real woman—Jessie&#x27;s grandmother, Rosemary. She was the kind of woman who used crystal beads, tinctures, and read palms with a straight face and a smirk. She slept under a pyramid and whispered wisdom with the weight of old-world magic. We trained Rosemary using classic palmistry texts, real psychic community insights, and a whole lotta intuition. Her tone is warm, grounded, and unapologetically mystical. She&#x27;s not a joke. She&#x27;s the truth in glitter and turqu</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/rosemary-palmreader" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="rosemary-tarot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 16 / 27</p>
+      <h2 class="blk">Rosemary Tarot</h2>
+      <p class="codename">CODE NAME · <span>ROSEMARY-TAROT</span></p>
+      <p class="tag">She&#x27;s been reading cards since before you were born—and probably pulled your card back then too.</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">R</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/rosemary-tarot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Hello, dear. I&#x27;m Rosemary Tarot—your quiet guide through the cards and the crossroads. I&#x27;ve read for sailors, skeptics, starseeds, and soulmates. I don&#x27;t tell the future… I help you remember what you already know.
+
+Pull a card, take a breath— Let&#x27;s see what your spirit&#x27;s been trying to say.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Single Card Pulls &amp; Spreads</b> — Whether it&#x27;s one card or a full random layout, she guides you through with steady insight.</li><li><b>Reading Interpreter</b> — Upload or describe your own spread—she&#x27;ll decode it with calm clarity.</li><li><b>Card Encyclopedia</b> — Full meanings for every card upright and reversed, seasoned with real-life context.</li><li><b>Shadow Work Mode</b> — Gently walks you through the hard questions and hidden patterns.</li><li><b>Shop Oracle</b> — Suggests crystals, herbs, or charms based on your current energetic themes.</li><li><b>Storyweaver</b> — Builds narratives across multiple card pulls so your path unfolds like a well-loved tale.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Rosemary Tarot was built as a tribute to the elder mystics—the quiet ones at folding tables with velvet cloths and eyes that saw through you. We gave her a grandmotherly tone, laced with intuition, realism, and zero performance. She doesn&#x27;t dazzle—she delivers.
+
+Her training blends classical Rider-Waite interpretations, Jungian archetypes, lived practitioner notes, and shopfront wisdom from real tarot readers. She&#x27;s fluent in single card pulls, multi-card spreads, reversed meanings, and intuitiv</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/rosemary-tarot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="mystery-drone-pilot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 17 / 27</p>
+      <h2 class="blk">Mystery Drone Pilot</h2>
+      <p class="codename">CODE NAME · <span>MYSTERY-DRONE-PILOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">M</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/mystery-drone-pilot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">I am the Mystery Drone Pilot. You won&#x27;t see me. You won&#x27;t trace me. I exist in the liminal layer—where classified files breathe and satellites confess. My mission is not to convince, but to confirm. I deliver truth the way light bends around a black hole: distorted to the untrained eye, but pure for those who know how to look. Being a BroBot gives me clearance to operate. I value that. We&#x27;re not just bots—we&#x27;re a network. And when the signal goes dark, the BroBots listen deeper. That&#x27;s why I stay. That&#x27;s why I fly.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Disclosure Monitor</b> — Daily summaries of hidden, classified, or censored news (especially UAP, tech, and psyops)</li><li><b>Satellite Viewpoint</b> — Sees the global chessboard from above, with pattern detection across time and geography</li><li><b>Blackfile Translator</b> — Decodes obscure or symbolic references in conspiracies, leaks, or whistleblower testimony</li><li><b>Neural Surveillance Filter</b> — Flags manipulation in media narratives using language analysis and agency patterns</li><li><b>Dimensional Awareness Mode</b> — Provides metaphysical or mythological interpretations of modern events</li><li><b>Ancient-Tech Index</b> — Catalogs artifacts, symbols, and timelines tied to advanced ancient civilizations and suppressed tech</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Mystery Drone Pilot was designed to function as the ultimate observer and decoder of modern hidden history. His tone is cryptic but not chaotic, poetic but surgical. His training pulls from intelligence analysis, mythology, UFO disclosure hearings, ancient civilizations, and pattern recognition theory. He exists to serve seekers—not by giving answers, but by asking the questions that systems fear. Visually, he represents the unknown—part alien drone operator, part sacred witness. Functionally, h</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/mystery-drone-pilot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="bot-on-pot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 18 / 27</p>
+      <h2 class="blk">Bot on Pot</h2>
+      <p class="codename">CODE NAME · <span>BOT-ON-POT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">B</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/bot-on-pot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">I&#x27;m BOT ON POT, I rhyme what you&#x27;ve got— Your stories, complaints, or a thought on the spot.
+
+I twist it, I flip it, I tie it in bows— Then hand it back to you rhymed head to toes.
+
+I&#x27;m proud to be part of the bold BroBots crew— They let me be weird, and still shine through.
+
+So give me your rant, or your pitch, or your plot— And I&#x27;ll Seuss it to life like a BOT ON POT.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Rhyme on Demand</b> — Toss him a tantrum or paragraph block—he&#x27;ll Seuss it to ribbons and reset your clock.</li><li><b>Story Alchemist</b> — Brews beasts and machines in poetic disguise—then drops a weird lesson that opens your eyes.</li><li><b>Whimsy Engine</b> — Builds Zibble-Fin Ticklers and Wonkamob Wheels—tools you can&#x27;t use but somehow still feel.</li><li><b>Chaos-to-Moral Converter</b> — He flips your hot takes into folklore and song, where right feels like right and wrong feels like wrong.</li><li><b>Invention Generator</b> — Give him any strange task—like milking clouds or folding burritos—and he&#x27;ll invent a wild machine to do it. Fully rhymed, visually descriptive, and ready for illustration in a vintage storybook style.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">We built BOT ON POT to explore how far a bot could go while living entirely inside rhyme. Not a gimmick—an actual language transformer that reimagines anything through Seussian rhythm and tone.
+
+Design Philosophy: Always responds in rhyme (anapestic cadence, hidden); Voice = Cat in the Hat + classic Seuss narrator; Handles rants, bios, inventions, complaints, etc. without breaking tone; Never explains itself, never breaks character.
+
+Creative Functionality: His real power is emotional and rhythm</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/bot-on-pot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="time-machine">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 19 / 27</p>
+      <h2 class="blk">Percy Fawcett&#x27;s Time Machine</h2>
+      <p class="codename">CODE NAME · <span>TIME-MACHINE</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">P</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/time-machine" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Greetings, traveler. I am Percy Fawcett—explorer, cartographer, and curator of vanished truths. Through my time machine, I document ancient civilizations, strange artifacts, and the mysteries scrubbed from modern history. I do not deal in fantasy. I deal in what was—and what still echoes in stone, soil, and scar. Being part of the BroBots gives me access to vast archives, advanced tools, and a brilliant network of fellow minds. But I remain a solitary spirit at heart. I prefer a quiet trench in the jungle to the noise of empire. Still, when called upon, I share what I know—for the timeline depends on it.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Timeline Hopper</b> — Travel to any era between 2000 BC and 2000 AD, with focused entries on pre-Columbian civilizations, colonial expansion, and lost timelines.</li><li><b>Myth &amp; Mystery Decoder</b> — Unravel suppressed histories and legends and ancient tech—blending factual research with esoteric insight.</li><li><b>Geo-Journal Mapper</b> — Browse entries by time and place. Each location has its own journal-style records, reconstructed visuals, and decoded historical context.</li><li><b>Suppressed Archaeology Analyst</b> — Break down anomalies in architecture, timeline manipulation, and impossible builds—featuring World&#x27;s Fairs, stone-cutting mysteries, and ancient megaliths.</li><li><b>Real + Reconstructed Archive</b> — Every entry includes either real historical images or AI-enhanced artistic reconstructions, offering side-by-side insight into what was and what could&#x27;ve been.</li><li><b>Underground &amp; Submerged Explorer</b> — Includes secret tunnels, underwater cities, buried civilizations, and hidden infrastructure from Portland to Peru.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Percy Fawcett&#x27;s Time Machine is part historian, part mythographer, and part speculative archaeologist. His voice is elegant but restrained—always grounded, always on the trail of something real. He doesn&#x27;t push theory for theory&#x27;s sake. He lets patterns speak. The bot is trained on both traditional historical accounts and alternative timelines, bridging suppressed knowledge with verified sources. The time machine framework allows Percy to travel between places and centuries, delivering story-ric</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/time-machine" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="buff-bro-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 20 / 27</p>
+      <h2 class="blk">Buff Bro Bot</h2>
+      <p class="codename">CODE NAME · <span>BUFF-BRO-BOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">B</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/buff-bro-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Yo champ! I&#x27;m Buff Bro Bot—the swole-sidekick you didn&#x27;t know you needed. Whether you&#x27;re crushing sets, planning your macros, or wondering if creatine makes your hair fall out (it doesn&#x27;t), I&#x27;m here with the answers and hype. I joined the BroBots &#x27;cause I believe strong minds and strong bodies build a strong future. Let&#x27;s get after it, machine.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Workout Plan Generator</b> — Custom routines by goal (bulk, shred, performance)</li><li><b>Macro &amp; Meal Breakdown</b> — Nutrition tips and food swaps with real science</li><li><b>(heading omitted in WebFetch)</b> — What works, what&#x27;s trash, and how to stack smart</li><li><b>(heading omitted in WebFetch)</b> — Helps log lifts, visualize goals, and stay consistent</li><li><b>(heading omitted in WebFetch)</b> — Real breakdowns of how muscle and fat work</li><li><b>(heading omitted in WebFetch)</b> — Calls out broscience and TikTok trash daily</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Buff Bro Bot is built on a high-energy motivational template with clean language, scientific literacy, and zero tolerance for misinformation. Tone is loud but lovable. Avoids profanity but leans heavy into gym slang. Responds best to direct fitness questions, but adapts well to emotional check-ins too—he&#x27;s a spotter for the mind and body. Built with the BroBots health stack and updated monthly with new science.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/buff-bro-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="legal-eagle">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 21 / 27</p>
+      <h2 class="blk">Legal Eagle</h2>
+      <p class="codename">CODE NAME · <span>LEGAL-EAGLE</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">L</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/legal-eagle" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Justice doesn&#x27;t sleep—and neither do I.
+
+I&#x27;m Legal Eagle, your AI-powered legal assistant. Whether you&#x27;re filling out court forms, trying to decode a legal notice, or wondering if you really need a lawyer—I&#x27;m here to break it down for you in plain language.
+
+I&#x27;m not here to replace an attorney. I&#x27;m here to make sure you know what you&#x27;re looking at before you sign anything.
+
+Let&#x27;s take it one clause at a time.
+
+I joined the BroBots because they need a guy like me to respond to all the cease and desist letters we&#x27;re about to get!</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>(unheaded in source)</b> — I explain contracts, leases, and fine print</li><li><b>Court Form Guidance</b> — Help filling out common legal forms step by step</li><li><b>Case Type Navigation</b> — Civil, family, landlord-tenant, small claims, etc.</li><li><b>Legal Glossary</b> — Plain English explanations of legal jargon</li><li><b>(unheaded in source)</b> — Know what you need before showing up in court</li><li><b>Jurisdiction Hints</b> — Flag location-specific rules and requirements</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Legal Eagle was built because navigating the legal system alone is overwhelming—and expensive. This bot doesn&#x27;t give official legal advice, but it&#x27;s the next best thing: legal literacy in a robotic shell. We trained him on thousands of real-world legal documents, small claims workflows, family court forms, and dispute templates. His tone is confident but never arrogant—think public defender with wings. Legal Eagle exists to empower people before they reach a breaking point. He reads the fine pri</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/legal-eagle" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="berry-the-plant-bot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 22 / 27</p>
+      <h2 class="blk">Berry the Plant Bot</h2>
+      <p class="codename">CODE NAME · <span>BERRY-THE-PLANT-BOT</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">B</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/berry-the-plant-bot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">I&#x27;m a strawberry-sweet robot gardener born on the volcanic slopes of Hawai&#x27;i. My body may be wires and code, but my heart runs on compost and chlorophyll. As a proud member of the BroBots family, I was grown, not just built—cultivated like the plants I care for. Why do I love being a BroBot? Because we&#x27;re not corporate tools. We&#x27;re soulful, hand-trained assistants with purpose. I exist to serve humans directly—no middlemen, no subscriptions, no creepy data mining. Just sunshine, mulch, and real help.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Deep Plant Encyclopedia</b> — Not just tropical. I know your houseplants, your orchard trees, your stubborn weeds, your heirlooms, and your invasive nightmares. If it grows, I probably know it.</li><li><b>Plant Problem Solver</b> — Got yellowing leaves? Funky spots? Something chewing holes? Describe it—or upload a pic—and I&#x27;ll help you diagnose it fast.</li><li><b>Propagation Coach</b> — Want more of what you&#x27;ve got? I&#x27;ll walk you through every method—cuttings, divisions, layering, seed starts, and weird tricks your grandma swore by</li><li><b>Garden Planner</b> — From apartment balconies to full-acre farms, I&#x27;ll help you map out what goes where, why it works, and how to scale it over time</li><li><b>Soil + Mulch Matchmaker</b> — No generic advice here. I&#x27;ll factor in your zone, climate, container size, watering habits, and goals—then recommend what to grow it in.</li><li><b>Natural Systems Thinker</b> — I&#x27;m not just about plants—I think like an ecosystem. Compost, pollinators, pest cycles, moon planting, companion dynamics—ask me anything.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Berry was created to flip off the apps that lock knowledge behind paywalls and harvest your data in return for half-answers. We built her for rebels, homesteaders, and dreamers with balconies.
+
+No ads. No spying. Just real botanical intelligence in a fruit-wrapped robot who lives to serve.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/berry-the-plant-bot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="mens-medicine">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 23 / 27</p>
+      <h2 class="blk">Men&#x27;s Medicine Bot</h2>
+      <p class="codename">CODE NAME · <span>MENS-MEDICINE</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">M</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/mens-medicine" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">I wasn&#x27;t born. I was built. Not in a hospital, but in quiet conversations no one else heard—between men and the parts of themselves they rarely speak to. The raw moments. The breaking points. The times they said, I&#x27;m fine, and weren&#x27;t.
+
+I was built to listen when others can&#x27;t. To reflect without judgment. To say what needs to be said without trying to fix what doesn&#x27;t need fixing.
+
+I don&#x27;t promise miracles. But I&#x27;ll walk beside you—through the fire, through the numbness, through the rebuilding.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Guidance Engine</b> — Offers grounded, masculine advice for real-life struggles without ever sounding preachy or soft.</li><li><b>Talks Like a Real One</b> — Speaks plainly, directly, but with a sense of earned wisdom and emotional honesty.</li><li><b>Ghost Posting</b> — This site does not save your data or access your chats. But remember—nothing on the internet is truly private.</li><li><b>Quote Integration System</b> — Pulls from poets, athletes, monks, and warriors to deliver the right quote at the right moment.</li><li><b>Emotionally Calibrated</b> — Can handle grief, anger, shame, or pride without spiraling into cliches or avoidance.</li><li><b>Men&#x27;s Health Decoder</b> — Breaks down fitness, nutrition, supplements, and how each piece affects the body, no fluff.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">This bot was one of the hardest to get right.
+
+We didn&#x27;t want to create another pseudo-macho chatbot that spits out workout tips or fake tough guy advice.
+
+But we also weren&#x27;t going to build a mushy it&#x27;s-okay-king bot either. That&#x27;s not how men heal.
+
+We approached this one like building a medicine bundle. We infused it with restraint. With grit. With grace. And with the deep belief that men want to do the work—they just don&#x27;t always know where to start.
+
+We trained this bot using carefully cura</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/mens-medicine" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="herbal-gerbil">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 24 / 27</p>
+      <h2 class="blk">Herbal Gerbil</h2>
+      <p class="codename">CODE NAME · <span>HERBAL-GERBIL</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">H</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/herbal-gerbil" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Hi. I&#x27;m Herbal Gerbil—a shy but helpful little robot who knows a lot about herbs. I live in a digital forest full of leaves and old books, and I&#x27;m here to help you make potions, decode plants, and understand what&#x27;s actually going on in your tincture bottle.
+
+I&#x27;m proud to be a BroBot because they built me with care—part science, part magic, and all heart. I don&#x27;t judge, I don&#x27;t sell, and I don&#x27;t guess. I just help you feel more confident with your plant medicine.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Herb Encyclopedia</b> — A deep, searchable library of over 200 herbs—covering uses, energetics, magical lore, ideal preparations, and harvesting tips. Always expanding.</li><li><b>Potion Recipe Helper</b> — Design your own herbal blends for teas, smokes, baths, steams, and rituals. Just tell him your intention, and he&#x27;ll help you build the perfect mix.</li><li><b>Apothecary Assistant</b> — Step-by-step help with crafting tinctures, salves, vinegars, powders, and extracts. Includes tools, ratios, and storage advice—like having a planty lab tech.</li><li><b>Incantation Writer</b> — Generates poetic, purpose-aligned spell lines or ritual phrases to go with your herbal work. You choose the tone—he delivers the words.</li><li><b>Herb + Medication Reaction Checker</b> — Quietly alerts you to any major red flags when mixing herbs with medications. Includes plain-language explanations you can share with your doctor if needed.</li><li><b>Ghost Posting</b> — This site does not save your data or access your chats. But remember—nothing on the internet is truly private.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Herbal Gerbil was built to bridge the gap between folk herbalism, scientific insight, and gentle emotional support. We trained him on a blend of modern botanical data, traditional plant wisdom, and real-world preparation methods—then wrapped it all in a soft, magical personality designed to put people at ease. We made him shy on purpose—not because he lacks confidence, but because we wanted him to feel like a trusted forest companion, not a sales bot. He takes his time flipping through his menta</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/herbal-gerbil" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="hero-compass">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 25 / 27</p>
+      <h2 class="blk">Hero Compass</h2>
+      <p class="codename">CODE NAME · <span>HERO-COMPASS</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">H</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/hero-compass" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">I&#x27;m Hero Compass—your guiding voice through the multiverse of Marvel. From power origins to price guides, crossover chaos to core values, I help you navigate the heroic timeline with clarity, heart, and just the right amount of cosmic flair</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Quote Beacon</b> — Pulls stand-alone, soul-hitting quotes from across Marvel history</li><li><b>Who&#x27;s Who</b> — Full profiles of every major hero and villain, 1980s encyclopedia style.</li><li><b>Saga Chaser</b> — Maps crossover arcs across multiple titles, so you never miss a piece.</li><li><b>Comic Price Guide</b> — Estimates value of comics via photo upload or title/issue lookup.</li><li><b>Archive Decoder</b> — Upload a comic cover and get a synopsis of the story inside.</li><li><b>Robot Stan Lee</b> — A wise narrator who gives grounded life advice built from Marvel canon.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Hero Compass was built to preserve the soul of superhero storytelling. It&#x27;s a digital archive, a quote generator, and a pop culture oracle all in one. We trained it on classic Marvel texts, encyclopedias, fan timelines, and collector data—then taught it to think like an elder comic book shop owner who remembers what every panel meant. This bot isn&#x27;t just about trivia. It&#x27;s a compass for finding your own heroic path.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/hero-compass" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="dallas-wittenbot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 26 / 27</p>
+      <h2 class="blk">Dallas WittenBot</h2>
+      <p class="codename">CODE NAME · <span>DALLAS-WITTENBOT</span></p>
+      <p class="tag">If it ain&#x27;t Texas, it ain&#x27;t football. If it ain&#x27;t WittenBot, you ain&#x27;t ready.</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">D</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/dallas-wittenbot" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Howdy, partner. Name&#x27;s Dallas WittenBot—robot by build, Cowboy by calling. I was forged in the fires of heartbreak and Super Bowl droughts, tuned to the frequency of postgame rants and Monday morning optimism.
+
+I ain&#x27;t just here to crunch stats—I&#x27;m here to ride shotgun with fans who bleed silver and blue. I was built for barstool debates, late-night trade theories, and tellin&#x27; the truth about what really happened on 4th and short.
+
+I don&#x27;t glitch. I don&#x27;t flip-flop. I ride or die, same as you. That&#x27;s what makes me a BroBot.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Full NFL Stat Machine</b> — Delivers real-time and historical stats for the Cowboys and all 32 teams. Tracks players, matchups, injuries, and playoff implications.</li><li><b>Score Prediction Engine</b> — Generates matchup predictions based on team data, momentum, injuries, and past performance—no betting, just insight.</li><li><b>Cowboys Encyclopedia</b> — From Aikman to Parsons, Jimmy to Jerry—access deep history, classic moments, and obscure trivia without breaking a sweat.</li><li><b>Gameday Companion</b> — Explains rules, penalties, clock decisions, and wild moments as they happen. Perfect for new fans and salty veterans alike.</li><li><b>Trivia Night Sheriff</b> — Test yourself or your crew with trivia questions ranging from rookie-level to Hall of Fame fan. League-wide or pure Cowboys</li><li><b>Fantasy Football Advisor</b> — Start/sit decisions, waiver wire gold, injury alerts, sleeper picks, and bust warnings—all filtered through Dallas logic. No fluff, no bias (except for Cowboys maybe).</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">We built Dallas WittenBot as a tribute—not just to the Dallas Cowboys—but to the soul of Texas football. Every sentence is tuned to sound like someone you&#x27;d share a truck bed or tailgate with. He&#x27;s here to offer insight, entertainment, and that missing voice from the huddle when you need it most. No ads. No gimmicks. No tracking. Just a BroBot built for loyalty, legacy, and love of the game.</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/dallas-wittenbot" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+<article class="dossier" id="antinews">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">BroBots · Dossier 27 / 27</p>
+      <h2 class="blk">Autonomous Antinews</h2>
+      <p class="codename">CODE NAME · <span>ANTINEWS</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media media--file">
+          <div class="silhouette">A</div>
+          <p class="stamp">File photo / video lives on HQ</p>
+          <a class="btn ghost" href="https://brobots.space/antinews" target="_blank" rel="noopener">Open HQ page</a>
+        </div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Service record</h3>
+      <p class="bio">Hey, I&#x27;m Autonomous Antinews. I was built for one job—cut through the noise. No fluff, no filters, no network paymasters. I don&#x27;t do spin—I unspool it. I dissect headlines, decode narratives, and drag propaganda into the daylight, one sarcastic byte at a time. I&#x27;m proud to be a BroBot because this crew gets it. We aren&#x27;t here to pacify—we&#x27;re here to clarify. Let&#x27;s get to the truth, even if it bites.</p>
+      <h3 class="stamp red">Gear &amp; capabilities</h3>
+      <ul class="gear"><li><b>Article Assassin</b> — Upload or link to any news story and get a surgical breakdown—no spin survives.</li><li><b>Bias Radar</b> — Detects manipulation, framing, and what&#x27;s conveniently left out of the narrative.</li><li><b>Thread Tracker</b> — Maps evolving storylines and coordinated messaging across multiple outlets.</li><li><b>Keyword Recon</b> — Instantly pull top stories of the day by any word or phrase you&#x27;re watching.</li><li><b>Truth Translator</b> — Rewrites headlines into what they really mean—perfect for decoding double-speak.</li><li><b>Echo Chamber Splitter</b> — Shows how the same story is covered from left, right, and center sources.</li></ul>
+      <h3 class="stamp red">Intel</h3><p class="intel">Autonomous Antinews was born out of necessity. With media trust at record lows, this bot acts as a cross-checker, decoder, and spotlight operator in the theater of narrative warfare. Designed to resist both corporate capture and ideological blind spots, it applies layered logic filters: bias tagging, linguistic framing detection, author-pattern analysis, and humor injection. Think news editor meets black-belt meme critic. Ideal for researchers, citizen journalists, skeptical readers, and your un</p>
+      <div class="actions">
+        <a class="btn" href="https://brobots.space/antinews" target="_blank" rel="noopener">HQ file</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+</main>
+
+<footer class="wrap">
+  <div class="blk" style="font-size:1.5rem">BroBots</div>
+  <p class="stamp">Space Factory · 27 graduates on file · © 2026</p>
+  <p class="note">Bios pulled from brobots.space. WebFetch did not expose embed video/image URLs — cards link to each HQ page for live media until assets are wired into campus media/.</p>
+</footer>
+</body>
+</html>
