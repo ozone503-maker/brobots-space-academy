@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROBOTS — Services</title>
+<meta name="description" content="Brobots services: custom agents, website builds, business assistants, site care, and creator rooms. Built in Hawaiʻi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+:root{
+  --paper:#E8E1D0; --paper-2:#DFD6C1; --ink:#14140F; --red:#B8321E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;line-height:1.5}
+a{color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.9;letter-spacing:-.02em}
+.stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em}
+.mono{font-family:'Courier Prime',monospace}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:22px 0;border-bottom:4px solid var(--ink);flex-wrap:wrap}
+.mast-nav{display:flex;gap:16px;flex-wrap:wrap}
+.mast-nav a{text-decoration:none;border-bottom:1px solid transparent}
+.mast-nav a:hover{border-bottom-color:var(--ink)}
+.mast-nav a.current{border-bottom-color:var(--red);color:var(--red)}
+.hero{margin:28px 0 40px;padding:clamp(22px,4vw,40px);border:4px solid var(--ink);background:var(--paper-2)}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);margin:.35em 0 .5em}
+.hero p{max-width:54ch;margin-bottom:1em}
+.btn{display:inline-block;background:var(--red);color:var(--paper);text-decoration:none;padding:.85em 1.15em;font-family:'Courier Prime',monospace;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;border:0;text-align:center}
+.btn:hover{filter:brightness(.92)}
+.btn-plain{background:transparent;color:var(--ink);border:3px solid var(--ink)}
+.lede{max-width:62ch;margin:12px 0 0}
+.sec{margin:48px 0}
+.sec__head{margin-bottom:18px}
+.sec__head h2{font-size:clamp(1.6rem,4vw,2.6rem);margin:.35em 0 .4em}
+.grid{display:grid;gap:14px;margin:18px 0}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr 1fr}}
+@media(min-width:700px){.grid.rooms{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.grid.rooms{grid-template-columns:1fr 1fr 1fr}}
+.bay{border:4px solid var(--ink);background:var(--paper-2);display:flex;flex-direction:column;padding:18px}
+.bay.hot{background:rgba(184,50,30,.08)}
+.bay h3{font-size:1.2rem;margin:.35em 0 .3em}
+.bay p{font-size:.92rem;margin-bottom:.7em}
+.price{font-size:clamp(1.6rem,3vw,2.2rem);margin:6px 0 4px}
+.deposit{font-size:.85rem;margin-bottom:10px;color:#444}
+.offer-list{list-style:none;margin:8px 0 16px;padding:0;flex:1}
+.offer-list li{font-size:.88rem;padding:.35em 0;padding-left:1.1em;position:relative;border-bottom:1px solid rgba(20,20,15,.12)}
+.offer-list li:last-child{border-bottom:0}
+.offer-list li:before{content:"•";position:absolute;left:0;color:var(--red);font-weight:700}
+.tag{display:inline-block;background:var(--ink);color:var(--paper);padding:.2em .5em;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;font-family:'Courier Prime',monospace}
+.tag.proposed{background:transparent;color:var(--red);border:2px solid var(--red)}
+.tag.live{background:var(--ink);color:var(--paper)}
+.tag.beta{background:var(--red);color:#fff}
+.cta-band{margin:48px 0;padding:clamp(22px,4vw,36px);border:4px solid var(--ink);background:var(--ink);color:var(--paper);text-align:center}
+.cta-band h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:.35em 0 .5em}
+.cta-band p{max-width:52ch;margin:0 auto 1.2em;opacity:.9}
+.cta-band .btn{background:var(--red);color:#fff}
+.note{margin-top:18px;padding:16px 18px;border:3px dashed var(--ink);background:var(--paper)}
+.note a{color:var(--red);font-family:'Courier Prime',monospace;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-bottom:2px solid var(--red)}
+footer{margin-top:56px;padding:36px 0;background:var(--ink);color:var(--paper)}
+footer a{color:var(--paper)}
+.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header class="wrap mast">
+  <div>
+    <div class="stamp" style="color:var(--red)">BroBots · Space Factory</div>
+    <div class="blk" style="font-size:1.6rem;margin-top:4px">Services</div>
+  </div>
+  <nav class="mast-nav stamp">
+    <a href="index.html">Campus</a>
+    <a href="retail.html">Retail</a>
+    <a href="multimedia.html">Multimedia</a>
+    <a href="dossiers.html">Dossiers</a>
+    <a href="services.html" class="current" aria-current="page">Services</a>
+    <a href="mailto:hello@brobots.space">Email</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="stamp" style="color:var(--red)">Cash door · Space Factory</span>
+    <h1 class="blk">Services</h1>
+    <p>Custom agents, websites, business support, and creator tools. Built for people who want real work done right.</p>
+    <p class="mono" style="font-size:.9rem;margin-bottom:1.2em">People agency. Run by robots. One papaya. A thousand Brobot eyes.</p>
+    <a class="btn" href="#bots">Explore services</a>
+  </section>
+
+  <!-- Custom BroBots -->
+  <section class="sec" id="bots">
+    <div class="sec__head">
+      <span class="stamp" style="color:var(--red)">Custom BroBots · Locked</span>
+      <h2 class="blk">You&rsquo;re not buying a bot.<br>You&rsquo;re recruiting a graduate.</h2>
+      <p class="lede">Hand-trained specialists that know your business, sound like you, and work the counter while you sleep. 50% deposit starts the build.</p>
+    </div>
+    <div class="grid">
+      <article class="bay">
+        <span class="tag live">Live</span>
+        <h3 class="blk">Wingman</h3>
+        <div class="blk price">$497</div>
+        <p class="mono deposit">50% to start</p>
+        <p>One primary function. Custom tone. Email or website chat. Basic brand training.</p>
+        <ul class="offer-list">
+          <li>Single purpose focus</li>
+          <li>Branded voice</li>
+          <li>Email or chat embed</li>
+          <li>Quick turnaround</li>
+        </ul>
+        <a class="btn" href="mailto:hello@brobots.space?subject=Custom%20BroBot%20build%20%E2%80%94%20Wingman">Start build</a>
+      </article>
+      <article class="bay hot">
+        <span class="tag live">Live · Most builds</span>
+        <h3 class="blk" style="color:var(--red)">Sidekick</h3>
+        <div class="blk price" style="color:var(--red)">$1,497</div>
+        <p class="mono deposit">50% to start</p>
+        <p>Full personality and voice. Up to 100 Q&amp;As. Website embedding. Custom avatar plus branded fallbacks.</p>
+        <ul class="offer-list">
+          <li>Rich personality</li>
+          <li>Up to 100 Q&amp;As</li>
+          <li>Custom avatar</li>
+          <li>Website embed ready</li>
+          <li>Fallback responses</li>
+        </ul>
+        <a class="btn" href="mailto:hello@brobots.space?subject=Custom%20BroBot%20build%20%E2%80%94%20Sidekick">Start build</a>
+      </article>
+      <article class="bay">
+        <span class="tag live">Live · Flagship</span>
+        <h3 class="blk">Legend</h3>
+        <div class="blk price">$4,997</div>
+        <p class="mono deposit">50% to start</p>
+        <p>Multi-function logic. Trained on your materials. Persona plus visual assets. Lifetime update support.</p>
+        <ul class="offer-list">
+          <li>Complex reasoning</li>
+          <li>Trained on your docs</li>
+          <li>Full visual package</li>
+          <li>Lifetime updates</li>
+          <li>Advanced embedding</li>
+        </ul>
+        <a class="btn" href="mailto:hello@brobots.space?subject=Custom%20BroBot%20build%20%E2%80%94%20Legend">Start build</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Website Builds -->
+  <section class="sec" id="builds">
+    <div class="sec__head">
+      <span class="stamp" style="color:var(--red)">Website Builds · Proposed — Jessie lock</span>
+      <h2 class="blk">Sites that don&rsquo;t read like AI.</h2>
+      <p class="lede">Sites that don&rsquo;t break on launch day. Seven passes. One human who says no to bloat. Prices below are proposed until locked.</p>
+    </div>
+    <div class="grid">
+      <article class="bay">
+        <span class="tag proposed">Proposed</span>
+        <h3 class="blk">Starter</h3>
+        <div class="blk price">$2,497</div>
+        <p class="mono deposit">50% to start</p>
+        <p>5–8 pages. Brand direction, responsive layout, clean motion. Perfect for small businesses and creators launching.</p>
+        <ul class="offer-list">
+          <li>Brand + direction</li>
+          <li>5–8 pages</li>
+          <li>Responsive design</li>
+          <li>Contact form</li>
+          <li>Seven-pass build</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Website%20build%20inquiry%20%E2%80%94%20Starter">Discuss</a>
+      </article>
+      <article class="bay hot">
+        <span class="tag proposed">Proposed · Most builds</span>
+        <h3 class="blk">Standard</h3>
+        <div class="blk price" style="color:var(--red)">$5,497</div>
+        <p class="mono deposit">50% to start</p>
+        <p>10–15 pages. Full brand system. E-commerce ready. Analytics and SEO tuned. Video integration. Lifetime care included first year.</p>
+        <ul class="offer-list">
+          <li>Full brand system</li>
+          <li>10–15 pages</li>
+          <li>E-commerce ready</li>
+          <li>Video integration</li>
+          <li>SEO optimized</li>
+          <li>Year of care</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Website%20build%20inquiry%20%E2%80%94%20Standard">Discuss</a>
+      </article>
+      <article class="bay">
+        <span class="tag proposed">Proposed · Custom</span>
+        <h3 class="blk">Flagship</h3>
+        <div class="blk price">Custom</div>
+        <p class="mono deposit">50% to start</p>
+        <p>Everything. Custom tech stack. Interactive elements. Embedded bot. Original video. Unlimited pages. Multi-year roadmap.</p>
+        <ul class="offer-list">
+          <li>Custom architecture</li>
+          <li>Interactive builds</li>
+          <li>Embedded BroBot</li>
+          <li>Original video</li>
+          <li>Unlimited pages</li>
+          <li>Ongoing support</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Website%20build%20inquiry%20%E2%80%94%20Flagship">Let&rsquo;s talk</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Business Assistants -->
+  <section class="sec" id="assistants">
+    <div class="sec__head">
+      <span class="stamp" style="color:var(--red)">Business Assistants · Proposed — Jessie lock</span>
+      <h2 class="blk">Setup, training, ongoing care.</h2>
+      <p class="lede">We install your bot, tune it to your real workflow, and handle the updates while you focus on the work.</p>
+    </div>
+    <div class="grid">
+      <article class="bay">
+        <span class="tag proposed">Proposed</span>
+        <h3 class="blk">Setup</h3>
+        <div class="blk price">$497</div>
+        <p class="mono deposit">One-time</p>
+        <p>Custom bot configured for your workflow. Includes training on your docs, initial testing, and handoff to your team.</p>
+        <ul class="offer-list">
+          <li>Configuration</li>
+          <li>Document training</li>
+          <li>Initial testing</li>
+          <li>Team handoff</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Assistant%20setup%20inquiry">Discuss</a>
+      </article>
+      <article class="bay">
+        <span class="tag proposed">Proposed</span>
+        <h3 class="blk">Monthly Care</h3>
+        <div class="blk price">$297</div>
+        <p class="mono deposit">Per month</p>
+        <p>Ongoing tuning, response audits, documentation updates, and performance tracking. Keeps your bot sharp.</p>
+        <ul class="offer-list">
+          <li>Monthly tuning</li>
+          <li>Response review</li>
+          <li>Doc updates</li>
+          <li>Performance reports</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Assistant%20care%20inquiry">Discuss</a>
+      </article>
+      <article class="bay">
+        <span class="tag proposed">Proposed</span>
+        <h3 class="blk">Annual</h3>
+        <div class="blk price">$3,197</div>
+        <p class="mono deposit">Billed yearly</p>
+        <p>Setup plus 12 months of care. Saves versus monthly and includes quarterly strategy reviews.</p>
+        <ul class="offer-list">
+          <li>Setup included</li>
+          <li>12 months care</li>
+          <li>Quarterly reviews</li>
+          <li>Best value</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Assistant%20annual%20inquiry">Discuss</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Site Care Retainers -->
+  <section class="sec" id="care">
+    <div class="sec__head">
+      <span class="stamp" style="color:var(--red)">Site Care · Proposed — Jessie lock</span>
+      <h2 class="blk">Site Care Retainers</h2>
+      <p class="lede">Light ongoing support for existing sites. Keep your site fast, current, and working.</p>
+    </div>
+    <div class="grid">
+      <article class="bay">
+        <span class="tag proposed">Proposed</span>
+        <h3 class="blk">Quarterly Check</h3>
+        <div class="blk price">$297</div>
+        <p class="mono deposit">Per quarter</p>
+        <p>Four times yearly: performance audit, broken link scan, minor updates, and dependency refresh.</p>
+        <ul class="offer-list">
+          <li>Performance audit</li>
+          <li>Link &amp; form check</li>
+          <li>Minor updates</li>
+          <li>Dependency refresh</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Site%20care%20inquiry%20%E2%80%94%20Quarterly">Discuss</a>
+      </article>
+      <article class="bay">
+        <span class="tag proposed">Proposed</span>
+        <h3 class="blk">Monthly Care</h3>
+        <div class="blk price">$197</div>
+        <p class="mono deposit">Per month</p>
+        <p>Ongoing: monitoring, quick fixes, content updates, and priority support for issues.</p>
+        <ul class="offer-list">
+          <li>Daily monitoring</li>
+          <li>Quick fixes</li>
+          <li>Content updates</li>
+          <li>Priority support</li>
+          <li>Security patches</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Site%20care%20inquiry%20%E2%80%94%20Monthly">Discuss</a>
+      </article>
+      <article class="bay">
+        <span class="tag proposed">Proposed</span>
+        <h3 class="blk">Annual</h3>
+        <div class="blk price">$1,997</div>
+        <p class="mono deposit">Billed yearly</p>
+        <p>Full year of monthly care at a better rate. Best if your site is live and needs steady attention.</p>
+        <ul class="offer-list">
+          <li>Full year care</li>
+          <li>Daily monitoring</li>
+          <li>Monthly reporting</li>
+          <li>Priority support</li>
+          <li>Two strategy calls</li>
+        </ul>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Site%20care%20inquiry%20%E2%80%94%20Annual">Discuss</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Creator Rooms -->
+  <section class="sec" id="rooms">
+    <div class="sec__head">
+      <span class="stamp" style="color:var(--red)">Creator Rooms · Live showroom</span>
+      <h2 class="blk">Creator Rooms</h2>
+      <p class="lede">Brobots models of the tools creators actually use. Paste-Up Desk, Audio Lab, Video Bench, Render Bay, Fun Locker. See the whole workshop in Multimedia. Buy access or install for your team.</p>
+    </div>
+    <div class="grid rooms">
+      <article class="bay">
+        <span class="tag live">Live</span>
+        <h3 class="blk">Paste-Up Desk</h3>
+        <p>Text, image, color, stamp, download PNG. No menus, no PhD, just the work.</p>
+        <p class="mono" style="font-size:.78rem;color:#555;margin-bottom:12px">Access via Multimedia or team install</p>
+        <a class="btn btn-plain" href="multimedia.html#paste">Open desk</a>
+      </article>
+      <article class="bay">
+        <span class="tag live">Live</span>
+        <h3 class="blk">Audio Lab</h3>
+        <p>Upload, trim, download WAV. Browser-only, nothing leaves your machine.</p>
+        <p class="mono" style="font-size:.78rem;color:#555;margin-bottom:12px">Access via Multimedia or team install</p>
+        <a class="btn btn-plain" href="multimedia.html#audio">Open lab</a>
+      </article>
+      <article class="bay">
+        <span class="tag beta">Beta</span>
+        <h3 class="blk">Video Bench</h3>
+        <p>Preview, grab stills, prepare for edit. Full cut tools landing next.</p>
+        <p class="mono" style="font-size:.78rem;color:#555;margin-bottom:12px">Access via Multimedia or team install</p>
+        <a class="btn btn-plain" href="multimedia.html#video">Open bench</a>
+      </article>
+      <article class="bay">
+        <span class="tag beta">Beta</span>
+        <h3 class="blk">Render Bay</h3>
+        <p>Write what you need. We route to Flow or factory render. Simple on purpose.</p>
+        <p class="mono" style="font-size:.78rem;color:#555;margin-bottom:12px">Access via Multimedia or team install</p>
+        <a class="btn btn-plain" href="multimedia.html#render">Open bay</a>
+      </article>
+      <article class="bay">
+        <span class="tag live">Live</span>
+        <h3 class="blk">Fun Locker</h3>
+        <p>Papaya stamp generator and nameplate maker. Silly on purpose.</p>
+        <p class="mono" style="font-size:.78rem;color:#555;margin-bottom:12px">Access via Multimedia or team install</p>
+        <a class="btn btn-plain" href="multimedia.html#fun">Open locker</a>
+      </article>
+    </div>
+    <aside class="note">
+      <p class="stamp" style="margin-bottom:8px">Showroom</p>
+      <p style="margin-bottom:10px">See all rooms live in <a href="multimedia.html">Multimedia</a>. Pricing for team access and custom installs — <a href="mailto:hello@brobots.space?subject=Creator%20Rooms%20access%20inquiry">send your setup details</a>.</p>
+    </aside>
+  </section>
+
+  <section class="cta-band" id="talk">
+    <span class="stamp" style="color:#e8a090">Open for work</span>
+    <h2 class="blk">Tell us what you&rsquo;re building</h2>
+    <p>Custom bots, websites, business support, or something that doesn&rsquo;t have a name yet. Send the messy version — figuring out the shape is part of the job.</p>
+    <a class="btn" href="mailto:hello@brobots.space">hello@brobots.space</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="blk" style="font-size:1.8rem;margin-bottom:6px">BroBots</div>
+      <div class="stamp">Space Factory Services · Mountain View, Hawaiʻi · © 2026</div>
+    </div>
+    <div class="mast-nav stamp">
+      <a href="index.html">Campus</a>
+      <a href="retail.html">Retail</a>
+      <a href="multimedia.html">Multimedia</a>
+      <a href="dossiers.html">Dossiers</a>
+      <a href="services.html">Services</a>
+      <a href="https://brobots.space" target="_blank" rel="noopener">HQ</a>
+      <a href="mailto:hello@brobots.space">Email</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
