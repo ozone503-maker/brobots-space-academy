@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BROBOTS — Mystery Drone Pilot · UFO Mission</title>
+<meta name="description" content="Mystery Drone Pilot UFO mission prototype. Collect data, stay dark, share the run. Brobots Space Factory.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+:root{
+  --paper:#E8E1D0; --paper-2:#DFD6C1; --ink:#14140F; --red:#B8321E;
+  --ok:#2F6B3A; --warn:#C4A035; --sky:#1a2330; --grid:#2a3544;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;line-height:1.45;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px}
+.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.9;letter-spacing:-.02em}
+.stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}
+.mono{font-family:'Courier Prime',monospace}
+.mast{display:flex;justify-content:space-between;gap:14px;align-items:flex-end;padding:18px 0;border-bottom:4px solid var(--ink);flex-wrap:wrap}
+.mast-nav{display:flex;gap:14px;flex-wrap:wrap}
+.mast-nav a{text-decoration:none;border-bottom:1px solid transparent}
+.mast-nav a:hover{border-bottom-color:var(--ink)}
+.mast-nav a.current{border-bottom-color:var(--red);color:var(--red)}
+.hero{margin:20px 0 16px;padding:18px;border:4px solid var(--ink);background:var(--paper-2)}
+.hero h1{font-size:clamp(1.8rem,6vw,3rem);margin:.3em 0 .4em}
+.hero p{max-width:58ch;font-size:.95rem}
+.btn,.toolbtn{appearance:none;border:3px solid var(--ink);background:var(--ink);color:var(--paper);padding:.65em .95em;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;text-decoration:none;display:inline-block}
+.toolbtn.ghost,.btn.ghost{background:transparent;color:var(--ink)}
+.toolbtn.hot,.btn.hot{background:var(--red);border-color:var(--red);color:#fff}
+.toolbtn:disabled{opacity:.45;cursor:not-allowed}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.stage{
+  position:relative;border:4px solid var(--ink);background:var(--sky);overflow:hidden;
+  touch-action:none;user-select:none;-webkit-user-select:none;
+}
+canvas#arena{display:block;width:100%;height:auto;max-height:min(70vh,640px);background:var(--sky);cursor:crosshair}
+.hud{
+  position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:10px;
+}
+.hud-top,.hud-bot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:flex-start}
+.chip{
+  pointer-events:none;background:rgba(232,225,208,.92);border:3px solid var(--ink);
+  padding:6px 10px;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--ink);
+}
+.chip.warn{background:rgba(196,160,53,.95);color:var(--ink)}
+.chip.hot{background:rgba(184,50,30,.95);color:#fff;border-color:#fff}
+.chip.ok{background:rgba(47,107,58,.95);color:#fff;border-color:#fff}
+.brief{
+  margin-top:12px;padding:14px 16px;border:4px solid var(--ink);background:var(--paper-2);
+  min-height:4.2em;
+}
+.brief .who{color:var(--red);margin-bottom:6px}
+.brief #mdp-line{font-size:1.02rem;max-width:70ch}
+.meter-wrap{margin-top:10px}
+.meter-label{display:flex;justify-content:space-between;margin-bottom:4px}
+.meter{height:14px;border:3px solid var(--ink);background:#fff}
+.meter>i{display:block;height:100%;width:0;background:var(--red);transition:width .12s linear}
+.pad{
+  display:none;margin:14px 0 0;gap:8px;justify-content:center;align-items:center;
+  user-select:none;-webkit-user-select:none;
+}
+.pad.on{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,56px);justify-content:center}
+.pad button{
+  appearance:none;border:3px solid var(--ink);background:var(--paper-2);color:var(--ink);
+  font-family:'Archivo Black',sans-serif;font-size:1.1rem;cursor:pointer;touch-action:manipulation;
+}
+.pad button:active,.pad button.held{background:var(--red);color:#fff}
+.pad .n{grid-column:2;grid-row:1}
+.pad .w{grid-column:1;grid-row:2}
+.pad .e{grid-column:3;grid-row:2}
+.pad .s{grid-column:2;grid-row:3}
+.pad .idle{grid-column:2;grid-row:2;background:transparent;border-style:dashed;pointer-events:none;opacity:.35;font-size:.55rem;letter-spacing:.06em}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;font-size:.85rem}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:14px;border:2px solid var(--ink);display:inline-block}
+.sw.y{background:#E8C84A}.sw.r{background:rgba(184,50,30,.55)}.sw.u{background:#cfd6e0;border-radius:50%}
+.note{margin:18px 0;padding:14px 16px;border:3px dashed var(--ink);background:var(--paper);font-size:.88rem}
+.note a{color:var(--red);font-family:'Courier Prime',monospace;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border-bottom:2px solid var(--red)}
+.overlay{
+  position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(20,20,15,.78);padding:18px;pointer-events:auto;
+}
+.overlay.on{display:flex}
+.card{
+  background:var(--paper);border:4px solid var(--ink);padding:22px;max-width:420px;width:100%;text-align:center;
+}
+.card h2{font-size:clamp(1.6rem,5vw,2.4rem);margin:.35em 0 .5em}
+.card p{margin-bottom:1em}
+.card .row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+footer{margin-top:36px;padding:28px 0;background:var(--ink);color:var(--paper)}
+footer a{color:var(--paper)}
+.foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+@media(max-width:720px){
+  .pad.on{display:grid}
+  canvas#arena{max-height:52vh}
+}
+@media(min-width:721px){
+  .pad.on{display:none}
+}
+@media(pointer:coarse){
+  .pad.on{display:grid}
+}
+</style>
+</head>
+<body>
+<!--
+  Brobots layer / wiring template — NOT production flight physics.
+  Production physics/terrain = RCForge + OSM (MIT). Not HexGL.
+  See docs/GAME_FOUNDATIONS.md
+-->
+<header class="wrap mast">
+  <div>
+    <div class="stamp" style="color:var(--red)">BroBots · Space Factory</div>
+    <div class="blk" style="font-size:1.45rem;margin-top:4px">UFO Pilot</div>
+  </div>
+  <nav class="mast-nav stamp">
+    <a href="index.html">Campus</a>
+    <a href="retail.html">Retail</a>
+    <a href="multimedia.html">Multimedia</a>
+    <a href="dossiers.html">Dossiers</a>
+    <a href="services.html">Services</a>
+    <a href="ufo-pilot.html" class="current" aria-current="page">UFO Pilot</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="stamp" style="color:var(--red)">Mystery Drone Pilot · Mission proto</span>
+    <h1 class="blk">Stay dark. Grab the packets.</h1>
+    <p>Five-minute window. Five data points on the board — secure <strong>three or more</strong> before the clock dies. Yellow = collect. Red = detection. WASD / arrows / touch pad. MDP is on the wing.</p>
+  </section>
+
+  <div class="toolbar">
+    <button type="button" class="toolbtn hot" id="btn-start">Start mission</button>
+    <button type="button" class="toolbtn ghost" id="btn-pause" disabled>Pause</button>
+    <button type="button" class="toolbtn ghost" id="btn-share" disabled>Share run</button>
+    <button type="button" class="toolbtn ghost" id="btn-pad">Touch pad</button>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw u"></i> Your craft</span>
+    <span><i class="sw y"></i> Data packet</span>
+    <span><i class="sw r"></i> Detection zone</span>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="arena" width="960" height="540" aria-label="UFO mission arena"></canvas>
+    <div class="hud">
+      <div class="hud-top">
+        <div class="chip" id="hud-time">05:00</div>
+        <div class="chip" id="hud-data">DATA 0 / 5</div>
+        <div class="chip" id="hud-city">—</div>
+      </div>
+      <div class="hud-bot">
+        <div class="chip" id="hud-status">STANDBY</div>
+        <div class="chip" id="hud-det">DET 0%</div>
+      </div>
+    </div>
+    <div class="overlay" id="overlay" role="dialog" aria-modal="true">
+      <div class="card">
+        <div class="stamp" style="color:var(--red)" id="end-stamp">Mission</div>
+        <h2 class="blk" id="end-title">Ready</h2>
+        <p id="end-msg">Collect 3+ data packets in 5:00. Avoid red zones.</p>
+        <div class="row">
+          <button type="button" class="toolbtn hot" id="btn-again">Fly again</button>
+          <button type="button" class="toolbtn ghost" id="btn-share-end">Share</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pad on" id="pad" aria-label="Touch controls">
+    <button type="button" class="n" data-dir="n" aria-label="North">N</button>
+    <button type="button" class="w" data-dir="w" aria-label="West">W</button>
+    <button type="button" class="idle" tabindex="-1">MDP</button>
+    <button type="button" class="e" data-dir="e" aria-label="East">E</button>
+    <button type="button" class="s" data-dir="s" aria-label="South">S</button>
+  </div>
+
+  <div class="meter-wrap">
+    <div class="meter-label stamp">
+      <span>Detection</span>
+      <span id="det-pct">0%</span>
+    </div>
+    <div class="meter"><i id="det-bar"></i></div>
+  </div>
+
+  <aside class="brief">
+    <div class="stamp who">Mystery Drone Pilot · Wingman</div>
+    <p id="mdp-line">Channel open. Press START when you are ready to leave the hangar.</p>
+  </aside>
+
+  <aside class="note">
+    <p class="stamp" style="margin-bottom:8px">Foundations</p>
+    <p>This page is the <strong>Brobots layer / wiring template</strong> (HUD, MDP, mission loop, share). Production physics and continuous terrain = <strong>RCForge + OSM</strong> (MIT). Not HexGL. Spec: <a href="docs/GAME_FOUNDATIONS.md">docs/GAME_FOUNDATIONS.md</a>.</p>
+  </aside>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="blk" style="font-size:1.7rem;margin-bottom:6px">BroBots</div>
+      <div class="stamp">UFO Pilot · Mystery Drone Pilot · © 2026</div>
+    </div>
+    <div class="mast-nav stamp">
+      <a href="index.html">Campus</a>
+      <a href="multimedia.html">Multimedia</a>
+      <a href="services.html">Services</a>
+      <a href="dossiers.html">Dossiers</a>
+      <a href="docs/GAME_FOUNDATIONS.md">Foundations</a>
+      <a href="mailto:hello@brobots.space">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var MISSION_SECS = 300; // 5:00 real time
+  var NEED_DATA = 3;
+  var TOTAL_DATA = 5;
+  var DET_FAIL_HOLD = 2; // seconds at 100% before soft fail
+
+  var cities = [
+    {name:'Mountain View', x:0.18, y:0.72},
+    {name:'Roswell', x:0.42, y:0.38},
+    {name:'Area 51', x:0.28, y:0.28},
+    {name:'Dulce', x:0.55, y:0.48},
+    {name:'Skinwalker', x:0.68, y:0.32},
+    {name:'Varginha', x:0.78, y:0.70},
+    {name:'Rendlesham', x:0.88, y:0.22}
+  ];
+
+  var mdpLines = {
+    standby: 'Channel open. Press START when you are ready to leave the hangar.',
+    start: 'Window is five minutes. Three packets minimum. Stay off the red.',
+    collect1: 'First packet locked. Pattern forming.',
+    collect2: 'Two secured. One more for a clean disclosure brief.',
+    collect3: 'Three packets. Enough to confirm. Optional: go for all five.',
+    collect4: 'Four. Satellites are nervous. Keep altitude quiet.',
+    collect5: 'Full haul. Extract before the clock eats you.',
+    hot: 'You are hot. Detection climbing — bank out of the zone.',
+    critical: 'Detection critical. Two seconds at full burn ends the run.',
+    warnTime: 'Clock bleeding. Prioritize packets over sightseeing.',
+    success: 'Mission green. Data is clean. Share it or fly again.',
+    failTime: 'Window closed. Incomplete haul. Reset and try a tighter line.',
+    failDet: 'Painted. Soft fail — you sat at 100% too long. Extract next time.',
+    pause: 'Hold. Systems frozen. Resume when the sky clears.'
+  };
+
+  var canvas = document.getElementById('arena');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+
+  var keys = Object.create(null);
+  var padDir = {n:false,s:false,e:false,w:false};
+  var dragVec = null;
+
+  var state = {
+    running: false,
+    paused: false,
+    ended: false,
+    timeLeft: MISSION_SECS,
+    timeAcc: 0,
+    lastTs: 0,
+    data: 0,
+    detection: 0,
+    detFullAcc: 0,
+    result: null,
+    nearestCity: '—'
+  };
+
+  var craft = {x: W*0.12, y: H*0.78, vx:0, vy:0, r:14, angle:0};
+  var packets = [];
+  var zones = [];
+
+  function $(id){ return document.getElementById(id); }
+
+  function resetWorld(){
+    craft.x = W*0.12; craft.y = H*0.78; craft.vx=0; craft.vy=0; craft.angle=0;
+    packets = [
+      {x:W*0.32,y:H*0.25,r:11,got:false},
+      {x:W*0.52,y:H*0.55,r:11,got:false},
+      {x:W*0.70,y:H*0.20,r:11,got:false},
+      {x:W*0.62,y:H*0.75,r:11,got:false},
+      {x:W*0.88,y:H*0.48,r:11,got:false}
+    ];
+    zones = [
+      {x:W*0.40,y:H*0.40,r:58},
+      {x:W*0.58,y:H*0.22,r:48},
+      {x:W*0.75,y:H*0.58,r:62},
+      {x:W*0.48,y:H*0.72,r:44}
+    ];
+    state.running = false;
+    state.paused = false;
+    state.ended = false;
+    state.timeLeft = MISSION_SECS;
+    state.timeAcc = 0;
+    state.lastTs = 0;
+    state.data = 0;
+    state.detection = 0;
+    state.detFullAcc = 0;
+    state.result = null;
+    setMdp(mdpLines.standby);
+    updateHud();
+    $('overlay').classList.remove('on');
+    $('btn-start').disabled = false;
+    $('btn-pause').disabled = true;
+    $('btn-share').disabled = true;
+    $('btn-pause').textContent = 'Pause';
+  }
+
+  function setMdp(line){
+    $('mdp-line').textContent = line;
+  }
+
+  function fmtTime(s){
+    s = Math.max(0, Math.ceil(s));
+    var m = Math.floor(s/60), ss = s%60;
+    return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;
+  }
+
+  function updateHud(){
+    $('hud-time').textContent = fmtTime(state.timeLeft);
+    $('hud-data').textContent = 'DATA '+state.data+' / '+TOTAL_DATA;
+    $('hud-city').textContent = state.nearestCity;
+    $('hud-det').textContent = 'DET '+Math.round(state.detection)+'%';
+    $('det-pct').textContent = Math.round(state.detection)+'%';
+    $('det-bar').style.width = Math.min(100, state.detection)+'%';
+
+    var st = $('hud-status');
+    var detChip = $('hud-det');
+    st.className = 'chip';
+    detChip.className = 'chip';
+    if(state.ended){
+      if(state.result==='success'){ st.textContent='SUCCESS'; st.classList.add('ok'); }
+      else if(state.result==='fail-det'){ st.textContent='COMPROMISED'; st.classList.add('hot'); }
+      else { st.textContent='TIMEOUT'; st.classList.add('warn'); }
+    } else if(!state.running){
+      st.textContent = 'STANDBY';
+    } else if(state.paused){
+      st.textContent = 'HOLD'; st.classList.add('warn');
+    } else if(state.detection >= 100){
+      st.textContent = 'CRITICAL'; st.classList.add('hot');
+      detChip.classList.add('hot');
+    } else if(state.detection >= 60){
+      st.textContent = 'HOT'; st.classList.add('warn');
+      detChip.classList.add('warn');
+    } else {
+      st.textContent = 'DARK'; st.classList.add('ok');
+    }
+
+    if(state.timeLeft <= 60 && state.running && !state.ended){
+      $('hud-time').classList.add('warn');
+    } else {
+      $('hud-time').classList.remove('warn');
+    }
+  }
+
+  function nearestCity(){
+    var best = cities[0], bd = 1e9;
+    for(var i=0;i<cities.length;i++){
+      var c = cities[i];
+      var dx = craft.x - c.x*W, dy = craft.y - c.y*H;
+      var d = dx*dx+dy*dy;
+      if(d<bd){ bd=d; best=c; }
+    }
+    return best.name;
+  }
+
+  function startMission(){
+    if(state.ended) resetWorld();
+    state.running = true;
+    state.paused = false;
+    state.ended = false;
+    state.lastTs = performance.now();
+    state.timeAcc = 0;
+    $('btn-start').disabled = true;
+    $('btn-pause').disabled = false;
+    $('btn-share').disabled = false;
+    $('overlay').classList.remove('on');
+    setMdp(mdpLines.start);
+    updateHud();
+  }
+
+  function togglePause(){
+    if(!state.running || state.ended) return;
+    state.paused = !state.paused;
+    if(!state.paused){
+      state.lastTs = performance.now();
+      setMdp(mdpLines.start);
+      $('btn-pause').textContent = 'Pause';
+    } else {
+      setMdp(mdpLines.pause);
+      $('btn-pause').textContent = 'Resume';
+    }
+    updateHud();
+  }
+
+  function endMission(result){
+    state.running = false;
+    state.ended = true;
+    state.result = result;
+    state.paused = false;
+    $('btn-pause').disabled = true;
+    $('btn-start').disabled = false;
+    $('btn-share').disabled = false;
+    var ov = $('overlay');
+    ov.classList.add('on');
+    if(result==='success'){
+      $('end-stamp').textContent = 'Mission green';
+      $('end-title').textContent = 'Data secured';
+      $('end-msg').textContent = state.data+' / '+TOTAL_DATA+' packets. Time left '+fmtTime(state.timeLeft)+'. Share the run.';
+      setMdp(mdpLines.success);
+    } else if(result==='fail-det'){
+      $('end-stamp').textContent = 'Soft fail';
+      $('end-title').textContent = 'Painted';
+      $('end-msg').textContent = 'Detection held at 100% for '+DET_FAIL_HOLD+'s. Packets: '+state.data+'.';
+      setMdp(mdpLines.failDet);
+    } else {
+      $('end-stamp').textContent = 'Window closed';
+      $('end-title').textContent = 'Incomplete';
+      $('end-msg').textContent = 'Only '+state.data+' packets before clock death. Need '+NEED_DATA+'+.';
+      setMdp(mdpLines.failTime);
+    }
+    updateHud();
+  }
+
+  function inputVector(){
+    var ix=0, iy=0;
+    if(keys['ArrowLeft']||keys['a']||keys['A']||padDir.w) ix -= 1;
+    if(keys['ArrowRight']||keys['d']||keys['D']||padDir.e) ix += 1;
+    if(keys['ArrowUp']||keys['w']||keys['W']||padDir.n) iy -= 1;
+    if(keys['ArrowDown']||keys['s']||keys['S']||padDir.s) iy += 1;
+    if(dragVec){ ix += dragVec.x; iy += dragVec.y; }
+    var len = Math.hypot(ix, iy);
+    if(len > 1){ ix/=len; iy/=len; }
+    return {x:ix, y:iy};
+  }
+
+  function update(dt){
+    // Real elapsed time for mission clock (fixes frame-drain bug)
+    state.timeAcc += dt;
+    while(state.timeAcc >= 1){
+      state.timeAcc -= 1;
+      state.timeLeft -= 1;
+      if(state.timeLeft <= 0){
+        state.timeLeft = 0;
+        if(state.data >= NEED_DATA) endMission('success');
+        else endMission('fail-time');
+        return;
+      }
+    }
+
+    var v = inputVector();
+    var accel = 420;
+    var friction = Math.pow(0.001, dt); // strong damping feel
+    craft.vx += v.x * accel * dt;
+    craft.vy += v.y * accel * dt;
+    craft.vx *= Math.pow(0.06, dt);
+    craft.vy *= Math.pow(0.06, dt);
+    var sp = Math.hypot(craft.vx, craft.vy);
+    var maxSp = 260;
+    if(sp > maxSp){ craft.vx *= maxSp/sp; craft.vy *= maxSp/sp; }
+    craft.x += craft.vx * dt;
+    craft.y += craft.vy * dt;
+    craft.x = Math.max(craft.r, Math.min(W-craft.r, craft.x));
+    craft.y = Math.max(craft.r, Math.min(H-craft.r, craft.y));
+    if(sp > 8) craft.angle = Math.atan2(craft.vy, craft.vx);
+
+    // packets
+    var prev = state.data;
+    for(var i=0;i<packets.length;i++){
+      var p = packets[i];
+      if(p.got) continue;
+      if(Math.hypot(craft.x-p.x, craft.y-p.y) < craft.r + p.r){
+        p.got = true;
+        state.data++;
+      }
+    }
+    if(state.data !== prev){
+      if(state.data===1) setMdp(mdpLines.collect1);
+      else if(state.data===2) setMdp(mdpLines.collect2);
+      else if(state.data===3) setMdp(mdpLines.collect3);
+      else if(state.data===4) setMdp(mdpLines.collect4);
+      else if(state.data===5) setMdp(mdpLines.collect5);
+      if(state.data >= NEED_DATA && state.data === NEED_DATA){
+        // soft nudge already via collect3
+      }
+    }
+
+    // detection zones
+    var inZone = false;
+    for(var z=0;z<zones.length;z++){
+      var zn = zones[z];
+      if(Math.hypot(craft.x-zn.x, craft.y-zn.y) < zn.r + craft.r*0.4){
+        inZone = true; break;
+      }
+    }
+    if(inZone){
+      state.detection = Math.min(100, state.detection + 28*dt);
+      if(state.detection >= 85 && state.detection < 100) setMdp(mdpLines.hot);
+    } else {
+      state.detection = Math.max(0, state.detection - 12*dt);
+    }
+
+    if(state.detection >= 100){
+      state.detFullAcc += dt;
+      setMdp(mdpLines.critical);
+      if(state.detFullAcc >= DET_FAIL_HOLD){
+        endMission('fail-det');
+        return;
+      }
+    } else {
+      state.detFullAcc = 0;
+    }
+
+    if(state.timeLeft === 60) setMdp(mdpLines.warnTime);
+
+    state.nearestCity = nearestCity();
+
+    // early success if all 5 and want? keep flying until time or player stops — only auto-end on timer/det
+    updateHud();
+  }
+
+  function drawGrid(){
+    ctx.fillStyle = '#1a2330';
+    ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(232,225,208,0.08)';
+    ctx.lineWidth = 1;
+    for(var x=0;x<W;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(var y=0;y<H;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    // terrain blobs
+    ctx.fillStyle = 'rgba(47,107,58,0.18)';
+    for(var i=0;i<cities.length;i++){
+      var c = cities[i];
+      ctx.beginPath();
+      ctx.ellipse(c.x*W, c.y*H, 70, 36, 0, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(232,225,208,0.55)';
+    ctx.font = '700 11px "Courier Prime", monospace';
+    ctx.textAlign = 'center';
+    for(var j=0;j<cities.length;j++){
+      var ci = cities[j];
+      ctx.fillText(ci.name.toUpperCase(), ci.x*W, ci.y*H + 4);
+    }
+  }
+
+  function draw(){
+    drawGrid();
+    // zones
+    for(var i=0;i<zones.length;i++){
+      var z = zones[i];
+      var g = ctx.createRadialGradient(z.x,z.y,z.r*0.2,z.x,z.y,z.r);
+      g.addColorStop(0,'rgba(184,50,30,0.45)');
+      g.addColorStop(1,'rgba(184,50,30,0.05)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(z.x,z.y,z.r,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle = 'rgba(184,50,30,0.85)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6,6]);
+      ctx.beginPath(); ctx.arc(z.x,z.y,z.r,0,Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // packets
+    for(var p=0;p<packets.length;p++){
+      var pk = packets[p];
+      if(pk.got) continue;
+      ctx.fillStyle = '#E8C84A';
+      ctx.strokeStyle = '#14140F';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(pk.x,pk.y,pk.r,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#14140F';
+      ctx.font = '700 10px "Courier Prime", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('◆', pk.x, pk.y+3);
+    }
+    // craft — saucer
+    ctx.save();
+    ctx.translate(craft.x, craft.y);
+    ctx.rotate(craft.angle);
+    ctx.fillStyle = '#cfd6e0';
+    ctx.strokeStyle = '#14140F';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.ellipse(0,0,22,9,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(184,50,30,0.85)';
+    ctx.beginPath(); ctx.ellipse(0,-4,10,7,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#E8C84A';
+    ctx.beginPath(); ctx.arc(-12,2,2.5,0,Math.PI*2); ctx.arc(12,2,2.5,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    // vignette
+    if(state.detection > 40){
+      var a = (state.detection-40)/60 * 0.35;
+      ctx.fillStyle = 'rgba(184,50,30,'+a+')';
+      ctx.fillRect(0,0,W,H);
+    }
+  }
+
+  function loop(ts){
+    if(state.running && !state.paused && !state.ended){
+      if(!state.lastTs) state.lastTs = ts;
+      var dt = Math.min(0.05, (ts - state.lastTs) / 1000);
+      state.lastTs = ts;
+      update(dt);
+    } else {
+      state.lastTs = ts;
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function shareText(){
+    var outcome = state.result || (state.data>=NEED_DATA?'in-progress-green':'in-progress');
+    return 'Mystery Drone Pilot · UFO run on Brobots Space Academy\n'+
+      'Data '+state.data+'/'+TOTAL_DATA+' · Time '+fmtTime(state.timeLeft)+' · Det '+Math.round(state.detection)+'%\n'+
+      'Outcome: '+outcome+'\n'+
+      'https://brobots-space-academy.vercel.app/ufo-pilot.html';
+  }
+
+  async function doShare(){
+    var text = shareText();
+    var url = 'https://brobots-space-academy.vercel.app/ufo-pilot.html';
+    var dataUrl = null;
+    try { dataUrl = canvas.toDataURL('image/png'); } catch(e){}
+
+    if(navigator.share){
+      try{
+        var data = {title:'UFO Pilot · Brobots', text:text, url:url};
+        if(dataUrl && navigator.canShare){
+          try{
+            var blob = await (await fetch(dataUrl)).blob();
+            var file = new File([blob], 'ufo-pilot-run.png', {type:'image/png'});
+            var withFile = {title:data.title, text:text, files:[file]};
+            if(navigator.canShare(withFile)){ await navigator.share(withFile); return; }
+          }catch(e){}
+        }
+        await navigator.share(data);
+        return;
+      }catch(e){
+        if(e && e.name==='AbortError') return;
+      }
+    }
+    var tw = 'https://twitter.com/intent/tweet?text='+encodeURIComponent(text);
+    window.open(tw, '_blank', 'noopener');
+  }
+
+  // keyboard
+  window.addEventListener('keydown', function(e){
+    keys[e.key] = true;
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].indexOf(e.key)>=0) e.preventDefault();
+    if(e.key==='p' || e.key==='P') togglePause();
+  });
+  window.addEventListener('keyup', function(e){ keys[e.key] = false; });
+
+  // touch pad
+  var pad = $('pad');
+  function bindPadBtn(btn){
+    var dir = btn.getAttribute('data-dir');
+    if(!dir) return;
+    function down(e){ e.preventDefault(); padDir[dir]=true; btn.classList.add('held'); }
+    function up(e){ e.preventDefault(); padDir[dir]=false; btn.classList.remove('held'); }
+    btn.addEventListener('pointerdown', down);
+    btn.addEventListener('pointerup', up);
+    btn.addEventListener('pointerleave', up);
+    btn.addEventListener('pointercancel', up);
+  }
+  pad.querySelectorAll('button[data-dir]').forEach(bindPadBtn);
+
+  // drag on canvas
+  var stage = $('stage');
+  var dragging = false, lastPX=0, lastPY=0;
+  function canvasPos(e){
+    var r = canvas.getBoundingClientRect();
+    var sx = W / r.width, sy = H / r.height;
+    var cx = (e.clientX - r.left)*sx, cy = (e.clientY - r.top)*sy;
+    return {x:cx,y:cy};
+  }
+  canvas.addEventListener('pointerdown', function(e){
+    if(!state.running || state.paused) return;
+    dragging = true;
+    canvas.setPointerCapture(e.pointerId);
+    var p = canvasPos(e);
+    lastPX=p.x; lastPY=p.y;
+    dragVec = {x:0,y:0};
+  });
+  canvas.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    var p = canvasPos(e);
+    var dx = p.x - craft.x, dy = p.y - craft.y;
+    var len = Math.hypot(dx,dy) || 1;
+    // pull toward finger / pointer
+    dragVec = {x: dx/len, y: dy/len};
+  });
+  function endDrag(e){
+    dragging = false;
+    dragVec = null;
+  }
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
+
+  $('btn-start').addEventListener('click', startMission);
+  $('btn-pause').addEventListener('click', togglePause);
+  $('btn-share').addEventListener('click', doShare);
+  $('btn-share-end').addEventListener('click', doShare);
+  $('btn-again').addEventListener('click', function(){ resetWorld(); startMission(); });
+  $('btn-pad').addEventListener('click', function(){
+    pad.classList.toggle('on');
+  });
+
+  resetWorld();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
