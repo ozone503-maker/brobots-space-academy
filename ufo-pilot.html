@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>BROBOTS — Mystery Drone Pilot · UFO Mission</title>
-<meta name="description" content="Mystery Drone Pilot UFO mission prototype. Collect data, stay dark, share the run. Brobots Space Factory.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+<title>BROBOTS — UFO Pilot · Cockpit Mission</title>
+<meta name="description" content="Look out the UFO windows at Earth. Collect data, stay dark, share the run. Brobots Space Factory cockpit prototype.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
 :root{
   --paper:#E8E1D0; --paper-2:#DFD6C1; --ink:#14140F; --red:#B8321E;
-  --ok:#2F6B3A; --warn:#C4A035; --sky:#1a2330; --grid:#2a3544;
+  --ok:#2F6B3A; --warn:#C4A035; --glass:rgba(200,220,240,.12); --metal:#1c1a16;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -28,62 +29,97 @@ a{color:inherit}
 .hero{margin:20px 0 16px;padding:18px;border:4px solid var(--ink);background:var(--paper-2)}
 .hero h1{font-size:clamp(1.8rem,6vw,3rem);margin:.3em 0 .4em}
 .hero p{max-width:58ch;font-size:.95rem}
-.btn,.toolbtn{appearance:none;border:3px solid var(--ink);background:var(--ink);color:var(--paper);padding:.65em .95em;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;text-decoration:none;display:inline-block}
+
+/* BIG phone-thumb buttons */
+.toolbtn,.btn{
+  appearance:none;border:4px solid var(--ink);background:var(--ink);color:var(--paper);
+  padding:1em 1.25em;min-height:56px;min-width:120px;
+  font-family:'Courier Prime',monospace;font-size:.9rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;cursor:pointer;text-decoration:none;
+  display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
 .toolbtn.ghost,.btn.ghost{background:transparent;color:var(--ink)}
-.toolbtn.hot,.btn.hot{background:var(--red);border-color:var(--red);color:#fff}
+.toolbtn.hot,.btn.hot{background:var(--red);border-color:var(--red);color:#fff;min-width:160px;font-size:1rem;padding:1.1em 1.4em}
 .toolbtn:disabled{opacity:.45;cursor:not-allowed}
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}
+
+/* Cockpit stage — map fills, frame sits on top */
 .stage{
-  position:relative;border:4px solid var(--ink);background:var(--sky);overflow:hidden;
+  position:relative;border:4px solid var(--ink);overflow:hidden;
+  height:min(72vh,640px);min-height:420px;background:#0a0a08;
   touch-action:none;user-select:none;-webkit-user-select:none;
 }
-canvas#arena{display:block;width:100%;height:auto;max-height:min(70vh,640px);background:var(--sky);cursor:crosshair}
-.hud{
-  position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:10px;
+#map{
+  position:absolute;inset:0;z-index:0;
+  /* Leaflet must receive no pan gestures — we fly programmatically */
+  pointer-events:none;
 }
-.hud-top,.hud-bot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:flex-start}
-.chip{
-  pointer-events:none;background:rgba(232,225,208,.92);border:3px solid var(--ink);
-  padding:6px 10px;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:.08em;color:var(--ink);
+#map .leaflet-control-attribution{
+  pointer-events:auto;background:rgba(20,20,15,.65)!important;color:#E8E1D0!important;
+  font-size:9px!important;max-width:55%;
 }
-.chip.warn{background:rgba(196,160,53,.95);color:var(--ink)}
-.chip.hot{background:rgba(184,50,30,.95);color:#fff;border-color:#fff}
-.chip.ok{background:rgba(47,107,58,.95);color:#fff;border-color:#fff}
-.brief{
-  margin-top:12px;padding:14px 16px;border:4px solid var(--ink);background:var(--paper-2);
-  min-height:4.2em;
+#map .leaflet-control-attribution a{color:#E8E1D0!important}
+
+/* Cockpit frame — solid metal, clear glass cutouts */
+.cockpit{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  display:grid;grid-template-rows:1fr auto;
 }
-.brief .who{color:var(--red);margin-bottom:6px}
-.brief #mdp-line{font-size:1.02rem;max-width:70ch}
-.meter-wrap{margin-top:10px}
-.meter-label{display:flex;justify-content:space-between;margin-bottom:4px}
-.meter{height:14px;border:3px solid var(--ink);background:#fff}
-.meter>i{display:block;height:100%;width:0;background:var(--red);transition:width .12s linear}
-.pad{
-  display:none;margin:14px 0 0;gap:8px;justify-content:center;align-items:center;
-  user-select:none;-webkit-user-select:none;
+.cockpit-svg{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;
 }
-.pad.on{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,56px);justify-content:center}
-.pad button{
-  appearance:none;border:3px solid var(--ink);background:var(--paper-2);color:var(--ink);
-  font-family:'Archivo Black',sans-serif;font-size:1.1rem;cursor:pointer;touch-action:manipulation;
+/* Soft vignette only — do NOT tint the whole map */
+.glass-vignette{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, transparent 55%, rgba(10,8,6,.28) 100%),
+    linear-gradient(180deg, rgba(20,18,14,.18) 0%, transparent 18%, transparent 72%, rgba(20,18,14,.22) 100%);
 }
-.pad button:active,.pad button.held{background:var(--red);color:#fff}
-.pad .n{grid-column:2;grid-row:1}
-.pad .w{grid-column:1;grid-row:2}
-.pad .e{grid-column:3;grid-row:2}
-.pad .s{grid-column:2;grid-row:3}
-.pad .idle{grid-column:2;grid-row:2;background:transparent;border-style:dashed;pointer-events:none;opacity:.35;font-size:.55rem;letter-spacing:.06em}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;font-size:.85rem}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.sw{width:14px;height:14px;border:2px solid var(--ink);display:inline-block}
-.sw.y{background:#E8C84A}.sw.r{background:rgba(184,50,30,.55)}.sw.u{background:#cfd6e0;border-radius:50%}
-.note{margin:18px 0;padding:14px 16px;border:3px dashed var(--ink);background:var(--paper);font-size:.88rem}
-.note a{color:var(--red);font-family:'Courier Prime',monospace;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border-bottom:2px solid var(--red)}
+.dash{
+  position:relative;z-index:3;pointer-events:none;
+  background:linear-gradient(180deg,#2a2620 0%,#1a1814 100%);
+  border-top:3px solid #3d3830;
+  padding:10px 12px 12px;
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;
+  box-shadow:0 -8px 24px rgba(0,0,0,.45);
+}
+.dash .chip{
+  pointer-events:none;background:rgba(232,225,208,.95);border:3px solid var(--ink);
+  padding:8px 12px;font-family:'Courier Prime',monospace;font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--ink);min-height:40px;
+  display:inline-flex;align-items:center;
+}
+.dash .chip.warn{background:rgba(196,160,53,.95)}
+.dash .chip.hot{background:rgba(184,50,30,.95);color:#fff;border-color:#fff}
+.dash .chip.ok{background:rgba(47,107,58,.95);color:#fff;border-color:#fff}
+.dash .chip.glass{
+  background:rgba(180,210,230,.22);border-color:rgba(180,210,230,.55);color:#E8E1D0;
+  backdrop-filter:blur(2px);
+}
+.reticule{
+  position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);
+  z-index:2;pointer-events:none;width:48px;height:48px;opacity:.85;
+}
+.hud-float{
+  position:absolute;z-index:3;pointer-events:none;
+  left:12px;top:12px;right:12px;
+  display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
+}
+.hud-float .chip{
+  background:rgba(232,225,208,.88);border:3px solid var(--ink);
+  padding:8px 12px;font-family:'Courier Prime',monospace;font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;min-height:40px;
+  display:inline-flex;align-items:center;
+}
+.hud-float .chip.warn{background:rgba(196,160,53,.92)}
+.hud-float .chip.hot{background:rgba(184,50,30,.92);color:#fff;border-color:#fff}
+.hud-float .chip.ok{background:rgba(47,107,58,.92);color:#fff;border-color:#fff}
+
 .overlay{
-  position:absolute;inset:0;display:none;align-items:center;justify-content:center;
-  background:rgba(20,20,15,.78);padding:18px;pointer-events:auto;
+  position:absolute;inset:0;z-index:10;display:none;align-items:center;justify-content:center;
+  background:rgba(20,20,15,.72);padding:18px;pointer-events:auto;
 }
 .overlay.on{display:flex}
 .card{
@@ -91,19 +127,83 @@ canvas#arena{display:block;width:100%;height:auto;max-height:min(70vh,640px);bac
 }
 .card h2{font-size:clamp(1.6rem,5vw,2.4rem);margin:.35em 0 .5em}
 .card p{margin-bottom:1em}
-.card .row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.card .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+
+/* Detection heat edge — only when hot, not a permanent map tint */
+.heat-edge{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;
+  box-shadow:inset 0 0 80px rgba(184,50,30,.55);
+  transition:opacity .2s;
+}
+
+/* BIG thumb stick / D-pad */
+.pad{
+  display:grid;margin:16px auto 0;gap:10px;
+  grid-template-columns:repeat(3,88px);grid-template-rows:repeat(3,78px);
+  justify-content:center;
+  user-select:none;-webkit-user-select:none;
+}
+.pad button{
+  appearance:none;border:4px solid var(--ink);background:var(--paper-2);color:var(--ink);
+  font-family:'Archivo Black',sans-serif;font-size:1.6rem;cursor:pointer;
+  touch-action:manipulation;min-height:78px;-webkit-tap-highlight-color:transparent;
+}
+.pad button:active,.pad button.held{background:var(--red);color:#fff}
+.pad .n{grid-column:2;grid-row:1}
+.pad .w{grid-column:1;grid-row:2}
+.pad .e{grid-column:3;grid-row:2}
+.pad .s{grid-column:2;grid-row:3}
+.pad .idle{
+  grid-column:2;grid-row:2;background:var(--ink);color:var(--paper);
+  border-style:solid;pointer-events:none;font-size:.7rem;letter-spacing:.08em;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.brief{
+  margin-top:14px;padding:14px 16px;border:4px solid var(--ink);background:var(--paper-2);min-height:4.2em;
+}
+.brief .who{color:var(--red);margin-bottom:6px}
+.brief #mdp-line{font-size:1.02rem;max-width:70ch}
+.meter-wrap{margin-top:12px}
+.meter-label{display:flex;justify-content:space-between;margin-bottom:4px}
+.meter{height:18px;border:3px solid var(--ink);background:#fff}
+.meter>i{display:block;height:100%;width:0;background:var(--red);transition:width .12s linear}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:12px 0;font-size:.9rem}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:16px;height:16px;border:2px solid var(--ink);display:inline-block}
+.sw.y{background:#E8C84A;border-radius:50%;box-shadow:0 0 8px #E8C84A}
+.sw.r{background:rgba(184,50,30,.7);border-radius:50%}
+.sw.u{background:#cfd6e0;border-radius:4px}
+.note{margin:18px 0;padding:14px 16px;border:3px dashed var(--ink);background:var(--paper);font-size:.88rem}
+.note a{color:var(--red);font-family:'Courier Prime',monospace;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border-bottom:2px solid var(--red)}
+.hint{font-size:.88rem;margin:8px 0 0;opacity:.85}
 footer{margin-top:36px;padding:28px 0;background:var(--ink);color:var(--paper)}
 footer a{color:var(--paper)}
 .foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+/* Custom map markers */
+.pkt-marker{
+  width:28px;height:28px;border-radius:50%;background:#E8C84A;border:3px solid #14140F;
+  box-shadow:0 0 14px rgba(232,200,74,.9),0 0 4px #000;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#14140F;
+}
+.pkt-marker.got{opacity:.25;box-shadow:none;background:#888}
+.zone-marker{
+  width:100%;height:100%;border-radius:50%;
+  background:rgba(184,50,30,.22);border:2px dashed rgba(184,50,30,.85);
+  box-shadow:inset 0 0 20px rgba(184,50,30,.25);
+}
+.craft-pip{
+  width:18px;height:18px;border-radius:50%;
+  background:rgba(232,225,208,.95);border:3px solid var(--red);
+  box-shadow:0 0 10px rgba(184,50,30,.7);
+}
+
 @media(max-width:720px){
-  .pad.on{display:grid}
-  canvas#arena{max-height:52vh}
-}
-@media(min-width:721px){
-  .pad.on{display:none}
-}
-@media(pointer:coarse){
-  .pad.on{display:grid}
+  .stage{height:min(58vh,520px);min-height:360px}
+  .pad{grid-template-columns:repeat(3,76px);grid-template-rows:repeat(3,72px)}
+  .pad button{min-height:72px;font-size:1.4rem}
+  .toolbtn.hot{width:100%}
 }
 </style>
 </head>
@@ -111,6 +211,8 @@ footer a{color:var(--paper)}
 <!--
   Brobots layer / wiring template — NOT production flight physics.
   Production physics/terrain = RCForge + OSM (MIT). Not HexGL.
+  This prototype uses Leaflet + Esri World Imagery as a Mapbox/satellite stand-in
+  until RCForge + OSM production terrain lands.
   See docs/GAME_FOUNDATIONS.md
 -->
 <header class="wrap mast">
@@ -130,42 +232,98 @@ footer a{color:var(--paper)}
 
 <main class="wrap">
   <section class="hero">
-    <span class="stamp" style="color:var(--red)">Mystery Drone Pilot · Mission proto</span>
-    <h1 class="blk">Stay dark. Grab the packets.</h1>
-    <p>Five-minute window. Five data points on the board — secure <strong>three or more</strong> before the clock dies. Yellow = collect. Red = detection. WASD / arrows / touch pad. MDP is on the wing.</p>
+    <span class="stamp" style="color:var(--red)">Cockpit view · Mystery Drone Pilot on comms</span>
+    <h1 class="blk">Look out the windows. Fly Earth.</h1>
+    <p>You are in the craft. Satellite cityscape out the glass. Five-minute window — secure <strong>three or more</strong> glowing data sites. Red rings = detection. WASD / arrows / big pad. MDP is on the wing.</p>
+    <p class="hint mono">Tip: streets and rooftops should read clearly through the windshield. Fly low over the city you landed in.</p>
   </section>
 
   <div class="toolbar">
-    <button type="button" class="toolbtn hot" id="btn-start">Start mission</button>
+    <button type="button" class="toolbtn hot" id="btn-start">Launch mission</button>
     <button type="button" class="toolbtn ghost" id="btn-pause" disabled>Pause</button>
     <button type="button" class="toolbtn ghost" id="btn-share" disabled>Share run</button>
-    <button type="button" class="toolbtn ghost" id="btn-pad">Touch pad</button>
   </div>
 
   <div class="legend">
-    <span><i class="sw u"></i> Your craft</span>
-    <span><i class="sw y"></i> Data packet</span>
-    <span><i class="sw r"></i> Detection zone</span>
+    <span><i class="sw u"></i> You (center of glass)</span>
+    <span><i class="sw y"></i> Data site</span>
+    <span><i class="sw r"></i> Detection ring</span>
   </div>
 
-  <div class="stage" id="stage">
-    <canvas id="arena" width="960" height="540" aria-label="UFO mission arena"></canvas>
-    <div class="hud">
-      <div class="hud-top">
-        <div class="chip" id="hud-time">05:00</div>
-        <div class="chip" id="hud-data">DATA 0 / 5</div>
-        <div class="chip" id="hud-city">—</div>
-      </div>
-      <div class="hud-bot">
-        <div class="chip" id="hud-status">STANDBY</div>
-        <div class="chip" id="hud-det">DET 0%</div>
-      </div>
+  <div class="stage" id="stage" aria-label="UFO cockpit looking out at Earth">
+    <div id="map" role="img" aria-label="Satellite view through cockpit windows"></div>
+    <div class="glass-vignette" aria-hidden="true"></div>
+    <div class="heat-edge" id="heat-edge" aria-hidden="true"></div>
+
+    <!-- Cockpit metal frame: windshield + side windows cut out so imagery shows through -->
+    <svg class="cockpit-svg" viewBox="0 0 1000 640" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <mask id="glassMask">
+          <rect width="1000" height="640" fill="white"/>
+          <!-- Center windshield -->
+          <path d="M210 70 L790 70 Q860 70 880 130 L900 340 Q900 390 840 400 L160 400 Q100 390 100 340 L120 130 Q140 70 210 70 Z" fill="black"/>
+          <!-- Left side window -->
+          <path d="M18 160 L95 145 L88 360 L22 375 Z" fill="black"/>
+          <!-- Right side window -->
+          <path d="M905 145 L982 160 L978 375 L912 360 Z" fill="black"/>
+        </mask>
+        <linearGradient id="metalGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3a3530"/>
+          <stop offset="40%" stop-color="#1e1b17"/>
+          <stop offset="100%" stop-color="#0e0c0a"/>
+        </linearGradient>
+        <linearGradient id="glassShine" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.14)"/>
+          <stop offset="35%" stop-color="rgba(255,255,255,0)"/>
+          <stop offset="100%" stop-color="rgba(180,210,240,0.06)"/>
+        </linearGradient>
+      </defs>
+      <!-- Opaque cockpit body outside glass -->
+      <rect width="1000" height="640" fill="url(#metalGrad)" mask="url(#glassMask)"/>
+      <!-- Pillars / mullions -->
+      <path d="M200 80 L215 395" stroke="#0a0908" stroke-width="10" fill="none" opacity=".9"/>
+      <path d="M800 80 L785 395" stroke="#0a0908" stroke-width="10" fill="none" opacity=".9"/>
+      <path d="M100 340 L900 340" stroke="#2a2620" stroke-width="3" opacity=".5"/>
+      <!-- Light glass reflection only — keeps city readable -->
+      <path d="M210 70 L790 70 Q860 70 880 130 L900 340 Q900 390 840 400 L160 400 Q100 390 100 340 L120 130 Q140 70 210 70 Z"
+            fill="url(#glassShine)" opacity=".55"/>
+      <!-- Dashboard brow -->
+      <path d="M0 400 L160 400 Q200 420 500 430 Q800 420 840 400 L1000 400 L1000 640 L0 640 Z" fill="#161410"/>
+      <path d="M40 455 Q500 480 960 455" stroke="#3d3830" stroke-width="2" fill="none"/>
+      <!-- Small instrument bezels (decorative) -->
+      <rect x="70" y="470" width="70" height="44" rx="4" fill="#0a0908" stroke="#4a453c" stroke-width="2"/>
+      <rect x="160" y="470" width="70" height="44" rx="4" fill="#0a0908" stroke="#4a453c" stroke-width="2"/>
+      <rect x="770" y="470" width="70" height="44" rx="4" fill="#0a0908" stroke="#4a453c" stroke-width="2"/>
+      <rect x="860" y="470" width="70" height="44" rx="4" fill="#0a0908" stroke="#4a453c" stroke-width="2"/>
+      <text x="105" y="498" text-anchor="middle" fill="#E8E1D0" font-family="Courier Prime,monospace" font-size="11" opacity=".7">ALT</text>
+      <text x="195" y="498" text-anchor="middle" fill="#E8E1D0" font-family="Courier Prime,monospace" font-size="11" opacity=".7">HDG</text>
+      <text x="805" y="498" text-anchor="middle" fill="#E8E1D0" font-family="Courier Prime,monospace" font-size="11" opacity=".7">SIG</text>
+      <text x="895" y="498" text-anchor="middle" fill="#E8E1D0" font-family="Courier Prime,monospace" font-size="11" opacity=".7">PWR</text>
+    </svg>
+
+    <svg class="reticule" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="10" fill="none" stroke="rgba(232,225,208,.85)" stroke-width="2"/>
+      <circle cx="24" cy="24" r="2" fill="rgba(184,50,30,.95)"/>
+      <path d="M24 4v8M24 36v8M4 24h8M36 24h8" stroke="rgba(232,225,208,.75)" stroke-width="2"/>
+    </svg>
+
+    <div class="hud-float">
+      <div class="chip" id="hud-time">05:00</div>
+      <div class="chip" id="hud-city">—</div>
+      <div class="chip" id="hud-data">DATA 0 / 5</div>
     </div>
+
+    <div class="dash">
+      <div class="chip" id="hud-status">STANDBY</div>
+      <div class="chip glass" id="hud-coords">—</div>
+      <div class="chip" id="hud-det">DET 0%</div>
+    </div>
+
     <div class="overlay" id="overlay" role="dialog" aria-modal="true">
       <div class="card">
         <div class="stamp" style="color:var(--red)" id="end-stamp">Mission</div>
         <h2 class="blk" id="end-title">Ready</h2>
-        <p id="end-msg">Collect 3+ data packets in 5:00. Avoid red zones.</p>
+        <p id="end-msg">Collect 3+ data sites in 5:00. Avoid red detection rings.</p>
         <div class="row">
           <button type="button" class="toolbtn hot" id="btn-again">Fly again</button>
           <button type="button" class="toolbtn ghost" id="btn-share-end">Share</button>
@@ -174,12 +332,12 @@ footer a{color:var(--paper)}
     </div>
   </div>
 
-  <div class="pad on" id="pad" aria-label="Touch controls">
-    <button type="button" class="n" data-dir="n" aria-label="North">N</button>
-    <button type="button" class="w" data-dir="w" aria-label="West">W</button>
-    <button type="button" class="idle" tabindex="-1">MDP</button>
-    <button type="button" class="e" data-dir="e" aria-label="East">E</button>
-    <button type="button" class="s" data-dir="s" aria-label="South">S</button>
+  <div class="pad" id="pad" aria-label="Flight stick — big thumb controls">
+    <button type="button" class="n" data-dir="n" aria-label="Fly north">▲</button>
+    <button type="button" class="w" data-dir="w" aria-label="Fly west">◀</button>
+    <div class="idle" aria-hidden="true">FLY</div>
+    <button type="button" class="e" data-dir="e" aria-label="Fly east">▶</button>
+    <button type="button" class="s" data-dir="s" aria-label="Fly south">▼</button>
   </div>
 
   <div class="meter-wrap">
@@ -192,12 +350,12 @@ footer a{color:var(--paper)}
 
   <aside class="brief">
     <div class="stamp who">Mystery Drone Pilot · Wingman</div>
-    <p id="mdp-line">Channel open. Press START when you are ready to leave the hangar.</p>
+    <p id="mdp-line">Channel open. Press LAUNCH when you are ready to leave the hangar. Look out the glass — real city below.</p>
   </aside>
 
   <aside class="note">
     <p class="stamp" style="margin-bottom:8px">Foundations</p>
-    <p>This page is the <strong>Brobots layer / wiring template</strong> (HUD, MDP, mission loop, share). Production physics and continuous terrain = <strong>RCForge + OSM</strong> (MIT). Not HexGL. Spec: <a href="docs/GAME_FOUNDATIONS.md">docs/GAME_FOUNDATIONS.md</a>.</p>
+    <p>This page is the <strong>Brobots layer / wiring template</strong> (cockpit HUD, MDP, mission loop, share). Satellite tiles stand in for OSM terrain until production. Physics foundation = <strong>RCForge + OSM</strong> (MIT). Not HexGL. Spec: <a href="docs/GAME_FOUNDATIONS.md">docs/GAME_FOUNDATIONS.md</a>.</p>
   </aside>
 </main>
 
@@ -205,7 +363,7 @@ footer a{color:var(--paper)}
   <div class="wrap foot">
     <div>
       <div class="blk" style="font-size:1.7rem;margin-bottom:6px">BroBots</div>
-      <div class="stamp">UFO Pilot · Mystery Drone Pilot · © 2026</div>
+      <div class="stamp">UFO Pilot · Cockpit · Mystery Drone Pilot · © 2026</div>
     </div>
     <div class="mast-nav stamp">
       <a href="index.html">Campus</a>
@@ -218,49 +376,60 @@ footer a{color:var(--paper)}
   </div>
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 (function(){
   'use strict';
 
-  var MISSION_SECS = 300; // 5:00 real time
+  var MISSION_SECS = 300;
   var NEED_DATA = 3;
   var TOTAL_DATA = 5;
-  var DET_FAIL_HOLD = 2; // seconds at 100% before soft fail
+  var DET_FAIL_HOLD = 2;
+  var FLY_ZOOM = 16; // streets/buildings readable
 
+  // Real cities — satellite must show urban fabric
   var cities = [
-    {name:'Mountain View', x:0.18, y:0.72},
-    {name:'Roswell', x:0.42, y:0.38},
-    {name:'Area 51', x:0.28, y:0.28},
-    {name:'Dulce', x:0.55, y:0.48},
-    {name:'Skinwalker', x:0.68, y:0.32},
-    {name:'Varginha', x:0.78, y:0.70},
-    {name:'Rendlesham', x:0.88, y:0.22}
+    {name:'Mountain View', lat:37.3894, lng:-122.0819},
+    {name:'Roswell', lat:33.3943, lng:-104.5230},
+    {name:'Las Vegas Strip', lat:36.1147, lng:-115.1728},
+    {name:'Downtown Austin', lat:30.2672, lng:-97.7431},
+    {name:'Honolulu', lat:21.3069, lng:-157.8583},
+    {name:'San Francisco', lat:37.7749, lng:-122.4194},
+    {name:'Chicago Loop', lat:41.8827, lng:-87.6233}
   ];
 
   var mdpLines = {
-    standby: 'Channel open. Press START when you are ready to leave the hangar.',
-    start: 'Window is five minutes. Three packets minimum. Stay off the red.',
-    collect1: 'First packet locked. Pattern forming.',
+    standby: 'Channel open. Press LAUNCH when you are ready to leave the hangar. Look out the glass — real city below.',
+    start: 'Window is five minutes. Three sites minimum. Stay off the red rings. Fly the streets you can see.',
+    collect1: 'First site locked. Pattern forming.',
     collect2: 'Two secured. One more for a clean disclosure brief.',
-    collect3: 'Three packets. Enough to confirm. Optional: go for all five.',
-    collect4: 'Four. Satellites are nervous. Keep altitude quiet.',
+    collect3: 'Three sites. Enough to confirm. Optional: go for all five.',
+    collect4: 'Four. Keep altitude quiet over the rooftops.',
     collect5: 'Full haul. Extract before the clock eats you.',
-    hot: 'You are hot. Detection climbing — bank out of the zone.',
+    hot: 'You are hot. Detection climbing — bank out of the ring.',
     critical: 'Detection critical. Two seconds at full burn ends the run.',
-    warnTime: 'Clock bleeding. Prioritize packets over sightseeing.',
+    warnTime: 'Clock bleeding. Prioritize glowing sites over sightseeing.',
     success: 'Mission green. Data is clean. Share it or fly again.',
     failTime: 'Window closed. Incomplete haul. Reset and try a tighter line.',
     failDet: 'Painted. Soft fail — you sat at 100% too long. Extract next time.',
     pause: 'Hold. Systems frozen. Resume when the sky clears.'
   };
 
-  var canvas = document.getElementById('arena');
-  var ctx = canvas.getContext('2d');
-  var W = canvas.width, H = canvas.height;
+  function $(id){ return document.getElementById(id); }
+
+  var startCity = cities[Math.floor(Math.random() * cities.length)];
+
+  // Craft state in lat/lng — you ARE the view center
+  var craft = {
+    lat: startCity.lat,
+    lng: startCity.lng,
+    vLat: 0,
+    vLng: 0
+  };
 
   var keys = Object.create(null);
   var padDir = {n:false,s:false,e:false,w:false};
-  var dragVec = null;
+  var stickVec = null; // thumb drag on stage
 
   var state = {
     running: false,
@@ -273,30 +442,106 @@ footer a{color:var(--paper)}
     detection: 0,
     detFullAcc: 0,
     result: null,
-    nearestCity: '—'
+    cityName: startCity.name
   };
 
-  var craft = {x: W*0.12, y: H*0.78, vx:0, vy:0, r:14, angle:0};
   var packets = [];
   var zones = [];
+  var packetMarkers = [];
+  var zoneMarkers = [];
 
-  function $(id){ return document.getElementById(id); }
+  // --- Map: Esri World Imagery (free, no token) ---
+  var map = L.map('map', {
+    zoomControl: false,
+    attributionControl: true,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    touchZoom: false,
+    inertia: false
+  }).setView([craft.lat, craft.lng], FLY_ZOOM);
+
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics',
+    maxZoom: 19,
+    maxNativeZoom: 19
+  }).addTo(map);
+
+  // Degrees per second at this zoom — tuned so city blocks scroll recognizably
+  function speedScale(){
+    // ~1 city block feel at zoom 16
+    return 0.00055;
+  }
+
+  function metersOffset(lat, dLat, dLng){
+    return {lat: lat + dLat, lng: craft.lng + dLng};
+  }
+
+  function spawnMissionAround(center){
+    packets = [];
+    zones = [];
+    packetMarkers.forEach(function(m){ map.removeLayer(m); });
+    zoneMarkers.forEach(function(m){ map.removeLayer(m); });
+    packetMarkers = [];
+    zoneMarkers = [];
+
+    // Spread sites ~150–450m around craft so they appear in-window over city fabric
+    var offsets = [
+      {dLat: 0.0022, dLng: 0.0015},
+      {dLat: -0.0018, dLng: 0.0028},
+      {dLat: 0.0010, dLng: -0.0025},
+      {dLat: -0.0024, dLng: -0.0012},
+      {dLat: 0.0006, dLng: 0.0032}
+    ];
+    for(var i=0;i<TOTAL_DATA;i++){
+      var o = offsets[i];
+      var plat = center.lat + o.dLat;
+      var plng = center.lng + o.dLng;
+      var pkt = {lat:plat, lng:plng, got:false, rMeters:45};
+      packets.push(pkt);
+      var icon = L.divIcon({
+        className: '',
+        html: '<div class="pkt-marker">◆</div>',
+        iconSize: [28,28],
+        iconAnchor: [14,14]
+      });
+      var mk = L.marker([plat, plng], {icon:icon, interactive:false}).addTo(map);
+      packetMarkers.push(mk);
+    }
+
+    var zOff = [
+      {dLat: 0.0012, dLng: 0.0002, r:90},
+      {dLat: -0.0008, dLng: 0.0018, r:80},
+      {dLat: 0.0002, dLng: -0.0016, r:95},
+      {dLat: -0.0015, dLng: -0.0005, r:75}
+    ];
+    for(var z=0;z<zOff.length;z++){
+      var zo = zOff[z];
+      var zlat = center.lat + zo.dLat;
+      var zlng = center.lng + zo.dLng;
+      zones.push({lat:zlat, lng:zlng, rMeters:zo.r});
+      var circle = L.circle([zlat, zlng], {
+        radius: zo.r,
+        color: 'rgba(184,50,30,0.9)',
+        weight: 2,
+        dashArray: '6 6',
+        fillColor: '#B8321E',
+        fillOpacity: 0.18,
+        interactive: false
+      }).addTo(map);
+      zoneMarkers.push(circle);
+    }
+  }
 
   function resetWorld(){
-    craft.x = W*0.12; craft.y = H*0.78; craft.vx=0; craft.vy=0; craft.angle=0;
-    packets = [
-      {x:W*0.32,y:H*0.25,r:11,got:false},
-      {x:W*0.52,y:H*0.55,r:11,got:false},
-      {x:W*0.70,y:H*0.20,r:11,got:false},
-      {x:W*0.62,y:H*0.75,r:11,got:false},
-      {x:W*0.88,y:H*0.48,r:11,got:false}
-    ];
-    zones = [
-      {x:W*0.40,y:H*0.40,r:58},
-      {x:W*0.58,y:H*0.22,r:48},
-      {x:W*0.75,y:H*0.58,r:62},
-      {x:W*0.48,y:H*0.72,r:44}
-    ];
+    startCity = cities[Math.floor(Math.random() * cities.length)];
+    craft.lat = startCity.lat;
+    craft.lng = startCity.lng;
+    craft.vLat = 0;
+    craft.vLng = 0;
+    state.cityName = startCity.name;
     state.running = false;
     state.paused = false;
     state.ended = false;
@@ -307,6 +552,8 @@ footer a{color:var(--paper)}
     state.detection = 0;
     state.detFullAcc = 0;
     state.result = null;
+    map.setView([craft.lat, craft.lng], FLY_ZOOM, {animate:false});
+    spawnMissionAround(craft);
     setMdp(mdpLines.standby);
     updateHud();
     $('overlay').classList.remove('on');
@@ -314,11 +561,10 @@ footer a{color:var(--paper)}
     $('btn-pause').disabled = true;
     $('btn-share').disabled = true;
     $('btn-pause').textContent = 'Pause';
+    $('heat-edge').style.opacity = '0';
   }
 
-  function setMdp(line){
-    $('mdp-line').textContent = line;
-  }
+  function setMdp(line){ $('mdp-line').textContent = line; }
 
   function fmtTime(s){
     s = Math.max(0, Math.ceil(s));
@@ -326,10 +572,25 @@ footer a{color:var(--paper)}
     return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;
   }
 
+  function fmtCoord(lat, lng){
+    return lat.toFixed(4)+'°, '+lng.toFixed(4)+'°';
+  }
+
+  function haversineMeters(aLat, aLng, bLat, bLng){
+    var R = 6371000;
+    var toR = Math.PI/180;
+    var dLat = (bLat-aLat)*toR;
+    var dLng = (bLng-aLng)*toR;
+    var x = Math.sin(dLat/2)*Math.sin(dLat/2) +
+            Math.cos(aLat*toR)*Math.cos(bLat*toR)*Math.sin(dLng/2)*Math.sin(dLng/2);
+    return 2*R*Math.asin(Math.sqrt(x));
+  }
+
   function updateHud(){
     $('hud-time').textContent = fmtTime(state.timeLeft);
     $('hud-data').textContent = 'DATA '+state.data+' / '+TOTAL_DATA;
-    $('hud-city').textContent = state.nearestCity;
+    $('hud-city').textContent = state.cityName;
+    $('hud-coords').textContent = fmtCoord(craft.lat, craft.lng);
     $('hud-det').textContent = 'DET '+Math.round(state.detection)+'%';
     $('det-pct').textContent = Math.round(state.detection)+'%';
     $('det-bar').style.width = Math.min(100, state.detection)+'%';
@@ -361,17 +622,9 @@ footer a{color:var(--paper)}
     } else {
       $('hud-time').classList.remove('warn');
     }
-  }
 
-  function nearestCity(){
-    var best = cities[0], bd = 1e9;
-    for(var i=0;i<cities.length;i++){
-      var c = cities[i];
-      var dx = craft.x - c.x*W, dy = craft.y - c.y*H;
-      var d = dx*dx+dy*dy;
-      if(d<bd){ bd=d; best=c; }
-    }
-    return best.name;
+    var heat = Math.max(0, (state.detection - 40) / 60);
+    $('heat-edge').style.opacity = String(heat * 0.85);
   }
 
   function startMission(){
@@ -387,6 +640,8 @@ footer a{color:var(--paper)}
     $('overlay').classList.remove('on');
     setMdp(mdpLines.start);
     updateHud();
+    // Invalidate size in case layout settled
+    setTimeout(function(){ map.invalidateSize(); }, 50);
   }
 
   function togglePause(){
@@ -416,17 +671,17 @@ footer a{color:var(--paper)}
     if(result==='success'){
       $('end-stamp').textContent = 'Mission green';
       $('end-title').textContent = 'Data secured';
-      $('end-msg').textContent = state.data+' / '+TOTAL_DATA+' packets. Time left '+fmtTime(state.timeLeft)+'. Share the run.';
+      $('end-msg').textContent = state.data+' / '+TOTAL_DATA+' sites over '+state.cityName+'. Time left '+fmtTime(state.timeLeft)+'.';
       setMdp(mdpLines.success);
     } else if(result==='fail-det'){
       $('end-stamp').textContent = 'Soft fail';
       $('end-title').textContent = 'Painted';
-      $('end-msg').textContent = 'Detection held at 100% for '+DET_FAIL_HOLD+'s. Packets: '+state.data+'.';
+      $('end-msg').textContent = 'Detection held at 100% for '+DET_FAIL_HOLD+'s. Sites: '+state.data+'.';
       setMdp(mdpLines.failDet);
     } else {
       $('end-stamp').textContent = 'Window closed';
       $('end-title').textContent = 'Incomplete';
-      $('end-msg').textContent = 'Only '+state.data+' packets before clock death. Need '+NEED_DATA+'+.';
+      $('end-msg').textContent = 'Only '+state.data+' sites before clock death. Need '+NEED_DATA+'+.';
       setMdp(mdpLines.failTime);
     }
     updateHud();
@@ -438,14 +693,14 @@ footer a{color:var(--paper)}
     if(keys['ArrowRight']||keys['d']||keys['D']||padDir.e) ix += 1;
     if(keys['ArrowUp']||keys['w']||keys['W']||padDir.n) iy -= 1;
     if(keys['ArrowDown']||keys['s']||keys['S']||padDir.s) iy += 1;
-    if(dragVec){ ix += dragVec.x; iy += dragVec.y; }
+    if(stickVec){ ix += stickVec.x; iy += stickVec.y; }
     var len = Math.hypot(ix, iy);
     if(len > 1){ ix/=len; iy/=len; }
     return {x:ix, y:iy};
   }
 
   function update(dt){
-    // Real elapsed time for mission clock (fixes frame-drain bug)
+    // Real-time mission clock via performance.now deltas
     state.timeAcc += dt;
     while(state.timeAcc >= 1){
       state.timeAcc -= 1;
@@ -459,29 +714,38 @@ footer a{color:var(--paper)}
     }
 
     var v = inputVector();
-    var accel = 420;
-    var friction = Math.pow(0.001, dt); // strong damping feel
-    craft.vx += v.x * accel * dt;
-    craft.vy += v.y * accel * dt;
-    craft.vx *= Math.pow(0.06, dt);
-    craft.vy *= Math.pow(0.06, dt);
-    var sp = Math.hypot(craft.vx, craft.vy);
-    var maxSp = 260;
-    if(sp > maxSp){ craft.vx *= maxSp/sp; craft.vy *= maxSp/sp; }
-    craft.x += craft.vx * dt;
-    craft.y += craft.vy * dt;
-    craft.x = Math.max(craft.r, Math.min(W-craft.r, craft.x));
-    craft.y = Math.max(craft.r, Math.min(H-craft.r, craft.y));
-    if(sp > 8) craft.angle = Math.atan2(craft.vy, craft.vx);
+    var accel = 2.8;
+    var damp = Math.pow(0.04, dt);
+    craft.vLng += v.x * accel * speedScale() * dt;
+    craft.vLat -= v.y * accel * speedScale() * dt; // up = north
+    craft.vLng *= damp;
+    craft.vLat *= damp;
+    var maxV = speedScale() * 1.35;
+    var sp = Math.hypot(craft.vLat, craft.vLng);
+    if(sp > maxV){ craft.vLat *= maxV/sp; craft.vLng *= maxV/sp; }
 
-    // packets
+    craft.lat += craft.vLat;
+    craft.lng += craft.vLng;
+
+    // Keep view locked to craft — you look straight down/out the windows
+    map.setView([craft.lat, craft.lng], FLY_ZOOM, {animate:false});
+
+    // Collect packets by ground distance
     var prev = state.data;
     for(var i=0;i<packets.length;i++){
       var p = packets[i];
       if(p.got) continue;
-      if(Math.hypot(craft.x-p.x, craft.y-p.y) < craft.r + p.r){
+      if(haversineMeters(craft.lat, craft.lng, p.lat, p.lng) < p.rMeters){
         p.got = true;
         state.data++;
+        if(packetMarkers[i]){
+          packetMarkers[i].setIcon(L.divIcon({
+            className: '',
+            html: '<div class="pkt-marker got">✓</div>',
+            iconSize: [28,28],
+            iconAnchor: [14,14]
+          }));
+        }
       }
     }
     if(state.data !== prev){
@@ -490,16 +754,13 @@ footer a{color:var(--paper)}
       else if(state.data===3) setMdp(mdpLines.collect3);
       else if(state.data===4) setMdp(mdpLines.collect4);
       else if(state.data===5) setMdp(mdpLines.collect5);
-      if(state.data >= NEED_DATA && state.data === NEED_DATA){
-        // soft nudge already via collect3
-      }
     }
 
-    // detection zones
+    // Detection rings
     var inZone = false;
     for(var z=0;z<zones.length;z++){
       var zn = zones[z];
-      if(Math.hypot(craft.x-zn.x, craft.y-zn.y) < zn.r + craft.r*0.4){
+      if(haversineMeters(craft.lat, craft.lng, zn.lat, zn.lng) < zn.rMeters){
         inZone = true; break;
       }
     }
@@ -522,86 +783,7 @@ footer a{color:var(--paper)}
     }
 
     if(state.timeLeft === 60) setMdp(mdpLines.warnTime);
-
-    state.nearestCity = nearestCity();
-
-    // early success if all 5 and want? keep flying until time or player stops — only auto-end on timer/det
     updateHud();
-  }
-
-  function drawGrid(){
-    ctx.fillStyle = '#1a2330';
-    ctx.fillRect(0,0,W,H);
-    ctx.strokeStyle = 'rgba(232,225,208,0.08)';
-    ctx.lineWidth = 1;
-    for(var x=0;x<W;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
-    for(var y=0;y<H;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
-    // terrain blobs
-    ctx.fillStyle = 'rgba(47,107,58,0.18)';
-    for(var i=0;i<cities.length;i++){
-      var c = cities[i];
-      ctx.beginPath();
-      ctx.ellipse(c.x*W, c.y*H, 70, 36, 0, 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.fillStyle = 'rgba(232,225,208,0.55)';
-    ctx.font = '700 11px "Courier Prime", monospace';
-    ctx.textAlign = 'center';
-    for(var j=0;j<cities.length;j++){
-      var ci = cities[j];
-      ctx.fillText(ci.name.toUpperCase(), ci.x*W, ci.y*H + 4);
-    }
-  }
-
-  function draw(){
-    drawGrid();
-    // zones
-    for(var i=0;i<zones.length;i++){
-      var z = zones[i];
-      var g = ctx.createRadialGradient(z.x,z.y,z.r*0.2,z.x,z.y,z.r);
-      g.addColorStop(0,'rgba(184,50,30,0.45)');
-      g.addColorStop(1,'rgba(184,50,30,0.05)');
-      ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(z.x,z.y,z.r,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle = 'rgba(184,50,30,0.85)';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([6,6]);
-      ctx.beginPath(); ctx.arc(z.x,z.y,z.r,0,Math.PI*2); ctx.stroke();
-      ctx.setLineDash([]);
-    }
-    // packets
-    for(var p=0;p<packets.length;p++){
-      var pk = packets[p];
-      if(pk.got) continue;
-      ctx.fillStyle = '#E8C84A';
-      ctx.strokeStyle = '#14140F';
-      ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.arc(pk.x,pk.y,pk.r,0,Math.PI*2); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#14140F';
-      ctx.font = '700 10px "Courier Prime", monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText('◆', pk.x, pk.y+3);
-    }
-    // craft — saucer
-    ctx.save();
-    ctx.translate(craft.x, craft.y);
-    ctx.rotate(craft.angle);
-    ctx.fillStyle = '#cfd6e0';
-    ctx.strokeStyle = '#14140F';
-    ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.ellipse(0,0,22,9,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = 'rgba(184,50,30,0.85)';
-    ctx.beginPath(); ctx.ellipse(0,-4,10,7,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#E8C84A';
-    ctx.beginPath(); ctx.arc(-12,2,2.5,0,Math.PI*2); ctx.arc(12,2,2.5,0,Math.PI*2); ctx.fill();
-    ctx.restore();
-
-    // vignette
-    if(state.detection > 40){
-      var a = (state.detection-40)/60 * 0.35;
-      ctx.fillStyle = 'rgba(184,50,30,'+a+')';
-      ctx.fillRect(0,0,W,H);
-    }
   }
 
   function loop(ts){
@@ -613,14 +795,13 @@ footer a{color:var(--paper)}
     } else {
       state.lastTs = ts;
     }
-    draw();
     requestAnimationFrame(loop);
   }
 
   function shareText(){
     var outcome = state.result || (state.data>=NEED_DATA?'in-progress-green':'in-progress');
-    return 'Mystery Drone Pilot · UFO run on Brobots Space Academy\n'+
-      'Data '+state.data+'/'+TOTAL_DATA+' · Time '+fmtTime(state.timeLeft)+' · Det '+Math.round(state.detection)+'%\n'+
+    return 'Mystery Drone Pilot · UFO cockpit run on Brobots Space Academy\n'+
+      'Over '+state.cityName+' · Data '+state.data+'/'+TOTAL_DATA+' · Time '+fmtTime(state.timeLeft)+'\n'+
       'Outcome: '+outcome+'\n'+
       'https://brobots-space-academy.vercel.app/ufo-pilot.html';
   }
@@ -628,31 +809,17 @@ footer a{color:var(--paper)}
   async function doShare(){
     var text = shareText();
     var url = 'https://brobots-space-academy.vercel.app/ufo-pilot.html';
-    var dataUrl = null;
-    try { dataUrl = canvas.toDataURL('image/png'); } catch(e){}
-
     if(navigator.share){
       try{
-        var data = {title:'UFO Pilot · Brobots', text:text, url:url};
-        if(dataUrl && navigator.canShare){
-          try{
-            var blob = await (await fetch(dataUrl)).blob();
-            var file = new File([blob], 'ufo-pilot-run.png', {type:'image/png'});
-            var withFile = {title:data.title, text:text, files:[file]};
-            if(navigator.canShare(withFile)){ await navigator.share(withFile); return; }
-          }catch(e){}
-        }
-        await navigator.share(data);
+        await navigator.share({title:'UFO Pilot · Brobots', text:text, url:url});
         return;
       }catch(e){
         if(e && e.name==='AbortError') return;
       }
     }
-    var tw = 'https://twitter.com/intent/tweet?text='+encodeURIComponent(text);
-    window.open(tw, '_blank', 'noopener');
+    window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text), '_blank', 'noopener');
   }
 
-  // keyboard
   window.addEventListener('keydown', function(e){
     keys[e.key] = true;
     if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].indexOf(e.key)>=0) e.preventDefault();
@@ -660,63 +827,58 @@ footer a{color:var(--paper)}
   });
   window.addEventListener('keyup', function(e){ keys[e.key] = false; });
 
-  // touch pad
   var pad = $('pad');
-  function bindPadBtn(btn){
+  pad.querySelectorAll('button[data-dir]').forEach(function(btn){
     var dir = btn.getAttribute('data-dir');
-    if(!dir) return;
     function down(e){ e.preventDefault(); padDir[dir]=true; btn.classList.add('held'); }
     function up(e){ e.preventDefault(); padDir[dir]=false; btn.classList.remove('held'); }
     btn.addEventListener('pointerdown', down);
     btn.addEventListener('pointerup', up);
     btn.addEventListener('pointerleave', up);
     btn.addEventListener('pointercancel', up);
-  }
-  pad.querySelectorAll('button[data-dir]').forEach(bindPadBtn);
+  });
 
-  // drag on canvas
+  // Thumb-stick style drag on the cockpit glass
   var stage = $('stage');
-  var dragging = false, lastPX=0, lastPY=0;
-  function canvasPos(e){
-    var r = canvas.getBoundingClientRect();
-    var sx = W / r.width, sy = H / r.height;
-    var cx = (e.clientX - r.left)*sx, cy = (e.clientY - r.top)*sy;
-    return {x:cx,y:cy};
-  }
-  canvas.addEventListener('pointerdown', function(e){
+  var dragging = false;
+  stage.addEventListener('pointerdown', function(e){
+    if(e.target.closest('button')) return;
     if(!state.running || state.paused) return;
     dragging = true;
-    canvas.setPointerCapture(e.pointerId);
-    var p = canvasPos(e);
-    lastPX=p.x; lastPY=p.y;
-    dragVec = {x:0,y:0};
-  });
-  canvas.addEventListener('pointermove', function(e){
-    if(!dragging) return;
-    var p = canvasPos(e);
-    var dx = p.x - craft.x, dy = p.y - craft.y;
+    stage.setPointerCapture(e.pointerId);
+    var r = stage.getBoundingClientRect();
+    var cx = r.left + r.width/2, cy = r.top + r.height*0.38;
+    var dx = (e.clientX - cx) / (r.width*0.35);
+    var dy = (e.clientY - cy) / (r.height*0.35);
     var len = Math.hypot(dx,dy) || 1;
-    // pull toward finger / pointer
-    dragVec = {x: dx/len, y: dy/len};
+    if(len > 1){ dx/=len; dy/=len; }
+    stickVec = {x:dx, y:dy};
   });
-  function endDrag(e){
-    dragging = false;
-    dragVec = null;
-  }
-  canvas.addEventListener('pointerup', endDrag);
-  canvas.addEventListener('pointercancel', endDrag);
+  stage.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    var r = stage.getBoundingClientRect();
+    var cx = r.left + r.width/2, cy = r.top + r.height*0.38;
+    var dx = (e.clientX - cx) / (r.width*0.35);
+    var dy = (e.clientY - cy) / (r.height*0.35);
+    var len = Math.hypot(dx,dy) || 1;
+    if(len > 1){ dx/=len; dy/=len; }
+    stickVec = {x:dx, y:dy};
+  });
+  function endDrag(){ dragging = false; stickVec = null; }
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
 
   $('btn-start').addEventListener('click', startMission);
   $('btn-pause').addEventListener('click', togglePause);
   $('btn-share').addEventListener('click', doShare);
   $('btn-share-end').addEventListener('click', doShare);
   $('btn-again').addEventListener('click', function(){ resetWorld(); startMission(); });
-  $('btn-pad').addEventListener('click', function(){
-    pad.classList.toggle('on');
-  });
+
+  window.addEventListener('resize', function(){ map.invalidateSize(); });
 
   resetWorld();
   requestAnimationFrame(loop);
+  setTimeout(function(){ map.invalidateSize(); }, 100);
 })();
 </script>
 </body>
