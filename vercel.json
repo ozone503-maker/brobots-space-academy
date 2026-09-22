@@ -1,0 +1,274 @@
+{
+  "redirects": [
+    {
+      "source": "/shock-bot",
+      "destination": "/dossiers.html?bot=shock-bot",
+      "permanent": true
+    },
+    {
+      "source": "/shock-bot/",
+      "destination": "/dossiers.html?bot=shock-bot",
+      "permanent": true
+    },
+    {
+      "source": "/bull-bot",
+      "destination": "/dossiers.html?bot=bull-bot",
+      "permanent": true
+    },
+    {
+      "source": "/bull-bot/",
+      "destination": "/dossiers.html?bot=bull-bot",
+      "permanent": true
+    },
+    {
+      "source": "/grease-monkey",
+      "destination": "/dossiers.html?bot=grease-monkey",
+      "permanent": true
+    },
+    {
+      "source": "/grease-monkey/",
+      "destination": "/dossiers.html?bot=grease-monkey",
+      "permanent": true
+    },
+    {
+      "source": "/neville-bottard",
+      "destination": "/dossiers.html?bot=neville-bottard",
+      "permanent": true
+    },
+    {
+      "source": "/neville-bottard/",
+      "destination": "/dossiers.html?bot=neville-bottard",
+      "permanent": true
+    },
+    {
+      "source": "/advocate-bot-1",
+      "destination": "/dossiers.html?bot=advocate-bot-1",
+      "permanent": true
+    },
+    {
+      "source": "/advocate-bot-1/",
+      "destination": "/dossiers.html?bot=advocate-bot-1",
+      "permanent": true
+    },
+    {
+      "source": "/solar-bowler-1",
+      "destination": "/dossiers.html?bot=solar-bowler-1",
+      "permanent": true
+    },
+    {
+      "source": "/solar-bowler-1/",
+      "destination": "/dossiers.html?bot=solar-bowler-1",
+      "permanent": true
+    },
+    {
+      "source": "/banzai-bot",
+      "destination": "/dossiers.html?bot=banzai-bot",
+      "permanent": true
+    },
+    {
+      "source": "/banzai-bot/",
+      "destination": "/dossiers.html?bot=banzai-bot",
+      "permanent": true
+    },
+    {
+      "source": "/biz-wiz-bot",
+      "destination": "/dossiers.html?bot=biz-wiz-bot",
+      "permanent": true
+    },
+    {
+      "source": "/biz-wiz-bot/",
+      "destination": "/dossiers.html?bot=biz-wiz-bot",
+      "permanent": true
+    },
+    {
+      "source": "/garage-sailor",
+      "destination": "/dossiers.html?bot=garage-sailor",
+      "permanent": true
+    },
+    {
+      "source": "/garage-sailor/",
+      "destination": "/dossiers.html?bot=garage-sailor",
+      "permanent": true
+    },
+    {
+      "source": "/codex-alchemist",
+      "destination": "/dossiers.html?bot=codex-alchemist",
+      "permanent": true
+    },
+    {
+      "source": "/codex-alchemist/",
+      "destination": "/dossiers.html?bot=codex-alchemist",
+      "permanent": true
+    },
+    {
+      "source": "/heart-rock-bot",
+      "destination": "/dossiers.html?bot=heart-rock-bot",
+      "permanent": true
+    },
+    {
+      "source": "/heart-rock-bot/",
+      "destination": "/dossiers.html?bot=heart-rock-bot",
+      "permanent": true
+    },
+    {
+      "source": "/proppa-shoppa",
+      "destination": "/dossiers.html?bot=proppa-shoppa",
+      "permanent": true
+    },
+    {
+      "source": "/proppa-shoppa/",
+      "destination": "/dossiers.html?bot=proppa-shoppa",
+      "permanent": true
+    },
+    {
+      "source": "/aloha-bot",
+      "destination": "/dossiers.html?bot=aloha-bot",
+      "permanent": true
+    },
+    {
+      "source": "/aloha-bot/",
+      "destination": "/dossiers.html?bot=aloha-bot",
+      "permanent": true
+    },
+    {
+      "source": "/cryptopotamus",
+      "destination": "/dossiers.html?bot=cryptopotamus",
+      "permanent": true
+    },
+    {
+      "source": "/cryptopotamus/",
+      "destination": "/dossiers.html?bot=cryptopotamus",
+      "permanent": true
+    },
+    {
+      "source": "/rosemary-palmreader",
+      "destination": "/dossiers.html?bot=rosemary-palmreader",
+      "permanent": true
+    },
+    {
+      "source": "/rosemary-palmreader/",
+      "destination": "/dossiers.html?bot=rosemary-palmreader",
+      "permanent": true
+    },
+    {
+      "source": "/rosemary-tarot",
+      "destination": "/dossiers.html?bot=rosemary-tarot",
+      "permanent": true
+    },
+    {
+      "source": "/rosemary-tarot/",
+      "destination": "/dossiers.html?bot=rosemary-tarot",
+      "permanent": true
+    },
+    {
+      "source": "/mystery-drone-pilot",
+      "destination": "/dossiers.html?bot=mystery-drone-pilot",
+      "permanent": true
+    },
+    {
+      "source": "/mystery-drone-pilot/",
+      "destination": "/dossiers.html?bot=mystery-drone-pilot",
+      "permanent": true
+    },
+    {
+      "source": "/bot-on-pot",
+      "destination": "/dossiers.html?bot=bot-on-pot",
+      "permanent": true
+    },
+    {
+      "source": "/bot-on-pot/",
+      "destination": "/dossiers.html?bot=bot-on-pot",
+      "permanent": true
+    },
+    {
+      "source": "/time-machine",
+      "destination": "/dossiers.html?bot=time-machine",
+      "permanent": true
+    },
+    {
+      "source": "/time-machine/",
+      "destination": "/dossiers.html?bot=time-machine",
+      "permanent": true
+    },
+    {
+      "source": "/buff-bro-bot",
+      "destination": "/dossiers.html?bot=buff-bro-bot",
+      "permanent": true
+    },
+    {
+      "source": "/buff-bro-bot/",
+      "destination": "/dossiers.html?bot=buff-bro-bot",
+      "permanent": true
+    },
+    {
+      "source": "/legal-eagle",
+      "destination": "/dossiers.html?bot=legal-eagle",
+      "permanent": true
+    },
+    {
+      "source": "/legal-eagle/",
+      "destination": "/dossiers.html?bot=legal-eagle",
+      "permanent": true
+    },
+    {
+      "source": "/berry-the-plant-bot",
+      "destination": "/dossiers.html?bot=berry-the-plant-bot",
+      "permanent": true
+    },
+    {
+      "source": "/berry-the-plant-bot/",
+      "destination": "/dossiers.html?bot=berry-the-plant-bot",
+      "permanent": true
+    },
+    {
+      "source": "/mens-medicine",
+      "destination": "/dossiers.html?bot=mens-medicine",
+      "permanent": true
+    },
+    {
+      "source": "/mens-medicine/",
+      "destination": "/dossiers.html?bot=mens-medicine",
+      "permanent": true
+    },
+    {
+      "source": "/herbal-gerbil",
+      "destination": "/dossiers.html?bot=herbal-gerbil",
+      "permanent": true
+    },
+    {
+      "source": "/herbal-gerbil/",
+      "destination": "/dossiers.html?bot=herbal-gerbil",
+      "permanent": true
+    },
+    {
+      "source": "/hero-compass",
+      "destination": "/dossiers.html?bot=hero-compass",
+      "permanent": true
+    },
+    {
+      "source": "/hero-compass/",
+      "destination": "/dossiers.html?bot=hero-compass",
+      "permanent": true
+    },
+    {
+      "source": "/dallas-wittenbot",
+      "destination": "/dossiers.html?bot=dallas-wittenbot",
+      "permanent": true
+    },
+    {
+      "source": "/dallas-wittenbot/",
+      "destination": "/dossiers.html?bot=dallas-wittenbot",
+      "permanent": true
+    },
+    {
+      "source": "/antinews",
+      "destination": "/dossiers.html?bot=antinews",
+      "permanent": true
+    },
+    {
+      "source": "/antinews/",
+      "destination": "/dossiers.html?bot=antinews",
+      "permanent": true
+    }
+  ]
+}
