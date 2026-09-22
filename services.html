@@ -60,35 +60,72 @@ a{color:inherit}
 footer{margin-top:56px;padding:36px 0;background:var(--ink);color:var(--paper)}
 footer a{color:var(--paper)}
 .foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+
+/* campus restyle — match homepage paste-up language */
+html{background:var(--paper)}
+body.bb-campus{background:var(--paper);color:var(--ink)}
+body.bb-campus::before{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.page-titlebar{border-bottom:4px solid var(--ink);padding:clamp(22px,4vw,36px) 0;background:var(--paper)}
+.page-titlebar .wrap{max-width:1240px}
+.page-titlebar h1{font-size:clamp(2.4rem,8vw,4.6rem);margin:.2em 0 .35em;line-height:.85}
+.page-titlebar .lede{max-width:54ch;font-size:1.05rem}
+.bay,.station,.chip,.pricing,.hero,.cta-band,.panel,.note,.mall,.tier,.dossier{
+  box-shadow:6px 6px 0 var(--ink);
+}
+.btn{
+  font-family:'Archivo Black',Impact,sans-serif!important;
+  letter-spacing:.01em!important;
+  border:2px solid var(--ink)!important;
+  box-shadow:5px 5px 0 var(--ink);
+  transition:transform .1s linear,box-shadow .1s linear;
+}
+.btn:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink);filter:none}
+.btn-plain{background:var(--paper)!important;color:var(--ink)!important}
+.wrap{max-width:1240px}
+footer{margin-top:56px;padding:36px 0;background:var(--ink);color:var(--paper)}
+footer a{color:var(--paper);text-decoration:none;border-bottom:1px solid transparent}
+footer a:hover{border-bottom-color:var(--paper)}
+.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 </style>
+<link rel="stylesheet" href="campus.css">
 </head>
-<body>
-<header class="wrap mast">
-  <div>
-    <div class="stamp" style="color:var(--red)">BroBots · Space Factory</div>
-    <div class="blk" style="font-size:1.6rem;margin-top:4px">Services</div>
-  </div>
-  <nav class="mast-nav stamp">
-    <a href="index.html">Campus</a>
-    <a href="retail.html">Retail</a>
-    <a href="multimedia.html">Multimedia</a>
-    <a href="dossiers.html">Dossiers</a>
-    <a href="services.html" class="current" aria-current="page">Services</a>
-    <a href="ufo-pilot.html">UFO Pilot</a>
-    <a href="mailto:hello@brobots.space">Email</a>
+<body class="bb-campus">
+<!-- CAMPUS NAV (shared pattern) -->
+<header class="campus-mast" id="campus-mast">
+ <div class="campus-mast-in">
+  <a class="campus-brand" href="index.html">
+   <span class="blk">BroBots</span>
+   <span class="stamp">Space Factory · Hawaiʻi</span>
+  </a>
+  <button class="campus-nav-toggle" type="button" aria-expanded="false" aria-controls="campus-nav" aria-label="Open menu">Menu</button>
+  <nav class="campus-nav" id="campus-nav" aria-label="Campus">
+  <a href="index.html">Home</a>
+  <a href="services.html" class="current" aria-current="page">Services</a>
+  <a href="dossiers.html">Graduates</a>
+  <a href="multimedia.html">Multimedia</a>
+  <a href="retail.html">Retail</a>
+  <a href="ufo-pilot.html">UFO Pilot</a>
+  <a href="mailto:hello@brobots.space" class="contact">Contact</a>
   </nav>
+ </div>
 </header>
 
-<main class="wrap">
-  <section class="hero">
+<div class="page-titlebar">
+  <div class="wrap">
     <span class="stamp" style="color:var(--red)">Cash door · Space Factory</span>
     <h1 class="blk">Services</h1>
-    <p>Custom agents, websites, business support, and creator tools. Built for people who want real work done right.</p>
-    <p class="mono" style="font-size:.9rem;margin-bottom:1.2em">People agency. Run by robots. One papaya. A thousand Brobot eyes.</p>
+    <p class="lede">Custom agents, websites, business support, and creator tools. An agency that uses AI — not one that is one.</p>
+  </div>
+</div>
+<main class="wrap">
+    <section class="hero" style="margin-top:28px">
+    <p class="mono" style="font-size:.95rem;margin-bottom:1em">People agency. Run by robots. One papaya. A thousand Brobot eyes.</p>
     <a class="btn" href="#bots">Explore services</a>
   </section>
-
-  <!-- Custom BroBots -->
+<!-- Custom BroBots -->
   <section class="sec" id="bots">
     <div class="sec__head">
       <span class="stamp" style="color:var(--red)">Custom BroBots · Locked</span>
@@ -380,19 +417,20 @@ footer a{color:var(--paper)}
   <div class="wrap foot">
     <div>
       <div class="blk" style="font-size:1.8rem;margin-bottom:6px">BroBots</div>
-      <div class="stamp">Space Factory Services · Mountain View, Hawaiʻi · © 2026</div>
+      <div class="stamp">Space Factory · Mountain View, Hawaiʻi · © 2026</div>
     </div>
-    <div class="mast-nav stamp">
-      <a href="index.html">Campus</a>
-      <a href="retail.html">Retail</a>
-      <a href="multimedia.html">Multimedia</a>
-      <a href="dossiers.html">Dossiers</a>
+    <div class="mast-nav stamp campus-foot-nav" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="index.html">Home</a>
       <a href="services.html">Services</a>
+      <a href="dossiers.html">Graduates</a>
+      <a href="multimedia.html">Multimedia</a>
+      <a href="retail.html">Retail</a>
       <a href="ufo-pilot.html">UFO Pilot</a>
-      <a href="https://brobots.space" target="_blank" rel="noopener">HQ</a>
-      <a href="mailto:hello@brobots.space">Email</a>
+      <a href="mailto:hello@brobots.space">Contact</a>
     </div>
   </div>
 </footer>
+<script src="campus-nav.js"></script>
+
 </body>
 </html>

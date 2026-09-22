@@ -1,0 +1,180 @@
+/* Brobots Space Factory — shared campus chrome
+   Matches homepage paste-up constitution. Do not SaaS-ify. */
+:root{
+  --paper:#E8E1D0;
+  --paper-2:#DFD6C1;
+  --ink:#14140F;
+  --red:#B8321E;
+  --blue:#1D3FA8;
+  --cyan:#00C4D6;
+}
+.bb-campus,.bb-campus *{box-sizing:border-box}
+.bb-campus{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Archivo',-apple-system,sans-serif;
+  line-height:1.5;
+  min-height:100%;
+}
+.bb-campus a{color:inherit}
+
+/* ===== sticky stamped black band nav ===== */
+.campus-mast{
+  position:sticky;
+  top:0;
+  z-index:200;
+  background:var(--ink);
+  color:var(--paper);
+  border-bottom:4px solid var(--ink);
+}
+.campus-mast-in{
+  max-width:1240px;
+  margin:0 auto;
+  padding:10px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.campus-brand{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  text-decoration:none;
+  min-width:0;
+}
+.campus-brand .blk{
+  font-family:'Archivo Black',Impact,sans-serif;
+  text-transform:uppercase;
+  font-size:clamp(1.05rem,2.4vw,1.35rem);
+  letter-spacing:-.02em;
+  line-height:.9;
+}
+.campus-brand .stamp{
+  font-family:'Courier Prime',monospace;
+  font-size:.62rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  opacity:.85;
+}
+.campus-nav-toggle{
+  display:none;
+  appearance:none;
+  border:2px solid var(--paper);
+  background:transparent;
+  color:var(--paper);
+  font-family:'Courier Prime',monospace;
+  font-size:.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  padding:10px 12px;
+  cursor:pointer;
+  min-height:44px;
+}
+.campus-nav-toggle[aria-expanded="true"]{
+  background:var(--red);
+  border-color:var(--red);
+}
+.campus-nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 16px;
+  align-items:center;
+}
+.campus-nav a{
+  font-family:'Courier Prime',monospace;
+  font-size:.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  text-decoration:none;
+  border-bottom:2px solid transparent;
+  padding:4px 0;
+  color:var(--paper);
+}
+.campus-nav a:hover{border-bottom-color:var(--paper)}
+.campus-nav a[aria-current="page"],
+.campus-nav a.current{
+  color:#f0a090;
+  border-bottom-color:var(--red);
+}
+.campus-nav a.contact{
+  background:var(--red);
+  color:#fff;
+  padding:8px 12px;
+  border-bottom:0;
+  border:2px solid var(--paper);
+}
+.campus-nav a.contact:hover{filter:brightness(1.05)}
+
+@media(max-width:860px){
+  .campus-nav-toggle{display:inline-flex;align-items:center}
+  .campus-nav{
+    display:none;
+    position:absolute;
+    left:0;right:0;top:100%;
+    flex-direction:column;
+    align-items:stretch;
+    gap:0;
+    background:var(--ink);
+    border-bottom:4px solid var(--ink);
+    padding:8px 22px 16px;
+  }
+  .campus-mast.is-open .campus-nav{display:flex}
+  .campus-nav a{
+    font-size:.78rem;
+    padding:14px 0;
+    border-bottom:1px solid rgba(232,225,208,.22);
+  }
+  .campus-nav a.contact{
+    margin-top:10px;
+    text-align:center;
+    border:2px solid var(--paper);
+  }
+}
+
+
+/* shared paste-up helpers for inner pages */
+.bb-campus .paste{
+  background:var(--paper);
+  border:2px solid var(--ink);
+  box-shadow:7px 7px 0 var(--ink);
+}
+.bb-campus .band{
+  background:var(--ink);
+  color:var(--paper);
+  padding:7px 0;
+  border-bottom:0;
+}
+.bb-campus .band-in{
+  max-width:1240px;
+  margin:0 auto;
+  padding:0 22px;
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.bb-campus .band .stamp{
+  font-family:'Courier Prime',monospace;
+  font-size:.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:var(--paper);
+}
+
+
+/* Survive homepage .bb-root * {margin:0;padding:0} reset */
+.bb-root .campus-mast-in{padding:10px 22px !important}
+.bb-root .campus-nav{gap:6px 16px !important}
+.bb-root .campus-nav a{padding:4px 0 !important;margin:0 !important}
+.bb-root .campus-nav a.contact{padding:8px 12px !important}
+.bb-root .campus-nav-toggle{padding:10px 12px !important;margin:0 !important}
+@media(max-width:860px){
+  .bb-root .campus-nav{padding:8px 22px 16px !important}
+  .bb-root .campus-nav a{padding:14px 0 !important}
+  .bb-root .campus-nav a.contact{margin-top:10px !important;padding:14px 12px !important}
+}
