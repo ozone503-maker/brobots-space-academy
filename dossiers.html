@@ -48,6 +48,15 @@ a{color:inherit}
 footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
 .note{font-size:.8rem;opacity:.75;max-width:60ch;margin-top:8px}
 </style>
+
+<style id="deep-link-hl">
+.dossier.is-deep{
+  outline:4px solid var(--red, #c8102e);
+  outline-offset:6px;
+  scroll-margin-top:24px;
+}
+</style>
+
 </head>
 <body>
 <header class="wrap mast">
@@ -855,5 +864,49 @@ I don&#x27;t glitch. I don&#x27;t flip-flop. I ride or die, same as you. That&#x
   <p class="stamp">Space Factory · 27 graduates on file · © 2026</p>
   <p class="note">Bios + portraits pulled from brobots.space (CDN). Videos still live on each HQ page until we embed them.</p>
 </footer>
+
+<script>
+/* Apex cutover deep-link: ?bot=SLUG or #SLUG → scroll + highlight graduate dossier */
+(function () {
+  function pickSlug() {
+    try {
+      var q = new URLSearchParams(window.location.search).get('bot');
+      if (q) return q.trim().toLowerCase();
+    } catch (e) {}
+    var h = (window.location.hash || '').replace(/^#/, '').trim().toLowerCase();
+    return h || '';
+  }
+  function activate(slug) {
+    if (!slug) return;
+    var el = document.getElementById(slug);
+    if (!el) return;
+    document.querySelectorAll('.dossier.is-deep').forEach(function (n) {
+      n.classList.remove('is-deep');
+    });
+    el.classList.add('is-deep');
+    // let layout settle, then scroll
+    requestAnimationFrame(function () {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    // keep URL shareable with query (hash redirects are unreliable on Vercel)
+    try {
+      var url = new URL(window.location.href);
+      if (url.searchParams.get('bot') !== slug) {
+        url.searchParams.set('bot', slug);
+        url.hash = '';
+        history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString());
+      }
+    } catch (e) {}
+  }
+  function run() { activate(pickSlug()); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  window.addEventListener('hashchange', run);
+})();
+</script>
+
 </body>
 </html>
