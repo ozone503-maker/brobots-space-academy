@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BROBOTS — NO GLASSES</title>
 <meta name="description" content="BroBots builds websites, stores, film and bots. Human + machine, built in Hawaiʻi.">
+<link rel="stylesheet" href="campus.css">
 </head>
 <body style="margin:0;overflow-x:hidden">
 <!-- ============================================================
@@ -92,14 +93,15 @@ a{color:inherit}
 
 
 
-/* ===== masthead ===== */
+/* ===== masthead (homepage uses shared .campus-mast from campus.css) ===== */
 .masthead{border-bottom:4px solid var(--ink);background:var(--ink);color:var(--paper)}
 .mast-in{max-width:1240px;margin:0 auto;padding:9px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .mast-in .stamp{letter-spacing:.2em}
 .mast-nav{display:flex;gap:18px}
 .mast-nav a{text-decoration:none;border-bottom:1px solid transparent}
 .mast-nav a:hover{border-bottom-color:var(--paper)}
-@media(max-width:700px){.mast-nav{display:none}}
+/* home page: sticky campus mast sits above nameplate */
+.bb-root > .campus-mast{position:sticky;top:0;z-index:200}
 
 /* ===== nameplate ===== */
 .nameplate{border-bottom:4px solid var(--ink);padding:26px 0 20px}
@@ -498,6 +500,26 @@ footer{background:var(--ink);color:var(--paper);padding:44px 0 38px}
 
 <div class="bb-root">
 
+<!-- CAMPUS NAV (shared pattern) -->
+<header class="campus-mast" id="campus-mast">
+ <div class="campus-mast-in">
+  <a class="campus-brand" href="index.html">
+   <span class="blk">BroBots</span>
+   <span class="stamp">Space Factory · Hawaiʻi</span>
+  </a>
+  <button class="campus-nav-toggle" type="button" aria-expanded="false" aria-controls="campus-nav" aria-label="Open menu">Menu</button>
+  <nav class="campus-nav" id="campus-nav" aria-label="Campus">
+  <a href="index.html" class="current" aria-current="page">Home</a>
+  <a href="services.html">Services</a>
+  <a href="dossiers.html">Graduates</a>
+  <a href="multimedia.html">Multimedia</a>
+  <a href="retail.html">Retail</a>
+  <a href="ufo-pilot.html">UFO Pilot</a>
+  <a href="mailto:hello@brobots.space" class="contact">Contact</a>
+  </nav>
+ </div>
+</header>
+
 <!-- NAMEPLATE -->
 <div class="nameplate">
  <div class="wrap">
@@ -533,6 +555,7 @@ footer{background:var(--ink);color:var(--paper);padding:44px 0 38px}
  <div><a href="#talk" class="btn">Start a build</a></div>
  </div>
 </section>
+
 
 <figure class="art-plate hero-art scroll-video-plate"><video class="scroll-play" muted loop playsinline preload="none" poster="media/jpg-02.jpg" aria-label="Story 1: a human brings a papaya into the Brobots robot factory" data-story-index="1"><source src="media/mp4-02.mp4" type="video/mp4"></video><button class="story-audio-gate" type="button" aria-label="Play story with sound">TAP FOR STORY AUDIO</button></figure>
 
@@ -745,17 +768,14 @@ footer{background:var(--ink);color:var(--paper);padding:44px 0 38px}
  <div class="blk" style="font-size:2.1rem;margin-bottom:8px">BroBots</div>
  <div class="stamp">Mountain View, Hawaiʻi · © 2026</div>
  </div>
- <div class="foot-nav stamp">
- <a href="#seven">The Seven</a>
- <a href="#film">Film</a>
- <a href="#bots">Bots</a>
- <a href="retail.html">Retail</a>
- <a href="multimedia.html">Multimedia</a>
- <a href="dossiers.html">Dossiers</a>
+ <div class="foot-nav stamp campus-foot-nav">
+ <a href="index.html">Home</a>
  <a href="services.html">Services</a>
+ <a href="dossiers.html">Graduates</a>
+ <a href="multimedia.html">Multimedia</a>
+ <a href="retail.html">Retail</a>
  <a href="ufo-pilot.html">UFO Pilot</a>
- <a href="#pricing">Pricing</a>
- <a href="mailto:hello@brobots.space">Email</a>
+ <a href="mailto:hello@brobots.space">Contact</a>
  </div>
  </div>
 </footer>
@@ -971,7 +991,7 @@ footer .blk{color:var(--ink)!important;}
 .hero-txt .knock{color:var(--paper)!important;}
 .hero-txt .red, .red{color:var(--red)!important;}
 /* Dark bands / black surfaces keep their light text. */
-.band, .band *, .masthead, .masthead *, footer, footer *,
+.band, .band *, .masthead, .masthead *, .campus-mast, .campus-mast *, footer, footer *,
 .btn-ink, .btn-ink *, .callout, .callout *, .pass.hot, .pass.hot *{color:var(--paper)!important;}
 /* Small red labels remain red. */
 [style*="color:var(--red)"], .work-kind, .work-type{color:var(--red)!important;}
@@ -1011,5 +1031,6 @@ footer .blk{color:var(--ink)!important;}
 }
 </style>
 
+<script src="campus-nav.js"></script>
 </body>
 </html>

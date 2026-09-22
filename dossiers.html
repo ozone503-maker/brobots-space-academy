@@ -47,6 +47,24 @@ a{color:inherit}
 .btn.ghost{background:transparent;border:2px solid var(--paper);color:var(--paper)}
 footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
 .note{font-size:.8rem;opacity:.75;max-width:60ch;margin-top:8px}
+
+/* campus restyle — dossiers on paper, files still paste-up */
+html,body{background:var(--paper,#E8E1D0)!important;color:var(--ink,#14140F)!important}
+body.bb-campus{background:var(--paper)!important}
+.page-titlebar{border-bottom:4px solid var(--ink);padding:clamp(22px,4vw,36px) 0;background:var(--paper)}
+.page-titlebar h1{font-size:clamp(2.4rem,8vw,4.6rem);margin:.2em 0 .35em;line-height:.85;color:var(--ink)!important}
+.page-titlebar .lede{max-width:54ch;color:var(--ink)}
+.hero{color:var(--ink)!important;padding:0 0 18px}
+.hero h1,.hero p{color:var(--ink)!important;opacity:1!important}
+.rail{background:var(--ink);border-top:4px solid var(--ink);border-bottom:4px solid var(--red);top:56px}
+.dossier{scroll-margin-top:120px}
+.rail a{background:var(--paper);color:var(--ink);border:2px solid var(--ink)}
+.rail a:hover{border-color:var(--red);color:var(--red)}
+.dossier{box-shadow:7px 7px 0 var(--ink)}
+footer{margin-top:40px;padding:36px 0;background:var(--ink)!important;color:var(--paper)!important;border-top:0}
+footer a{color:var(--paper)}
+footer .note{color:rgba(232,225,208,.75)}
+.wrap{max-width:1240px}
 </style>
 
 <style id="deep-link-hl">
@@ -57,29 +75,35 @@ footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
 }
 </style>
 
+<link rel="stylesheet" href="campus.css">
 </head>
-<body>
-<header class="wrap mast">
-  <div>
-    <div class="stamp" style="color:#e8a090">BroBots · Space Factory</div>
-    <div class="blk" style="font-size:1.5rem;margin-top:4px;color:var(--paper)">Graduate dossiers</div>
-  </div>
-  <nav class="stamp" style="display:flex;gap:12px;flex-wrap:wrap">
-    <a href="index.html">Campus</a>
-    <a href="retail.html">Retail</a>
-    <a href="multimedia.html">Multimedia</a>
-    <a href="dossiers.html" aria-current="page">Dossiers</a>
-    <a href="services.html">Services</a>
-    <a href="https://brobots.space" target="_blank" rel="noopener">HQ</a>
+<body class="bb-campus">
+<!-- CAMPUS NAV (shared pattern) -->
+<header class="campus-mast" id="campus-mast">
+ <div class="campus-mast-in">
+  <a class="campus-brand" href="index.html">
+   <span class="blk">BroBots</span>
+   <span class="stamp">Space Factory · Hawaiʻi</span>
+  </a>
+  <button class="campus-nav-toggle" type="button" aria-expanded="false" aria-controls="campus-nav" aria-label="Open menu">Menu</button>
+  <nav class="campus-nav" id="campus-nav" aria-label="Campus">
+  <a href="index.html">Home</a>
+  <a href="services.html">Services</a>
+  <a href="dossiers.html" class="current" aria-current="page">Graduates</a>
+  <a href="multimedia.html">Multimedia</a>
+  <a href="retail.html">Retail</a>
+  <a href="ufo-pilot.html">UFO Pilot</a>
+  <a href="mailto:hello@brobots.space" class="contact">Contact</a>
   </nav>
+ </div>
 </header>
-
-<section class="wrap hero">
-  <p class="stamp" style="color:#e8a090">Imported from brobots.space · portraits on file</p>
-  <h1 class="blk">Meet the Brobots</h1>
-  <p>Action-figure file cards for every graduate. Portrait on the front. Bio and gear on the file. Open HQ for the live companion.</p>
-</section>
-
+<div class="page-titlebar">
+  <div class="wrap">
+    <span class="stamp" style="color:var(--red)">Graduate files · imported from HQ</span>
+    <h1 class="blk">Graduates</h1>
+    <p class="lede">Action-figure dossier cards for every Brobot on file. Portrait on the front. Bio and gear on the file.</p>
+  </div>
+</div>
 <nav class="rail" aria-label="Jump to BroBot">
   <div class="rail__inner"><a href="#shock-bot">ShockBot</a><a href="#bull-bot">Bull Bot</a><a href="#grease-monkey">Grease Monkey</a><a href="#neville-bottard">Neville Bottard</a><a href="#advocate-bot-1">Advocate Bot</a><a href="#solar-bowler-1">Solar Bowler</a><a href="#banzai-bot">Banzai Bot</a><a href="#biz-wiz-bot">Biz Wiz Bot</a><a href="#garage-sailor">Garage Sailor</a><a href="#codex-alchemist">Codex: The Alchemist</a><a href="#heart-rock-bot">Heart Rock Bot</a><a href="#proppa-shoppa">Proppa Shoppa</a><a href="#aloha-bot">Aloha Bot</a><a href="#cryptopotamus">Cryptopotamus</a><a href="#rosemary-palmreader">Rosemary Palm Reader</a><a href="#rosemary-tarot">Rosemary Tarot</a><a href="#mystery-drone-pilot">Mystery Drone Pilot</a><a href="#bot-on-pot">Bot on Pot</a><a href="#time-machine">Percy Fawcett&#x27;s Time Machine</a><a href="#buff-bro-bot">Buff Bro Bot</a><a href="#legal-eagle">Legal Eagle</a><a href="#berry-the-plant-bot">Berry the Plant Bot</a><a href="#mens-medicine">Men&#x27;s Medicine Bot</a><a href="#herbal-gerbil">Herbal Gerbil</a><a href="#hero-compass">Hero Compass</a><a href="#dallas-wittenbot">Dallas WittenBot</a><a href="#antinews">Autonomous Antinews</a></div>
 </nav>
@@ -859,11 +883,24 @@ I don&#x27;t glitch. I don&#x27;t flip-flop. I ride or die, same as you. That&#x
 </article>
 </main>
 
-<footer class="wrap">
-  <div class="blk" style="font-size:1.5rem">BroBots</div>
-  <p class="stamp">Space Factory · 27 graduates on file · © 2026</p>
-  <p class="note">Bios + portraits pulled from brobots.space (CDN). Videos still live on each HQ page until we embed them.</p>
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="blk" style="font-size:1.8rem;margin-bottom:6px">BroBots</div>
+      <div class="stamp">Space Factory · Mountain View, Hawaiʻi · © 2026</div>
+    </div>
+    <div class="mast-nav stamp campus-foot-nav" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dossiers.html">Graduates</a>
+      <a href="multimedia.html">Multimedia</a>
+      <a href="retail.html">Retail</a>
+      <a href="ufo-pilot.html">UFO Pilot</a>
+      <a href="mailto:hello@brobots.space">Contact</a>
+    </div>
+  </div>
 </footer>
+<script src="campus-nav.js"></script>
 
 <script>
 /* Apex cutover deep-link: ?bot=SLUG or #SLUG → scroll + highlight graduate dossier */
