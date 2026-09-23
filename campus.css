@@ -5,7 +5,6 @@
   --ink:#14140F;
   --red:#14140F;
   --hot:#14140F;
-  --blue:#1D3FA8;
 }
 .bb-campus,.bb-campus *{box-sizing:border-box}
 .bb-campus{
@@ -39,6 +38,7 @@
   gap:2px;
   text-decoration:none;
   min-width:0;
+  color:var(--paper) !important;
 }
 .campus-brand .blk{
   font-family:'Archivo Black',Impact,sans-serif;
@@ -46,6 +46,7 @@
   font-size:clamp(1.05rem,2.4vw,1.35rem);
   letter-spacing:-.02em;
   line-height:.9;
+  color:var(--paper) !important;
 }
 .campus-brand .stamp{
   font-family:'Courier Prime',monospace;
@@ -54,6 +55,7 @@
   text-transform:uppercase;
   letter-spacing:.16em;
   opacity:.85;
+  color:var(--paper) !important;
 }
 .campus-nav-toggle{
   display:none;
