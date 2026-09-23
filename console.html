@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROBOTS — Console</title>
+<meta name="description" content="Seat a BroBot graduate and talk. Sessions ghost when you leave.">
+<link rel="stylesheet" href="campus.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,600;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  .page{max-width:1240px;margin:0 auto;padding:42px 22px 80px}
+  .page h1{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(3rem,10vw,6.4rem);line-height:.86;letter-spacing:-.03em;text-transform:uppercase;margin:0 0 18px}
+  .lede{max-width:36em;font-size:1.05rem;margin:0 0 28px}
+  .rail{background:var(--ink);color:var(--paper);margin:0 -22px 28px;padding:10px 0;overflow-x:auto;white-space:nowrap}
+  .rail-in{padding:0 22px;display:inline-flex;gap:8px}
+  .chip{font-family:'Courier Prime',monospace;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.62rem;background:var(--paper);color:var(--ink);border:2px solid var(--paper);padding:8px 10px;cursor:pointer}
+  .chip.active{background:var(--ink);color:var(--paper)}
+  .stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,380px);gap:22px;align-items:start}
+  @media(max-width:860px){.stage{grid-template-columns:1fr}}
+  .file{background:var(--paper);border:3px solid var(--ink);padding:18px 18px 22px}
+  .file-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+  .file h2{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;margin:4px 0 6px}
+  .stamp-mark{border:2px solid var(--ink);padding:6px 8px;transform:rotate(8deg);font-family:'Courier Prime',monospace;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+  .portrait{width:100%;aspect-ratio:16/10;object-fit:cover;border:2px solid var(--ink);background:var(--paper-2,#DFD6C1);display:block;margin:14px 0 16px;filter:grayscale(.15) contrast(1.05)}
+  .log{min-height:220px;max-height:420px;overflow-y:auto;border-top:2px dotted var(--ink);padding-top:12px}
+  .msg{margin:0 0 14px;max-width:92%}
+  .msg.user{margin-left:auto;text-align:right}
+  .msg .who{font-family:'Courier Prime',monospace;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;opacity:.7}
+  .msg p{margin:0;white-space:pre-wrap}
+  .composer{display:flex;gap:8px;margin-top:14px;border-top:2px solid var(--ink);padding-top:12px}
+  .composer input{flex:1;background:transparent;border:2px solid var(--ink);font-family:'Archivo',sans-serif;font-size:1rem;padding:10px 12px;color:var(--ink)}
+  .composer input:focus{outline:none;background:#fff}
+  .composer button{font-family:'Courier Prime',monospace;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--paper);border:2px solid var(--ink);padding:10px 14px;cursor:pointer}
+  .composer button:disabled{opacity:.45;cursor:wait}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+  .thumb{border:2px solid var(--ink);background:#fff;cursor:pointer;padding:0 0 8px;filter:grayscale(1)}
+  .thumb img{width:100%;height:92px;object-fit:cover;display:block;border-bottom:2px solid var(--ink)}
+  .thumb span{display:block;padding:6px 6px 0;font-family:'Courier Prime',monospace;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center}
+  .thumb:hover,.thumb.active{filter:none}
+  .idle{font-family:'Courier Prime',monospace;font-size:.78rem}
+</style>
+</head>
+<body class="bb-campus">
+<header class="campus-mast" id="campus-mast">
+  <div class="campus-mast-in">
+    <a class="campus-brand" href="index.html"><span class="blk">BroBots</span><span class="stamp">Space Factory · Hawaiʻi</span></a>
+    <button class="campus-nav-toggle" type="button" aria-expanded="false" aria-controls="campus-nav" aria-label="Open menu">Menu</button>
+    <nav class="campus-nav" id="campus-nav" aria-label="Campus">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dossiers.html">Graduates</a>
+      <a href="console.html" class="current" aria-current="page">Console</a>
+      <a href="multimedia.html">Multimedia</a>
+      <a href="retail.html">Retail</a>
+      <a href="ufo-pilot.html">UFO Pilot</a>
+      <a href="index.html#talk" class="contact">Contact</a>
+    </nav>
+  </div>
+</header>
+<main class="page">
+  <p class="stamp" style="font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase">Graduate files · live console</p>
+  <h1>Console</h1>
+  <p class="lede">Pick a graduate. The console seats their cartridge and stays out of the way. Sessions ghost when you leave.</p>
+  <div class="rail" id="rail" hidden><div class="rail-in" id="chips"></div></div>
+  <div class="stage">
+    <section class="file">
+      <div id="idle" class="idle">No cartridge seated. Pick a graduate.</div>
+      <div id="seated" hidden>
+        <div class="file-top">
+          <div>
+            <div class="stamp" id="dossier-no" style="font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase">BroBots · Dossier</div>
+            <h2 id="chat-name"></h2>
+            <div class="stamp" id="chat-code" style="font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase"></div>
+            <div id="chat-tagline"></div>
+          </div>
+          <div class="stamp-mark">Authentic<br>BroBot</div>
+        </div>
+        <img class="portrait" id="chat-avatar" alt="">
+        <div class="log" id="log"></div>
+        <div class="composer">
+          <input id="chat-input" type="text" placeholder="Say something…" autocomplete="off">
+          <button id="send-btn" type="button">Send</button>
+        </div>
+      </div>
+    </section>
+    <aside>
+      <p class="stamp" style="font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-top:0">Roster</p>
+      <div class="grid" id="picker">Loading roster…</div>
+    </aside>
+  </div>
+</main>
+<script src="campus-nav.js"></script>
+<script>
+let ROSTER = [];
+let currentBot = null;
+let history = [];
+const API = '/api/chat';
+function localSkin(bot) {
+  if (!bot.skin_image) return '';
+  return bot.skin_image.replace('https://brobots.space/', '');
+}
+function fallbackRoster() {
+  return fetch('cartridges/_manifest.json').then(r => r.json()).then(list =>
+    list.map((b,i) => ({...b, dossier: i+1, code_name: (b.slug||'').toUpperCase(), tagline: b.tagline||''}))
+  );
+}
+async function loadRoster() {
+  try {
+    const res = await fetch(API);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.roster && data.roster.length) ROSTER = data.roster;
+    }
+  } catch (_) {}
+  if (!ROSTER.length) {
+    try { ROSTER = await fallbackRoster(); } catch (_) { ROSTER = []; }
+  }
+  renderRoster();
+  const want = new URLSearchParams(location.search).get('bot');
+  if (want) {
+    const hit = ROSTER.find(b => b.slug === want);
+    if (hit) selectBot(hit);
+  }
+}
+function renderRoster() {
+  const picker = document.getElementById('picker');
+  const chips = document.getElementById('chips');
+  const rail = document.getElementById('rail');
+  picker.innerHTML = '';
+  chips.innerHTML = '';
+  if (!ROSTER.length) {
+    picker.textContent = 'No cartridges on disk.';
+    return;
+  }
+  rail.hidden = false;
+  ROSTER.forEach(bot => {
+    const div = document.createElement('div');
+    div.className = 'thumb';
+    div.dataset.slug = bot.slug;
+    div.innerHTML = '<img src="'+localSkin(bot)+'" alt="'+bot.name+'"><span>'+bot.name+'</span>';
+    div.onclick = () => selectBot(bot);
+    picker.appendChild(div);
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.dataset.slug = bot.slug;
+    chip.textContent = bot.name;
+    chip.onclick = () => selectBot(bot);
+    chips.appendChild(chip);
+  });
+}
+function selectBot(bot) {
+  currentBot = bot;
+  history = [];
+  const url = new URL(location.href);
+  url.searchParams.set('bot', bot.slug);
+  window.history.replaceState({}, '', url);
+  document.querySelectorAll('.thumb').forEach(el => el.classList.toggle('active', el.dataset.slug === bot.slug));
+  document.querySelectorAll('.chip').forEach(el => el.classList.toggle('active', el.dataset.slug === bot.slug));
+  document.getElementById('idle').hidden = true;
+  document.getElementById('seated').hidden = false;
+  document.getElementById('chat-avatar').src = localSkin(bot);
+  document.getElementById('chat-name').textContent = bot.name;
+  document.getElementById('chat-code').textContent = 'Code name · ' + (bot.code_name || bot.slug);
+  document.getElementById('chat-tagline').textContent = bot.tagline || 'BroBot graduate';
+  document.getElementById('dossier-no').textContent =
+    'BroBots · Dossier ' + String(bot.dossier || 1).padStart(2,'0') + ' / ' + String(ROSTER.length).padStart(2,'0');
+  document.getElementById('log').innerHTML = '';
+  addMsg('bot', bot.name, 'Cartridge seated. Talk.');
+}
+function addMsg(role, who, text) {
+  const log = document.getElementById('log');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const w = document.createElement('div');
+  w.className = 'who';
+  w.textContent = role === 'user' ? 'You' : who;
+  const p = document.createElement('p');
+  p.textContent = text;
+  div.appendChild(w); div.appendChild(p);
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const btn = document.getElementById('send-btn');
+  const text = input.value.trim();
+  if (!text || !currentBot) return;
+  input.value = '';
+  addMsg('user', 'You', text);
+  history.push({ role: 'user', content: text });
+  btn.disabled = true;
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ botSlug: currentBot.slug, messages: history })
+    });
+    const data = await res.json();
+    if (data.reply) {
+      addMsg('bot', currentBot.name, data.reply);
+      history.push({ role: 'assistant', content: data.reply });
+    } else {
+      addMsg('bot', 'Console', data.error || 'Connection hiccup. Try again.');
+    }
+  } catch (e) {
+    addMsg('bot', 'Console', 'Connection hiccup. Try again.');
+  } finally {
+    btn.disabled = false;
+    input.focus();
+  }
+}
+document.getElementById('send-btn').onclick = sendMessage;
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage();
+});
+loadRoster();
+</script>
+</body>
+</html>
