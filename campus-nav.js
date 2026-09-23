@@ -1,6 +1,13 @@
-/* Shared campus sticky nav — mobile toggle */
+/* Shared campus sticky nav — mobile toggle + contact routing */
 (function () {
   function init() {
+    document.querySelectorAll('a[href^="mailto:hello@brobots.space"]').forEach(function (a) {
+      var label = (a.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      if (a.classList.contains('contact') || label === 'contact' || label === 'hello@brobots.space') {
+        a.setAttribute('href', 'index.html#talk');
+      }
+    });
+
     var mast = document.querySelector('.campus-mast');
     if (!mast) return;
     var btn = mast.querySelector('.campus-nav-toggle');
