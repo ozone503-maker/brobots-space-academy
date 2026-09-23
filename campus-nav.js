@@ -1,4 +1,4 @@
-/* Shared campus sticky nav — mobile toggle + contact routing */
+/* Shared campus sticky nav — mobile toggle + contact routing + console link */
 (function () {
   function init() {
     document.querySelectorAll('a[href^="mailto:hello@brobots.space"]').forEach(function (a) {
@@ -12,7 +12,27 @@
     if (!mast) return;
     var btn = mast.querySelector('.campus-nav-toggle');
     var nav = mast.querySelector('.campus-nav');
-    if (!btn || !nav) return;
+    if (!nav) return;
+
+    if (!nav.querySelector('a[href="console.html"]')) {
+      var grads = nav.querySelector('a[href="dossiers.html"]');
+      var a = document.createElement('a');
+      a.href = 'console.html';
+      a.textContent = 'Console';
+      var here = (location.pathname || '').indexOf('console') !== -1;
+      if (here) {
+        a.className = 'current';
+        a.setAttribute('aria-current', 'page');
+        nav.querySelectorAll('a.current').forEach(function (x) {
+          if (x !== a) { x.classList.remove('current'); x.removeAttribute('aria-current'); }
+        });
+      }
+      if (grads && grads.nextSibling) grads.parentNode.insertBefore(a, grads.nextSibling);
+      else if (grads) grads.parentNode.appendChild(a);
+      else nav.insertBefore(a, nav.querySelector('a.contact'));
+    }
+
+    if (!btn) return;
 
     function setOpen(open) {
       mast.classList.toggle('is-open', open);
