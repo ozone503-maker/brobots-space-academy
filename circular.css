@@ -29,16 +29,16 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 .offer-menu{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;border:3px solid var(--ink);max-width:40rem;background:var(--paper)}
 .offer-menu li{border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);min-height:0}
 .offer-menu li:nth-child(2){border-right:0}
-.offer-menu li.pack{grid-column:1 / -1;border-right:0;border-bottom:0;background:var(--paper-2)}
+.offer-menu li:last-child{grid-column:1 / -1;border-right:0;border-bottom:0;background:var(--paper-2)}
 .offer-menu a{display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:14px 12px 12px;text-decoration:none;color:var(--ink);min-height:118px}
 .offer-menu .offer-name{font-family:'Courier Prime',monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 .offer-menu .offer-sub{display:none}
 .offer-menu .offer-price{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(1.8rem,7vw,2.6rem);line-height:.8;letter-spacing:-.03em}
-.offer-menu li.pack a{min-height:96px}
+.offer-menu li:last-child a{min-height:96px}
 .offer-menu a:hover{background:var(--ink);color:var(--paper)}
 @media(min-width:640px){
   .offer-menu{grid-template-columns:1fr 1fr 1fr;max-width:48rem}
-  .offer-menu li.pack{grid-column:auto;border-right:0;border-bottom:3px solid var(--ink)}
+  .offer-menu li:last-child{grid-column:auto;border-right:0;border-bottom:3px solid var(--ink)}
   .offer-menu li:nth-child(2){border-right:3px solid var(--ink)}
 }
 .hero-actions{display:none}
