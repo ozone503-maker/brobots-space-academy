@@ -7,7 +7,7 @@
 <meta name="description" content="Creation tools for people. Audio, video, paste-up design, AI render — in one Brobots room.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
-:root{--paper:#E8E1D0;--paper-2:#DFD6C1;--ink:#14140F;--red:#B8321E;--ok:#2F6B3A}
+:root{--paper:#E8E1D0;--paper-2:#DFD6C1;--ink:#14140F;--red:#6B2D55;--ok:#2F6B3A}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--paper);color:var(--ink);font-family:'Archivo',system-ui,sans-serif;line-height:1.5}
 a{color:inherit}
@@ -172,7 +172,7 @@ footer a:hover{border-bottom-color:var(--paper)}
       <div class="toolbar">
         <button type="button" class="toolbtn" id="p-text">Add text</button>
         <label class="file toolbtn ghost">Image<input type="file" id="p-img" accept="image/*" hidden></label>
-        <input type="color" id="p-color" value="#B8321E" title="Ink color">
+        <input type="color" id="p-color" value="#6B2D55" title="Ink color">
         <button type="button" class="toolbtn" id="p-stamp">Red stamp</button>
         <button type="button" class="toolbtn" id="p-clear">Clear</button>
         <button type="button" class="toolbtn hot" id="p-dl">Download PNG</button>
@@ -489,8 +489,8 @@ footer a:hover{border-bottom-color:var(--paper)}
     var words=['PAPAYA','FACTORY','GHOST','BROBOT','VOLCANO','GRADUATE','JUNGLE','CLUNKER'];
     var w=words[Math.floor(Math.random()*words.length)];
     g.save(); g.translate(240,240); g.rotate((Math.random()-.5)*.5);
-    g.strokeStyle='#B8321E'; g.lineWidth=8; g.strokeRect(-150,-50,300,100);
-    g.fillStyle='#B8321E'; g.font='700 42px Courier Prime, monospace';
+    g.strokeStyle='#6B2D55'; g.lineWidth=8; g.strokeRect(-150,-50,300,100);
+    g.fillStyle='#6B2D55'; g.font='700 42px Courier Prime, monospace';
     g.textAlign='center'; g.textBaseline='middle'; g.fillText(w,0,0);
     g.restore();
     g.fillStyle='#14140F'; g.font='700 16px Courier Prime, monospace';
@@ -500,7 +500,7 @@ footer a:hover{border-bottom-color:var(--paper)}
     var c=$('fun-plate'), g=c.getContext('2d');
     var name=($('fun-name').value||'BROBOT').toUpperCase();
     g.fillStyle='#E8E1D0'; g.fillRect(0,0,720,240);
-    g.fillStyle='#B8321E'; g.fillRect(0,0,18,240);
+    g.fillStyle='#6B2D55'; g.fillRect(0,0,18,240);
     g.strokeStyle='#14140F'; g.lineWidth=8; g.strokeRect(4,4,712,232);
     g.fillStyle='#14140F'; g.font='700 18px Courier Prime, monospace';
     g.fillText('SPACE FACTORY · DOOR PLATE', 40, 48);

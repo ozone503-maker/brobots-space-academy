@@ -4,7 +4,7 @@
   --paper:#E8E1D0;
   --paper-2:#DFD6C1;
   --ink:#14140F;
-  --red:#B8321E;
+  --red:#6B2D55; /* plum spot ink (was alarm red) */
   --blue:#1D3FA8;
   --cyan:#00C4D6;
 }
@@ -97,7 +97,7 @@
 .campus-nav a:hover{border-bottom-color:var(--paper)}
 .campus-nav a[aria-current="page"],
 .campus-nav a.current{
-  color:#f0a090;
+  color:#E0B8D0;
   border-bottom-color:var(--red);
 }
 .campus-nav a.contact{
