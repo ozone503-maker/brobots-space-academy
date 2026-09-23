@@ -4,51 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brobots Space Factory — Sites, stores, film, and trained bots | Hawaiʻi</title>
-<meta name="description" content="Hawaiʻi studio. Seven-pass builds, original film, and hand-trained BroBots. Same tools. One extra pass. 50% starts the work.">
+<meta name="description" content="Circular from a volcano. Seven-pass sites, original papaya film, hand-trained BroBots. 50% starts the work.">
 <link rel="stylesheet" href="campus.css">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
-:root{--paper:#E8E1D0;--paper-2:#DFD6C1;--ink:#14140F;--red:#6B2D55}
-*{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:Archivo,sans-serif;line-height:1.5}
-.wrap{max-width:1240px;margin:0 auto;padding:0 22px}
-.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.88;letter-spacing:-.02em}
-.mono,.stamp{font-family:'Courier Prime',monospace}
-.stamp{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}
-.btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:var(--red);color:var(--paper);border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);text-decoration:none}
-.btn-plain{background:var(--paper);color:var(--ink)}
-.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
-.nameplate{border-bottom:4px solid var(--ink);padding:22px 0 16px}
-.nameplate h1{font-size:clamp(2.6rem,12vw,6rem);margin:0;line-height:.8}
-.hero-video-full video{display:block;width:100%;height:auto;background:#171713}
-.hero-txt{padding:28px 22px 36px}
-.hero-txt h2{font-size:clamp(2.4rem,10vw,4.6rem);margin:8px 0 14px}
-.knock{background:var(--ink);color:var(--paper);padding:0 .12em}
-.red{color:var(--red)}
-.lede{max-width:44ch;font-size:1.05rem}
-.team-line{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:12px 0;margin:16px 0;text-transform:uppercase;font-family:'Archivo Black',sans-serif;line-height:1.1}
-.team-line strong{display:block;color:var(--red);margin-top:4px}
-.band{background:var(--ink);color:var(--paper);padding:8px 22px}
-.sec{padding:42px 0;border-bottom:4px solid var(--ink)}
-.art-plate{margin:0;background:#171713;border-bottom:4px solid var(--ink)}
-.art-plate video,.art-plate img{display:block;width:100%;height:auto}
-.pass{display:grid;grid-template-columns:64px 1fr;border-bottom:2px solid var(--ink)}
-.pass-n{background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:1.4rem}
-.pass-b{padding:14px 16px}
-.pass.hot .pass-n{background:var(--red)}
-.prices{display:grid;grid-template-columns:1fr;border:3px solid var(--ink)}
-.pane{padding:22px 18px;border-bottom:3px solid var(--ink)}
-.pane:last-child{border-bottom:0}
-.callout{background:var(--red);color:var(--paper);padding:48px 22px;border-bottom:4px solid var(--ink)}
-.brief{max-width:520px;display:grid;gap:12px;margin-top:8px}
-.brief label{display:grid;gap:6px;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em}
-.brief input,.brief textarea,.brief select{font:1rem Archivo,sans-serif;padding:12px;border:2px solid var(--ink);width:100%;background:var(--paper);color:var(--ink)}
-.brief button{justify-self:start;cursor:pointer}
-footer{background:var(--ink);color:var(--paper);padding:36px 22px}
-@media(min-width:800px){.prices{grid-template-columns:1fr 1fr 1fr}.pane{border-bottom:0;border-right:3px solid var(--ink)}.pane:last-child{border-right:0}}
-</style>
+<link rel="stylesheet" href="circular.css">
 </head>
-<body>
+<body class="factory">
+<div class="circular-mast" aria-hidden="true">
+  <div class="circular-run stamp">
+    <span>Space Factory circular</span><span>Mountain View, Hawaiʻi</span><span>50% starts the work</span><span>Papaya film with the sound on</span><span>An agency that uses AI — not one that is one</span>
+    <span>Space Factory circular</span><span>Mountain View, Hawaiʻi</span><span>50% starts the work</span><span>Papaya film with the sound on</span><span>An agency that uses AI — not one that is one</span>
+  </div>
+</div>
 <header class="campus-mast" id="campus-mast">
  <div class="campus-mast-in">
   <a class="campus-brand" href="index.html"><span class="blk">BroBots</span><span class="stamp">Space Factory · Hawaiʻi</span></a>
@@ -65,8 +31,16 @@ footer{background:var(--ink);color:var(--paper);padding:36px 22px}
  </div>
 </header>
 <div class="nameplate wrap">
- <h1 class="blk">BroBots<br><span style="font-size:.38em;background:var(--ink);color:var(--paper);padding:.15em .3em">Space Factory</span></h1>
- <p class="stamp" style="margin-top:14px">Websites · Stores · Film · Bots · On a volcano</p>
+ <div class="burst">50%<br>to start</div>
+ <h1 class="blk">BroBots<br><span style="font-size:.36em;background:var(--ink);color:var(--paper);padding:.14em .28em">Space Factory</span></h1>
+ <p class="stamp" style="margin-top:12px">Websites · Stores · Film · Bots · On a volcano</p>
+ <div class="hero-volume-panel">
+  <button class="hero-volume-toggle" id="global-volume-toggle" type="button" aria-pressed="false" aria-label="Turn volume on">
+   <span class="speaker-icon" aria-hidden="true">🔊</span>
+   <span class="volume-word">VOLUME</span>
+   <span class="volume-state">OFF</span>
+  </button>
+ </div>
 </div>
 <section class="hero">
  <div class="hero-video-full">
@@ -75,86 +49,98 @@ footer{background:var(--ink);color:var(--paper);padding:36px 22px}
   </video>
  </div>
  <div class="hero-txt wrap">
-  <span class="stamp" style="color:var(--red)">Space Factory · Hawaiʻi</span>
+  <span class="stamp" style="color:var(--red)">This week’s circular · FlashTown</span>
   <h2 class="blk">We build the <span class="knock">whole</span> <span class="red">thing.</span></h2>
   <p class="lede">Then we take the machine out of it. Sites, stores, brand, film — and a bot that sounds like you at 2am.</p>
   <p class="team-line"><span>We don't use a robot.</span><strong>We use a team of robots.</strong></p>
-  <p class="mono">Same machines as everybody. We don't stop where they stop. The extra pass is the job.</p>
+  <p class="mono">Same machines as everybody. We don't stop where they stop. Turn the volume on. The fruit has a song.</p>
   <div class="hero-actions">
    <a href="#talk" class="btn">Start a build</a>
-   <a href="#pricing" class="btn btn-plain">Get a BroBot — from $497</a>
+   <a href="#pricing" class="btn btn-plain">Clip a BroBot coupon</a>
   </div>
  </div>
 </section>
 <figure class="art-plate">
- <video muted loop playsinline preload="none" poster="media/jpg-02.jpg" autoplay>
+ <video class="scroll-play" muted loop playsinline preload="none" poster="media/jpg-02.jpg" data-story-index="1" aria-label="A human brings a papaya into the factory">
   <source src="media/mp4-02.mp4" type="video/mp4">
  </video>
+ <figcaption class="plate-cap stamp"><span>Story 1</span><span>The papaya enters the factory</span></figcaption>
 </figure>
 <section class="sec">
  <div class="wrap">
-  <h3 class="blk" style="font-size:clamp(2rem,8vw,3.6rem);margin:0 0 16px">An agency that uses AI.<br>Not one that is one.</h3>
-  <p>We run the same tools everybody else has. The difference is the step after: a human removes everything that reads as machine-made. That step is pass 06. It is the one nobody else runs.</p>
+  <h3 class="blk" style="font-size:clamp(2rem,8vw,3.8rem);margin:0 0 16px">An agency that uses AI.<br>Not one that is one.</h3>
+  <p>The internet is filling up with the same gradient and the same sentence about being passionate. We run the same tools. A human then rips out everything that could belong to anybody. That step is pass 06. It is the job.</p>
  </div>
 </section>
 <figure class="art-plate">
- <video muted loop playsinline preload="none" poster="media/jpg-03.jpg" autoplay>
+ <video class="scroll-play" muted loop playsinline preload="none" poster="media/jpg-03.jpg" data-story-index="2" aria-label="Robots inspect the papaya">
   <source src="media/mp4-03.mp4" type="video/mp4">
  </video>
+ <figcaption class="plate-cap stamp"><span>Story 2</span><span>Inspected. Multiplied.</span></figcaption>
 </figure>
-<div class="band stamp">The method · Seven passes · Pass 06 is the job</div>
+<div class="band stamp"><span>The method</span><span>Seven passes · no skipping</span></div>
 <section class="sec" style="padding-top:0">
  <div class="pass"><div class="pass-n">01</div><div class="pass-b"><h4>Direction</h4><p>What it looks like, sounds like, and why. In writing. Before a pixel.</p></div></div>
  <div class="pass"><div class="pass-n">02</div><div class="pass-b"><h4>The map</h4><p>Every section gets a job. Phone first.</p></div></div>
- <div class="pass"><div class="pass-n">03</div><div class="pass-b"><h4>The one image</h4><p>If they remember one thing, this is it. The papaya film.</p></div></div>
+ <div class="pass"><div class="pass-n">03</div><div class="pass-b"><h4>The one image</h4><p>If they remember one thing: the papaya, and the sound.</p></div></div>
  <div class="pass"><div class="pass-n">04</div><div class="pass-b"><h4>Motion</h4><p>If it does not earn the frame, it gets cut.</p></div></div>
  <div class="pass"><div class="pass-n">05</div><div class="pass-b"><h4>Build</h4><p>Real construction. Forms, speed, devices.</p></div></div>
- <div class="pass hot"><div class="pass-n">06</div><div class="pass-b"><h4>The de-slop pass</h4><p>A human rips out anything generic and replaces it with something that could only be yours.</p></div></div>
+ <div class="pass hot"><div class="pass-n">06</div><div class="pass-b"><h4>The de-slop pass</h4><p>A human hunts anything generic and replaces it with something that could only be yours.</p></div></div>
  <div class="pass"><div class="pass-n">07</div><div class="pass-b"><h4>Launch audit</h4><p>Real phones. Real links. Then it ships.</p></div></div>
 </section>
 <figure class="art-plate">
- <video muted loop playsinline preload="none" poster="media/jpg-04.jpg" autoplay>
+ <video class="scroll-play" muted loop playsinline preload="none" poster="media/jpg-04.jpg" data-story-index="3" aria-label="The factory expands the experiment">
   <source src="media/mp4-04.mp4" type="video/mp4">
  </video>
+ <figcaption class="plate-cap stamp"><span>Story 3</span><span>The line gets longer</span></figcaption>
 </figure>
 <section class="sec" id="bots">
  <div class="wrap">
-  <span class="stamp" style="color:var(--red)">The bots</span>
+  <span class="stamp" style="color:var(--red)">Comes with the build</span>
   <h3 class="blk" style="font-size:clamp(2rem,8vw,3.4rem)">Every site can have one</h3>
-  <p>A BroBot sounds like you and knows the business. Ipo does this for Fruity Puppy. She tells the truth or she does not ship.</p>
-  <a href="#talk" class="btn">Ask about a bot</a>
+  <p>A BroBot sounds like you and knows the counter. Ipo does this for Fruity Puppy. She tells the truth or she does not ship.</p>
  </div>
 </section>
 <figure class="art-plate">
- <video muted loop playsinline preload="none" poster="media/jpg-05.jpg" autoplay>
+ <video class="scroll-play" muted loop playsinline preload="none" poster="media/jpg-05.jpg" data-story-index="4" aria-label="The man sings while robots dance with the papaya">
   <source src="media/mp4-05.mp4" type="video/mp4">
  </video>
+ <figcaption class="plate-cap stamp"><span>Story 4</span><span>The song. Turn the volume on.</span></figcaption>
 </figure>
 <figure class="art-plate">
- <video muted loop playsinline preload="none" poster="media/jpg-06.jpg" autoplay>
+ <video class="scroll-play" muted loop playsinline preload="none" poster="media/jpg-06.jpg" data-story-index="5" aria-label="The papaya becomes information">
   <source src="media/mp4-06.mp4" type="video/mp4">
  </video>
+ <figcaption class="plate-cap stamp"><span>Story 5</span><span>Fruit becomes a network</span></figcaption>
 </figure>
+<section class="sec">
+ <div class="wrap shop-box">
+  <span class="stamp" style="color:var(--red)">The shop</span>
+  <h3 class="blk" style="font-size:clamp(1.8rem,7vw,3rem);margin:8px 0 12px">Built in the jungle</h3>
+  <p>FlashTown sits above the Kazumura lava tube. Fruit, cats, solar, rain off the roof. The internet is a negotiation. If it survives a volcano, it survives launch day.</p>
+ </div>
+</section>
 <figure class="art-plate">
  <img src="media/jpg-07.jpg" alt="FlashTown, Hawaiʻi">
+ <figcaption class="plate-cap stamp"><span>Local color</span><span>FlashTown · Big Island</span></figcaption>
 </figure>
 <section class="sec" id="pricing">
  <div class="wrap">
-  <span class="stamp" style="color:var(--red)">Custom BroBots</span>
-  <h3 class="blk" style="font-size:clamp(1.8rem,7vw,3rem)">You're not buying a bot.<br>You're recruiting a graduate.</h3>
-  <p>Three tiers. 50% to start. Balance on delivery.</p>
+  <span class="stamp" style="color:var(--red)">Clip and keep · Custom BroBots</span>
+  <h3 class="blk" style="font-size:clamp(1.8rem,7vw,3.1rem)">You're not buying a bot.<br>You're recruiting a graduate.</h3>
+  <p>Three coupons. Hand-trained. 50% deposit starts the build. Balance on delivery.</p>
   <div class="prices">
-   <div class="pane"><span class="stamp">Wingman</span><h3 class="blk">$497</h3><p>One job. Your tone. Chat.</p></div>
-   <div class="pane"><span class="stamp" style="color:var(--red)">Sidekick</span><h3 class="blk" style="color:var(--red)">$1,497</h3><p>Full voice. 100 answers. Face. Most builds.</p></div>
-   <div class="pane"><span class="stamp">Legend</span><h3 class="blk">$4,997</h3><p>Multi-job. Your materials. Lifetime updates.</p></div>
+   <article class="coupon"><span class="stamp">Wingman</span><h3 class="blk amt">$497</h3><p class="mono stamp">50% to start</p><p>One job. Your tone. Chat.</p></article>
+   <article class="coupon" style="background:rgba(184,50,30,.1)"><span class="stamp" style="color:var(--red)">Sidekick · most builds</span><h3 class="blk amt" style="color:var(--red)">$1,497</h3><p class="mono stamp">50% to start</p><p>Full voice. 100 answers. Face.</p></article>
+   <article class="coupon"><span class="stamp">Legend</span><h3 class="blk amt">$4,997</h3><p class="mono stamp">50% to start</p><p>Multi-job. Your materials. Lifetime updates.</p></article>
   </div>
-  <p style="margin-top:22px"><a href="#talk" class="btn" data-budget="bot">Start a BroBot build</a></p>
+  <p style="margin-top:22px"><a href="#talk" class="btn" data-budget="bot">Redeem a coupon</a></p>
  </div>
 </section>
 <section class="callout" id="talk">
- <span class="stamp">Open for work</span>
+ <span class="stamp">Open for work · like Sunday hours</span>
  <h3 class="blk" style="font-size:clamp(2.2rem,10vw,4rem);margin:10px 0 14px">Tell us what you're building</h3>
- <p>Send the messy version. Fifty percent starts the work. If it is a fit, a plan. If it is not, a no.</p>
+ <p>Send the messy version. If it is a fit, a plan. If it is not, a no.</p>
  <form class="brief" id="brief">
   <label>Name <input name="name" required autocomplete="name"></label>
   <label>Email <input name="email" type="email" required autocomplete="email"></label>
@@ -172,11 +158,12 @@ footer{background:var(--ink);color:var(--paper);padding:36px 22px}
   <button class="btn btn-plain" type="submit">Send the brief</button>
  </form>
 </section>
-<footer>
+<footer class="factory-foot">
  <div class="blk" style="font-size:2rem">BroBots</div>
  <div class="stamp">Mountain View, Hawaiʻi · FlashTown · © 2026</div>
 </footer>
 <script src="campus-nav.js"></script>
+<script src="circular-audio.js"></script>
 <script>
 (function(){
  var form=document.getElementById('brief');
