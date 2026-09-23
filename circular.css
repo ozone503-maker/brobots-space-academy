@@ -10,10 +10,6 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 .stamp{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}
 .btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:var(--red);color:var(--paper);border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);text-decoration:none}
 .btn-plain{background:var(--paper);color:var(--ink)}
-.circular-mast{background:var(--ink);color:var(--paper);padding:8px 0;overflow:hidden;border-bottom:4px solid var(--ink)}
-.circular-run{display:flex;gap:28px;white-space:nowrap;animation:crawl 28s linear infinite;font-family:'Courier Prime',monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
-@keyframes crawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.circular-run{animation:none}}
 .nameplate{border-bottom:4px solid var(--ink);padding:18px 0 14px}
 .nameplate h1{font-size:clamp(2.8rem,13vw,7rem);margin:0;line-height:.78}
 .hero-volume-panel{display:flex;justify-content:flex-end;margin:10px 0 0;padding-top:10px;border-top:2px solid var(--ink)}
@@ -30,7 +26,13 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 .lede{max-width:46ch;font-size:1.06rem}
 .team-line{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:12px 0;margin:16px 0;text-transform:uppercase;font-family:'Archivo Black',sans-serif;line-height:1.1}
 .team-line strong{display:block;color:var(--red);margin-top:4px}
-.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.offer-menu{list-style:none;margin:22px 0 0;padding:0;border-top:3px solid var(--ink);max-width:34rem}
+.offer-menu li{border-bottom:2px solid var(--ink)}
+.offer-menu a{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 2px;text-decoration:none;color:var(--ink);font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:clamp(1rem,3.4vw,1.35rem);line-height:1.1}
+.offer-menu a:hover .offer-name{color:var(--red)}
+.offer-menu .offer-price{font-family:'Courier Prime',monospace;font-size:.85rem;letter-spacing:.06em;white-space:nowrap}
+.offer-menu .offer-sub{display:block;font-family:'Courier Prime',monospace;font-size:.68rem;letter-spacing:.1em;margin-top:4px;text-transform:uppercase;color:#444}
+.hero-actions{display:none}
 .plate-cap{background:var(--ink);color:var(--paper);padding:8px 14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .art-plate{margin:0;background:#171713;border-bottom:4px solid var(--ink)}
 .art-plate video,.art-plate img{display:block;width:100%;height:auto}
