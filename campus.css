@@ -1,12 +1,11 @@
-/* Brobots Space Factory — shared campus chrome
-   Matches homepage paste-up constitution. Do not SaaS-ify. */
+/* Brobots Space Factory — shared campus chrome */
 :root{
   --paper:#E8E1D0;
   --paper-2:#DFD6C1;
   --ink:#14140F;
-  --red:#00D4E8; /* electric cyan spot — not plum */
+  --red:#FF8A00;
+  --cyan:#FF8A00;
   --blue:#1D3FA8;
-  --cyan:#00D4E8;
 }
 .bb-campus,.bb-campus *{box-sizing:border-box}
 .bb-campus{
@@ -72,9 +71,9 @@
   min-height:44px;
 }
 .campus-nav-toggle[aria-expanded="true"]{
-  background:var(--cyan);
+  background:var(--red);
   color:var(--ink);
-  border-color:var(--cyan);
+  border-color:var(--red);
 }
 .campus-nav{
   display:flex;
@@ -93,14 +92,14 @@
   padding:4px 0;
   color:var(--paper);
 }
-.campus-nav a:hover{border-bottom-color:var(--cyan)}
+.campus-nav a:hover{border-bottom-color:var(--red)}
 .campus-nav a[aria-current="page"],
 .campus-nav a.current{
-  color:var(--cyan);
-  border-bottom-color:var(--cyan);
+  color:var(--red);
+  border-bottom-color:var(--red);
 }
 .campus-nav a.contact{
-  background:var(--cyan);
+  background:var(--red);
   color:var(--ink);
   padding:8px 12px;
   border-bottom:0;
