@@ -8,8 +8,8 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 .blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.88;letter-spacing:-.02em}
 .mono,.stamp{font-family:'Courier Prime',monospace}
 .stamp{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}
-.btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);color:#04101f;border:2px solid transparent;text-decoration:none;transition:background .15s linear}
-.btn:hover,.btn:focus-visible{background:#07f6ed}
+.btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:#22B894;color:#0b0d10;border:2px solid transparent;text-decoration:none;transition:background .15s linear}
+.btn:hover,.btn:focus-visible{background:#4FE3AE}
 .btn-plain{background:var(--paper);color:var(--ink)}
 .nameplate{border-bottom:4px solid var(--paper);padding:18px 0 14px}
 .nameplate h1{font-size:clamp(2.8rem,13vw,7rem);margin:0;line-height:.78}
@@ -76,7 +76,7 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 .callout h3.blk,
 .factory-foot > .blk,
 .pass-n,
-.offer-menu a:hover .offer-price{color:#07f6ed}
+.offer-menu a:hover .offer-price{color:#4FE3AE}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .nameplate h1,
   .hero-txt h2,
@@ -106,7 +106,7 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
   /* "Space Factory" sub-plate under the BROBOTS wordmark: chrome */
   .nameplate h1 span{background:var(--chrome) !important;-webkit-background-clip:text !important;background-clip:text !important;-webkit-text-fill-color:transparent;color:transparent !important;border:2px solid var(--silver-edge);padding:.1em .26em !important}
   /* "whole" knock: lit gradient plate with ink letters */
-  .hero-txt h2 .knock{background:var(--hurricane);color:#04101f;-webkit-text-fill-color:#04101f}
+  .hero-txt h2 .knock{background:var(--hurricane);color:#0b0d10;-webkit-text-fill-color:#0b0d10}
 }
 /* small captions/eyebrows: plain muted paper, no cyan. Step titles and the
    team line inherit body paper. Color lives only on the big type. */
@@ -116,7 +116,7 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 .callout > .stamp,
 .band,.band.stamp{color:var(--caption)}
 .offer-menu a:hover{background:#060606}
-.btn-plain:hover,.btn-plain:focus-visible{background:#07f6ed;color:#04101f}
+.btn-plain:hover,.btn-plain:focus-visible{background:#4FE3AE;color:#0b0d10}
 
 /* ===== Chrome neutrals on the homepage (cool silver, not cream) ===== */
 /* rules + borders that were cream */
@@ -147,7 +147,7 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 .offer-menu a{color:var(--silver-body)}
 .offer-menu .offer-name{color:var(--silver)}
 .offer-menu a:hover{background:#11161b;color:var(--silver-body)}
-.offer-menu .offer-price{color:#07f6ed}
+.offer-menu .offer-price{color:#4FE3AE}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .offer-menu .offer-price{background:var(--hurricane);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:none}
 }
@@ -156,9 +156,9 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 /* brief form on the ink callout: dark fields, silver edges */
 .brief label{color:var(--silver)}
 .brief input,.brief textarea,.brief select{background:var(--card);color:#e6ebef;border:2px solid var(--silver-edge)}
-.brief input:focus,.brief textarea:focus,.brief select:focus{outline:2px solid #07f6ed;outline-offset:1px}
+.brief input:focus,.brief textarea:focus,.brief select:focus{outline:2px solid #4FE3AE;outline-offset:1px}
 .brief button,.btn-plain{background:var(--card);color:#e6ebef;border:2px solid var(--silver-edge)}
-.btn-plain:hover,.btn-plain:focus-visible,.brief button:hover{background:#07f6ed;color:#04101f;border-color:#07f6ed}
+.btn-plain:hover,.btn-plain:focus-visible,.brief button:hover{background:#4FE3AE;color:#0b0d10;border-color:#4FE3AE}
 /* ink bands / footer: silver */
 .band,.band.stamp,.factory-foot .stamp{color:var(--silver)}
 .factory-foot{color:var(--silver-body)}
@@ -183,3 +183,17 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 /* big monitors + TVs: scale type a notch and widen the column, never full-bleed text */
 @media (min-width:1900px){html{font-size:106.25%} body .wrap{max-width:1360px} .campus-mast-in{max-width:1360px}}
 @media (min-width:2400px){html{font-size:118.75%} body .wrap{max-width:1520px} .campus-mast-in{max-width:1520px}}
+
+/* ===== Green ink, fewer places: homepage =====
+   Green stays on the BROBOTS nameplate, the hero headline ("We build the whole thing")
+   and the price strip. Section heads, callout head and step numbers go chrome. */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .sec > .wrap > h3.blk,
+  .callout h3.blk,
+  .pass-n{background:var(--chrome) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;-webkit-text-fill-color:transparent !important;filter:none !important}
+  .nameplate h1,.hero-txt h2{filter:none !important}
+}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .sec > .wrap > h3.blk,.callout h3.blk,.pass-n{color:#cfd6dc !important}
+}
+.factory-circular a{color:inherit;display:block}
