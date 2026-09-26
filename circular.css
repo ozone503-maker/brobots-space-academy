@@ -67,3 +67,31 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 
 /* storm gradient on the ink knock highlight (beats .knock background) */
 .knock.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+
+/* ===== robot factory — juicy blue energy (index) ===== */
+:root{
+  --deep:#050c1a;
+  --deep-2:#0a1528;
+  --steel:#1e3054;
+  --energy1:#2fe08c;
+  --energy2:#00d5ff;
+  --energy3:#2f7bff;
+  --mist:#9fb3d9;
+}
+body.factory{
+  background:
+    radial-gradient(1100px 550px at 12% -4%, rgba(0,213,255,.13), transparent 60%),
+    radial-gradient(900px 650px at 88% 6%, rgba(47,123,255,.12), transparent 60%),
+    linear-gradient(165deg,#0a1730 0%,#060d1d 55%,#040912 100%);
+  background-attachment:fixed;
+  color:var(--paper);
+}
+body.factory .nameplate,body.factory .team-line,body.factory .hero-video-full,body.factory .art-plate,body.factory .ink-plate,body.factory .ink-pair,body.factory .sec,body.factory .pass,body.factory .callout{border-color:var(--steel)}
+body.factory .ink-pair img{border-color:var(--steel)}
+body.factory .shop-box{background:var(--deep-2);border:4px solid var(--steel);color:var(--paper);box-shadow:6px 6px 0 rgba(0,0,0,.55)}
+body.factory .offer-menu{background:var(--deep-2);border:3px solid var(--steel)}
+body.factory .offer-menu li{border-color:var(--steel)}
+body.factory .offer-menu li:last-child{background:transparent}
+body.factory .offer-menu a{color:var(--paper)}
+body.factory .offer-menu a:hover{background:#12233f;color:var(--paper)}
+body.factory .btn{background:linear-gradient(100deg,var(--energy1),var(--energy2) 50%,var(--energy3));color:#04101f;border-color:transparent}
