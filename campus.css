@@ -169,7 +169,3 @@
 
 /* storm gradient accent — hurricane-party teal to electric blue */
 .storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(0,213,255,.55))}
-/* gradient blue display text — lives on the black canvas */
-.blue-text{background:linear-gradient(100deg,#00d5ff 0%,#2f7bff 55%,#1e4dff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-/* masthead brand in gradient blue — beats the !important paper color, no glow */
-.campus-brand .blk.blue-text{background:linear-gradient(100deg,#00d5ff 0%,#2f7bff 55%,#1e4dff 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent}
