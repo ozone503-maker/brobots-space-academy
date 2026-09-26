@@ -481,3 +481,4 @@ body.bb-campus .craft-pip{background:var(--silver-body)}
 /* paste-up offset shadows retired on dark */
 body.bb-campus .bay,body.bb-campus .station,body.bb-campus .chip,body.bb-campus .pricing,body.bb-campus .hero,
 body.bb-campus .cta-band,body.bb-campus .panel,body.bb-campus .note,body.bb-campus .mall,body.bb-campus .tier,body.bb-campus .dossier{box-shadow:none !important}
+body.bb-campus .bay .tag{align-self:flex-start;width:auto}
