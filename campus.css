@@ -8,8 +8,8 @@
 }
 .bb-campus,.bb-campus *{box-sizing:border-box}
 .bb-campus{
-  background:var(--paper);
-  color:var(--ink);
+  background:#060606;
+  color:var(--paper);
   font-family:'Archivo',-apple-system,sans-serif;
   line-height:1.5;
   min-height:100%;
@@ -168,4 +168,4 @@
 }
 
 /* storm gradient accent — hurricane-party teal to electric blue */
-.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(0,213,255,.55))}

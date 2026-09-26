@@ -20,7 +20,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
 :root{--paper:#E8D9B8;--paper-2:#DCCBA0;--ink:#1A150F;--red:#6B2D55;--olive:#3F4A2E;--stamp:#5A2A40}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#2A241C;color:var(--ink);font-family:'Archivo',system-ui,sans-serif;line-height:1.45}
+body{background:#060606;color:var(--paper);font-family:'Archivo',system-ui,sans-serif;line-height:1.45}
 a{color:inherit}
 .wrap{max-width:980px;margin:0 auto;padding:0 16px}
 .blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.92;letter-spacing:-.02em}
@@ -37,7 +37,7 @@ a{color:inherit}
 .rail a{flex:0 0 auto;color:var(--paper);text-decoration:none;font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid #5a4d3c;padding:.35em .55em;background:#2A241C}
 .rail a:hover{border-color:var(--paper)}
 .stack{display:flex;flex-direction:column;gap:28px;padding:28px 0 80px}
-.dossier{background:linear-gradient(180deg,var(--paper),var(--paper-2));border:5px solid var(--ink);box-shadow:8px 8px 0 #0d0b08;padding:16px}
+.dossier{background:linear-gradient(180deg,var(--paper),var(--paper-2));border:5px solid var(--ink);box-shadow:8px 8px 0 rgba(232,225,208,.85);padding:16px}
 .dossier__top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:3px dashed var(--ink);padding-bottom:12px;margin-bottom:14px}
 .dossier__top h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:.2em 0}
 .codename{font-family:'Courier Prime',monospace;font-size:.78rem;margin-top:4px}
@@ -60,8 +60,8 @@ footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
 .note{font-size:.8rem;opacity:.75;max-width:60ch;margin-top:8px}
 
 /* campus restyle — dossiers on paper, files still paste-up */
-html,body{background:var(--paper,#E8E1D0)!important;color:var(--ink,#14140F)!important}
-body.bb-campus{background:var(--paper)!important}
+html,body{background:#060606!important;color:#E8E1D0!important}
+body.bb-campus{background:#060606!important}
 .page-titlebar{border-bottom:4px solid var(--ink);padding:clamp(22px,4vw,36px) 0;background:var(--paper)}
 .page-titlebar h1{font-size:clamp(2.4rem,8vw,4.6rem);margin:.2em 0 .35em;line-height:.85;color:var(--ink)!important}
 .page-titlebar .lede{max-width:54ch;color:var(--ink)}
@@ -71,7 +71,7 @@ body.bb-campus{background:var(--paper)!important}
 .dossier{scroll-margin-top:120px}
 .rail a{background:var(--paper);color:var(--ink);border:2px solid var(--ink)}
 .rail a:hover{border-color:var(--red);color:var(--red)}
-.dossier{box-shadow:7px 7px 0 var(--ink)}
+.dossier{box-shadow:7px 7px 0 rgba(232,225,208,.85)}
 footer{margin-top:40px;padding:36px 0;background:var(--ink)!important;color:var(--paper)!important;border-top:0}
 footer a{color:var(--paper)}
 footer .note{color:rgba(232,225,208,.75)}
