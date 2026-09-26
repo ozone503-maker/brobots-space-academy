@@ -189,11 +189,15 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
    and the price strip. Section heads, callout head and step numbers go chrome. */
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .sec > .wrap > h3.blk,
-  .callout h3.blk,
-  .pass-n{background:var(--chrome) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;-webkit-text-fill-color:transparent !important;filter:none !important}
+  .callout h3.blk{background:var(--chrome) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;-webkit-text-fill-color:transparent !important;filter:none !important}
   .nameplate h1,.hero-txt h2{filter:none !important}
 }
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
-  .sec > .wrap > h3.blk,.callout h3.blk,.pass-n{color:#cfd6dc !important}
+  .sec > .wrap > h3.blk,.callout h3.blk{color:#cfd6dc !important}
 }
 .factory-circular a{color:inherit;display:block}
+
+/* step numbers: solid sea green ink */
+.pass-n{background:none !important;color:#22B894 !important;-webkit-text-fill-color:#22B894 !important;filter:none !important}
+/* thin accent: sea-green rule under each ink band (kicker strip) */
+.band{box-shadow:inset 0 -2px 0 #22B894}

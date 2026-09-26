@@ -173,10 +173,11 @@
    Only on display type that sits on the black canvas / ink panels.
    Never on cream paste-up cards, never on body copy or small text. */
 :root{
-  --hurricane:linear-gradient(90deg,#4FE3AE,#22B894); /* green-only printed ink: mint -> sea green, no cyan/blue */
+  --hurricane:linear-gradient(90deg,#4FE3AE,#22B894 55%,#3CA9E5); /* printed ink: mint -> sea green -> tamed ink blue (#3CA9E5 = oklch(.70 .13 237), same L/C as #22B894) */
   --hurricane-cyan:#22B894; /* legacy name: now the sea-green accent (borders, fills) */
   --green:#22B894;
   --green-hi:#4FE3AE;
+  --ink-blue:#3CA9E5;
   /* cool chrome neutrals (replace warm cream on the black canvas) */
   --chrome:linear-gradient(180deg,#ffffff 0%,#dfe5ea 38%,#8e99a4 52%,#eef2f5 70%,#b9c2ca 100%);
   /* softer 3-stop chrome for medium/small type — the hard mid band striped it below ~24px */
@@ -531,3 +532,17 @@ body.bb-campus .mall a:hover,body.bb-campus .note a:hover{color:#fff !important;
 body.bb-campus .composer button{background:var(--green) !important;color:#0b0d10 !important;border-color:var(--green) !important}
 /* focus rings: green, not the browser's blue */
 a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid #4FE3AE;outline-offset:2px}
+
+/* ===== Accent back in the middle (Sep 25, v=d) =====
+   Key word/line of big section headlines carries the ink gradient (.grad span);
+   the rest of the headline stays chrome. Kickers next to them stay silver. */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  body.bb-campus h1 .grad,body.bb-campus h2 .grad,body.bb-campus h3 .grad,
+  .factory h1 .grad,.factory h2 .grad,.factory h3 .grad{
+    background:var(--hurricane) !important;-webkit-background-clip:text !important;background-clip:text !important;
+    color:transparent !important;-webkit-text-fill-color:transparent !important;filter:none !important;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone;
+  }
+}
+/* thin accent: active nav underline in sea green */
+.campus-nav a[aria-current="page"],.campus-nav a.current{border-bottom-color:var(--green) !important}
