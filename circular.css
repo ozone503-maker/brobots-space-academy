@@ -66,7 +66,7 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 @media(max-width:700px){.hero-volume-toggle{width:100%;justify-content:center}}
 
 /* storm gradient on the ink knock highlight (beats .knock background) */
-.knock.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.knock.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 0 rgba(3,12,26,.9))}
 
 /* ===== robot factory — juicy blue energy (index) ===== */
 :root{
@@ -78,13 +78,22 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
   --energy3:#2f7bff;
   --mist:#9fb3d9;
 }
+/* factory canvas: the storm gradient, always moving */
+@keyframes storm-drift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
 body.factory{
-  background:
-    radial-gradient(1100px 550px at 12% -4%, rgba(0,213,255,.13), transparent 60%),
-    radial-gradient(900px 650px at 88% 6%, rgba(47,123,255,.12), transparent 60%),
-    linear-gradient(165deg,#0a1730 0%,#060d1d 55%,#040912 100%);
-  background-attachment:fixed;
+  background:linear-gradient(115deg,#2fe08c,#00d5ff,#2f7bff,#2fe08c);
+  background-size:300% 300%;
+  animation:storm-drift 16s ease-in-out infinite;
   color:var(--paper);
+  text-shadow:0 1px 3px rgba(3,12,26,.45);
+}
+body.factory .btn{text-shadow:none}
+@media (prefers-reduced-motion:reduce){
+  body.factory{animation:none}
 }
 body.factory .nameplate,body.factory .team-line,body.factory .hero-video-full,body.factory .art-plate,body.factory .ink-plate,body.factory .ink-pair,body.factory .sec,body.factory .pass,body.factory .callout{border-color:var(--steel)}
 body.factory .ink-pair img{border-color:var(--steel)}
