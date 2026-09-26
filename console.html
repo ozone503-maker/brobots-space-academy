@@ -30,7 +30,7 @@
   .chip.active{background:var(--ink);color:var(--paper)}
   .stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,380px);gap:22px;align-items:start}
   @media(max-width:860px){.stage{grid-template-columns:1fr}}
-  .file{background:var(--paper);border:3px solid var(--ink);padding:18px 18px 22px}
+  .file{background:var(--paper);color:var(--ink);border:3px solid var(--ink);padding:18px 18px 22px}
   .file-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
   .file h2{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;margin:4px 0 6px}
   .stamp-mark{border:2px solid var(--ink);padding:6px 8px;transform:rotate(8deg);font-family:'Courier Prime',monospace;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
@@ -42,11 +42,11 @@
   .msg p{margin:0;white-space:pre-wrap}
   .composer{display:flex;gap:8px;margin-top:14px;border-top:2px solid var(--paper);padding-top:12px}
   .composer input{flex:1;background:transparent;border:2px solid var(--paper);font-family:'Archivo',sans-serif;font-size:1rem;padding:10px 12px;color:var(--paper)}
-  .composer input:focus{outline:none;background:#fff}
+  .composer input:focus{outline:none;background:#fff;color:var(--ink)}
   .composer button{font-family:'Courier Prime',monospace;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:linear-gradient(100deg,#2fe08c,#00d5ff 50%,#2f7bff);color:#04101f;border:2px solid transparent;padding:10px 14px;cursor:pointer}
   .composer button:disabled{opacity:.45;cursor:wait}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
-  .thumb{border:2px solid var(--ink);background:#fff;cursor:pointer;padding:0 0 8px;filter:grayscale(1)}
+  .thumb{border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;padding:0 0 8px;filter:grayscale(1)}
   .thumb img{width:100%;height:92px;object-fit:cover;display:block;border-bottom:2px solid var(--ink)}
   .thumb span{display:block;padding:6px 6px 0;font-family:'Courier Prime',monospace;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center}
   .thumb:hover,.thumb.active{filter:none}
