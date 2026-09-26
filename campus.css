@@ -188,8 +188,8 @@
 }
 body.bb-campus{
   background:linear-gradient(115deg,#2fe08c,#00d5ff,#2f7bff,#2fe08c);
-  background-size:300% 300%;
-  animation:storm-drift 16s ease-in-out infinite;
+  background-size:200% 200%;
+  animation:storm-drift 12s ease-in-out infinite;
   color:var(--paper);
   text-shadow:0 1px 3px rgba(3,12,26,.45);
 }
