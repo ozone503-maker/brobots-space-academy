@@ -174,7 +174,15 @@
 :root{
   --hurricane:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);
   --hurricane-cyan:#07f6ed;
-  --caption:rgba(232,225,208,.72); /* muted paper for small eyebrow/caption labels */
+  /* cool chrome neutrals (replace warm cream on the black canvas) */
+  --chrome:linear-gradient(180deg,#ffffff 0%,#dfe5ea 38%,#8e99a4 52%,#eef2f5 70%,#b9c2ca 100%);
+  /* softer 3-stop chrome for medium/small type — the hard mid band striped it below ~24px */
+  --chrome-soft:linear-gradient(180deg,#f4f7f9 0%,#d3dae0 50%,#9aa5b0 100%);
+  --silver:#9AA5B0;      /* tiny captions / eyebrows: flat, no gradient */
+  --silver-body:#D3DAE0; /* body copy on black */
+  --silver-edge:#8E99A4; /* flat 2px card borders + rules */
+  --card:#0b0d10;        /* near-black card */
+  --caption:var(--silver);
   /* printed-ink edge, not neon: tight and faint, headings only */
   --hurricane-glow:drop-shadow(0 0 2px rgba(7,246,237,.25));
 }
@@ -213,7 +221,7 @@ body.bb-campus > footer .blk{color:#07f6ed !important}
   body.bb-campus > footer .blk{filter:none}
 }
 
-/* small eyebrow/caption labels stay plain muted paper — color lives only on the big type
+/* small eyebrow/caption labels stay flat silver — color lives only on the big type
    (!important beats the old inline plum/salmon colors, which were unreadable on black) */
 .bb-campus .sec__head .stamp,
 .bb-campus .cta-band .stamp{color:var(--caption) !important}
@@ -243,3 +251,61 @@ body.bb-campus > footer .blk{color:#07f6ed !important}
    "Explore services", retail "Recruit a graduate"/"See pricing"/"Email").
    Plain buttons keep their own ink-on-paper; the Sidekick gradient button keeps its !important ink. */
 .bb-campus a.btn:not(.btn-plain){color:var(--paper)}
+
+/* ===== Chrome neutrals — cool silver instead of warm cream on black ===== */
+/* .chrome: brushed-chrome fill for medium neutral display text. No glow. */
+.chrome{color:#cfd6dc}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .chrome{background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;filter:none}
+}
+/* body copy on black */
+body.factory,body.bb-campus,.bb-campus{color:var(--silver-body)}
+/* sticky header (all pages): silver sublabel + nav, silver contact chip */
+.campus-brand .stamp{color:var(--silver) !important;opacity:1}
+.campus-nav a{color:var(--silver-body)}
+.campus-nav a:hover,.campus-nav a[aria-current="page"],.campus-nav a.current{border-bottom-color:var(--silver-body)}
+.campus-nav a.contact{background:var(--silver-body);border-color:var(--silver-body);color:var(--ink)}
+.campus-nav a.contact:hover{background:#07f6ed;border-color:#07f6ed}
+.campus-nav-toggle{border-color:var(--silver-edge);color:var(--silver-body)}
+.campus-nav-toggle[aria-expanded="true"]{background:var(--silver-body);border-color:var(--silver-body)}
+@media(max-width:860px){.campus-nav a{border-bottom-color:rgba(154,165,176,.25)}}
+/* footers (all ink) */
+body.bb-campus > footer,body.bb-campus > footer a{color:var(--silver-body)}
+body.bb-campus > footer .stamp{color:var(--silver)}
+
+/* ---- services: cream cards on black become near-black cards with flat silver edges ---- */
+.bb-campus.svc .bay:not(.hot),
+.bb-campus.svc .hero,
+.bb-campus.svc .note{background:var(--card);color:var(--silver-body);border:2px solid var(--silver-edge);box-shadow:none}
+.bb-campus.svc .note{border-style:dashed}
+.bb-campus.svc .note a{color:var(--silver-body);border-bottom-color:var(--silver-edge)}
+.bb-campus.svc .note a:hover{color:#07f6ed;border-bottom-color:#07f6ed}
+.bb-campus.svc .note .stamp,
+.bb-campus.svc .bay .mono,
+.bb-campus.svc .bay:not(.hot) .deposit{color:var(--silver) !important}
+.bb-campus.svc .bay:not(.hot) .offer-list li{border-bottom-color:rgba(154,165,176,.2)}
+.bb-campus.svc .bay:not(.hot) .offer-list li:before{color:var(--silver)}
+.bb-campus.svc .bay:not(.hot) .tag{background:transparent;color:var(--silver);border:1px solid var(--silver-edge)}
+/* tier / room names: chrome */
+.bb-campus.svc .bay:not(.hot) h3{color:#cfd6dc}
+/* tier prices: hurricane gradient, flat */
+.bb-campus.svc .bay:not(.hot) .price{color:#07f6ed}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .bb-campus.svc .bay:not(.hot) h3{background:var(--chrome-soft);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%}
+  .bb-campus.svc .bay:not(.hot) .price{background:var(--hurricane);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%}
+}
+/* buttons on dark cards + CTA band: dark with flat silver border, readable text, flat cyan hover */
+.bb-campus.svc .bay:not(.hot) .btn,
+.bb-campus.svc .hero .btn,
+.bb-campus.svc .cta-band .btn{background:var(--card) !important;color:#e6ebef !important;border:2px solid var(--silver-edge) !important;box-shadow:none}
+.bb-campus.svc .bay:not(.hot) .btn:hover,
+.bb-campus.svc .hero .btn:hover,
+.bb-campus.svc .cta-band .btn:hover{background:#07f6ed !important;color:#04101f !important;border-color:#07f6ed !important;transform:none;box-shadow:none}
+.bb-campus.svc .cta-band{border:2px solid var(--silver-edge);box-shadow:none}
+/* services title bar sits on the black page: dark bar, gradient title, silver copy */
+.bb-campus.svc .page-titlebar{background:var(--card);color:var(--silver-body);border-bottom:2px solid var(--silver-edge)}
+.bb-campus.svc .page-titlebar .stamp{color:var(--silver) !important}
+.bb-campus.svc .page-titlebar h1{color:#07f6ed}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .bb-campus.svc .page-titlebar h1{background:var(--hurricane);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%;filter:var(--hurricane-glow)}
+}

@@ -72,7 +72,7 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
    shop box, form fields) keep ink-on-paper. */
 .nameplate h1,
 .hero-txt h2,
-.sec > .wrap:not(.shop-box) > h3.blk,
+.sec > .wrap > h3.blk,
 .callout h3.blk,
 .factory-foot > .blk,
 .pass-n,
@@ -80,7 +80,7 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .nameplate h1,
   .hero-txt h2,
-  .sec > .wrap:not(.shop-box) > h3.blk,
+  .sec > .wrap > h3.blk,
   .callout h3.blk,
   .factory-foot > .blk,
   .pass-n,
@@ -100,11 +100,11 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
   /* shrink-wrap block headings so the whole mint->cyan->blue sweep shows */
   .nameplate h1,
   .hero-txt h2,
-  .sec > .wrap:not(.shop-box) > h3.blk,
+  .sec > .wrap > h3.blk,
   .callout h3.blk,
   .factory-foot > .blk{width:fit-content;max-width:100%}
-  /* "Space Factory" sub-plate under the BROBOTS wordmark: plain paper, no color */
-  .nameplate h1 span{-webkit-text-fill-color:var(--paper);color:var(--paper) !important}
+  /* "Space Factory" sub-plate under the BROBOTS wordmark: chrome */
+  .nameplate h1 span{background:var(--chrome) !important;-webkit-background-clip:text !important;background-clip:text !important;-webkit-text-fill-color:transparent;color:transparent !important;border:2px solid var(--silver-edge);padding:.1em .26em !important}
   /* "whole" knock: lit gradient plate with ink letters */
   .hero-txt h2 .knock{background:var(--hurricane);color:#04101f;-webkit-text-fill-color:#04101f}
 }
@@ -112,8 +112,53 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
    team line inherit body paper. Color lives only on the big type. */
 .nameplate .stamp,
 .hero-txt > .stamp,
-.sec > .wrap:not(.shop-box) > .stamp,
+.sec > .wrap > .stamp,
 .callout > .stamp,
 .band,.band.stamp{color:var(--caption)}
 .offer-menu a:hover{background:#060606}
 .btn-plain:hover,.btn-plain:focus-visible{background:#07f6ed;color:#04101f}
+
+/* ===== Chrome neutrals on the homepage (cool silver, not cream) ===== */
+/* rules + borders that were cream */
+.nameplate,.sec{border-bottom-color:var(--silver-edge)}
+.hero-volume-panel{border-top-color:var(--silver-edge)}
+.pass{border-bottom-color:rgba(154,165,176,.35)}
+.team-line{border-color:var(--silver-edge)}
+/* medium sub-headlines: chrome ("We don't use a robot." / "We use a team of robots.") */
+.team-line span,.team-line strong{color:#cfd6dc}
+/* step titles: chrome */
+.pass-b h4{color:#cfd6dc}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .team-line span,.team-line strong,.pass-b h4{background:var(--chrome-soft);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%}
+  .team-line span{display:block}
+}
+/* volume toggle: dark chip with silver edge */
+.hero-volume-toggle{background:var(--card);color:var(--silver-body);border:2px solid var(--silver-edge)}
+.hero-volume-toggle.is-on{background:var(--silver-body);color:var(--ink);border-color:var(--silver-body)}
+/* offer strip: near-black cards, flat silver edges, silver labels, hurricane prices */
+.offer-menu{background:var(--card);color:var(--silver-body);border:2px solid var(--silver-edge)}
+.offer-menu li{border-right:2px solid var(--silver-edge);border-bottom:2px solid var(--silver-edge)}
+.offer-menu li:nth-child(2){border-right:0}
+.offer-menu li:last-child{background:var(--card);border-right:0;border-bottom:0}
+@media(min-width:640px){
+  .offer-menu li:nth-child(2){border-right:2px solid var(--silver-edge)}
+  .offer-menu li:last-child{border-bottom:0}
+}
+.offer-menu a{color:var(--silver-body)}
+.offer-menu .offer-name{color:var(--silver)}
+.offer-menu a:hover{background:#11161b;color:var(--silver-body)}
+.offer-menu .offer-price{color:#07f6ed}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .offer-menu .offer-price{background:var(--hurricane);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:none}
+}
+/* shop box: near-black card (its heading now matches the other section heads) */
+.shop-box{background:var(--card);color:var(--silver-body);border:2px solid var(--silver-edge)}
+/* brief form on the ink callout: dark fields, silver edges */
+.brief label{color:var(--silver)}
+.brief input,.brief textarea,.brief select{background:var(--card);color:#e6ebef;border:2px solid var(--silver-edge)}
+.brief input:focus,.brief textarea:focus,.brief select:focus{outline:2px solid #07f6ed;outline-offset:1px}
+.brief button,.btn-plain{background:var(--card);color:#e6ebef;border:2px solid var(--silver-edge)}
+.btn-plain:hover,.btn-plain:focus-visible,.brief button:hover{background:#07f6ed;color:#04101f;border-color:#07f6ed}
+/* ink bands / footer: silver */
+.band,.band.stamp,.factory-foot .stamp{color:var(--silver)}
+.factory-foot{color:var(--silver-body)}
