@@ -103,18 +103,17 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
   .sec > .wrap:not(.shop-box) > h3.blk,
   .callout h3.blk,
   .factory-foot > .blk{width:fit-content;max-width:100%}
-  /* "Space Factory" sub-plate under the BROBOTS wordmark: flat cyan */
-  .nameplate h1 span{-webkit-text-fill-color:#07f6ed;color:#07f6ed !important}
+  /* "Space Factory" sub-plate under the BROBOTS wordmark: plain paper, no color */
+  .nameplate h1 span{-webkit-text-fill-color:var(--paper);color:var(--paper) !important}
   /* "whole" knock: lit gradient plate with ink letters */
   .hero-txt h2 .knock{background:var(--hurricane);color:#04101f;-webkit-text-fill-color:#04101f}
 }
-/* flat cyan secondary type on black — readable, not gradient */
+/* small captions/eyebrows: plain muted paper, no cyan. Step titles and the
+   team line inherit body paper. Color lives only on the big type. */
 .nameplate .stamp,
 .hero-txt > .stamp,
 .sec > .wrap:not(.shop-box) > .stamp,
 .callout > .stamp,
-.band,.band.stamp,
-.pass-b h4,
-.team-line strong{color:#07f6ed}
+.band,.band.stamp{color:var(--caption)}
 .offer-menu a:hover{background:#060606}
 .btn-plain:hover,.btn-plain:focus-visible{background:#07f6ed;color:#04101f}

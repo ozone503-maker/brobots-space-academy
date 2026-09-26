@@ -174,6 +174,7 @@
 :root{
   --hurricane:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);
   --hurricane-cyan:#07f6ed;
+  --caption:rgba(232,225,208,.72); /* muted paper for small eyebrow/caption labels */
   /* printed-ink edge, not neon: tight and faint, headings only */
   --hurricane-glow:drop-shadow(0 0 2px rgba(7,246,237,.25));
 }
@@ -212,9 +213,10 @@ body.bb-campus > footer .blk{color:#07f6ed !important}
   body.bb-campus > footer .blk{filter:none}
 }
 
-/* flat cyan secondary text on black (condensed-caps-on-black end of the palette) */
+/* small eyebrow/caption labels stay plain muted paper — color lives only on the big type
+   (!important beats the old inline plum/salmon colors, which were unreadable on black) */
 .bb-campus .sec__head .stamp,
-.bb-campus .cta-band .stamp{color:var(--hurricane-cyan) !important}
+.bb-campus .cta-band .stamp{color:var(--caption) !important}
 
 /* services: "hot" middle tier was ink-on-near-black after the black canvas —
    make it a lit black card so its price can carry the gradient */
