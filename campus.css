@@ -482,3 +482,7 @@ body.bb-campus .craft-pip{background:var(--silver-body)}
 body.bb-campus .bay,body.bb-campus .station,body.bb-campus .chip,body.bb-campus .pricing,body.bb-campus .hero,
 body.bb-campus .cta-band,body.bb-campus .panel,body.bb-campus .note,body.bb-campus .mall,body.bb-campus .tier,body.bb-campus .dossier{box-shadow:none !important}
 body.bb-campus .bay .tag{align-self:flex-start;width:auto}
+
+/* big monitors + TVs: scale type a notch and widen the column, never full-bleed text */
+@media (min-width:1900px){html{font-size:106.25%} body .wrap,body .page-titlebar .wrap{max-width:1360px} .campus-mast-in{max-width:1360px}}
+@media (min-width:2400px){html{font-size:118.75%} body .wrap,body .page-titlebar .wrap{max-width:1520px} .campus-mast-in{max-width:1520px}}
