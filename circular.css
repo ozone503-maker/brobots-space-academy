@@ -201,3 +201,5 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 .pass-n{background:none !important;color:#22B894 !important;-webkit-text-fill-color:#22B894 !important;filter:none !important}
 /* thin accent: sea-green rule under each ink band (kicker strip) */
 .band{box-shadow:inset 0 -2px 0 #22B894}
+/* ownership line under the price strip: small, silver, quiet */
+.own-line{font-family:'Courier Prime',monospace;font-size:.82rem;letter-spacing:.02em;color:var(--silver);max-width:48rem;margin:10px 0 0;line-height:1.5}

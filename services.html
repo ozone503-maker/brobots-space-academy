@@ -100,8 +100,26 @@ footer{margin-top:56px;padding:36px 0;background:var(--ink);color:var(--paper)}
 footer a{color:var(--paper);text-decoration:none;border-bottom:1px solid transparent}
 footer a:hover{border-bottom-color:var(--paper)}
 .foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+/* every-build facts + Site Editor add-on */
+.grid.facts{margin-top:4px}
+@media(min-width:700px){.grid.facts{grid-template-columns:1.35fr 1fr}}
+.bay.fact .stamp{display:block;font-size:.66rem;letter-spacing:.14em}
+.bay .fine{font-size:.8rem;margin-top:auto;margin-bottom:0}
+.bay.addon{margin:4px 0 18px;gap:6px}
+.bay.addon .addon-id .tag{display:inline-block}
+.bay.addon ol.steps{list-style:none;counter-reset:step;margin:0 0 14px;padding:0}
+.bay.addon ol.steps li{counter-increment:step}
+.bay.addon ol.steps li{padding-left:2.1em}
+.bay.addon ol.steps li:before{content:counter(step,decimal-leading-zero);font-family:'Courier Prime',monospace;font-weight:700;font-size:.8rem;top:.5em}
+.bay.fact h3{margin:.55em 0 .5em}
+.bay.fact p:not(.fine){margin-bottom:1em}
+@media(min-width:900px){
+  .bay.addon{display:grid;grid-template-columns:minmax(230px,1fr) 1.5fr minmax(200px,.9fr);gap:28px;align-items:start}
+  .bay.addon .addon-copy{padding-top:28px}
+  .bay.addon .addon-act{padding-top:28px}
+}
 </style>
-<link rel="stylesheet" href="campus.css?v=20260925d">
+<link rel="stylesheet" href="campus.css?v=20260926a">
 </head>
 <body class="bb-campus svc">
 <!-- CAMPUS NAV (shared pattern) -->
@@ -247,6 +265,20 @@ footer a:hover{border-bottom-color:var(--paper)}
         <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Website%20build%20inquiry%20%E2%80%94%20Flagship">Let&rsquo;s talk</a>
       </article>
     </div>
+    <div class="grid facts">
+      <article class="bay fact">
+        <span class="stamp">Every build · Search + AI answers</span>
+        <h3 class="blk">Found on Google. Quoted by the bots.</h3>
+        <p>Every site we build is set up to be found on Google and Bing, and in AI answers from ChatGPT, Claude, Perplexity, Gemini, and Grok. That means clean structure, real page titles and descriptions, structured data, fast pages, and straight answers to the questions your customers already ask.</p>
+        <p class="mono fine">No one can promise a ranking. We make you easy to find and easy to quote.</p>
+      </article>
+      <article class="bay fact">
+        <span class="stamp">Every build · Ownership</span>
+        <h3 class="blk">You own it.</h3>
+        <p>Your code, your domain, your accounts. If you leave, it leaves with you.</p>
+        <p class="mono fine">No hostage hosting. No rented site you lose when you stop paying us.</p>
+      </article>
+    </div>
   </section>
 
   <!-- Business Assistants -->
@@ -357,6 +389,27 @@ footer a:hover{border-bottom-color:var(--paper)}
         <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Site%20care%20inquiry%20%E2%80%94%20Annual">Discuss</a>
       </article>
     </div>
+    <article class="bay addon" id="site-editor">
+      <div class="addon-id">
+        <span class="tag proposed">Proposed · Add-on</span>
+        <h3 class="blk">Site Editor BroBot</h3>
+        <div class="blk price">Ask</div>
+        <p class="mono deposit">Add to any care plan · Proposed — Jessie lock</p>
+      </div>
+      <div class="addon-copy">
+        <p>A BroBot that edits your site when you ask. Text it &ldquo;add a holiday banner&rdquo; or &ldquo;post Saturday&rsquo;s event.&rdquo; It sends you a preview. You approve. It goes live.</p>
+        <p class="mono fine">No logins. No editor. No waiting on us to fix a typo.</p>
+      </div>
+      <div class="addon-act">
+        <ol class="offer-list steps">
+          <li>Text the change</li>
+          <li>Get a preview</li>
+          <li>Say yes</li>
+          <li>It&rsquo;s live</li>
+        </ol>
+        <a class="btn btn-plain" href="mailto:hello@brobots.space?subject=Site%20care%20inquiry%20%E2%80%94%20Site%20Editor%20BroBot">Discuss</a>
+      </div>
+    </article>
   </section>
 
   <!-- Creator Rooms -->
@@ -441,7 +494,7 @@ footer a:hover{border-bottom-color:var(--paper)}
     </div>
   </div>
 </footer>
-<script src="campus-nav.js?v=20260925d"></script>
+<script src="campus-nav.js?v=20260926a"></script>
 
 </body>
 </html>
