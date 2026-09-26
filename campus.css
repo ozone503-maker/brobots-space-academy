@@ -167,14 +167,15 @@
   .bb-root .campus-nav a.contact{margin-top:10px !important;padding:14px 12px !important}
 }
 
-/* ===== Hurricane gradient glow — black canvas only =====
-   Lime-mint -> cyan -> electric blue, glowing like the Hurricane Party poster.
+/* ===== Hurricane gradient — black canvas only =====
+   Lime-mint -> cyan -> electric blue, the Hurricane Party lettering as flat printed ink.
    Only on display type that sits on the black canvas / ink panels.
    Never on cream paste-up cards, never on body copy or small text. */
 :root{
   --hurricane:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);
   --hurricane-cyan:#07f6ed;
-  --hurricane-glow:drop-shadow(0 0 6px rgba(7,246,237,.55)) drop-shadow(0 0 18px rgba(8,141,242,.35));
+  /* printed-ink edge, not neon: tight and faint, headings only */
+  --hurricane-glow:drop-shadow(0 0 2px rgba(7,246,237,.25));
 }
 /* solid fallback for browsers without background-clip:text */
 .grad,.storm-text,
@@ -205,6 +206,10 @@ body.bb-campus > footer .blk{color:#07f6ed !important}
   .bb-campus .bay.hot .price,
   body.bb-campus > footer .blk{width:fit-content;max-width:100%}
   .bb-campus .cta-band h2{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}
+  /* no edge at all on the wordmark or prices */
+  .campus-brand .blk,
+  .bb-campus .bay.hot .price,
+  body.bb-campus > footer .blk{filter:none}
 }
 
 /* flat cyan secondary text on black (condensed-caps-on-black end of the palette) */
@@ -217,7 +222,7 @@ body.bb-campus > footer .blk{color:#07f6ed !important}
   background:#0a0d10;
   color:var(--paper);
   border-color:var(--hurricane-cyan);
-  box-shadow:0 0 0 1px rgba(8,141,242,.6),0 0 26px rgba(7,246,237,.28);
+  box-shadow:none;
 }
 .bb-campus .bay.hot .deposit{color:var(--hurricane-cyan)}
 .bb-campus .bay.hot .offer-list li{border-bottom-color:rgba(232,225,208,.16)}
@@ -227,7 +232,12 @@ body.bb-campus > footer .blk{color:#07f6ed !important}
   background:var(--hurricane) !important;
   color:#04101f !important;
   border-color:transparent !important;
-  box-shadow:0 0 18px rgba(7,246,237,.35);
+  box-shadow:none;
 }
-.bb-campus .bay.hot .btn:hover{box-shadow:0 0 0 2px #07f6ed,0 0 26px rgba(7,246,237,.6)}
-.bb-campus .cta-band .btn:hover{box-shadow:0 0 0 2px #07f6ed,0 0 22px rgba(7,246,237,.55)}
+.bb-campus .bay.hot .btn:hover{background:#07f6ed !important;box-shadow:none;transform:none}
+
+/* campus pages: '.bb-campus a{color:inherit}' outranked '.btn{color:paper}', so filled
+   buttons on cream cards inherited ink text on an ink button (blank "Start build",
+   "Explore services", retail "Recruit a graduate"/"See pricing"/"Email").
+   Plain buttons keep their own ink-on-paper; the Sidekick gradient button keeps its !important ink. */
+.bb-campus a.btn:not(.btn-plain){color:var(--paper)}

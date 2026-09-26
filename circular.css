@@ -8,8 +8,8 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 .blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.88;letter-spacing:-.02em}
 .mono,.stamp{font-family:'Courier Prime',monospace}
 .stamp{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}
-.btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);color:#04101f;border:2px solid transparent;text-decoration:none;transition:box-shadow .15s linear}
-.btn:hover,.btn:focus-visible{box-shadow:0 0 0 2px #07f6ed,0 0 22px rgba(7,246,237,.55),0 0 40px rgba(8,141,242,.3)}
+.btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);color:#04101f;border:2px solid transparent;text-decoration:none;transition:background .15s linear}
+.btn:hover,.btn:focus-visible{background:#07f6ed}
 .btn-plain{background:var(--paper);color:var(--ink)}
 .nameplate{border-bottom:4px solid var(--paper);padding:18px 0 14px}
 .nameplate h1{font-size:clamp(2.8rem,13vw,7rem);margin:0;line-height:.78}
@@ -66,7 +66,7 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 @media(max-width:700px){.hero-volume-toggle{width:100%;justify-content:center}}
 
-/* ===== Hurricane gradient glow on the black homepage =====
+/* ===== Hurricane gradient on the black homepage (flat ink, faint edge on heads only) =====
    Uses --hurricane / --hurricane-glow from campus.css. Display type on the
    black canvas and ink panels only. Cream cards (offer menu, circular,
    shop box, form fields) keep ink-on-paper. */
@@ -92,6 +92,11 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
     -webkit-text-fill-color:transparent;
     filter:var(--hurricane-glow);
   }
+  /* no edge on wordmark, step numbers, prices */
+  .nameplate h1,
+  .factory-foot > .blk,
+  .pass-n,
+  .offer-menu a:hover .offer-price{filter:none}
   /* shrink-wrap block headings so the whole mint->cyan->blue sweep shows */
   .nameplate h1,
   .hero-txt h2,
@@ -112,4 +117,4 @@ footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 .pass-b h4,
 .team-line strong{color:#07f6ed}
 .offer-menu a:hover{background:#060606}
-.btn-plain:hover,.btn-plain:focus-visible{box-shadow:0 0 0 2px #07f6ed,0 0 22px rgba(7,246,237,.55)}
+.btn-plain:hover,.btn-plain:focus-visible{background:#07f6ed;color:#04101f}
