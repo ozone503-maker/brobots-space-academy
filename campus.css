@@ -167,5 +167,67 @@
   .bb-root .campus-nav a.contact{margin-top:10px !important;padding:14px 12px !important}
 }
 
-/* storm gradient accent — hurricane-party teal to electric blue */
-.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(0,213,255,.55))}
+/* ===== Hurricane gradient glow — black canvas only =====
+   Lime-mint -> cyan -> electric blue, glowing like the Hurricane Party poster.
+   Only on display type that sits on the black canvas / ink panels.
+   Never on cream paste-up cards, never on body copy or small text. */
+:root{
+  --hurricane:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);
+  --hurricane-cyan:#07f6ed;
+  --hurricane-glow:drop-shadow(0 0 6px rgba(7,246,237,.55)) drop-shadow(0 0 18px rgba(8,141,242,.35));
+}
+/* solid fallback for browsers without background-clip:text */
+.grad,.storm-text,
+.campus-brand .blk,
+.bb-campus .sec__head h2,
+.bb-campus .cta-band h2,
+.bb-campus .bay.hot h3,
+.bb-campus .bay.hot .price,
+body.bb-campus > footer .blk{color:#07f6ed !important}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .grad,.storm-text,
+  .campus-brand .blk,
+  .bb-campus .sec__head h2,
+  .bb-campus .cta-band h2,
+  .bb-campus .bay.hot h3,
+  .bb-campus .bay.hot .price,
+  body.bb-campus > footer .blk{
+    background:var(--hurricane);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent !important;
+    -webkit-text-fill-color:transparent;
+    filter:var(--hurricane-glow);
+  }
+  /* block headings shrink-wrap so the full mint->blue sweep lands on the words */
+  .bb-campus .sec__head h2,
+  .bb-campus .bay.hot h3,
+  .bb-campus .bay.hot .price,
+  body.bb-campus > footer .blk{width:fit-content;max-width:100%}
+  .bb-campus .cta-band h2{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}
+}
+
+/* flat cyan secondary text on black (condensed-caps-on-black end of the palette) */
+.bb-campus .sec__head .stamp,
+.bb-campus .cta-band .stamp{color:var(--hurricane-cyan) !important}
+
+/* services: "hot" middle tier was ink-on-near-black after the black canvas —
+   make it a lit black card so its price can carry the gradient */
+.bb-campus .bay.hot{
+  background:#0a0d10;
+  color:var(--paper);
+  border-color:var(--hurricane-cyan);
+  box-shadow:0 0 0 1px rgba(8,141,242,.6),0 0 26px rgba(7,246,237,.28);
+}
+.bb-campus .bay.hot .deposit{color:var(--hurricane-cyan)}
+.bb-campus .bay.hot .offer-list li{border-bottom-color:rgba(232,225,208,.16)}
+.bb-campus .bay.hot .offer-list li:before{color:var(--hurricane-cyan)}
+.bb-campus .bay.hot .tag{background:transparent;color:var(--hurricane-cyan);border:2px solid var(--hurricane-cyan)}
+.bb-campus .bay.hot .btn{
+  background:var(--hurricane) !important;
+  color:#04101f !important;
+  border-color:transparent !important;
+  box-shadow:0 0 18px rgba(7,246,237,.35);
+}
+.bb-campus .bay.hot .btn:hover{box-shadow:0 0 0 2px #07f6ed,0 0 26px rgba(7,246,237,.6)}
+.bb-campus .cta-band .btn:hover{box-shadow:0 0 0 2px #07f6ed,0 0 22px rgba(7,246,237,.55)}
