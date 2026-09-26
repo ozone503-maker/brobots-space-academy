@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://brobots.space/sitemap.xml
