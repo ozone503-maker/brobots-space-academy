@@ -173,8 +173,10 @@
    Only on display type that sits on the black canvas / ink panels.
    Never on cream paste-up cards, never on body copy or small text. */
 :root{
-  --hurricane:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);
-  --hurricane-cyan:#07f6ed;
+  --hurricane:linear-gradient(90deg,#4FE3AE,#22B894); /* green-only printed ink: mint -> sea green, no cyan/blue */
+  --hurricane-cyan:#22B894; /* legacy name: now the sea-green accent (borders, fills) */
+  --green:#22B894;
+  --green-hi:#4FE3AE;
   /* cool chrome neutrals (replace warm cream on the black canvas) */
   --chrome:linear-gradient(180deg,#ffffff 0%,#dfe5ea 38%,#8e99a4 52%,#eef2f5 70%,#b9c2ca 100%);
   /* softer 3-stop chrome for medium/small type — the hard mid band striped it below ~24px */
@@ -185,7 +187,7 @@
   --card:#0b0d10;        /* near-black card */
   --caption:var(--silver);
   /* printed-ink edge, not neon: tight and faint, headings only */
-  --hurricane-glow:drop-shadow(0 0 2px rgba(7,246,237,.25));
+  --hurricane-glow:none;
 }
 /* solid fallback for browsers without background-clip:text */
 .grad,.storm-text,
@@ -194,7 +196,7 @@
 .bb-campus .cta-band h2,
 .bb-campus .bay.hot h3,
 .bb-campus .bay.hot .price,
-body.bb-campus > footer .blk{color:#07f6ed !important}
+body.bb-campus > footer .blk{color:#4FE3AE !important}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .grad,.storm-text,
   .campus-brand .blk,
@@ -240,12 +242,12 @@ body.bb-campus > footer .blk{color:#07f6ed !important}
 .bb-campus .bay.hot .offer-list li:before{color:var(--hurricane-cyan)}
 .bb-campus .bay.hot .tag{background:transparent;color:var(--hurricane-cyan);border:2px solid var(--hurricane-cyan)}
 .bb-campus .bay.hot .btn{
-  background:var(--hurricane) !important;
-  color:#04101f !important;
+  background:var(--green) !important;
+  color:#0b0d10 !important;
   border-color:transparent !important;
   box-shadow:none;
 }
-.bb-campus .bay.hot .btn:hover{background:#07f6ed !important;box-shadow:none;transform:none}
+.bb-campus .bay.hot .btn:hover{background:#4FE3AE !important;box-shadow:none;transform:none}
 
 /* campus pages: '.bb-campus a{color:inherit}' outranked '.btn{color:paper}', so filled
    buttons on cream cards inherited ink text on an ink button (blank "Start build",
@@ -266,7 +268,7 @@ body.factory,body.bb-campus,.bb-campus{color:var(--silver-body)}
 .campus-nav a{color:var(--silver-body)}
 .campus-nav a:hover,.campus-nav a[aria-current="page"],.campus-nav a.current{border-bottom-color:var(--silver-body)}
 .campus-nav a.contact{background:var(--silver-body);border-color:var(--silver-body);color:var(--ink)}
-.campus-nav a.contact:hover{background:#07f6ed;border-color:#07f6ed}
+.campus-nav a.contact:hover{background:#4FE3AE;border-color:#4FE3AE}
 .campus-nav-toggle{border-color:var(--silver-edge);color:var(--silver-body)}
 .campus-nav-toggle[aria-expanded="true"]{background:var(--silver-body);border-color:var(--silver-body)}
 @media(max-width:860px){.campus-nav a{border-bottom-color:rgba(154,165,176,.25)}}
@@ -280,7 +282,7 @@ body.bb-campus .hero,
 body.bb-campus .note{background:var(--card);color:var(--silver-body);border:2px solid var(--silver-edge);box-shadow:none}
 body.bb-campus .note{border-style:dashed}
 body.bb-campus .note a{color:var(--silver-body);border-bottom-color:var(--silver-edge)}
-body.bb-campus .note a:hover{color:#07f6ed;border-bottom-color:#07f6ed}
+body.bb-campus .note a:hover{color:#4FE3AE;border-bottom-color:#4FE3AE}
 body.bb-campus .note .stamp,
 body.bb-campus .bay .mono,
 body.bb-campus .bay:not(.hot) .deposit{color:var(--silver) !important}
@@ -290,7 +292,7 @@ body.bb-campus .bay:not(.hot) .tag{background:transparent;color:var(--silver);bo
 /* tier / room names: chrome */
 body.bb-campus .bay:not(.hot) h3{color:#cfd6dc}
 /* tier prices: hurricane gradient, flat */
-body.bb-campus .bay:not(.hot) .price{color:#07f6ed}
+body.bb-campus .bay:not(.hot) .price{color:#4FE3AE}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   body.bb-campus .bay:not(.hot) h3{background:var(--chrome-soft);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%}
   body.bb-campus .bay:not(.hot) .price{background:var(--hurricane);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%}
@@ -301,12 +303,12 @@ body.bb-campus .hero .btn,
 body.bb-campus .cta-band .btn{background:var(--card) !important;color:#e6ebef !important;border:2px solid var(--silver-edge) !important;box-shadow:none}
 body.bb-campus .bay:not(.hot) .btn:hover,
 body.bb-campus .hero .btn:hover,
-body.bb-campus .cta-band .btn:hover{background:#07f6ed !important;color:#04101f !important;border-color:#07f6ed !important;transform:none;box-shadow:none}
+body.bb-campus .cta-band .btn:hover{background:#4FE3AE !important;color:#0b0d10 !important;border-color:#4FE3AE !important;transform:none;box-shadow:none}
 body.bb-campus .cta-band{border:2px solid var(--silver-edge);box-shadow:none}
 /* page title bars: dark bar, gradient title, silver copy */
 body.bb-campus .page-titlebar{background:var(--card);color:var(--silver-body);border-bottom:2px solid var(--silver-edge)}
 body.bb-campus .page-titlebar .stamp{color:var(--silver) !important}
-body.bb-campus .page-titlebar h1{color:#07f6ed}
+body.bb-campus .page-titlebar h1{color:#4FE3AE}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   body.bb-campus .page-titlebar h1{background:var(--hurricane);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%;filter:var(--hurricane-glow)}
 }
@@ -338,7 +340,7 @@ body.bb-campus .chip:not(.hot):not(.ok):not(.warn):not(.glass){
 body.bb-campus .hero *:not(.btn):not(.toolbtn):not(h1):not(h2),
 body.bb-campus .hero__copy *:not(.btn):not(h2),
 body.bb-campus .dossier *:not(.btn):not(h2):not(.badge){color:inherit}
-body.bb-campus .station:hover{background:#11161b !important;border-color:#07f6ed !important}
+body.bb-campus .station:hover{background:#11161b !important;border-color:#4FE3AE !important}
 body.bb-campus .mall,body.bb-campus .note{border-style:dashed !important}
 body.bb-campus .panel__head{border-width:0 0 2px !important}
 body.bb-campus .pricing__head{border-width:0 0 2px !important}
@@ -374,7 +376,7 @@ body.bb-campus .dossier .tag{border:0 !important;padding:0;color:var(--silver-bo
 body.bb-campus .badge:not(.live):not(.beta){background:var(--card) !important;color:var(--silver-body) !important;border:2px solid var(--silver-edge) !important}
 body.bb-campus .stamp-mark{border-color:var(--silver-edge);color:var(--silver)}
 body.bb-campus .mall a,body.bb-campus .note a{color:var(--silver-body) !important;border-bottom:2px solid var(--silver-edge)}
-body.bb-campus .mall a:hover,body.bb-campus .note a:hover{color:#07f6ed !important;border-bottom-color:#07f6ed}
+body.bb-campus .mall a:hover,body.bb-campus .note a:hover{color:#4FE3AE !important;border-bottom-color:#4FE3AE}
 /* medium names: soft chrome */
 body.bb-campus .station b.blk,
 body.bb-campus .station strong,
@@ -399,7 +401,7 @@ body.bb-campus .overlay .card h2,
 body.bb-campus .hero h2,
 body.bb-campus main > h2.blk,
 body.bb-campus main > h1,
-body.bb-campus .page-titlebar h1{color:#07f6ed !important}
+body.bb-campus .page-titlebar h1{color:#4FE3AE !important}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   body.bb-campus .hero__copy h2,
   body.bb-campus .pricing__head h2,
@@ -414,7 +416,7 @@ body.bb-campus .page-titlebar h1{color:#07f6ed !important}
 /* retail pricing tiers: silver rules, gradient prices, Sidekick = cyan standout */
 body.bb-campus .tier{border-color:var(--silver-edge) !important;color:var(--silver-body)}
 body.bb-campus .tier .stamp{color:var(--silver) !important}
-body.bb-campus .tier .price{color:#07f6ed !important}
+body.bb-campus .tier .price{color:#4FE3AE !important}
 body.bb-campus .tier.hot{background:var(--card) !important;outline:2px solid var(--hurricane-cyan);outline-offset:-2px}
 body.bb-campus .tier.hot .stamp{color:var(--hurricane-cyan) !important}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
@@ -432,35 +434,35 @@ body.bb-campus .btn-plain{
 }
 body.bb-campus .btn:not(.hot):hover,
 body.bb-campus .toolbtn:not(.hot):not(:disabled):hover,
-body.bb-campus .btn-plain:hover{background:#07f6ed !important;color:#04101f !important;border-color:#07f6ed !important;transform:none}
+body.bb-campus .btn-plain:hover{background:#4FE3AE !important;color:#0b0d10 !important;border-color:#4FE3AE !important;transform:none}
 /* primary action buttons (.hot): hurricane fill, ink letters */
 body.bb-campus .toolbtn.hot,
-body.bb-campus .btn.hot{background:var(--hurricane) !important;color:#04101f !important;border:2px solid transparent !important;box-shadow:none !important}
+body.bb-campus .btn.hot{background:var(--green) !important;color:#0b0d10 !important;border:2px solid transparent !important;box-shadow:none !important}
 body.bb-campus .toolbtn.hot:not(:disabled):hover,
-body.bb-campus .btn.hot:hover{background:#07f6ed !important}
+body.bb-campus .btn.hot:hover{background:#4FE3AE !important}
 /* services Sidekick CTA keeps its gradient (declared above with higher specificity) */
-body.bb-campus .bay.hot .btn{background:var(--hurricane) !important;color:#04101f !important;border-color:transparent !important}
-body.bb-campus .bay.hot .btn:hover{background:#07f6ed !important}
+body.bb-campus .bay.hot .btn{background:var(--green) !important;color:#0b0d10 !important;border-color:transparent !important}
+body.bb-campus .bay.hot .btn:hover{background:#4FE3AE !important}
 /* header contact chip: dark + silver edge too */
 .campus-nav a.contact{background:var(--card);color:#e6ebef;border:2px solid var(--silver-edge)}
-.campus-nav a.contact:hover{background:#07f6ed;border-color:#07f6ed;color:#04101f}
+.campus-nav a.contact:hover{background:#4FE3AE;border-color:#4FE3AE;color:#0b0d10}
 
 /* form fields on campus pages */
 body.bb-campus input[type=text],body.bb-campus input[type=number],body.bb-campus input[type=email],
 body.bb-campus textarea,body.bb-campus select,body.bb-campus .composer input{
   background:var(--card) !important;color:#e6ebef !important;border:2px solid var(--silver-edge) !important;
 }
-body.bb-campus .composer input:focus,body.bb-campus input:focus,body.bb-campus textarea:focus,body.bb-campus select:focus{outline:2px solid #07f6ed;outline-offset:1px;background:var(--card) !important;color:#e6ebef !important}
+body.bb-campus .composer input:focus,body.bb-campus input:focus,body.bb-campus textarea:focus,body.bb-campus select:focus{outline:2px solid #4FE3AE;outline-offset:1px;background:var(--card) !important;color:#e6ebef !important}
 body.bb-campus .canvas-wrap{background:var(--card);border:2px solid var(--silver-edge)}
 body.bb-campus .meter{background:var(--card) !important;border:2px solid var(--silver-edge) !important}
-body.bb-campus .meter > i{background:var(--hurricane) !important}
+body.bb-campus .meter > i{background:var(--green) !important}
 
 /* graduates rail + console chips */
 body.bb-campus .rail{background:var(--ink) !important;border-top:0 !important;border-bottom:2px solid var(--silver-edge) !important}
 body.bb-campus .rail a{background:var(--card) !important;color:var(--silver-body) !important;border:1px solid var(--silver-edge) !important}
-body.bb-campus .rail a:hover{border-color:#07f6ed !important;color:#07f6ed !important}
+body.bb-campus .rail a:hover{border-color:#4FE3AE !important;color:#4FE3AE !important}
 body.bb-campus button.chip{cursor:pointer}
-body.bb-campus button.chip.active{border-color:#07f6ed !important;color:#07f6ed !important}
+body.bb-campus button.chip.active{border-color:#4FE3AE !important;color:#4FE3AE !important}
 body.bb-campus .portrait{background:var(--card);border-color:var(--silver-edge)}
 body.bb-campus .thumb{background:var(--card) !important;color:var(--silver-body) !important;border:2px solid var(--silver-edge) !important}
 body.bb-campus .thumb img{border-bottom-color:var(--silver-edge)}
@@ -474,7 +476,7 @@ body.bb-campus .hud-float .chip:not(.hot):not(.ok):not(.warn){background:rgba(11
 body.bb-campus #map .leaflet-control-attribution,
 body.bb-campus #map .leaflet-control-attribution a{color:var(--silver-body) !important}
 body.bb-campus .pad button{background:var(--card);color:var(--silver-body);border:2px solid var(--silver-edge)}
-body.bb-campus .pad button:active,body.bb-campus .pad button.held{background:#07f6ed;color:#04101f;border-color:#07f6ed}
+body.bb-campus .pad button:active,body.bb-campus .pad button.held{background:#4FE3AE;color:#0b0d10;border-color:#4FE3AE}
 body.bb-campus .pad .idle{background:var(--ink);color:var(--silver)}
 body.bb-campus .sw{border-color:var(--silver-edge)}
 body.bb-campus .craft-pip{background:var(--silver-body)}
@@ -486,3 +488,46 @@ body.bb-campus .bay .tag{align-self:flex-start;width:auto}
 /* big monitors + TVs: scale type a notch and widen the column, never full-bleed text */
 @media (min-width:1900px){html{font-size:106.25%} body .wrap,body .page-titlebar .wrap{max-width:1360px} .campus-mast-in{max-width:1360px}}
 @media (min-width:2400px){html{font-size:118.75%} body .wrap,body .page-titlebar .wrap{max-width:1520px} .campus-mast-in{max-width:1520px}}
+
+/* ===== Green ink, fewer places (Sep 25) =====
+   Green gradient lives only on: BROBOTS wordmark (header/footer/nameplate),
+   the homepage hero headline, and prices. Every other big headline is chrome. */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  body.bb-campus .sec__head h2,
+  body.bb-campus .cta-band h2,
+  body.bb-campus .page-titlebar h1,
+  body.bb-campus main > h1,
+  body.bb-campus main > h2.blk,
+  body.bb-campus .hero h2,
+  body.bb-campus .hero__copy h2,
+  body.bb-campus .pricing__head h2,
+  body.bb-campus .overlay .card h2{
+    background:var(--chrome) !important;-webkit-background-clip:text !important;background-clip:text !important;
+    color:transparent !important;-webkit-text-fill-color:transparent !important;filter:none !important;
+  }
+  body.bb-campus .bay.hot h3{
+    background:var(--chrome-soft) !important;-webkit-background-clip:text !important;background-clip:text !important;
+    color:transparent !important;-webkit-text-fill-color:transparent !important;filter:none !important;
+  }
+}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  body.bb-campus .sec__head h2,body.bb-campus .cta-band h2,body.bb-campus .page-titlebar h1,
+  body.bb-campus main > h1,body.bb-campus main > h2.blk,body.bb-campus .hero h2,body.bb-campus .hero__copy h2,
+  body.bb-campus .pricing__head h2,body.bb-campus .overlay .card h2,body.bb-campus .bay.hot h3{color:#cfd6dc !important}
+}
+/* no accent on small labels next to accented type */
+body.bb-campus .bay.hot .tag{color:var(--silver) !important;border:1px solid var(--silver-edge) !important;background:transparent !important}
+body.bb-campus .bay.hot .deposit,
+body.bb-campus .bay.hot .offer-list li:before,
+body.bb-campus .tier.hot .stamp{color:var(--silver) !important}
+body.bb-campus .badge.live{color:var(--silver-body) !important;border-color:var(--silver-edge) !important}
+/* one standout card per page: sea-green edge, flat */
+body.bb-campus .bay.hot{border-color:var(--green) !important}
+body.bb-campus .tier.hot{outline-color:var(--green) !important}
+/* hovers + selection: chrome, not colour, for quiet UI; green only on primary fills + focus */
+body.bb-campus .rail a:hover,body.bb-campus button.chip.active{border-color:var(--silver-body) !important;color:#fff !important}
+body.bb-campus .station:hover{border-color:var(--silver-body) !important}
+body.bb-campus .mall a:hover,body.bb-campus .note a:hover{color:#fff !important;border-bottom-color:#fff !important}
+body.bb-campus .composer button{background:var(--green) !important;color:#0b0d10 !important;border-color:var(--green) !important}
+/* focus rings: green, not the browser's blue */
+a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid #4FE3AE;outline-offset:2px}
