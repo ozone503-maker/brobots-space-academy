@@ -8,7 +8,8 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 .blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.88;letter-spacing:-.02em}
 .mono,.stamp{font-family:'Courier Prime',monospace}
 .stamp{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em}
-.btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:linear-gradient(100deg,#2fe08c,#00d5ff 50%,#2f7bff);color:#04101f;border:2px solid transparent;text-decoration:none}
+.btn{display:inline-block;font-family:'Archivo Black',sans-serif;text-transform:uppercase;padding:15px 28px;background:linear-gradient(90deg,#06f8b3,#07f6ed,#088df2);color:#04101f;border:2px solid transparent;text-decoration:none;transition:background .15s linear}
+.btn:hover,.btn:focus-visible{background:#07f6ed}
 .btn-plain{background:var(--paper);color:var(--ink)}
 .nameplate{border-bottom:4px solid var(--paper);padding:18px 0 14px}
 .nameplate h1{font-size:clamp(2.8rem,13vw,7rem);margin:0;line-height:.78}
@@ -65,5 +66,55 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 @media(max-width:700px){.hero-volume-toggle{width:100%;justify-content:center}}
 
-/* storm gradient on the ink knock highlight (beats .knock background) */
-.knock.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(0,213,255,.55))}
+/* ===== Hurricane gradient on the black homepage (flat ink, faint edge on heads only) =====
+   Uses --hurricane / --hurricane-glow from campus.css. Display type on the
+   black canvas and ink panels only. Cream cards (offer menu, circular,
+   shop box, form fields) keep ink-on-paper. */
+.nameplate h1,
+.hero-txt h2,
+.sec > .wrap:not(.shop-box) > h3.blk,
+.callout h3.blk,
+.factory-foot > .blk,
+.pass-n,
+.offer-menu a:hover .offer-price{color:#07f6ed}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .nameplate h1,
+  .hero-txt h2,
+  .sec > .wrap:not(.shop-box) > h3.blk,
+  .callout h3.blk,
+  .factory-foot > .blk,
+  .pass-n,
+  .offer-menu a:hover .offer-price{
+    background:var(--hurricane);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    filter:var(--hurricane-glow);
+  }
+  /* no edge on wordmark, step numbers, prices */
+  .nameplate h1,
+  .factory-foot > .blk,
+  .pass-n,
+  .offer-menu a:hover .offer-price{filter:none}
+  /* shrink-wrap block headings so the whole mint->cyan->blue sweep shows */
+  .nameplate h1,
+  .hero-txt h2,
+  .sec > .wrap:not(.shop-box) > h3.blk,
+  .callout h3.blk,
+  .factory-foot > .blk{width:fit-content;max-width:100%}
+  /* "Space Factory" sub-plate under the BROBOTS wordmark: flat cyan */
+  .nameplate h1 span{-webkit-text-fill-color:#07f6ed;color:#07f6ed !important}
+  /* "whole" knock: lit gradient plate with ink letters */
+  .hero-txt h2 .knock{background:var(--hurricane);color:#04101f;-webkit-text-fill-color:#04101f}
+}
+/* flat cyan secondary type on black — readable, not gradient */
+.nameplate .stamp,
+.hero-txt > .stamp,
+.sec > .wrap:not(.shop-box) > .stamp,
+.callout > .stamp,
+.band,.band.stamp,
+.pass-b h4,
+.team-line strong{color:#07f6ed}
+.offer-menu a:hover{background:#060606}
+.btn-plain:hover,.btn-plain:focus-visible{background:#07f6ed;color:#04101f}
