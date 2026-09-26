@@ -166,3 +166,6 @@
   .bb-root .campus-nav a{padding:14px 0 !important}
   .bb-root .campus-nav a.contact{margin-top:10px !important;padding:14px 12px !important}
 }
+
+/* storm gradient accent — hurricane-party teal to electric blue */
+.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}

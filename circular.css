@@ -64,3 +64,6 @@ body.factory::before{content:'';position:fixed;inset:0;z-index:9999;pointer-even
 .brief button{justify-self:start;cursor:pointer;background:var(--paper);color:var(--ink);border-color:var(--paper)}
 footer.factory-foot{background:var(--ink);color:var(--paper);padding:36px 22px}
 @media(max-width:700px){.hero-volume-toggle{width:100%;justify-content:center}}
+
+/* storm gradient on the ink knock highlight (beats .knock background) */
+.knock.storm-text{background:linear-gradient(100deg,#2fe08c 0%,#00d5ff 45%,#2f7bff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
