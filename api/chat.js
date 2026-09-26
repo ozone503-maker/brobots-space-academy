@@ -225,6 +225,9 @@ function sanitizeMessages(messages) {
 
 function friendlyGatewayError(status, body) {
   const text = String(body || "").toLowerCase();
+  if (text.includes("customer_verification") || text.includes("credit card")) {
+    return "Console unpowered. The AI Gateway isn't switched on for this station yet — check back soon.";
+  }
   if (status === 401 || status === 403) {
     return "Console unpowered. The AI Gateway rejected our credentials. Try again later.";
   }
