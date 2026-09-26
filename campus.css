@@ -181,7 +181,7 @@
   --mist:#9fb3d9;
 }
 /* factory canvas: dark deck with blue energy glow */
-.bb-campus{
+body.bb-campus{
   background:
     radial-gradient(1100px 550px at 12% -4%, rgba(0,213,255,.13), transparent 60%),
     radial-gradient(900px 650px at 88% 6%, rgba(47,123,255,.12), transparent 60%),
