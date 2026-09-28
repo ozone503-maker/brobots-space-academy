@@ -1,0 +1,14 @@
+# Core (always needed)
+requests>=2.31
+beautifulsoup4>=4.12
+rapidfuzz>=3.0
+geonamescache>=2.0
+
+# LLM steps: embeddings + [LLM-ASSIST] verdicts/classifier.
+# Without it (or with --no-llm), LLM steps score 0 with evidence "skipped (no API key)".
+openai>=1.0
+
+# Rendered-homepage comparison for T1. Optional: if missing, T1 falls back to
+# raw-HTML-only and notes the fallback in its evidence.
+# Requires a one-time `playwright install chromium` after pip install.
+playwright>=1.40

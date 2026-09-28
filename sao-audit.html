@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free SAO Audit — Is AI Recommending Your Business? | BROBOTS</title>
+<meta name="description" content="Free Search Answer Optimization audit. We ask 30 questions your customers ask AI, then check whether your website answers them. Get your score in minutes.">
+<link rel="canonical" href="https://brobots.space/sao-audit.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Free SAO Audit — Is AI Recommending Your Business?">
+<meta property="og:description" content="people helping robots helping people">
+<meta property="og:url" content="https://brobots.space/sao-audit.html">
+<meta property="og:image" content="https://brobots.space/media/og-card-flyer.jpg">
+<meta property="og:image:alt" content="BROBOTS — people helping robots helping people">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free SAO Audit — Is AI Recommending Your Business?">
+<meta name="twitter:description" content="people helping robots helping people">
+<meta name="twitter:image" content="https://brobots.space/media/og-card-flyer.jpg">
+<link rel="icon" href="/favicon.ico">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"BROBOTS","url":"https://brobots.space","description":"Free SAO (Search Answer Optimization) audit: 38 checks across clarity, authority, relevance, consistency, AI readability, and question coverage.","priceRange":"$495 - $4,995","areaServed":"Worldwide"}
+</script>
+<style>
+:root{
+  --bg:#0a0a0c; --panel:#121216; --panel2:#17171d;
+  --ink:#f5efe0; --muted:#a8a29a; --faint:#6b675f;
+  --accent:#4f8ff7; --accent2:#a06ff7;
+  --good:#4ade80; --warn:#f5a623; --bad:#f75555; --mid:#e3c84b;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+nav.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.brandmark{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800;letter-spacing:.06em}
+.brandmark img{width:30px;height:30px;border-radius:8px}
+nav.top .back{color:var(--muted);text-decoration:none;font-size:.9rem}
+nav.top .back:hover{color:var(--ink)}
+.hero{padding:56px 0 30px;text-align:center}
+.hero h1{font-size:clamp(2rem,5.4vw,3.4rem);line-height:1.12;font-weight:800;background:linear-gradient(100deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:16px}
+.hero p.sub{color:var(--muted);font-size:1.12rem;max-width:640px;margin:0 auto 34px}
+.hero p.sub strong{color:var(--ink)}
+.audit-form{background:var(--panel);border:1px solid #232329;border-radius:var(--radius);padding:28px;max-width:640px;margin:0 auto;text-align:left}
+.audit-form label{display:block;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.audit-form input[type=url],.audit-form select{width:100%;background:#0d0d10;border:1px solid #2a2a32;color:var(--ink);border-radius:10px;padding:14px 16px;font-size:1rem;margin-bottom:18px;outline:none}
+.audit-form input[type=url]:focus,.audit-form select:focus{border-color:var(--accent)}
+.btn{display:inline-block;background:linear-gradient(100deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:15px 34px;font-size:1.05rem;font-weight:700;cursor:pointer;width:100%;transition:transform .12s ease,filter .12s ease}
+.btn:hover{filter:brightness(1.1)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.55;cursor:wait}
+.fineprint{margin-top:14px;color:var(--faint);font-size:.85rem;text-align:center}
+.form-err{display:none;background:#2a1215;border:1px solid #5c232a;color:#ffb4b4;border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:.95rem}
+/* progress */
+.progress{display:none;text-align:center;padding:40px 0}
+.spinner{width:54px;height:54px;border:4px solid #232329;border-top-color:var(--accent);border-radius:50%;margin:0 auto 22px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.progress .stage{font-size:1.15rem;font-weight:600}
+.progress .eta{color:var(--faint);font-size:.9rem;margin-top:8px}
+/* report */
+#report{display:none;padding:10px 0 60px}
+.score-hero{text-align:center;padding:34px 0 10px}
+.ring{width:210px;height:210px;margin:0 auto 18px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .num b{font-size:3.4rem;line-height:1;font-weight:800}
+.ring .num span{color:var(--muted);font-size:.85rem;letter-spacing:.1em}
+.band-name{font-size:1.9rem;font-weight:800;margin:6px 0 8px}
+.band-line{color:var(--muted);font-size:1.08rem;max-width:560px;margin:0 auto}
+.biz-line{margin-top:14px;color:var(--faint);font-size:.95rem}
+.cap-banner{display:none;background:#2a1215;border:1px solid #5c232a;color:#ffc9c9;border-radius:12px;padding:16px 20px;margin:26px auto 0;max-width:640px;font-size:.98rem}
+.cap-banner strong{color:#fff}
+.sec{margin-top:54px}
+.sec h2{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+.sec .sec-sub{color:var(--muted);margin-bottom:20px;font-size:.98rem}
+/* fixes */
+.fix-card{background:var(--panel);border:1px solid #232329;border-radius:var(--radius);padding:20px 22px;margin-bottom:14px;display:flex;gap:16px;align-items:flex-start}
+.fix-num{flex:0 0 40px;height:40px;border-radius:10px;background:linear-gradient(100deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.15rem;color:#fff}
+.fix-card .pts{margin-left:auto;flex:0 0 auto;color:var(--mid);font-size:.82rem;font-weight:700;white-space:nowrap;padding-top:4px}
+.fix-card p{font-size:1rem}
+/* categories */
+.cat{background:var(--panel);border:1px solid #232329;border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.cat-head{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+.cat-head:hover{background:var(--panel2)}
+.cat-name{font-weight:700;flex:0 0 170px}
+.cat-bar{flex:1;height:10px;background:#0d0d10;border-radius:6px;overflow:hidden}
+.cat-bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.cat-pct{flex:0 0 52px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+.cat-chev{color:var(--faint);transition:transform .2s}
+.cat.open .cat-chev{transform:rotate(180deg)}
+.cat-body{display:none;border-top:1px solid #232329;padding:6px 20px 14px}
+.cat.open .cat-body{display:block}
+.check{padding:14px 0;border-bottom:1px solid #1d1d23}
+.check:last-child{border-bottom:none}
+.check-top{display:flex;gap:10px;align-items:baseline}
+.dot{flex:0 0 10px;height:10px;border-radius:50%;margin-top:6px}
+.dot.s2{background:var(--good)}.dot.s1{background:var(--warn)}.dot.s0{background:var(--bad)}
+.check-id{font-size:.78rem;color:var(--faint);font-weight:700;letter-spacing:.06em}
+.check-evidence{color:var(--muted);font-size:.92rem;margin:6px 0 0 20px}
+.check-evidence code{background:#0d0d10;padding:1px 6px;border-radius:6px;color:var(--ink);font-size:.86rem}
+.check-fix{margin:8px 0 0 20px;font-size:.92rem;color:var(--ink);border-left:3px solid var(--accent);padding-left:12px}
+/* questions */
+.q-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.q-filter{background:var(--panel);border:1px solid #2a2a32;color:var(--muted);border-radius:999px;padding:8px 18px;font-size:.9rem;cursor:pointer}
+.q-filter.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.q-item{background:var(--panel);border:1px solid #232329;border-radius:12px;padding:16px 20px;margin-bottom:10px}
+.q-item .q-text{font-weight:600}
+.q-item .q-meta{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.pill{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 12px}
+.pill.answered{background:rgba(74,222,128,.14);color:var(--good)}
+.pill.partial{background:rgba(245,166,35,.14);color:var(--warn)}
+.pill.missing{background:rgba(247,85,85,.14);color:var(--bad)}
+.pill.core{background:rgba(79,143,247,.16);color:var(--accent)}
+.q-quote{margin-top:10px;color:var(--muted);font-size:.92rem;border-left:3px solid var(--good);padding-left:12px;font-style:italic}
+.q-quote a{font-style:normal;font-size:.82rem}
+/* cta */
+.cta-band{margin-top:60px;background:linear-gradient(120deg,#141a2e,#1c1440);border:1px solid #2a3352;border-radius:18px;padding:44px 34px;text-align:center}
+.cta-band h2{font-size:1.8rem;font-weight:800;margin-bottom:10px}
+.cta-band p{color:var(--muted);max-width:520px;margin:0 auto 24px}
+.cta-band .btn{width:auto;padding:15px 44px;text-decoration:none}
+/* footer */
+footer.site{border-top:1px solid #1d1d23;margin-top:60px;padding:26px 0 40px;color:var(--faint);font-size:.88rem;text-align:center}
+footer.site .tag{color:var(--muted)}
+/* niche picker */
+.niche-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:18px}
+.niche-pick{background:var(--panel);border:1px solid #2a2a32;color:var(--ink);border-radius:10px;padding:12px;font-size:.92rem;cursor:pointer}
+.niche-pick:hover{border-color:var(--accent)}
+#nicheStep{display:none;text-align:center;padding:30px 0}
+@media(max-width:640px){.cat-name{flex:0 0 120px;font-size:.92rem}.fix-card .pts{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top">
+    <a class="brandmark" href="/" id="brandHome"><img src="/apple-touch-icon.png" alt="logo" id="brandLogo"><span id="brandNameTop">BROBOTS</span></a>
+    <a class="back" href="/services.html">← services</a>
+  </nav>
+
+  <section class="hero" id="heroSec">
+    <h1>Is AI recommending your business?</h1>
+    <p class="sub">We crawl your site, then ask the <strong>30 questions</strong> your customers ask AI — and check whether your website actually answers them. <strong>38 checks. Zero guesswork.</strong> Free.</p>
+    <form class="audit-form" id="auditForm">
+      <div class="form-err" id="formErr"></div>
+      <label for="urlInput">Your website</label>
+      <input type="url" id="urlInput" placeholder="https://yourbusiness.com" required autocomplete="url">
+      <label for="nicheSelect">Business type <span style="text-transform:none;letter-spacing:0">(we usually detect this)</span></label>
+      <select id="nicheSelect">
+        <option value="">Auto-detect</option>
+      </select>
+      <button class="btn" type="submit" id="goBtn">Run my free audit</button>
+      <p class="fineprint">Takes about 2–4 minutes. We never share your results.</p>
+    </form>
+  </section>
+
+  <section class="progress" id="progressSec">
+    <div class="spinner"></div>
+    <div class="stage" id="stageText">Crawling your site…</div>
+    <div class="eta">This usually takes 2–4 minutes. Keep this tab open.</div>
+  </section>
+
+  <section id="nicheStep">
+    <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:8px">We couldn't quite tell what kind of business this is.</h2>
+    <p class="sub" style="color:var(--muted)">Pick yours and we'll run the audit tuned for it.</p>
+    <div class="niche-grid" id="nicheGrid"></div>
+  </section>
+
+  <section id="report"></section>
+
+  <footer class="site">
+    <div class="tag" id="brandTag">people helping robots helping people</div>
+    <div style="margin-top:6px"><span id="brandNameFoot">BROBOTS</span> · free SAO audit</div>
+  </footer>
+</div>
+<script>
+(function(){
+"use strict";
+var NICHES = [["accountant","Accountant"],["auto-repair","Auto Repair"],["chiropractor","Chiropractor"],["cleaning","Cleaning Service"],["consultant","Consultant"],["contractor","General Contractor"],["dentist","Dentist"],["electrician","Electrician"],["hvac","HVAC"],["landscaping","Landscaping"],["law-firm","Law Firm"],["med-spa","Med Spa"],["mortgage-broker","Mortgage Broker"],["painter","Painter"],["pest-control","Pest Control"],["personal-trainer","Personal Trainer"],["plumbing","Plumbing"],["real-estate-agent","Real Estate Agent"],["roofing","Roofing"],["salon","Salon"]];
+var BUCKET_LABELS = {find:"Find & Choose",cost:"Cost",trust:"Trust",process:"Process & Time",problems:"Problems",local:"Local & Availability"};
+var CAT_OF = {C:"Clarity",A:"Authority",R:"Relevance",K:"Consistency",T:"AI Readability",Q:"Question Coverage"};
+var BAND_COLORS = {"invisible":"var(--bad)","overlooked":"var(--warn)","in the running":"var(--mid)","ai's pick":"var(--good)"};
+
+var form=document.getElementById("auditForm"), urlInput=document.getElementById("urlInput"),
+    nicheSelect=document.getElementById("nicheSelect"), goBtn=document.getElementById("goBtn"),
+    formErr=document.getElementById("formErr"), heroSec=document.getElementById("heroSec"),
+    progressSec=document.getElementById("progressSec"), stageText=document.getElementById("stageText"),
+    reportSec=document.getElementById("report"), nicheStep=document.getElementById("nicheStep"),
+    nicheGrid=document.getElementById("nicheGrid");
+
+NICHES.forEach(function(n){var o=document.createElement("option");o.value=n[0];o.textContent=n[1];nicheSelect.appendChild(o);});
+
+var lastUrl="", lastNiche="", pollTimer=null, startTime=0;
+
+function showErr(msg){formErr.textContent=msg;formErr.style.display="block";}
+function hideErr(){formErr.style.display="none";}
+
+form.addEventListener("submit",function(e){
+  e.preventDefault(); hideErr();
+  var url=urlInput.value.trim();
+  if(!/^https?:\/\//i.test(url)) url="https://"+url;
+  lastUrl=url; lastNiche=nicheSelect.value;
+  startAudit(url,lastNiche);
+});
+
+function startAudit(url,niche){
+  goBtn.disabled=true; goBtn.textContent="Starting…";
+  heroSec.style.display="none"; nicheStep.style.display="none"; reportSec.style.display="none"; reportSec.innerHTML="";
+  progressSec.style.display="block"; startTime=Date.now(); tickStage();
+  fetch("/api/audit",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({url:url,niche:niche})})
+    .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
+    .then(function(res){
+      if(!res.ok){resetToForm(res.j.error||"Something went wrong.");return;}
+      pollForResult(res.j.results_url);
+    })
+    .catch(function(){resetToForm("Couldn't reach the audit service. Check your connection and try again.");});
+}
+
+function resetToForm(msg){
+  clearInterval(pollTimer);
+  progressSec.style.display="none"; heroSec.style.display="block";
+  goBtn.disabled=false; goBtn.textContent="Run my free audit";
+  if(msg) showErr(msg);
+}
+
+function tickStage(){
+  var el=(Date.now()-startTime)/1000, msg;
+  if(el<25) msg="Crawling your site…";
+  else if(el<75) msg="Reading every page…";
+  else if(el<160) msg="Asking 30 questions your customers ask AI…";
+  else msg="Grading the answers…";
+  stageText.textContent=msg;
+}
+
+function pollForResult(resultsUrl){
+  var tries=0, maxTries=120; // ~12 minutes
+  pollTimer=setInterval(function(){
+    tickStage();
+    tries++;
+    fetch(resultsUrl,{cache:"no-store"})
+      .then(function(r){
+        if(r.status===404) return null;
+        if(!r.ok) throw new Error("http");
+        return r.json();
+      })
+      .then(function(report){
+        if(!report) return;
+        clearInterval(pollTimer);
+        if(report.status==="needs_niche") showNicheStep(report);
+        else renderReport(report);
+      })
+      .catch(function(){/* transient; keep polling */});
+    if(tries>=maxTries){
+      clearInterval(pollTimer);
+      resetToForm("The audit took too long. Please try again — it usually finishes in 2–4 minutes.");
+    }
+  },6000);
+}
+
+function showNicheStep(report){
+  progressSec.style.display="none"; nicheStep.style.display="block";
+  nicheGrid.innerHTML="";
+  (report.niches||NICHES.map(function(n){return {id:n[0],label:n[1]};})).forEach(function(n){
+    var b=document.createElement("button"); b.className="niche-pick"; b.textContent=n.label;
+    b.onclick=function(){startAudit(lastUrl,n.id);};
+    nicheGrid.appendChild(b);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---------- rendering ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+
+function applyBrand(b){
+  if(!b) return;
+  var c=b.colors||{};
+  var root=document.documentElement.style;
+  if(c.bg) root.setProperty("--bg",c.bg);
+  if(c.ink) root.setProperty("--ink",c.ink);
+  if(c.muted) root.setProperty("--muted",c.muted);
+  if(c.accent) root.setProperty("--accent",c.accent);
+  if(c.accent2) root.setProperty("--accent2",c.accent2);
+  if(b.name){
+    document.getElementById("brandNameTop").textContent=b.name;
+    document.getElementById("brandNameFoot").textContent=b.name;
+    document.title="Free SAO Audit — Is AI Recommending Your Business? | "+b.name;
+  }
+  if(b.tagline) document.getElementById("brandTag").textContent=b.tagline;
+  if(b.logo_url) document.getElementById("brandLogo").src=b.logo_url;
+  if(b.url) document.getElementById("brandHome").href=b.url;
+}
+
+function bandColor(band){
+  var k=String(band||"").toLowerCase();
+  return BAND_COLORS[k]||"var(--warn)";
+}
+
+function ring(score,color){
+  var r=84, circ=2*Math.PI*r, off=circ*(1-Math.max(0,Math.min(100,score))/100);
+  return '<div class="ring"><svg width="210" height="210" viewBox="0 0 210 210">'+
+    '<circle cx="105" cy="105" r="'+r+'" fill="none" stroke="#232329" stroke-width="14"/>'+
+    '<circle cx="105" cy="105" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round" '+
+    'stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg>'+
+    '<div class="num"><b>'+score+'</b><span>/ 100</span></div></div>';
+}
+
+function renderReport(r){
+  applyBrand(r.brand);
+  progressSec.style.display="none";
+  var color=bandColor(r.band);
+  var nicheLabel=(NICHES.find(function(n){return n[0]===r.niche;})||["",r.niche||""])[1];
+
+  var html='<div class="score-hero">'+
+    ring(r.final_score,color)+
+    '<div class="band-name" style="color:'+color+'">'+esc(r.band)+'</div>'+
+    '<p class="band-line">'+esc(r.band_line)+'</p>'+
+    '<div class="biz-line">'+esc(r.business)+' · '+esc(r.primary_city||"")+' · '+esc(nicheLabel)+'</div>'+
+    (r.cap_reason?'<div class="cap-banner"><strong>Score capped at 49.</strong> '+esc(r.cap_reason)+'</div>':"")+
+    '</div>';
+
+  // top fixes
+  var checkById={};
+  (r.checks||[]).forEach(function(c){checkById[c.id]=c;});
+  var fixes=(r.top_fixes||[]).map(function(id){return checkById[id];}).filter(Boolean);
+  if(fixes.length){
+    html+='<div class="sec"><h2>Fix these first</h2><p class="sec-sub">The five changes that recover the most points.</p>';
+    fixes.forEach(function(c,i){
+      var pts=Math.round((2-c.score)*c.weight*100/168);
+      html+='<div class="fix-card"><div class="fix-num">'+(i+1)+'</div><div><p>'+esc(c.fix)+'</p></div>'+
+        (pts>0?'<div class="pts">+'+pts+' pts</div>':"")+'</div>';
+    });
+    html+='</div>';
+  }
+
+  // categories
+  html+='<div class="sec"><h2>How you scored</h2><p class="sec-sub">38 checks across six categories. Tap a category to see every check and the evidence behind it.</p>';
+  var cats=r.categories||[];
+  cats.forEach(function(cat,ci){
+    var catChecks=(r.checks||[]).filter(function(c){return CAT_OF[c.id.charAt(0)]===cat.name;});
+    html+='<div class="cat" id="cat-'+ci+'"><div class="cat-head" onclick="document.getElementById(\'cat-'+ci+'\').classList.toggle(\'open\')">'+
+      '<div class="cat-name">'+esc(cat.name)+'</div>'+
+      '<div class="cat-bar"><i style="width:'+Math.round(cat.pct)+'%"></i></div>'+
+      '<div class="cat-pct">'+Math.round(cat.pct)+'%</div>'+
+      '<div class="cat-chev">▾</div></div><div class="cat-body">';
+    catChecks.forEach(function(c){
+      html+='<div class="check"><div class="check-top"><span class="dot s'+c.score+'"></span>'+
+        '<span class="check-id">'+esc(c.id)+'</span></div>'+
+        (c.evidence?'<p class="check-evidence">'+linkify(esc(c.evidence))+'</p>':"")+
+        (c.fix?'<p class="check-fix">'+esc(c.fix)+'</p>':"")+'</div>';
+    });
+    html+='</div></div>';
+  });
+  html+='</div>';
+
+  // questions
+  var qs=r.questions||[];
+  var answered=qs.filter(function(q){return q.status==="ANSWERED";}).length;
+  var partial=qs.filter(function(q){return q.status==="PARTIAL";}).length;
+  html+='<div class="sec"><h2>The 30 questions</h2>'+
+    '<p class="sec-sub">The exact questions your customers ask AI. Your site fully answers <strong>'+answered+' of 30</strong>'+
+    (partial?', partially answers '+partial:"")+'. Every missing answer is a page your competitors get to write first.</p>'+
+    '<div class="q-filters" id="qFilters">'+
+    '<button class="q-filter active" data-f="all">All 30</button>'+
+    '<button class="q-filter" data-f="ANSWERED">Answered ('+answered+')</button>'+
+    '<button class="q-filter" data-f="PARTIAL">Partial ('+partial+')</button>'+
+    '<button class="q-filter" data-f="MISSING">Missing ('+(30-answered-partial)+')</button>'+
+    '</div><div id="qList"></div></div>';
+
+  // cta
+  var ctaUrl=(r.brand&&r.brand.cta_url)||"/services.html";
+  var ctaName=(r.brand&&r.brand.name)||"BROBOTS";
+  html+='<div class="cta-band"><h2>Want every fix handled?</h2>'+
+    '<p>'+esc(ctaName)+' builds the pages, the answers, and the AI-proof structure your audit says you\'re missing — starting at $495.</p>'+
+    '<a class="btn" href="'+esc(ctaUrl)+'">See what '+esc(ctaName)+' can do</a></div>';
+
+  reportSec.innerHTML=html;
+  reportSec.style.display="block";
+
+  // question list + filters
+  var qList=document.getElementById("qList"), qFilter="all";
+  function qHtml(q){
+    var cls=q.status.toLowerCase();
+    var h='<div class="q-item" data-status="'+q.status+'"><div class="q-text">'+q.n+'. '+esc(q.text)+'</div>'+
+      '<div class="q-meta"><span class="pill '+cls+'">'+q.status.toLowerCase()+'</span>'+
+      '<span class="pill" style="background:#1d1d23;color:var(--muted)">'+esc(BUCKET_LABELS[q.bucket]||q.bucket)+'</span>'+
+      (q.core?'<span class="pill core">core</span>':"")+'</div>';
+    if(q.quote) h+='<div class="q-quote">“'+esc(q.quote)+'”'+(q.evidence_url?' <a href="'+esc(q.evidence_url)+'" target="_blank" rel="noopener">source ↗</a>':"")+'</div>';
+    return h+'</div>';
+  }
+  function drawQs(){
+    qList.innerHTML=qs.filter(function(q){return qFilter==="all"||q.status===qFilter;}).map(qHtml).join("");
+  }
+  document.getElementById("qFilters").addEventListener("click",function(e){
+    var b=e.target.closest(".q-filter"); if(!b) return;
+    qFilter=b.getAttribute("data-f");
+    Array.prototype.forEach.call(this.children,function(x){x.classList.remove("active");});
+    b.classList.add("active"); drawQs();
+  });
+  drawQs();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function linkify(s){
+  return s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+}
+})();
+</script>
+</body>
+</html>
