@@ -175,7 +175,7 @@ footer.site .tag{color:var(--muted)}
 <script>
 (function(){
 "use strict";
-var NICHES = [["accountant","Accountant"],["auto-repair","Auto Repair"],["chiropractor","Chiropractor"],["cleaning","Cleaning Service"],["consultant","Consultant"],["contractor","General Contractor"],["dentist","Dentist"],["electrician","Electrician"],["hvac","HVAC"],["landscaping","Landscaping"],["law-firm","Law Firm"],["med-spa","Med Spa"],["mortgage-broker","Mortgage Broker"],["painter","Painter"],["pest-control","Pest Control"],["personal-trainer","Personal Trainer"],["plumbing","Plumbing"],["real-estate-agent","Real Estate Agent"],["roofing","Roofing"],["salon","Salon"]];
+var NICHES = [["accountant","Accountant"],["auto-repair","Auto Repair"],["chiropractor","Chiropractor"],["cleaning","Cleaning Service"],["consultant","Consultant"],["general-contractor","General Contractor"],["dentist","Dentist"],["electrician","Electrician"],["hvac","HVAC"],["landscaping","Landscaping"],["law-firm","Law Firm"],["med-spa","Med Spa"],["mortgage-broker","Mortgage Broker"],["painter","Painter"],["pest-control","Pest Control"],["personal-trainer","Personal Trainer"],["plumbing","Plumbing"],["real-estate-agent","Real Estate Agent"],["roofing","Roofing"],["salon","Salon"]];
 var BUCKET_LABELS = {find:"Find & Choose",cost:"Cost",trust:"Trust",process:"Process & Time",problems:"Problems",local:"Local & Availability"};
 var CAT_OF = {C:"Clarity",A:"Authority",R:"Relevance",K:"Consistency",T:"AI Readability",Q:"Question Coverage"};
 var BAND_COLORS = {"invisible":"var(--bad)","overlooked":"var(--warn)","in the running":"var(--mid)","ai's pick":"var(--good)"};
@@ -188,6 +188,19 @@ var form=document.getElementById("auditForm"), urlInput=document.getElementById(
     nicheGrid=document.getElementById("nicheGrid");
 
 NICHES.forEach(function(n){var o=document.createElement("option");o.value=n[0];o.textContent=n[1];nicheSelect.appendChild(o);});
+
+/* deep-link: /sao-audit.html?url=...&niche=... — vertical pages hand off here */
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    var u=q.get("url"); if(!u) return;
+    urlInput.value=u;
+    var n=q.get("niche");
+    if(n && NICHES.some(function(x){return x[0]===n;})) nicheSelect.value=n;
+    if(form.requestSubmit) form.requestSubmit();
+    else form.dispatchEvent(new Event("submit"));
+  }catch(err){/* stay on the form */}
+})();
 
 var lastUrl="", lastNiche="", pollTimer=null, startTime=0;
 
