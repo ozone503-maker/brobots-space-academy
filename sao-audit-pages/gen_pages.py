@@ -166,6 +166,7 @@ form.addEventListener("submit",function(e){{
 }});
 }})();
 </script>
+<script src="/sao-chat.js" defer></script>
 </body>
 </html>
 """
