@@ -1,0 +1,193 @@
+/* Brobots Tutor: homepage section. Printed-ink look: flat strokes, no glow, no cyan or electric blue. */
+.tutor{
+  --t-bg:#060606;
+  --t-card:#0b0d10;
+  --t-silver:#9AA5B0;
+  --t-body:#D3DAE0;
+  --t-edge:#8E99A4;
+  --t-white:#eef2f5;
+  --t-green:#22B894;
+  --t-green-hi:#4FE3AE;
+  background:var(--t-bg);
+  color:var(--t-body);
+  border-top:2px solid var(--t-edge);
+  border-bottom:2px solid var(--t-edge);
+}
+.tutor *{box-sizing:border-box}
+.tutor-wrap{
+  max-width:1240px;
+  margin:0 auto;
+  padding:0 16px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:28px;
+  align-items:start;
+}
+.tutor-stage{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.tutor-eyebrow{
+  font-family:'Courier Prime',monospace;
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--t-silver);
+}
+.tutor h3{
+  font-family:'Archivo Black',Impact,sans-serif;
+  text-transform:uppercase;letter-spacing:-.02em;line-height:.95;
+  font-size:clamp(1.9rem,7vw,3.2rem);
+  margin:6px 0 10px;
+  color:var(--t-white);
+}
+.tutor-grad{
+  color:var(--t-green-hi);
+  background:linear-gradient(90deg,var(--t-green-hi),var(--t-green));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .tutor-grad{-webkit-text-fill-color:currentColor}
+}
+.tutor-intro{margin:0 0 6px;font-size:clamp(1rem,.95rem + .3vw,1.5rem);line-height:1.5;color:var(--t-body)}
+
+/* ---- the robot head ---- */
+.tutor-bot{width:min(56vw,240px);margin:0}
+.tutor-bot svg{display:block;width:100%;height:auto;overflow:visible}
+.tutor-bot .ink{fill:none;stroke:var(--t-body);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.tutor-bot .ink-thin{fill:none;stroke:var(--t-edge);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.tutor-bot .fill-card{fill:var(--t-card)}
+.tutor-bot .fill-body{fill:var(--t-body)}
+.tutor-bot .fill-green{fill:var(--t-green)}
+.tutor-bot .shine{fill:none;stroke:var(--t-white);stroke-width:3;stroke-linecap:round;opacity:.55}
+.tutor-bot .hatch{stroke:var(--t-edge);stroke-width:2;stroke-linecap:round;opacity:.7}
+.tutor-name{
+  font-family:'Courier Prime',monospace;
+  font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--t-body);margin:0;
+}
+.tutor-status{
+  font-family:'Courier Prime',monospace;
+  font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--t-silver);margin:0;min-height:1.2em;
+}
+
+/* Poses. These are static so the state still reads with reduced motion. */
+.tutor-bot .head,.tutor-bot .pupils,.tutor-bot .eyes,.tutor-bot .mouth rect,.tutor-bot .bulb{transform-box:fill-box;transform-origin:center}
+.tutor-bot .head{transform-box:view-box;transform-origin:120px 200px}
+.tutor-bot .mouth rect{transform:scaleY(.14)}
+.tutor-bot[data-state="thinking"] .head{transform:rotate(-5deg)}
+.tutor-bot[data-state="thinking"] .pupils{transform:translate(5px,-4px)}
+.tutor-bot[data-state="talking"] .mouth rect:nth-child(odd){transform:scaleY(.9)}
+.tutor-bot[data-state="talking"] .mouth rect:nth-child(even){transform:scaleY(.5)}
+
+/* Motion. Light, and only if the visitor hasn't asked for less. */
+@media (prefers-reduced-motion:no-preference){
+  .tutor-bot .head{animation:tutor-bob 4.2s ease-in-out infinite alternate;transition:transform .35s ease}
+  .tutor-bot .eyes{animation:tutor-blink 5.2s infinite}
+  .tutor-bot .pupils{transition:transform .35s ease}
+  .tutor-bot .mouth rect{transition:transform .12s ease}
+  .tutor-bot[data-state="thinking"] .head{animation:tutor-think 3.2s ease-in-out infinite}
+  .tutor-bot[data-state="thinking"] .pupils{animation:tutor-look 1.8s ease-in-out infinite alternate}
+  .tutor-bot[data-state="thinking"] .bulb{animation:tutor-pulse 1s ease-in-out infinite alternate}
+  .tutor-bot[data-state="talking"] .head{animation:tutor-nod .42s ease-in-out infinite alternate}
+  .tutor-bot[data-state="talking"] .mouth rect{animation:tutor-talk .34s ease-in-out infinite alternate}
+  .tutor-bot[data-state="talking"] .mouth rect:nth-child(2){animation-duration:.27s;animation-delay:-.1s}
+  .tutor-bot[data-state="talking"] .mouth rect:nth-child(3){animation-duration:.41s;animation-delay:-.2s}
+  .tutor-bot[data-state="talking"] .mouth rect:nth-child(4){animation-duration:.3s;animation-delay:-.05s}
+  .tutor-bot[data-state="talking"] .mouth rect:nth-child(5){animation-duration:.37s;animation-delay:-.15s}
+  .tutor-bot[data-state="talking"] .mouth rect:nth-child(odd),
+  .tutor-bot[data-state="talking"] .mouth rect:nth-child(even){transform:none}
+}
+@keyframes tutor-bob{from{transform:translateY(0)}to{transform:translateY(-3px)}}
+@keyframes tutor-blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes tutor-think{0%,100%{transform:rotate(-2deg)}40%{transform:rotate(-6deg)}75%{transform:rotate(3deg)}}
+@keyframes tutor-look{from{transform:translate(6px,-5px)}to{transform:translate(-6px,-5px)}}
+@keyframes tutor-pulse{from{opacity:1}to{opacity:.3}}
+@keyframes tutor-nod{from{transform:translateY(0)}to{transform:translateY(-2px)}}
+@keyframes tutor-talk{from{transform:scaleY(.2)}to{transform:scaleY(1)}}
+
+/* ---- the chat panel ---- */
+.tutor-panel{
+  background:var(--t-card);
+  border:2px solid var(--t-edge);
+  display:flex;flex-direction:column;
+  min-width:0;
+}
+.tutor-log{
+  height:clamp(260px,46vh,440px);
+  overflow-y:auto;
+  padding:14px;
+  display:flex;flex-direction:column;gap:10px;
+  font-size:clamp(1rem,.95rem + .3vw,1.45rem);
+  line-height:1.5;
+  overscroll-behavior:contain;
+}
+.tutor-msg{
+  max-width:92%;
+  padding:10px 12px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  border:2px solid var(--t-edge);
+}
+.tutor-msg.bot{align-self:flex-start;border-left:4px solid var(--t-green);color:var(--t-body)}
+.tutor-msg.you{align-self:flex-end;color:var(--t-white);background:#14181d}
+.tutor-msg.note{align-self:flex-start;border-style:dashed;color:var(--t-silver);font-size:.92em}
+.tutor-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 12px}
+.tutor-chip{
+  appearance:none;cursor:pointer;
+  background:transparent;color:var(--t-body);
+  border:2px solid var(--t-edge);
+  font:inherit;font-size:.85rem;line-height:1.2;
+  padding:10px 12px;min-height:44px;text-align:left;
+}
+.tutor-chip:hover{border-color:var(--t-green);color:var(--t-white)}
+.tutor-form{display:flex;gap:8px;padding:12px 14px 14px;border-top:2px solid var(--t-edge)}
+.tutor-input{
+  flex:1;min-width:0;min-height:48px;
+  background:#000;color:var(--t-white);
+  border:2px solid var(--t-edge);border-radius:0;
+  font:inherit;font-size:1rem;padding:10px 12px;
+}
+.tutor-input::placeholder{color:var(--t-silver)}
+.tutor-send{
+  appearance:none;cursor:pointer;min-height:48px;padding:0 18px;
+  background:var(--t-body);color:#14140F;
+  border:2px solid var(--t-body);border-radius:0;
+  font-family:'Courier Prime',monospace;font-size:.8rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.14em;
+}
+.tutor-send:hover{background:var(--t-white)}
+.tutor-send[disabled],.tutor-input[disabled]{opacity:.55;cursor:not-allowed}
+.tutor a:focus-visible,.tutor button:focus-visible,.tutor input:focus-visible{outline:3px solid var(--t-green-hi);outline-offset:2px}
+.tutor-fine{margin:10px 0 0;font-size:.8rem;color:var(--t-silver)}
+.tutor-fine a{color:var(--t-body)}
+
+@media (min-width:820px){
+  .tutor-wrap{grid-template-columns:minmax(220px,340px) 1fr;gap:44px;padding:0 22px;align-items:center}
+  .tutor-bot{width:min(100%,300px)}
+  .tutor-stage{text-align:center}
+}
+/* big screens and TVs: scale everything up */
+@media (min-width:1800px){
+  .tutor-wrap{max-width:1640px;gap:72px;grid-template-columns:minmax(300px,480px) 1fr}
+  .tutor-bot{width:min(100%,440px)}
+  .tutor-log{height:clamp(420px,52vh,760px)}
+  .tutor-chip{font-size:1.15rem;min-height:56px}
+  .tutor-input{font-size:1.4rem;min-height:64px}
+  .tutor-send{font-size:1.05rem;min-height:64px;padding:0 28px}
+  .tutor-name,.tutor-status,.tutor-eyebrow{font-size:1rem}
+  .tutor-fine{font-size:1.05rem}
+}
+@media (max-width:420px){
+  .tutor-form{flex-direction:column}
+  .tutor-send{width:100%}
+}
+@media (min-width:2600px){
+  .tutor-wrap{max-width:2600px;gap:110px;grid-template-columns:minmax(440px,720px) 1fr}
+  .tutor-bot{width:min(100%,680px)}
+  .tutor h3{font-size:clamp(3.2rem,4vw,6rem)}
+  .tutor-intro,.tutor-log{font-size:2rem}
+  .tutor-log{height:clamp(640px,54vh,1100px)}
+  .tutor-chip{font-size:1.6rem;min-height:80px;padding:14px 22px}
+  .tutor-input{font-size:2rem;min-height:92px}
+  .tutor-send{font-size:1.5rem;min-height:92px;padding:0 44px}
+  .tutor-name,.tutor-status,.tutor-eyebrow{font-size:1.4rem}
+  .tutor-fine{font-size:1.5rem}
+}

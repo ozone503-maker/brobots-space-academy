@@ -27,6 +27,7 @@
 </script>
 <link rel="stylesheet" href="campus.css?v=20260926a">
 <link rel="stylesheet" href="circular.css?v=20260926a">
+<link rel="stylesheet" href="tutor/tutor.css">
 </head>
 <body class="factory">
 <header class="campus-mast" id="campus-mast">
@@ -121,6 +122,70 @@
   <img src="media/factory-circular-chrome-1400.jpg" width="1400" height="1657" style="display:block;width:100%;height:auto" sizes="(min-width: 2400px) 1200px, (min-width: 1180px) 1120px, calc(100vw - 16px)" loading="lazy" decoding="async" alt="BROBOTS SPACE FACTORY · FLASHTOWN. People helping ROBOTS helping people. Custom BroBot: personality driven, technical expert, jungle trained, never sleeps, never asks for a raise — $495. Custom website: site that sells, phone ready, your domain, we launch — $495. Video: you shoot, we chop, cheap. Website tiers $495 to $4,995. brobots.space — financing available. Open for work.">
  </picture></a>
 </figure>
+<section class="sec tutor" id="tutor" aria-labelledby="tutor-h">
+ <div class="tutor-wrap">
+  <div class="tutor-stage">
+   <figure class="tutor-bot" data-state="idle" aria-hidden="true">
+    <svg viewBox="0 0 240 240" focusable="false">
+     <g class="head">
+      <line class="ink" x1="120" y1="54" x2="120" y2="34"/>
+      <circle class="bulb fill-green" cx="120" cy="26" r="9"/>
+      <circle class="ink-thin" cx="120" cy="26" r="9"/>
+      <rect class="ink fill-card" x="24" y="98" width="16" height="48" rx="6"/>
+      <rect class="ink fill-card" x="200" y="98" width="16" height="48" rx="6"/>
+      <rect class="ink fill-card" x="40" y="54" width="160" height="136" rx="32"/>
+      <path class="shine" d="M62 82 Q62 68 78 66 L104 66"/>
+      <rect class="ink-thin" x="56" y="72" width="128" height="100" rx="20"/>
+      <g class="eyes">
+       <circle class="ink fill-card" cx="92" cy="110" r="18"/>
+       <circle class="ink fill-card" cx="148" cy="110" r="18"/>
+       <g class="pupils">
+        <circle class="fill-green" cx="92" cy="110" r="8"/>
+        <circle class="fill-green" cx="148" cy="110" r="8"/>
+       </g>
+      </g>
+      <g class="mouth">
+       <rect class="fill-body" x="80" y="132" width="9" height="30" rx="4.5"/>
+       <rect class="fill-body" x="97" y="132" width="9" height="30" rx="4.5"/>
+       <rect class="fill-body" x="115" y="132" width="9" height="30" rx="4.5"/>
+       <rect class="fill-body" x="133" y="132" width="9" height="30" rx="4.5"/>
+       <rect class="fill-body" x="151" y="132" width="9" height="30" rx="4.5"/>
+      </g>
+      <line class="hatch" x1="168" y1="178" x2="180" y2="166"/>
+      <line class="hatch" x1="176" y1="182" x2="190" y2="168"/>
+      <line class="hatch" x1="186" y1="184" x2="194" y2="176"/>
+     </g>
+     <rect class="ink fill-card" x="100" y="190" width="40" height="14" rx="4"/>
+     <rect class="ink fill-card" x="60" y="204" width="120" height="26" rx="12"/>
+    </svg>
+   </figure>
+   <p class="tutor-name">Professor Sprocket</p>
+   <p class="tutor-status" id="tutor-status">Ready</p>
+  </div>
+  <div class="tutor-main">
+   <span class="tutor-eyebrow">Class is in session</span>
+   <h3 id="tutor-h">Ask the <span class="tutor-grad">Professor</span></h3>
+   <p class="tutor-intro">Professor Sprocket teaches the factory: how a BroBot gets built, how a site comes together, and how to use every tool in the Creator Rooms. Ask anything.</p>
+   <div class="tutor-panel">
+    <div class="tutor-log" role="log" aria-live="polite" aria-label="Conversation with Professor Sprocket" tabindex="0">
+     <div class="tutor-msg bot">Aloha! I'm Professor Sprocket. Ask me how anything in the factory works, or tap a question below.</div>
+    </div>
+    <div class="tutor-chips">
+     <button class="tutor-chip" type="button" data-q="What is a BroBot?">What is a BroBot?</button>
+     <button class="tutor-chip" type="button" data-q="How does a custom BroBot get built?">How is a BroBot built?</button>
+     <button class="tutor-chip" type="button" data-q="How does a website get built here?">How is a website built?</button>
+     <button class="tutor-chip" type="button" data-q="How do I use the Paste-Up Desk?">Use the Paste-Up Desk</button>
+    </div>
+    <form class="tutor-form" autocomplete="off">
+     <input class="tutor-input" type="text" name="q" maxlength="2000" placeholder="Ask Professor Sprocket..." aria-label="Your question" enterkeyhint="send">
+     <button class="tutor-send" type="submit">Ask</button>
+    </form>
+   </div>
+   <p class="tutor-fine">Professor Sprocket is a robot and can get things wrong. For pricing or a real person, see <a href="services.html">Services</a> or email <a href="mailto:hello@brobots.space">hello@brobots.space</a>.</p>
+   <noscript><p class="tutor-fine">The tutor needs JavaScript. Email hello@brobots.space and a human will help.</p></noscript>
+  </div>
+ </div>
+</section>
 <section class="callout" id="talk">
  <span class="stamp">Open for work</span>
  <h3 class="blk" style="font-size:clamp(2.2rem,10vw,4rem);margin:10px 0 14px">Tell us what you're <span class="grad">building</span></h3>
@@ -165,5 +230,6 @@
  });
 })();
 </script>
+<script src="tutor/tutor.js" defer></script>
 </body>
 </html>
