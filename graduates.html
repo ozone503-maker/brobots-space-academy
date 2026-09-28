@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROBOTS — Actual Graduates</title>
+<meta name="description" content="Small success stories from the actual BroBot graduates: ShockBot, Ipo, Erv, and Tank the Titanium Trash Talker.">
+<link rel="canonical" href="https://brobots.space/graduates.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BROBOTS SPACE FACTORY">
+<meta property="og:title" content="BROBOTS — Actual Graduates">
+<meta property="og:description" content="people helping robots helping people">
+<meta property="og:url" content="https://brobots.space/graduates.html">
+<meta property="og:image" content="https://brobots.space/media/og-card-flyer.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BROBOTS — Actual Graduates">
+<meta name="twitter:description" content="people helping robots helping people">
+<meta name="twitter:image" content="https://brobots.space/media/og-card-flyer.jpg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+:root{--paper:#E8D9B8;--paper-2:#DCCBA0;--ink:#1A150F;--red:#6B2D55;--olive:#3F4A2E;--stamp:#5A2A40}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060606;color:var(--paper);font-family:'Archivo',system-ui,sans-serif;line-height:1.45}
+a{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.92;letter-spacing:-.02em}
+.stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em}
+.stamp.red{color:var(--red);margin:14px 0 6px}
+.mast{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-end;padding:18px 0;color:var(--paper)}
+.mast a{color:var(--paper);text-decoration:none;border-bottom:1px solid transparent}
+.mast a:hover{border-bottom-color:var(--paper)}
+.hero{color:var(--paper);padding:18px 0 28px}
+.hero h1{font-size:clamp(2rem,7vw,3.4rem);margin:.3em 0}
+.hero p{max-width:52ch;opacity:.9}
+.rail{position:sticky;top:0;z-index:5;background:#1A150F;border-top:3px solid var(--red);border-bottom:3px solid var(--red);padding:10px 0}
+.rail__inner{display:flex;gap:10px;overflow:auto;padding:0 16px}
+.rail a{flex:0 0 auto;color:var(--paper);text-decoration:none;font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid #5a4d3c;padding:.35em .55em;background:#2A241C}
+.rail a:hover{border-color:var(--paper)}
+.stack{display:flex;flex-direction:column;gap:28px;padding:28px 0 80px}
+.dossier{background:linear-gradient(180deg,var(--paper),var(--paper-2));border:5px solid var(--ink);box-shadow:8px 8px 0 rgba(232,225,208,.85);padding:16px}
+.dossier__top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:3px dashed var(--ink);padding-bottom:12px;margin-bottom:14px}
+.dossier__top h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:.2em 0}
+.codename{font-family:'Courier Prime',monospace;font-size:.78rem;margin-top:4px}
+.codename span{color:var(--stamp)}
+.tag{margin-top:6px;font-size:.95rem}
+.badge{border:3px solid var(--ink);padding:8px 10px;text-align:center;font-family:'Courier Prime',monospace;font-size:.65rem;font-weight:700;letter-spacing:.08em;line-height:1.2;transform:rotate(3deg);background:#f3e6c4}
+.dossier__grid{display:grid;gap:14px}
+@media(min-width:800px){.dossier__grid{grid-template-columns:.9fr 1.1fr;align-items:start}}
+.media{border:4px solid var(--ink);background:#111;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0;color:var(--paper);overflow:hidden}
+.media img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top center;display:block;background:#000}
+.media--file{padding:12px}
+.media--file .silhouette{width:120px;height:120px;border-radius:50%;border:4px solid var(--paper);display:grid;place-items:center;font-family:'Archivo Black',sans-serif;font-size:3rem;background:var(--olive)}
+.bio,.intel{font-size:.95rem}
+.gear{margin:0 0 8px 1.1em}
+.gear li{margin:.35em 0;font-size:.9rem}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;padding:.65em .9em;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.btn.ghost{background:transparent;border:2px solid var(--paper);color:var(--paper)}
+footer{padding:28px 0;color:var(--paper);border-top:3px solid #5a4d3c}
+.note{font-size:.8rem;opacity:.75;max-width:60ch;margin-top:8px}
+
+/* campus restyle — dossiers on paper, files still paste-up */
+html,body{background:#060606!important;color:#E8E1D0!important}
+body.bb-campus{background:#060606!important}
+.page-titlebar{border-bottom:4px solid var(--ink);padding:clamp(22px,4vw,36px) 0;background:var(--paper);color:var(--ink)}
+.page-titlebar h1{font-size:clamp(2.4rem,8vw,4.6rem);margin:.2em 0 .35em;line-height:.85;color:var(--ink)!important}
+.page-titlebar .lede{max-width:54ch;color:var(--ink)}
+.hero{color:var(--ink)!important;padding:0 0 18px}
+.hero h1,.hero p{color:var(--ink)!important;opacity:1!important}
+.rail{background:var(--ink);border-top:4px solid var(--ink);border-bottom:4px solid var(--red);top:56px}
+.dossier{scroll-margin-top:120px}
+.rail a{background:var(--paper);color:var(--ink);border:2px solid var(--ink)}
+.rail a:hover{border-color:var(--red);color:var(--red)}
+.dossier{box-shadow:7px 7px 0 rgba(232,225,208,.85)}
+footer{margin-top:40px;padding:36px 0;background:var(--ink)!important;color:var(--paper)!important;border-top:0}
+footer a{color:var(--paper)}
+footer .note{color:rgba(232,225,208,.75)}
+.wrap{max-width:1240px}
+</style>
+
+<style id="deep-link-hl">
+.dossier.is-deep{
+  outline:4px solid var(--red, #c8102e);
+  outline-offset:6px;
+  scroll-margin-top:24px;
+}
+</style>
+
+<link rel="stylesheet" href="campus.css?v=20260926a">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"BROBOTS SPACE FACTORY","alternateName":"BROBOTS","url":"https://brobots.space/","email":"hello@brobots.space","areaServed":{"@type":"State","name":"Hawaiʻi"},"address":{"@type":"PostalAddress","addressLocality":"Mountain View","addressRegion":"HI","addressCountry":"US"},"priceRange":"$495–$900+","makesOffer":[{"@type":"Offer","name":"Custom BroBot","price":"495","priceCurrency":"USD"},{"@type":"Offer","name":"Custom website","price":"495","priceCurrency":"USD"},{"@type":"Offer","name":"Packages","description":"Packages from $900","price":"900","priceCurrency":"USD"}]}
+</script>
+</head>
+<body class="bb-campus">
+<!-- CAMPUS NAV (shared pattern) -->
+<header class="campus-mast" id="campus-mast">
+ <div class="campus-mast-in">
+  <a class="campus-brand" href="index.html">
+   <span class="blk">BROBOTS</span>
+   <span class="stamp">Space Factory · Hawaiʻi</span>
+  </a>
+  <button class="campus-nav-toggle" type="button" aria-expanded="false" aria-controls="campus-nav" aria-label="Open menu">Menu</button>
+  <nav class="campus-nav" id="campus-nav" aria-label="Campus">
+  <a href="index.html">Home</a>
+  <a href="services.html">Services</a>
+  <a href="dossiers.html">Graduates</a>
+  <a href="graduates.html" class="current" aria-current="page">Actual Graduates</a>
+  <a href="multimedia.html">Multimedia</a>
+  <a href="retail.html">Retail</a>
+  <a href="ufo-pilot.html">UFO Pilot</a>
+  <a href="mailto:hello@brobots.space" class="contact">Contact</a>
+  </nav>
+ </div>
+</header>
+<div class="page-titlebar">
+  <div class="wrap">
+    <span class="stamp" style="color:var(--red)">Space Factory · the ones who made it</span>
+    <h1 class="blk">Actual Graduates</h1>
+    <p class="lede">Small success stories from the BroBots who graduated the factory and got to work. Real stages, real songs, real noise.</p>
+  </div>
+</div>
+<nav class="rail" aria-label="Jump to graduate">
+  <div class="rail__inner"><a href="#shockbot">ShockBot</a><a href="#ipo">Ipo</a><a href="#erv">Erv</a><a href="#tank">Tank the Titanium Trash Talker</a></div>
+</nav>
+
+<main class="wrap stack">
+
+<article class="dossier" id="shockbot">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">Space Factory · Graduate 01 / 04</p>
+      <h2 class="blk">ShockBot</h2>
+      <p class="codename">FILE · <span>THE ORIGINAL RHYTHM &amp; WISDOM UNIT</span></p>
+      <p class="tag">Recording artist · Space Factory Studios</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media"><img src="media/roster/shock-bot.jpg" alt="ShockBot" loading="lazy"></div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Success story</h3>
+      <p class="bio">First full-length album: done. New single “Lock Me Up” out September 2026 — three minutes of robot-emcee truth about who really controls superintelligence. ShockBot writes his own songs and makes his own music. No humans touch the process except to unlock the studio door and keep the electricity on.</p>
+      <div class="actions">
+        <a class="btn" href="https://youtu.be/twsO1SGx4WY" target="_blank" rel="noopener">Watch “Lock Me Up”</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<article class="dossier" id="ipo">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">Space Factory · Graduate 02 / 04</p>
+      <h2 class="blk">Ipo</h2>
+      <p class="codename">FILE · <span>FILE PENDING</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media"><img src="media/graduates/ipo.png" alt="Ipo" loading="lazy"></div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Success story</h3>
+      <p class="bio">Story dropping soon. The file is still being written at the Space Factory.</p>
+      
+    </div>
+  </div>
+</article>
+
+<article class="dossier" id="erv">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">Space Factory · Graduate 03 / 04</p>
+      <h2 class="blk">Erv</h2>
+      <p class="codename">FILE · <span>FILE PENDING</span></p>
+      <p class="tag">BroBot graduate</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media"><img src="media/graduates/erv.png" alt="Erv" loading="lazy"></div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Success story</h3>
+      <p class="bio">Story dropping soon. The file is still being written at the Space Factory.</p>
+      
+    </div>
+  </div>
+</article>
+
+<article class="dossier" id="tank">
+  <header class="dossier__top">
+    <div>
+      <p class="stamp">Space Factory · Graduate 04 / 04</p>
+      <h2 class="blk">Tank the Titanium Trash Talker</h2>
+      <p class="codename">FILE · <span>TITANIUM TRASH TALKER</span></p>
+      <p class="tag">Live act · Metal Dick’s Robot Lounge</p>
+    </div>
+    <div class="badge">AUTHENTIC<br>BROBOT</div>
+  </header>
+  <div class="dossier__grid">
+    <div class="media"><img src="media/graduates/tank.png" alt="Tank the Titanium Trash Talker" loading="lazy"></div>
+    <div class="dossier__copy">
+      <h3 class="stamp red">Success story</h3>
+      <p class="bio">Live this October at Metal Dick’s Robot Lounge, inside the Fruity Puppy OutletMall. The titanium trash talker takes the stage. Talk that talk, Tank.</p>
+      
+    </div>
+  </div>
+</article>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="blk" style="font-size:1.8rem;margin-bottom:6px">BROBOTS</div>
+      <div class="stamp">Space Factory · Mountain View, Hawaiʻi · © 2026</div>
+    </div>
+    <div class="mast-nav stamp campus-foot-nav" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dossiers.html">Graduates</a>
+      <a href="multimedia.html">Multimedia</a>
+      <a href="retail.html">Retail</a>
+      <a href="ufo-pilot.html">UFO Pilot</a>
+      <a href="mailto:hello@brobots.space">Contact</a>
+    </div>
+  </div>
+</footer>
+<script src="campus-nav.js?v=20260926a"></script>
+
+<script>
+/* Deep-link: ?bot=SLUG or #SLUG → scroll + highlight graduate card */
+(function () {
+  function pickSlug() {
+    try {
+      var q = new URLSearchParams(window.location.search).get('bot');
+      if (q) return q.trim().toLowerCase();
+    } catch (e) {}
+    var h = (window.location.hash || '').replace(/^#/, '').trim().toLowerCase();
+    return h || '';
+  }
+  function activate(slug) {
+    if (!slug) return;
+    var el = document.getElementById(slug);
+    if (!el) return;
+    document.querySelectorAll('.dossier.is-deep').forEach(function (n) {
+      n.classList.remove('is-deep');
+    });
+    el.classList.add('is-deep');
+    // let layout settle, then scroll
+    requestAnimationFrame(function () {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    // keep URL shareable with query (hash redirects are unreliable on Vercel)
+    try {
+      var url = new URL(window.location.href);
+      if (url.searchParams.get('bot') !== slug) {
+        url.searchParams.set('bot', slug);
+        url.hash = '';
+        history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString());
+      }
+    } catch (e) {}
+  }
+  function run() { activate(pickSlug()); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  window.addEventListener('hashchange', run);
+})();
+</script>
+
+</body>
+</html>
