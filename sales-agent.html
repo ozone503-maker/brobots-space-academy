@@ -89,7 +89,10 @@ img{max-width:100%;display:block}
 .offer .tag{position:absolute;top:-11px;left:22px;background:linear-gradient(100deg,var(--blue1),var(--blue2));color:#06101f;font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;border-radius:999px;padding:3px 12px}
 .offer .stamp{color:var(--blue1);margin-bottom:10px;display:block}
 .offer h3{font-size:1.3rem;margin-bottom:4px}
-.offer .price{font-family:'Archivo Black',sans-serif;font-size:2rem;background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent;margin:6px 0 10px}
+.offer .price{font-family:'Archivo Black',sans-serif;font-size:2rem;background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent;margin:2px 0 2px}
+.was-line{font-size:.95rem;color:#8a8a8a;margin-top:8px}
+.was-line s{text-decoration-thickness:2px}
+.per{font-size:.85rem;color:#bdbdbd;margin-bottom:10px}
 .offer p{font-size:.9rem;color:var(--cream);opacity:.88}
 .offer ul{list-style:none;margin-top:12px;font-size:.86rem;color:#bdbdbd}
 .offer li{margin-bottom:6px;padding-left:20px;position:relative}
@@ -177,19 +180,21 @@ img{max-width:100%;display:block}
     <h2 class="blk">Get one for your store</h2>
     <p class="sub">Two ways in. Both come with the human approval step.</p>
     <div class="offer-grid">
-      <div class="offer">
+      <div class="offer hot">
+        <span class="tag">On sale</span>
         <span class="stamp">For existing stores</span>
         <h3>The agent, alone</h3>
-        <div class="price">$3,000</div>
-        <p>Already got a store you love? I build the sales agent for your existing Shopify. No rebuild, no redesign.</p>
+        <div class="was-line"><s>$995</s></div>
+        <div class="price">$495</div>
+        <div class="per">one-time setup, then $99/mo</div>
+        <p>Already got a store you love? I build the sales agent for your existing Shopify. No rebuild, no redesign. It doesn't chat. It closes.</p>
         <ul>
           <li>Trained on your products and your voice</li>
           <li>Closes with real one-tap checkout links</li>
           <li>Works on the store you already have</li>
         </ul>
       </div>
-      <div class="offer hot">
-        <span class="tag">Full build</span>
+      <div class="offer">
         <span class="stamp">Tier 3</span>
         <h3>Site plus agent</h3>
         <div class="price">$4,995</div>
