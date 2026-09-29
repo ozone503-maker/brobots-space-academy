@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROBOTS — Work</title>
+<meta name="description" content="Recent BROBOTS website builds, labeled by tier: a $495 field guide, $2,495 business sites, and the $9,995 build my own company runs on.">
+<link rel="canonical" href="https://brobots.space/work.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BROBOTS SPACE FACTORY">
+<meta property="og:title" content="BROBOTS — Work">
+<meta property="og:description" content="people helping robots helping people">
+<meta property="og:url" content="https://brobots.space/work.html">
+<meta property="og:image" content="https://brobots.space/media/og-card-flyer.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BROBOTS — Work">
+<meta name="twitter:description" content="people helping robots helping people">
+<meta name="twitter:image" content="https://brobots.space/media/og-card-flyer.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+:root{
+  --paper:#E8E1D0; --paper-2:#DFD6C1; --ink:#14140F; --red:#6B2D55;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060606;color:var(--paper);font-family:'Archivo',system-ui,sans-serif;line-height:1.5}
+a{color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.9;letter-spacing:-.02em}
+.stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em}
+.mono{font-family:'Courier Prime',monospace}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:22px 0;border-bottom:4px solid var(--paper);flex-wrap:wrap}
+.mast-nav{display:flex;gap:16px;flex-wrap:wrap}
+.mast-nav a{text-decoration:none;border-bottom:1px solid transparent}
+.mast-nav a:hover{border-bottom-color:var(--paper)}
+.mast-nav a.current{border-bottom-color:var(--red);color:var(--red)}
+.hero{margin:28px 0 40px;padding:clamp(22px,4vw,40px);border:4px solid var(--ink);background:var(--paper-2);color:var(--ink)}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);margin:.35em 0 .5em}
+.hero p{max-width:54ch;margin-bottom:1em}
+.btn{display:inline-block;background:var(--red);color:var(--paper);text-decoration:none;padding:.85em 1.15em;font-family:'Courier Prime',monospace;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;border:0;text-align:center}
+.btn:hover{filter:brightness(.92)}
+.btn-plain{background:transparent;color:var(--ink);border:3px solid var(--ink)}
+.lede{max-width:62ch;margin:12px 0 0}
+.sec{margin:48px 0}
+.sec__head{margin-bottom:18px}
+.sec__head h2{font-size:clamp(1.6rem,4vw,2.6rem);margin:.35em 0 .4em}
+.grid{display:grid;gap:14px;margin:18px 0}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr 1fr}}
+@media(min-width:700px){.grid.rooms{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.grid.rooms{grid-template-columns:1fr 1fr 1fr}}
+.bay{border:4px solid var(--ink);background:var(--paper-2);color:var(--ink);display:flex;flex-direction:column;padding:18px}
+.bay.hot{background:rgba(184,50,30,.08)}
+.bay h3{font-size:1.2rem;margin:.35em 0 .3em}
+.bay p{font-size:.92rem;margin-bottom:.7em}
+.price{font-size:clamp(1.6rem,3vw,2.2rem);margin:6px 0 4px}
+.deposit{font-size:.85rem;margin-bottom:10px;color:#444}
+.offer-list{list-style:none;margin:8px 0 16px;padding:0;flex:1}
+.offer-list li{font-size:.88rem;padding:.35em 0;padding-left:1.1em;position:relative;border-bottom:1px solid rgba(20,20,15,.12)}
+.offer-list li:last-child{border-bottom:0}
+.offer-list li:before{content:"•";position:absolute;left:0;color:var(--red);font-weight:700}
+.tag{display:inline-block;background:var(--ink);color:var(--paper);padding:.2em .5em;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;font-family:'Courier Prime',monospace}
+.tag.proposed{background:transparent;color:var(--red);border:2px solid var(--red)}
+.tag.live{background:var(--ink);color:var(--paper)}
+.tag.beta{background:var(--red);color:#fff}
+.cta-band{margin:48px 0;padding:clamp(22px,4vw,36px);border:4px solid var(--ink);background:var(--ink);color:var(--paper);text-align:center}
+.cta-band h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:.35em 0 .5em}
+.cta-band p{max-width:52ch;margin:0 auto 1.2em;opacity:.9}
+.cta-band .btn{background:var(--red);color:#fff}
+.note{margin-top:18px;padding:16px 18px;border:3px dashed var(--ink);background:var(--paper);color:var(--ink)}
+.note a{color:var(--red);font-family:'Courier Prime',monospace;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-bottom:2px solid var(--red)}
+footer{margin-top:56px;padding:36px 0;background:var(--ink);color:var(--paper)}
+footer a{color:var(--paper)}
+.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+
+/* campus restyle — match homepage paste-up language */
+html{background:#060606}
+body.bb-campus{background:#060606;color:var(--paper)}
+body.bb-campus::before{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.page-titlebar{border-bottom:4px solid var(--ink);padding:clamp(22px,4vw,36px) 0;background:var(--paper);color:var(--ink)}
+.page-titlebar .wrap{max-width:1240px}
+.page-titlebar h1{font-size:clamp(2.4rem,8vw,4.6rem);margin:.2em 0 .35em;line-height:.85}
+.page-titlebar .lede{max-width:54ch;font-size:1.05rem}
+.bay,.station,.chip,.pricing,.hero,.cta-band,.panel,.note,.mall,.tier,.dossier{
+  box-shadow:6px 6px 0 var(--ink);
+}
+.btn{
+  font-family:'Archivo Black',Impact,sans-serif!important;
+  letter-spacing:.01em!important;
+  border:2px solid var(--ink)!important;
+  box-shadow:5px 5px 0 var(--ink);
+  transition:transform .1s linear,box-shadow .1s linear;
+}
+.btn:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink);filter:none}
+.btn-plain{background:var(--paper)!important;color:var(--ink)!important}
+.wrap{max-width:1240px}
+footer{margin-top:56px;padding:36px 0;background:var(--ink);color:var(--paper)}
+footer a{color:var(--paper);text-decoration:none;border-bottom:1px solid transparent}
+footer a:hover{border-bottom-color:var(--paper)}
+.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+/* every-build facts + Site Editor add-on */
+.grid.facts{margin-top:4px}
+@media(min-width:700px){.grid.facts{grid-template-columns:1.35fr 1fr}}
+.bay.fact .stamp{display:block;font-size:.66rem;letter-spacing:.14em}
+.bay .fine{font-size:.8rem;margin-top:auto;margin-bottom:0}
+.bay.addon{margin:4px 0 18px;gap:6px}
+.bay.addon .addon-id .tag{display:inline-block}
+.bay.addon ol.steps{list-style:none;counter-reset:step;margin:0 0 14px;padding:0}
+.bay.addon ol.steps li{counter-increment:step}
+.bay.addon ol.steps li{padding-left:2.1em}
+.bay.addon ol.steps li:before{content:counter(step,decimal-leading-zero);font-family:'Courier Prime',monospace;font-weight:700;font-size:.8rem;top:.5em}
+.bay.fact h3{margin:.55em 0 .5em}
+.bay.fact p:not(.fine){margin-bottom:1em}
+@media(min-width:900px){
+  .bay.addon{display:grid;grid-template-columns:minmax(230px,1fr) 1.5fr minmax(200px,.9fr);gap:28px;align-items:start}
+  .bay.addon .addon-copy{padding-top:28px}
+  .bay.addon .addon-act{padding-top:28px}
+}
+
+/* ---- futuristic carousel: theme colors kept exactly ---- */
+.carousel{position:relative;margin:26px 0 10px;outline:none}
+.carousel:focus-visible{outline:2px solid var(--hurricane-cyan);outline-offset:4px}
+.grid.carousel-stage{
+  grid-template-columns:1fr;margin:0;position:relative;overflow:hidden;
+  background:#0b0d10;border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  padding:clamp(20px,4vw,40px) clamp(14px,3vw,28px);
+}
+.carousel-slide{
+  grid-area:1/1;display:flex;justify-content:center;align-items:stretch;
+  opacity:0;transform:translateX(56px) scale(.985);
+  transition:opacity .55s ease,transform .55s cubic-bezier(.22,.9,.28,1);
+  pointer-events:none;visibility:hidden;
+}
+.carousel[data-dir="prev"] .carousel-slide{transform:translateX(-56px) scale(.985)}
+.carousel-slide.active{opacity:1;transform:none;pointer-events:auto;visibility:visible}
+.carousel-slide .bay{width:min(680px,100%);margin:0}
+.carousel-watermark{
+  position:absolute;top:2px;right:14px;z-index:0;pointer-events:none;user-select:none;
+  font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(4rem,12vw,7.5rem);line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(232,225,208,.22);
+}
+.carousel-ui{display:flex;align-items:center;gap:14px;margin-top:16px}
+.carousel-arrow{
+  flex:0 0 auto;width:54px;height:54px;border-radius:50%;
+  border:2px solid var(--paper);background:transparent;color:var(--paper);
+  font-family:'Archivo Black',Impact,sans-serif;font-size:1.25rem;line-height:1;cursor:pointer;
+  transition:background .2s,border-color .2s,color .2s,transform .15s;
+}
+.carousel-arrow:hover{background:var(--red);border-color:var(--red);color:#fff}
+.carousel-arrow:active{transform:scale(.94)}
+.carousel-dots{display:flex;gap:10px;flex:1;justify-content:center;align-items:center}
+.carousel-dot{
+  width:12px;height:12px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--paper);background:transparent;transition:all .25s;
+}
+.carousel-dot:hover{border-color:var(--hurricane-cyan)}
+.carousel-dot.active{background:var(--hurricane-cyan);border-color:var(--hurricane-cyan);width:36px;border-radius:7px}
+.carousel-count{
+  flex:0 0 auto;font-family:'Courier Prime',monospace;font-size:.82rem;font-weight:700;
+  letter-spacing:.16em;color:var(--paper);white-space:nowrap;
+}
+.carousel-progress{height:3px;background:rgba(232,225,208,.14);margin-top:14px;overflow:hidden}
+.carousel-progress i{display:block;height:100%;width:0;background:var(--hurricane);transition:width .5s ease}
+@media (prefers-reduced-motion:reduce){
+  .carousel-slide{transition:none}
+  .carousel-progress i{transition:none}
+}
+
+/* ---- image breaks: robots with text overlays ---- */
+.img-break{position:relative;margin:60px 0;overflow:hidden;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
+.img-break img{display:block;width:100%;height:clamp(240px,40vw,400px);object-fit:cover}
+.img-break figcaption{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:clamp(20px,4vw,40px) clamp(18px,4vw,36px);
+  background:linear-gradient(to top,rgba(6,6,6,.9) 15%,rgba(6,6,6,.35) 60%,transparent);
+}
+.img-break .stamp{display:block;color:#e8a090;margin-bottom:10px}
+.img-break .blk{color:var(--paper);font-size:clamp(1.5rem,4.5vw,2.6rem);max-width:22ch}
+</style>
+<link rel="stylesheet" href="campus.css?v=20260926a">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"BROBOTS SPACE FACTORY","alternateName":"BROBOTS","url":"https://brobots.space/","email":"hello@brobots.space","areaServed":{"@type":"State","name":"Hawaiʻi"},"address":{"@type":"PostalAddress","addressLocality":"Mountain View","addressRegion":"HI","addressCountry":"US"},"priceRange":"$495–$4,995","makesOffer":[{"@type":"Offer","name":"Custom BroBot","price":"495","priceCurrency":"USD"},{"@type":"Offer","name":"Custom website","price":"495","priceCurrency":"USD"},{"@type":"Offer","name":"Website Tier 1","price":"495","priceCurrency":"USD"},{"@type":"Offer","name":"Website Tier 2","price":"2495","priceCurrency":"USD"},{"@type":"Offer","name":"Website Tier 3","price":"4995","priceCurrency":"USD"}]}
+</script>
+</head>
+<body class="bb-campus svc">
+<header class="campus-mast" id="campus-mast">
+ <div class="campus-mast-in">
+  <a class="campus-brand" href="index.html">
+   <span class="blk">BROBOTS</span>
+   <span class="stamp">Space Factory · Hawaiʻi</span>
+  </a>
+  <button class="campus-nav-toggle" type="button" aria-expanded="false" aria-controls="campus-nav" aria-label="Open menu">Menu</button>
+  <nav class="campus-nav" id="campus-nav" aria-label="Campus">
+  <a href="index.html">Home</a>
+  <a href="services.html">Services</a>
+  <a href="work.html" class="current" aria-current="page">Work</a>
+  <a href="dossiers.html">Graduates</a>
+  <a href="multimedia.html">Multimedia</a>
+  <a href="retail.html">Retail</a>
+  <a href="ufo-pilot.html">UFO Pilot</a>
+  <a href="mailto:hello@brobots.space" class="contact">Contact</a>
+  </nav>
+ </div>
+</header>
+
+<div class="page-titlebar">
+  <div class="wrap">
+    <span class="stamp" style="color:var(--red)">Proof · Space Factory</span>
+    <h1 class="blk">Work</h1>
+    <p class="lede">Real sites for real businesses. Every one labeled with the tier that built it, so you know exactly what your money buys.</p>
+  </div>
+</div>
+<main class="wrap">
+  <section class="sec">
+    <div class="grid">
+      <article class="bay">
+        <span class="tag live">Tier 1 · $495</span>
+        <h3 class="blk">Peter Herres — Field Guide</h3>
+        <p>A field guide for a Pacific Northwest rockhound and lapidary artist. Stone, water, time, and whatever looked interesting enough to carry home.</p>
+        <ul class="offer-list">
+          <li>Built free for a friend as a showcase</li>
+          <li>This is what $495 buys</li>
+        </ul>
+        <a class="btn btn-plain" href="https://peter-herres-field-guide-ozone503-6682.vercel.app/" target="_blank" rel="noopener">Visit site</a>
+      </article>
+      <article class="bay">
+        <span class="tag live">Tier 2 · $2,495</span>
+        <h3 class="blk">Aura About You</h3>
+        <p>The business site of Shana Madsen, Portland healing-arts practitioner. Aura photography, Reiki, hypnosis, energy clearing.</p>
+        <ul class="offer-list">
+          <li>Services, pricing, bio, testimonials</li>
+          <li>Private events + a journal that answers the exact questions clients ask</li>
+        </ul>
+        <a class="btn btn-plain" href="https://aura-about-you.vercel.app/" target="_blank" rel="noopener">Visit site</a>
+      </article>
+      <article class="bay">
+        <span class="tag live">Tier 2 · $2,495</span>
+        <h3 class="blk">EcoWell Oil &amp; Gas</h3>
+        <p>Investor-facing site for a West Texas oil field restoration in the Permian Basin. 2,800+ acres, 110 wells, one disciplined plan.</p>
+        <ul class="offer-list">
+          <li>News articles that frame the pitch</li>
+          <li>Copy that does the selling: &ldquo;This is not a bet on finding oil.&rdquo;</li>
+        </ul>
+        <a class="btn btn-plain" href="https://share.google/iDcs3YjkXcl5ockDj" target="_blank" rel="noopener">Visit site</a>
+      </article>
+    </div>
+    <div class="grid" style="margin-top:14px">
+      <article class="bay hot" style="grid-column:1/-1">
+        <span class="tag live">Tier 4 · $9,995 · My own company</span>
+        <h3 class="blk">Fruity Puppy</h3>
+        <p>Fresh biological skincare from the Big Island, co-founded with Ryan McKenzie. The whole business runs on this site.</p>
+        <ul class="offer-list">
+          <li>I run my own company on a $10k build. Enough said.</li>
+        </ul>
+        <a class="btn btn-plain" href="https://fruitypuppy.com" target="_blank" rel="noopener">Visit site</a>
+      </article>
+    </div>
+  </section>
+  <section class="cta-band">
+    <span class="stamp">Your turn</span>
+    <h2 class="blk">Your site could be the fifth.</h2>
+    <p>Four tiers, locked prices. Pick the one that fits and we start.</p>
+    <a class="btn" href="services.html#builds">See the tiers</a>
+  </section>
+</main>
+
+<footer>
+
+  <div class="wrap foot">
+    <div>
+      <div class="blk" style="font-size:1.8rem;margin-bottom:6px">BROBOTS</div>
+      <div class="stamp">Space Factory · Mountain View, Hawaiʻi · © 2026</div>
+    </div>
+    <div class="mast-nav stamp campus-foot-nav" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dossiers.html">Graduates</a>
+      <a href="multimedia.html">Multimedia</a>
+      <a href="retail.html">Retail</a>
+      <a href="ufo-pilot.html">UFO Pilot</a>
+      <a href="mailto:hello@brobots.space">Contact</a>
+    </div>
+  </div>
+</footer>
+<script src="campus-nav.js?v=20260926a"></script>
+
+</body>
+</html>
