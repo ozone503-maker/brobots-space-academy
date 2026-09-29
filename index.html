@@ -27,7 +27,7 @@
 </script>
 <link rel="stylesheet" href="campus.css?v=20260926a">
 <link rel="stylesheet" href="circular.css?v=20260926a">
-<link rel="stylesheet" href="tutor/tutor.css?v=6">
+<link rel="stylesheet" href="tutor/tutor.css">
 </head>
 <body class="factory">
 <header class="campus-mast" id="campus-mast">
@@ -123,15 +123,43 @@
  </picture></a>
 </figure>
 <section class="sec tutor" id="tutor" aria-labelledby="tutor-h">
- <div class="tutor-wrap tutor-wrap-hero">
+ <div class="tutor-wrap">
+  <div class="tutor-stage">
+   <figure class="tutor-bot" data-state="idle" aria-hidden="true">
+    <svg viewBox="0 0 240 240" focusable="false">
+     <g class="head">
+      <rect class="ink fill-yellow" x="62" y="34" width="116" height="182" rx="20"/>
+      <path class="shine" d="M80 52 Q80 44 90 44 L104 44"/>
+      <rect class="ink-thin" x="78" y="52" width="84" height="34" rx="6"/>
+      <rect class="fill-card" x="78" y="52" width="84" height="34" rx="6"/>
+      <g class="eyes">
+       <text class="pupils led" x="120" y="76" text-anchor="middle">3 x 6 =</text>
+      </g>
+      <rect class="bulb fill-green" x="78" y="94" width="84" height="10" rx="5"/>
+      <rect class="ink-thin" x="78" y="94" width="84" height="10" rx="5"/>
+      <g class="mouth keys">
+       <rect class="fill-card" x="78" y="114" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="108" y="114" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="138" y="114" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="78" y="142" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="108" y="142" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="138" y="142" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="78" y="170" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="108" y="170" width="24" height="20" rx="5"/>
+       <rect class="fill-card" x="138" y="170" width="24" height="20" rx="5"/>
+      </g>
+      <text class="brand" x="120" y="206" text-anchor="middle">LITTLE PROFESSOR</text>
+     </g>
+    </svg>
+   </figure>
+   <p class="tutor-name">Professor</p>
+   <p class="tutor-status" id="tutor-status">Ready</p>
+  </div>
+  <div class="tutor-main">
    <span class="tutor-eyebrow">Class is in session</span>
    <h3 id="tutor-h">Ask the <span class="tutor-grad">Professor</span></h3>
    <p class="tutor-intro">The Professor teaches the factory: how a BroBot gets built, how a site comes together, and how to use every tool in the Creator Rooms. Ask anything.</p>
-   <div class="tutor-hero">
-    <img class="tutor-hero-photo" src="media/little-professor-hero.jpg" alt="The original 1976 Texas Instruments Little Professor">
-    <p class="tutor-status tutor-status-hero" id="tutor-status">Ready</p>
-    <div class="tutor-panel">
-
+   <div class="tutor-panel">
     <div class="tutor-log" role="log" aria-live="polite" aria-label="Conversation with the Professor" tabindex="0">
      <div class="tutor-msg bot">Aloha! I'm the Professor. Ask me how anything in the factory works, or tap a question below.</div>
     </div>
@@ -143,15 +171,12 @@
     </div>
     <form class="tutor-form" autocomplete="off">
      <input class="tutor-input" type="text" name="q" maxlength="2000" placeholder="Ask the Professor..." aria-label="Your question" enterkeyhint="send">
-     <button class="tutor-mic" type="button" aria-label="Speak your question" aria-pressed="false" title="Speak your question" hidden>
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17.5" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="8.5" y1="21" x2="15.5" y2="21" stroke="currentColor" stroke-width="2"/></svg>
-     </button>
      <button class="tutor-send" type="submit">Ask</button>
     </form>
    </div>
    <p class="tutor-fine">The Professor is a robot and can get things wrong. For pricing or a real person, see <a href="services.html">Services</a> or email <a href="mailto:hello@brobots.space">hello@brobots.space</a>.</p>
    <noscript><p class="tutor-fine">The tutor needs JavaScript. Email hello@brobots.space and a human will help.</p></noscript>
-   </div>
+  </div>
  </div>
 </section>
 <section class="callout" id="talk">
@@ -198,6 +223,6 @@
  });
 })();
 </script>
-<script src="tutor/tutor.js?v=4" defer></script>
+<script src="tutor/tutor.js" defer></script>
 </body>
 </html>
