@@ -3,38 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BROBOTS — Sales Agent Demo</title>
-<meta name="description" content="Talk to a real BROBOTS sales agent selling real Fruity Puppy cream, and watch it walk you to checkout. This is the Tier 3 product, live.">
+<title>BROBOTS — The Closer: an AI sales agent that closes</title>
+<meta name="description" content="Shopify now lets AI agents complete checkout. Meet the Closer: a real BROBOTS sales agent selling real Fruity Puppy cream right now. It doesn't just chat. It closes.">
 <link rel="canonical" href="https://brobots.space/sales-agent.html">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BROBOTS SPACE FACTORY">
-<meta property="og:title" content="BROBOTS — Sales Agent Demo">
-<meta property="og:description" content="A real sales agent, selling real cream, walking you to checkout. This is the Tier 3 product.">
+<meta property="og:title" content="BROBOTS — The Closer: an AI sales agent that closes">
+<meta property="og:description" content="A real sales agent, selling real cream, walking customers to checkout. Built by BROBOTS.">
 <meta property="og:url" content="https://brobots.space/sales-agent.html">
+<meta property="og:image" content="https://brobots.space/media/sales-agent/fp-cream.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
-:root{--paper:#E8E1D0;--ink:#14140F;--blue1:#7FB2FF;--blue2:#3E7BFA;--cream:#F5EDD8}
+:root{--paper:#E8E1D0;--ink:#14140F;--blue1:#7FB2FF;--blue2:#3E7BFA;--cream:#F5EDD8;--green:#57e389}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#060606;color:var(--paper);font-family:'Archivo',system-ui,sans-serif;line-height:1.55}
 a{color:inherit}
+img{max-width:100%;display:block}
 .wrap{max-width:880px;margin:0 auto;padding:0 22px}
 .blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.95;letter-spacing:-.02em}
 .stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em}
+.grad{background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:22px 0;border-bottom:4px solid var(--paper);flex-wrap:wrap}
 .mast .wordmark{font-size:1.5rem}
 .mast-nav{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem}
 .mast-nav a{text-decoration:none;border-bottom:1px solid transparent}
 .mast-nav a:hover{border-bottom-color:var(--paper)}
-.hero{padding:56px 0 30px;text-align:center}
+.hero{padding:56px 0 10px;text-align:center}
 .eyebrow{display:inline-block;border:1px solid var(--blue1);color:var(--blue1);border-radius:999px;padding:6px 16px;margin-bottom:18px}
 .hero h1{font-size:clamp(2.4rem,7vw,4.2rem);background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px}
-.hero p{color:var(--cream);max-width:620px;margin:0 auto;opacity:.92}
+.hero p{color:var(--cream);max-width:640px;margin:0 auto;opacity:.92}
+.hero .news{margin-top:16px;font-size:.85rem;color:#bdbdbd;max-width:600px;margin-left:auto;margin-right:auto}
+.hero .news strong{color:var(--paper)}
 /* chat panel */
 .agent{margin:26px 0 10px;border:1px solid #2a2a2a;border-radius:14px;background:#0c0c0e;overflow:hidden}
 .agent-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #222;background:#101014}
-.agent-dot{width:11px;height:11px;border-radius:50%;background:#57e389;box-shadow:0 0 10px #57e389}
+.agent-dot{width:11px;height:11px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
 .agent-head .who{font-weight:700}
 .agent-status{margin-left:auto;font-family:'Courier Prime',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a}
 .agent-log{height:380px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
@@ -51,6 +56,18 @@ a{color:inherit}
 .agent-input:focus{outline:none;border-color:var(--blue1)}
 .agent-send{background:linear-gradient(100deg,var(--blue1),var(--blue2));border:none;color:#06101f;font-weight:700;border-radius:10px;padding:12px 22px;font-size:.95rem;cursor:pointer;font-family:inherit}
 .agent-send:disabled{opacity:.45;cursor:default}
+/* shelf */
+.shelf{padding:34px 0 8px}
+.shelf h2{font-size:1.5rem;margin-bottom:6px;text-align:center}
+.shelf .sub{text-align:center;font-size:.9rem;color:#bdbdbd;margin-bottom:20px}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.product{border:1px solid #26262e;border-radius:12px;padding:18px;background:#0c0c0e;text-align:center}
+.product img{width:150px;height:150px;object-fit:contain;margin:0 auto 12px}
+.product h3{font-size:1rem;margin-bottom:4px}
+.product .price{font-family:'Archivo Black',sans-serif;font-size:1.25rem;background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.product .was{font-size:.8rem;color:#8a8a8a;text-decoration:line-through;margin-left:6px}
+.product .stock{display:inline-block;margin-top:8px;font-family:'Courier Prime',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--green);border:1px solid var(--green);border-radius:999px;padding:4px 12px}
+@media(max-width:640px){.products{grid-template-columns:1fr}.agent-log{height:320px}}
 /* how it works */
 .how{padding:34px 0}
 .how h2{font-size:1.5rem;margin-bottom:18px;text-align:center}
@@ -59,10 +76,26 @@ a{color:inherit}
 .step .n{font-family:'Archivo Black',sans-serif;font-size:1.6rem;background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .step h3{font-size:1rem;margin:8px 0 6px}
 .step p{font-size:.88rem;color:var(--cream);opacity:.85}
-@media(max-width:640px){.steps{grid-template-columns:1fr}.agent-log{height:320px}}
+@media(max-width:640px){.steps{grid-template-columns:1fr}}
 .fine{border-top:1px solid #222;margin-top:10px;padding:22px 0;color:#bdbdbd;font-size:.88rem}
 .fine strong{color:var(--paper)}
-.cta{padding:26px 0 60px;text-align:center}
+/* offers */
+.offers{padding:20px 0 10px}
+.offers h2{font-size:1.5rem;margin-bottom:6px;text-align:center}
+.offers .sub{text-align:center;font-size:.9rem;color:#bdbdbd;margin-bottom:20px}
+.offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.offer{border:1px solid #26262e;border-radius:14px;padding:26px 22px;background:#0c0c0e;position:relative}
+.offer.hot{border-color:var(--blue1)}
+.offer .tag{position:absolute;top:-11px;left:22px;background:linear-gradient(100deg,var(--blue1),var(--blue2));color:#06101f;font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;border-radius:999px;padding:3px 12px}
+.offer .stamp{color:var(--blue1);margin-bottom:10px;display:block}
+.offer h3{font-size:1.3rem;margin-bottom:4px}
+.offer .price{font-family:'Archivo Black',sans-serif;font-size:2rem;background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent;margin:6px 0 10px}
+.offer p{font-size:.9rem;color:var(--cream);opacity:.88}
+.offer ul{list-style:none;margin-top:12px;font-size:.86rem;color:#bdbdbd}
+.offer li{margin-bottom:6px;padding-left:20px;position:relative}
+.offer li:before{content:"\2713";position:absolute;left:0;color:var(--green);font-weight:700}
+@media(max-width:640px){.offer-grid{grid-template-columns:1fr}}
+.cta{padding:30px 0 60px;text-align:center}
 .cta .btn{display:inline-block;background:linear-gradient(100deg,var(--blue1),var(--blue2));color:#06101f;font-weight:700;text-decoration:none;border-radius:12px;padding:15px 34px;font-size:1.05rem}
 .cta p{margin-top:14px;font-size:.9rem;color:#bdbdbd}
 .foot{border-top:1px solid #222;padding:20px 0 34px;font-size:.78rem;color:#8a8a8a;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
@@ -81,9 +114,10 @@ a{color:inherit}
   </header>
 
   <section class="hero">
-    <span class="eyebrow stamp">Live demo</span>
-    <h1 class="blk">Meet the Closer</h1>
-    <p>A real sales agent built by BROBOTS, selling real Fruity Puppy cream right now. Ask it about your skin. When you're ready, watch it walk you to checkout.</p>
+    <span class="eyebrow stamp">Shopify news &middot; Sep 28, 2026</span>
+    <h1 class="blk">Your store just learned to close</h1>
+    <p>Yesterday Shopify gave browser-based AI agents the tools to complete checkout. No scraping. Shop Pay included. So I built the Closer: a real sales agent selling real Fruity Puppy cream right now. It doesn't just chat. It closes.</p>
+    <p class="news"><strong>Why this matters:</strong> your Shopify store is already compatible. No install, no new API, no config. The agent your shoppers bring, or the one I build you, can walk a customer from first question to completed order.</p>
   </section>
 
   <div class="agent" id="agent">
@@ -107,22 +141,71 @@ a{color:inherit}
     </form>
   </div>
 
+  <section class="shelf">
+    <h2 class="blk">On the shelf right now</h2>
+    <p class="sub">This isn't a mockup. These are the real products, real prices, real checkout links.</p>
+    <div class="products">
+      <div class="product">
+        <img src="media/sales-agent/fp-cream.png" alt="Fruity Puppy Skin Cream jar" loading="lazy">
+        <h3>Fruity Puppy Skin Cream</h3>
+        <div class="price">$59.99</div>
+        <div><span class="stock">In stock</span></div>
+      </div>
+      <div class="product">
+        <img src="media/sales-agent/face-juice.png" alt="Thorny Toad Face Juice bottle" loading="lazy">
+        <h3>Thorny Toad Face Juice</h3>
+        <div class="price">$29.99<span class="was">$35</span></div>
+        <div><span class="stock">In stock</span></div>
+      </div>
+    </div>
+  </section>
+
   <section class="how">
     <h2 class="blk">How it works</h2>
     <div class="steps">
-      <div class="step"><div class="n">01</div><h3>You talk</h3><p>The agent learns what your skin needs and recommends the right product. No forms, no menus.</p></div>
-      <div class="step"><div class="n">02</div><h3>It builds your cart</h3><p>When you say yes, the agent assembles your order and hands you a one-tap checkout link.</p></div>
-      <div class="step"><div class="n">03</div><h3>You approve and pay</h3><p>The link opens the real Shopify checkout. You review and pay. The agent never charges you itself.</p></div>
+      <div class="step"><div class="n">01</div><h3>You talk</h3><p>The agent learns what the shopper needs and recommends the right product. No forms, no menus.</p></div>
+      <div class="step"><div class="n">02</div><h3>It builds the cart</h3><p>When the shopper says yes, the agent assembles the order and hands over a one-tap checkout link.</p></div>
+      <div class="step"><div class="n">03</div><h3>They approve and pay</h3><p>The link opens the real Shopify checkout. The shopper reviews and pays. The agent never charges anyone itself.</p></div>
     </div>
   </section>
 
   <div class="fine">
-    <p><strong>Straight talk:</strong> this demo chats with you and hands you a one-tap link to the real Shopify checkout, where you approve and pay. With Shopify's new agent checkout, AI agents shoppers bring themselves can now complete checkout on any Shopify store the same way. This agent is the Tier 3 product: a custom AI agent built for one of your real workflows. On Shopify, it doesn't just chat — it closes.</p>
+    <p><strong>Straight talk:</strong> this demo chats with you and hands you a one-tap link to the real Shopify checkout, where you approve and pay. With Shopify's new agent checkout, AI agents shoppers bring themselves can now complete checkout on any Shopify store the same way. The agent always stops at the register. The human always pays.</p>
   </div>
+
+  <section class="offers">
+    <h2 class="blk">Get one for your store</h2>
+    <p class="sub">Two ways in. Both come with the human approval step.</p>
+    <div class="offer-grid">
+      <div class="offer">
+        <span class="stamp">For existing stores</span>
+        <h3>The agent, alone</h3>
+        <div class="price">$3,000</div>
+        <p>Already got a store you love? I build the sales agent for your existing Shopify. No rebuild, no redesign.</p>
+        <ul>
+          <li>Trained on your products and your voice</li>
+          <li>Closes with real one-tap checkout links</li>
+          <li>Works on the store you already have</li>
+        </ul>
+      </div>
+      <div class="offer hot">
+        <span class="tag">Full build</span>
+        <span class="stamp">Tier 3</span>
+        <h3>Site plus agent</h3>
+        <div class="price">$4,995</div>
+        <p>Everything in Tier 2, plus a custom AI agent built for one of your real workflows. The site works while you sleep.</p>
+        <ul>
+          <li>Complete BROBOTS site, bots and media</li>
+          <li>Custom sales agent that closes</li>
+          <li>DIY agent access included</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <section class="cta">
     <a class="btn" href="services.html#builds">Want one for your store?</a>
-    <p>Custom AI agent, one workflow, $4,995. Human approval step included.</p>
+    <p>DM me and tell me about your store. I'll tell you which one fits.</p>
   </section>
 
   <footer class="foot">
