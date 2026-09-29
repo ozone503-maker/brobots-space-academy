@@ -35,10 +35,28 @@
     return el;
   }
 
+  // Escape HTML, then turn bare https:// URLs into tappable links.
+  // Site links stay in this tab; anything else opens a new one.
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function linkify(text) {
+    return escapeHtml(text).replace(/(https?:\/\/[^\s<]+)/g, function (url) {
+      var clean = url, trail = "";
+      var m = clean.match(/[.,;:!?)]+$/);
+      if (m) { trail = m[0]; clean = clean.slice(0, -trail.length); }
+      if (!clean) return url;
+      var external = clean.indexOf("brobots.space") === -1;
+      var attrs = external ? ' target="_blank" rel="noopener"' : "";
+      return '<a href="' + clean + '"' + attrs + ">" + clean + "</a>" + trail;
+    });
+  }
+
   // Reveal a reply a few characters at a time while the mouth moves.
   function speak(el, text) {
     if (reduce) {
-      el.textContent = text;
+      el.innerHTML = linkify(text);
       log.scrollTop = log.scrollHeight;
       setState("idle");
       return;
@@ -51,7 +69,7 @@
       clearInterval(revealTimer);
       revealTimer = null;
       finishReveal = null;
-      el.textContent = text;
+      el.innerHTML = linkify(text);
       log.scrollTop = log.scrollHeight;
       setState("idle");
     };
