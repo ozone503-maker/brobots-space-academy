@@ -133,6 +133,8 @@
 .tutor-msg.bot{align-self:flex-start;border-left:4px solid var(--t-green);color:var(--t-body)}
 .tutor-msg.you{align-self:flex-end;color:var(--t-white);background:#14181d}
 .tutor-msg.note{align-self:flex-start;border-style:dashed;color:var(--t-silver);font-size:.92em}
+.tutor-msg.bot a{color:var(--t-green-hi);text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+.tutor-msg.bot a:hover{color:var(--t-white)}
 .tutor-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 12px}
 .tutor-chip{
   appearance:none;cursor:pointer;
