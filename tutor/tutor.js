@@ -57,8 +57,8 @@
   var finishReveal = null;
 
   function setState(s) {
-    bot.setAttribute("data-state", s);
-    status.textContent = STATUS[s] || "";
+    if (bot) bot.setAttribute("data-state", s);
+    if (status) status.textContent = STATUS[s] || "";
   }
 
   function addMsg(kind, text) {
