@@ -133,8 +133,6 @@
 .tutor-msg.bot{align-self:flex-start;border-left:4px solid var(--t-green);color:var(--t-body)}
 .tutor-msg.you{align-self:flex-end;color:var(--t-white);background:#14181d}
 .tutor-msg.note{align-self:flex-start;border-style:dashed;color:var(--t-silver);font-size:.92em}
-.tutor-msg.bot a{color:var(--t-green-hi);text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
-.tutor-msg.bot a:hover{color:var(--t-white)}
 .tutor-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 12px}
 .tutor-chip{
   appearance:none;cursor:pointer;
@@ -161,17 +159,6 @@
 }
 .tutor-send:hover{background:var(--t-white)}
 .tutor-send[disabled],.tutor-input[disabled]{opacity:.55;cursor:not-allowed}
-.tutor-mic{
-  appearance:none;cursor:pointer;flex:0 0 auto;min-height:48px;width:52px;
-  display:flex;align-items:center;justify-content:center;
-  background:transparent;color:var(--t-body);
-  border:2px solid var(--t-body);border-radius:0;
-}
-.tutor-mic[hidden]{display:none}
-.tutor-mic:hover{background:var(--t-body);color:#14140F}
-.tutor-mic.recording{background:#B8321E;border-color:#B8321E;color:#fff;animation:micpulse 1.2s ease-out infinite}
-@keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(184,50,30,.5)}70%{box-shadow:0 0 0 10px rgba(184,50,30,0)}100%{box-shadow:0 0 0 0 rgba(184,50,30,0)}}
-@media (prefers-reduced-motion:reduce){.tutor-mic.recording{animation:none}}
 .tutor a:focus-visible,.tutor button:focus-visible,.tutor input:focus-visible{outline:3px solid var(--t-green-hi);outline-offset:2px}
 .tutor-fine{margin:10px 0 0;font-size:.8rem;color:var(--t-silver)}
 .tutor-fine a{color:var(--t-body)}
@@ -195,7 +182,6 @@
 @media (max-width:420px){
   .tutor-form{flex-direction:column}
   .tutor-send{width:100%}
-  .tutor-mic{align-self:center}
 }
 @media (min-width:2600px){
   .tutor-wrap{max-width:2600px;gap:110px;grid-template-columns:minmax(440px,720px) 1fr}
