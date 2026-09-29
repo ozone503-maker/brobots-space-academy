@@ -56,6 +56,13 @@
 .tutor-bot .fill-body{fill:var(--t-body)}
 .tutor-bot .fill-green{fill:var(--t-green)}
 .tutor-bot .fill-yellow{fill:#F2B705}
+.tutor-bot .fill-key{fill:#FFC92E}
+.tutor-bot .panel-brown{fill:#6E4B2A}
+.tutor-bot .hair{fill:none;stroke:#F2B705;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.tutor-bot .led-red{fill:#FF4438;font-family:'Courier Prime',monospace;font-size:16px;font-weight:700;letter-spacing:.06em}
+.tutor-bot .key-label{fill:#14140F;font-family:'Courier Prime',monospace;font-size:9.5px;font-weight:700}
+.tutor-bot .key-label.fn{font-size:7px}
+.tutor-bot .brand-lite{fill:#E8E1D0;font-family:'Courier Prime',monospace;font-size:8.5px;font-weight:700;letter-spacing:.08em}
 .tutor-bot .led{fill:var(--t-green-hi);font-family:'Courier Prime',monospace;font-size:17px;font-weight:700;letter-spacing:.06em}
 .tutor-bot .brand{fill:#0b0d10;font-family:'Courier Prime',monospace;font-size:8.5px;font-weight:700;letter-spacing:.08em}
 .tutor-bot .mouth.keys rect{transform:none}
