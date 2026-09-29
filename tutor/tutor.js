@@ -8,43 +8,8 @@
   var form = root.querySelector(".tutor-form");
   var input = root.querySelector(".tutor-input");
   var send = root.querySelector(".tutor-send");
-  var mic = root.querySelector(".tutor-mic");
   var status = root.querySelector(".tutor-status");
   var chips = root.querySelectorAll(".tutor-chip");
-
-  // Voice input: Web Speech API, no keys, no cost. Hidden where unsupported.
-  (function voice() {
-    if (!mic) return;
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) return;
-    mic.hidden = false;
-    var rec = null, recording = false;
-    function setRec(on) {
-      recording = on;
-      mic.classList.toggle("recording", on);
-      mic.setAttribute("aria-pressed", on ? "true" : "false");
-      mic.setAttribute("aria-label", on ? "Stop listening" : "Speak your question");
-    }
-    mic.addEventListener("click", function () {
-      if (busy) return;
-      if (recording) { try { rec.stop(); } catch (e) {} return; }
-      rec = new SR();
-      rec.lang = "en-US";
-      rec.interimResults = true;
-      rec.maxAlternatives = 1;
-      rec.onresult = function (e) {
-        var text = "";
-        for (var i = e.resultIndex; i < e.results.length; i++) {
-          text += e.results[i][0].transcript;
-        }
-        input.value = text.trim();
-      };
-      rec.onend = function () { setRec(false); };
-      rec.onerror = function () { setRec(false); };
-      try { rec.start(); setRec(true); input.focus({ preventScroll: true }); }
-      catch (e) { setRec(false); }
-    });
-  })();
 
   var STATUS = { idle: "Ready", thinking: "Thinking...", talking: "Talking..." };
   var MAX_HISTORY = 20;
@@ -57,8 +22,8 @@
   var finishReveal = null;
 
   function setState(s) {
-    if (bot) bot.setAttribute("data-state", s);
-    if (status) status.textContent = STATUS[s] || "";
+    bot.setAttribute("data-state", s);
+    status.textContent = STATUS[s] || "";
   }
 
   function addMsg(kind, text) {
