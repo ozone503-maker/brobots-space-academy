@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROBOTS — Sales Agent Demo</title>
+<meta name="description" content="Talk to a real BROBOTS sales agent selling real Fruity Puppy cream, and watch it walk you to checkout. This is the Tier 3 product, live.">
+<link rel="canonical" href="https://brobots.space/sales-agent.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BROBOTS SPACE FACTORY">
+<meta property="og:title" content="BROBOTS — Sales Agent Demo">
+<meta property="og:description" content="A real sales agent, selling real cream, walking you to checkout. This is the Tier 3 product.">
+<meta property="og:url" content="https://brobots.space/sales-agent.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');
+:root{--paper:#E8E1D0;--ink:#14140F;--blue1:#7FB2FF;--blue2:#3E7BFA;--cream:#F5EDD8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060606;color:var(--paper);font-family:'Archivo',system-ui,sans-serif;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px}
+.blk{font-family:'Archivo Black',Impact,sans-serif;text-transform:uppercase;line-height:.95;letter-spacing:-.02em}
+.stamp{font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:22px 0;border-bottom:4px solid var(--paper);flex-wrap:wrap}
+.mast .wordmark{font-size:1.5rem}
+.mast-nav{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem}
+.mast-nav a{text-decoration:none;border-bottom:1px solid transparent}
+.mast-nav a:hover{border-bottom-color:var(--paper)}
+.hero{padding:56px 0 30px;text-align:center}
+.eyebrow{display:inline-block;border:1px solid var(--blue1);color:var(--blue1);border-radius:999px;padding:6px 16px;margin-bottom:18px}
+.hero h1{font-size:clamp(2.4rem,7vw,4.2rem);background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px}
+.hero p{color:var(--cream);max-width:620px;margin:0 auto;opacity:.92}
+/* chat panel */
+.agent{margin:26px 0 10px;border:1px solid #2a2a2a;border-radius:14px;background:#0c0c0e;overflow:hidden}
+.agent-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #222;background:#101014}
+.agent-dot{width:11px;height:11px;border-radius:50%;background:#57e389;box-shadow:0 0 10px #57e389}
+.agent-head .who{font-weight:700}
+.agent-status{margin-left:auto;font-family:'Courier Prime',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a}
+.agent-log{height:380px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+.agent-msg{max-width:82%;padding:10px 14px;border-radius:12px;font-size:.95rem;line-height:1.5;word-wrap:break-word}
+.agent-msg.bot{background:#17171c;border:1px solid #26262e;align-self:flex-start}
+.agent-msg.bot a{color:var(--blue1);font-weight:700;word-break:break-all}
+.agent-msg.you{background:linear-gradient(100deg,#2b4a8f,#1d3260);align-self:flex-end}
+.agent-msg.note{align-self:center;font-size:.8rem;color:#9a9a9a;font-style:italic}
+.agent-chips{display:flex;gap:8px;flex-wrap:wrap;padding:0 18px 12px}
+.agent-chip{background:transparent;border:1px solid #3a3a44;color:var(--cream);border-radius:999px;padding:7px 14px;font-size:.82rem;cursor:pointer;font-family:inherit}
+.agent-chip:hover{border-color:var(--blue1);color:#fff}
+.agent-form{display:flex;gap:10px;padding:14px 18px;border-top:1px solid #222}
+.agent-input{flex:1;background:#131318;border:1px solid #2c2c34;color:var(--paper);border-radius:10px;padding:12px 14px;font-size:.95rem;font-family:inherit}
+.agent-input:focus{outline:none;border-color:var(--blue1)}
+.agent-send{background:linear-gradient(100deg,var(--blue1),var(--blue2));border:none;color:#06101f;font-weight:700;border-radius:10px;padding:12px 22px;font-size:.95rem;cursor:pointer;font-family:inherit}
+.agent-send:disabled{opacity:.45;cursor:default}
+/* how it works */
+.how{padding:34px 0}
+.how h2{font-size:1.5rem;margin-bottom:18px;text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.step{border:1px solid #26262e;border-radius:12px;padding:18px;background:#0c0c0e}
+.step .n{font-family:'Archivo Black',sans-serif;font-size:1.6rem;background:linear-gradient(100deg,var(--blue1),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.step h3{font-size:1rem;margin:8px 0 6px}
+.step p{font-size:.88rem;color:var(--cream);opacity:.85}
+@media(max-width:640px){.steps{grid-template-columns:1fr}.agent-log{height:320px}}
+.fine{border-top:1px solid #222;margin-top:10px;padding:22px 0;color:#bdbdbd;font-size:.88rem}
+.fine strong{color:var(--paper)}
+.cta{padding:26px 0 60px;text-align:center}
+.cta .btn{display:inline-block;background:linear-gradient(100deg,var(--blue1),var(--blue2));color:#06101f;font-weight:700;text-decoration:none;border-radius:12px;padding:15px 34px;font-size:1.05rem}
+.cta p{margin-top:14px;font-size:.9rem;color:#bdbdbd}
+.foot{border-top:1px solid #222;padding:20px 0 34px;font-size:.78rem;color:#8a8a8a;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="wordmark blk">BROBOTS</div>
+    <nav class="mast-nav">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="services.html#builds">Pricing</a>
+      <a href="work.html">Work</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow stamp">Live demo</span>
+    <h1 class="blk">Meet the Closer</h1>
+    <p>A real sales agent built by BROBOTS, selling real Fruity Puppy cream right now. Ask it about your skin. When you're ready, watch it walk you to checkout.</p>
+  </section>
+
+  <div class="agent" id="agent">
+    <div class="agent-head">
+      <span class="agent-dot"></span>
+      <span class="who">The Closer</span>
+      <span class="agent-status" id="agent-status">Ready</span>
+    </div>
+    <div class="agent-log" id="agent-log" role="log" aria-live="polite" aria-label="Conversation with the sales agent" tabindex="0">
+      <div class="agent-msg bot">Aloha, I'm the Closer. I sell Fruity Puppy cream, made fresh on a farm in the jungle on the Big Island. What's your skin dealing with?</div>
+    </div>
+    <div class="agent-chips">
+      <button class="agent-chip" type="button" data-q="My skin is really dry. What do you recommend?">My skin is really dry</button>
+      <button class="agent-chip" type="button" data-q="Is it good for sensitive skin?">Sensitive skin?</button>
+      <button class="agent-chip" type="button" data-q="What is Fruity Puppy cream made of?">What's in it?</button>
+      <button class="agent-chip" type="button" data-q="I'll take the cream.">I'll take the cream</button>
+    </div>
+    <form class="agent-form" id="agent-form" autocomplete="off">
+      <input class="agent-input" id="agent-input" type="text" name="q" maxlength="2000" placeholder="Talk to the Closer..." aria-label="Your message" enterkeyhint="send">
+      <button class="agent-send" id="agent-send" type="submit">Send</button>
+    </form>
+  </div>
+
+  <section class="how">
+    <h2 class="blk">How it works</h2>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>You talk</h3><p>The agent learns what your skin needs and recommends the right product. No forms, no menus.</p></div>
+      <div class="step"><div class="n">02</div><h3>It builds your cart</h3><p>When you say yes, the agent assembles your order and hands you a one-tap checkout link.</p></div>
+      <div class="step"><div class="n">03</div><h3>You approve and pay</h3><p>The link opens the real Shopify checkout. You review and pay. The agent never charges you itself.</p></div>
+    </div>
+  </section>
+
+  <div class="fine">
+    <p><strong>Straight talk:</strong> this demo chats with you and hands you a one-tap link to the real Shopify checkout, where you approve and pay. With Shopify's new agent checkout, AI agents shoppers bring themselves can now complete checkout on any Shopify store the same way. This agent is the Tier 3 product: a custom AI agent built for one of your real workflows. On Shopify, it doesn't just chat — it closes.</p>
+  </div>
+
+  <section class="cta">
+    <a class="btn" href="services.html#builds">Want one for your store?</a>
+    <p>Custom AI agent, one workflow, $4,995. Human approval step included.</p>
+  </section>
+
+  <footer class="foot">
+    <span>BROBOTS SPACE FACTORY</span>
+    <span>people helping robots helping people</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById("agent");
+  if (!root) return;
+  var log = document.getElementById("agent-log");
+  var form = document.getElementById("agent-form");
+  var input = document.getElementById("agent-input");
+  var send = document.getElementById("agent-send");
+  var status = document.getElementById("agent-status");
+  var chips = root.querySelectorAll(".agent-chip");
+  var STATUS = { idle: "Ready", thinking: "Thinking...", talking: "Talking..." };
+  var MAX_HISTORY = 20, TIMEOUT_MS = 30000;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var history = [], busy = false, revealTimer = null, finishReveal = null;
+  function setState(s) { if (status) status.textContent = STATUS[s] || ""; }
+  function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function linkify(text) {
+    return esc(text).replace(/(https?:\/\/[^\s<]+)/g, function (url) {
+      var clean = url, trail = "", m = clean.match(/[.,;:!?)]+$/);
+      if (m) { trail = m[0]; clean = clean.slice(0, -trail.length); }
+      if (!clean) return url;
+      var external = clean.indexOf("brobots.space") === -1;
+      return '<a href="' + clean + '"' + (external ? ' target="_blank" rel="noopener"' : "") + ">" + clean + "</a>" + trail;
+    });
+  }
+  function addMsg(kind, text) {
+    var el = document.createElement("div");
+    el.className = "agent-msg " + kind;
+    el.textContent = text;
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  }
+  function speak(el, text) {
+    if (reduce) { el.innerHTML = linkify(text); log.scrollTop = log.scrollHeight; setState("idle"); return; }
+    var i = 0, step = Math.max(2, Math.ceil(text.length / 90));
+    el.textContent = ""; setState("talking");
+    finishReveal = function () {
+      clearInterval(revealTimer); revealTimer = null; finishReveal = null;
+      el.innerHTML = linkify(text); log.scrollTop = log.scrollHeight; setState("idle");
+    };
+    revealTimer = setInterval(function () {
+      i += step;
+      if (i >= text.length) return finishReveal();
+      el.textContent = text.slice(0, i);
+      log.scrollTop = log.scrollHeight;
+    }, 24);
+  }
+  function setBusy(b) { busy = b; send.disabled = b; input.disabled = b; }
+  async function ask(text) {
+    text = String(text || "").trim();
+    if (!text || busy) return;
+    if (finishReveal) finishReveal();
+    history.push({ role: "user", content: text });
+    history = history.slice(-MAX_HISTORY);
+    addMsg("you", text);
+    input.value = ""; setBusy(true); setState("thinking");
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, TIMEOUT_MS);
+    try {
+      var res = await fetch("/api/sales-agent", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }), signal: controller.signal
+      });
+      var data = await res.json().catch(function () { return {}; });
+      if (!res.ok || !data.reply) throw new Error(data.error || "Static on the line. Try again.");
+      history.push({ role: "assistant", content: data.reply });
+      history = history.slice(-MAX_HISTORY);
+      setBusy(false);
+      speak(addMsg("bot", ""), data.reply);
+    } catch (err) {
+      history.pop(); input.value = text; setBusy(false); setState("idle");
+      addMsg("note", err && err.name === "AbortError" ? "The agent is taking too long. Try again." : (err && err.message) || "Connection hiccup. Try again.");
+    } finally {
+      clearTimeout(timer);
+      if (!input.disabled) input.focus({ preventScroll: true });
+    }
+  }
+  form.addEventListener("submit", function (e) { e.preventDefault(); ask(input.value); });
+  Array.prototype.forEach.call(chips, function (c) {
+    c.addEventListener("click", function () { ask(c.getAttribute("data-q") || c.textContent); });
+  });
+  setState("idle");
+})();
+</script>
+</body>
+</html>
