@@ -179,6 +179,13 @@
 .tutor-mic.recording{background:#B8321E;border-color:#B8321E;color:#fff;animation:micpulse 1.2s ease-out infinite}
 @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(184,50,30,.5)}70%{box-shadow:0 0 0 10px rgba(184,50,30,0)}100%{box-shadow:0 0 0 0 rgba(184,50,30,0)}}
 @media (prefers-reduced-motion:reduce){.tutor-mic.recording{animation:none}}
+
+/* ---- hero: the real 1976 device as the backdrop, dialog in a box on top ---- */
+.tutor{position:relative;overflow:hidden}
+.tutor-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45}
+.tutor-hero-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,6,.82),rgba(6,6,6,.5) 45%,rgba(6,6,6,.88))}
+.tutor-wrap{position:relative;z-index:1;padding-top:clamp(30px,6vw,64px);padding-bottom:clamp(30px,6vw,64px)}
+.tutor-panel{border:3px solid var(--t-edge);box-shadow:8px 8px 0 rgba(0,0,0,.55)}
 .tutor a:focus-visible,.tutor button:focus-visible,.tutor input:focus-visible{outline:3px solid var(--t-green-hi);outline-offset:2px}
 .tutor-fine{margin:10px 0 0;font-size:.8rem;color:var(--t-silver)}
 .tutor-fine a{color:var(--t-body)}
