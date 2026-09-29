@@ -123,6 +123,67 @@ footer a:hover{border-bottom-color:var(--paper)}
   .bay.addon .addon-copy{padding-top:28px}
   .bay.addon .addon-act{padding-top:28px}
 }
+
+/* ---- futuristic carousel: theme colors kept exactly ---- */
+.carousel{position:relative;margin:26px 0 10px;outline:none}
+.carousel:focus-visible{outline:2px solid var(--hurricane-cyan);outline-offset:4px}
+.grid.carousel-stage{
+  grid-template-columns:1fr;margin:0;position:relative;overflow:hidden;
+  background:#0b0d10;border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  padding:clamp(20px,4vw,40px) clamp(14px,3vw,28px);
+}
+.carousel-slide{
+  grid-area:1/1;display:flex;justify-content:center;align-items:stretch;
+  opacity:0;transform:translateX(56px) scale(.985);
+  transition:opacity .55s ease,transform .55s cubic-bezier(.22,.9,.28,1);
+  pointer-events:none;visibility:hidden;
+}
+.carousel[data-dir="prev"] .carousel-slide{transform:translateX(-56px) scale(.985)}
+.carousel-slide.active{opacity:1;transform:none;pointer-events:auto;visibility:visible}
+.carousel-slide .bay{width:min(680px,100%);margin:0}
+.carousel-watermark{
+  position:absolute;top:2px;right:14px;z-index:0;pointer-events:none;user-select:none;
+  font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(4rem,12vw,7.5rem);line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(232,225,208,.22);
+}
+.carousel-ui{display:flex;align-items:center;gap:14px;margin-top:16px}
+.carousel-arrow{
+  flex:0 0 auto;width:54px;height:54px;border-radius:50%;
+  border:2px solid var(--paper);background:transparent;color:var(--paper);
+  font-family:'Archivo Black',Impact,sans-serif;font-size:1.25rem;line-height:1;cursor:pointer;
+  transition:background .2s,border-color .2s,color .2s,transform .15s;
+}
+.carousel-arrow:hover{background:var(--red);border-color:var(--red);color:#fff}
+.carousel-arrow:active{transform:scale(.94)}
+.carousel-dots{display:flex;gap:10px;flex:1;justify-content:center;align-items:center}
+.carousel-dot{
+  width:12px;height:12px;padding:0;border-radius:50%;cursor:pointer;
+  border:2px solid var(--paper);background:transparent;transition:all .25s;
+}
+.carousel-dot:hover{border-color:var(--hurricane-cyan)}
+.carousel-dot.active{background:var(--hurricane-cyan);border-color:var(--hurricane-cyan);width:36px;border-radius:7px}
+.carousel-count{
+  flex:0 0 auto;font-family:'Courier Prime',monospace;font-size:.82rem;font-weight:700;
+  letter-spacing:.16em;color:var(--paper);white-space:nowrap;
+}
+.carousel-progress{height:3px;background:rgba(232,225,208,.14);margin-top:14px;overflow:hidden}
+.carousel-progress i{display:block;height:100%;width:0;background:var(--hurricane);transition:width .5s ease}
+@media (prefers-reduced-motion:reduce){
+  .carousel-slide{transition:none}
+  .carousel-progress i{transition:none}
+}
+
+/* ---- image breaks: robots with text overlays ---- */
+.img-break{position:relative;margin:60px 0;overflow:hidden;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
+.img-break img{display:block;width:100%;height:clamp(240px,40vw,400px);object-fit:cover}
+.img-break figcaption{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:clamp(20px,4vw,40px) clamp(18px,4vw,36px);
+  background:linear-gradient(to top,rgba(6,6,6,.9) 15%,rgba(6,6,6,.35) 60%,transparent);
+}
+.img-break .stamp{display:block;color:#e8a090;margin-bottom:10px}
+.img-break .blk{color:var(--paper);font-size:clamp(1.5rem,4.5vw,2.6rem);max-width:22ch}
 </style>
 <link rel="stylesheet" href="campus.css?v=20260926a">
 <script type="application/ld+json">
@@ -169,7 +230,7 @@ footer a:hover{border-bottom-color:var(--paper)}
       <h2 class="blk">You&rsquo;re not buying a bot.<br><span class="grad">You&rsquo;re recruiting a graduate.</span></h2>
       <p class="lede">Hand-trained specialists that know your business, sound like you, and work the counter while you sleep. 50% deposit starts the build.</p>
     </div>
-    <div class="grid">
+    <div class="grid" data-carousel-grid data-carousel-label="Custom BroBots">
       <article class="bay">
         <span class="tag live">Live</span>
         <h3 class="blk">Wingman</h3>
@@ -217,6 +278,14 @@ footer a:hover{border-bottom-color:var(--paper)}
     </div>
   </section>
 
+  <figure class="img-break">
+    <img src="media/robot-rust-beach.jpg" alt="A rusty orange BroBot with glowing yellow eyes standing on a Hawaiian beach" loading="lazy">
+    <figcaption>
+      <span class="stamp">Space Factory &middot; Hawai&#699;i</span>
+      <span class="blk">people helping robots helping people</span>
+    </figcaption>
+  </figure>
+
   <!-- Website Builds -->
   <section class="sec" id="builds">
     <div class="sec__head">
@@ -224,7 +293,7 @@ footer a:hover{border-bottom-color:var(--paper)}
       <h2 class="blk">Sites that <span class="grad">don&rsquo;t read like AI.</span></h2>
       <p class="lede">Three tiers, locked prices. Every tier includes the DIY agent, so you can make your own site changes whenever you want. Seven passes. One human who says no to bloat.</p>
     </div>
-    <div class="grid">
+    <div class="grid" data-carousel-grid data-carousel-label="Website builds">
       <article class="bay">
         <span class="tag live">Live</span>
         <h3 class="blk">Tier 1</h3>
@@ -300,6 +369,14 @@ footer a:hover{border-bottom-color:var(--paper)}
     </div>
   </section>
 
+  <figure class="img-break">
+    <img src="media/robot-blue-red-eyes.jpg" alt="A blue-gray BroBot with glowing red eyes and loose wiring standing on the sand" loading="lazy">
+    <figcaption>
+      <span class="stamp">Website builds</span>
+      <span class="blk">Sites that don&rsquo;t read like AI.</span>
+    </figcaption>
+  </figure>
+
   <!-- Business Assistants -->
   <section class="sec" id="assistants">
     <div class="sec__head">
@@ -307,7 +384,7 @@ footer a:hover{border-bottom-color:var(--paper)}
       <h2 class="blk">Setup, training, <span class="grad">ongoing care.</span></h2>
       <p class="lede">We install your bot, tune it to your real workflow, and handle the updates while you focus on the work.</p>
     </div>
-    <div class="grid">
+    <div class="grid" data-carousel-grid data-carousel-label="Business assistants">
       <article class="bay">
         <span class="tag proposed">Proposed</span>
         <h3 class="blk">Setup</h3>
@@ -355,6 +432,14 @@ footer a:hover{border-bottom-color:var(--paper)}
     </div>
   </section>
 
+  <figure class="img-break">
+    <img src="media/robot-blue-head.jpg" alt="Close-up of a BroBot head with glowing red eyes" loading="lazy">
+    <figcaption>
+      <span class="stamp">Business assistants</span>
+      <span class="blk">An agency that uses AI. Not one that is one.</span>
+    </figcaption>
+  </figure>
+
   <!-- Site Care Retainers -->
   <section class="sec" id="care">
     <div class="sec__head">
@@ -362,7 +447,7 @@ footer a:hover{border-bottom-color:var(--paper)}
       <h2 class="blk">Site Care <span class="grad">Retainers</span></h2>
       <p class="lede">Light ongoing support for existing sites. Keep your site fast, current, and working.</p>
     </div>
-    <div class="grid">
+    <div class="grid" data-carousel-grid data-carousel-label="Site care retainers">
       <article class="bay">
         <span class="tag proposed">Proposed</span>
         <h3 class="blk">Quarterly Check</h3>
@@ -431,6 +516,14 @@ footer a:hover{border-bottom-color:var(--paper)}
     </article>
   </section>
 
+  <figure class="img-break">
+    <img src="media/robot-rust-head.jpg" alt="Close-up of a rusty BroBot face with a glowing yellow eye" loading="lazy">
+    <figcaption>
+      <span class="stamp">Site care</span>
+      <span class="blk">You own it. No hostage hosting.</span>
+    </figcaption>
+  </figure>
+
   <!-- Creator Rooms -->
   <section class="sec" id="rooms">
     <div class="sec__head">
@@ -438,7 +531,7 @@ footer a:hover{border-bottom-color:var(--paper)}
       <h2 class="blk">Creator <span class="grad">Rooms</span></h2>
       <p class="lede">Brobots models of the tools creators actually use. Paste-Up Desk, Audio Lab, Video Bench, Render Bay, Fun Locker. See the whole workshop in Multimedia. Buy access or install for your team.</p>
     </div>
-    <div class="grid rooms">
+    <div class="grid rooms" data-carousel-grid data-carousel-label="Creator rooms">
       <article class="bay">
         <span class="tag live">Live</span>
         <h3 class="blk">Paste-Up Desk</h3>
@@ -488,6 +581,14 @@ footer a:hover{border-bottom-color:var(--paper)}
     </aside>
   </section>
 
+  <figure class="img-break">
+    <img src="media/robot-spike-head.jpg" alt="A BroBot head with antenna spikes and a toothy grin" loading="lazy">
+    <figcaption>
+      <span class="stamp">Creator rooms</span>
+      <span class="blk">The workshop is open.</span>
+    </figcaption>
+  </figure>
+
   <section class="cta-band" id="talk">
     <span class="stamp" style="color:#e8a090">Open for work</span>
     <h2 class="blk">Tell us what you&rsquo;re <span class="grad">building</span></h2>
@@ -514,6 +615,120 @@ footer a:hover{border-bottom-color:var(--paper)}
   </div>
 </footer>
 <script src="campus-nav.js?v=20260926a"></script>
+<script>
+/* Futuristic carousel: builds itself from any .grid[data-carousel-grid].
+   No dependencies. Keyboard + swipe + dots + prev/next. */
+(function () {
+  var grids = document.querySelectorAll('.grid[data-carousel-grid]');
+  if (!grids.length) return;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function el(tag, cls, text) {
+    var d = document.createElement(tag);
+    if (cls) d.className = cls;
+    if (text != null) d.textContent = text;
+    return d;
+  }
+
+  Array.prototype.forEach.call(grids, function (grid) {
+    var label = grid.getAttribute('data-carousel-label') || 'Services';
+    var cards = Array.prototype.slice.call(grid.querySelectorAll(':scope > article'));
+    if (cards.length < 2) return; // not worth carouseling
+
+    // Wrap: .carousel > (.carousel-stage=grid, watermark, ui, progress)
+    var root = el('div', 'carousel');
+    root.setAttribute('tabindex', '0');
+    root.setAttribute('role', 'region');
+    root.setAttribute('aria-roledescription', 'carousel');
+    root.setAttribute('aria-label', label);
+    grid.parentNode.insertBefore(root, grid);
+    root.appendChild(grid);
+    grid.classList.add('carousel-stage');
+
+    cards.forEach(function (card) {
+      var slide = el('div', 'carousel-slide');
+      slide.setAttribute('role', 'group');
+      slide.setAttribute('aria-roledescription', 'slide');
+      card.parentNode.insertBefore(slide, card);
+      slide.appendChild(card);
+    });
+    var slides = Array.prototype.slice.call(root.querySelectorAll('.carousel-slide'));
+
+    var water = el('span', 'carousel-watermark', '01');
+    water.setAttribute('aria-hidden', 'true');
+    root.appendChild(water);
+
+    var ui = el('div', 'carousel-ui');
+    var prev = el('button', 'carousel-arrow', '\u2039');
+    prev.type = 'button'; prev.setAttribute('aria-label', 'Previous ' + label);
+    var next = el('button', 'carousel-arrow', '\u203A');
+    next.type = 'button'; next.setAttribute('aria-label', 'Next ' + label);
+    var dots = el('div', 'carousel-dots');
+    dots.setAttribute('role', 'tablist');
+    dots.setAttribute('aria-label', label + ' slides');
+    var count = el('span', 'carousel-count', '01 / ' + pad(slides.length));
+    ui.appendChild(prev); ui.appendChild(dots); ui.appendChild(count); ui.appendChild(next);
+    root.appendChild(ui);
+
+    var prog = el('div', 'carousel-progress');
+    var bar = el('i'); bar.setAttribute('aria-hidden', 'true');
+    prog.appendChild(bar); root.appendChild(prog);
+
+    var dotBtns = slides.map(function (s, k) {
+      var b = el('button', 'carousel-dot');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', 'Go to slide ' + (k + 1) + ' of ' + slides.length);
+      b.addEventListener('click', function () { go(k, k > idx ? 'next' : 'prev'); });
+      dots.appendChild(b);
+      return b;
+    });
+
+    // Start on the "hot" (most popular) card when there is one.
+    var idx = 0;
+    slides.forEach(function (s, k) { if (s.querySelector('.bay.hot')) idx = k; });
+
+    function go(i, dir) {
+      idx = ((i % slides.length) + slides.length) % slides.length;
+      root.setAttribute('data-dir', dir === 'prev' ? 'prev' : 'next');
+      slides.forEach(function (s, k) {
+        var on = k === idx;
+        s.classList.toggle('active', on);
+        s.setAttribute('aria-hidden', on ? 'false' : 'true');
+        dotBtns[k].classList.toggle('active', on);
+        dotBtns[k].setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      count.textContent = pad(idx + 1) + ' / ' + pad(slides.length);
+      water.textContent = pad(idx + 1);
+      bar.style.width = ((idx + 1) / slides.length * 100) + '%';
+    }
+
+    prev.addEventListener('click', function () { go(idx - 1, 'prev'); });
+    next.addEventListener('click', function () { go(idx + 1, 'next'); });
+    root.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx - 1, 'prev'); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); go(idx + 1, 'next'); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0, 'prev'); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1, 'next'); }
+    });
+
+    var touchX = null;
+    grid.addEventListener('touchstart', function (e) {
+      touchX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    grid.addEventListener('touchend', function (e) {
+      if (touchX == null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      touchX = null;
+      if (Math.abs(dx) < 40) return;
+      go(idx + (dx < 0 ? 1 : -1), dx < 0 ? 'next' : 'prev');
+    }, { passive: true });
+
+    go(idx, 'next');
+  });
+})();
+</script>
 
 </body>
 </html>
