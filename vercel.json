@@ -269,6 +269,26 @@
       "source": "/antinews/",
       "destination": "/dossiers.html?bot=antinews",
       "permanent": true
+    },
+    {
+      "source": "/free_tech",
+      "destination": "/free_tech.html",
+      "permanent": true
+    },
+    {
+      "source": "/free_tech/",
+      "destination": "/free_tech.html",
+      "permanent": true
+    },
+    {
+      "source": "/spots",
+      "destination": "/spots.html",
+      "permanent": true
+    },
+    {
+      "source": "/spots/",
+      "destination": "/spots.html",
+      "permanent": true
     }
   ]
 }
