@@ -289,6 +289,16 @@
       "source": "/spots/",
       "destination": "/spots.html",
       "permanent": true
+    },
+    {
+      "source": "/biorama",
+      "destination": "/biorama.html",
+      "permanent": true
+    },
+    {
+      "source": "/biorama/",
+      "destination": "/biorama.html",
+      "permanent": true
     }
   ]
 }
