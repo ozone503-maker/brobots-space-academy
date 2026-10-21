@@ -6,7 +6,7 @@
 <title>Thumb Test — help pick how the fighting game reads your thumbs</title>
 <style>
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:#0b0b10;color:#e8edf2;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+  html,body{margin:0;padding:0;background:#0b0b10;color:#e8edf2;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;touch-action:pan-y;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
   #app{max-width:560px;margin:0 auto;padding:14px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
   h1{font-size:30px;letter-spacing:1px;margin:6px 0 2px;text-align:center;}
   h1 span{color:#4fe3ae;}
@@ -14,10 +14,10 @@
   .sub{text-align:center;color:#aeb9c4;font-size:15.5px;line-height:1.55;margin:4px 0 12px;}
   .glabel{font-size:14px;font-weight:bold;letter-spacing:1px;color:#aeb9c4;margin:16px 0 6px;}
   .btnrow{display:flex;flex-direction:column;gap:10px;}
-  .pick{background:#14161c;border:2px solid #2a2f38;color:#e8edf2;font-family:inherit;font-size:18px;font-weight:bold;padding:16px;text-align:left;cursor:pointer;touch-action:none;min-height:64px;border-radius:8px;}
+  .pick{touch-action:pan-y;background:#14161c;border:2px solid #2a2f38;color:#e8edf2;font-family:inherit;font-size:18px;font-weight:bold;padding:16px;text-align:left;cursor:pointer;min-height:64px;border-radius:8px;}
   .pick small{display:block;font-weight:normal;font-size:13.5px;color:#aeb9c4;margin-top:4px;line-height:1.5;}
   .pick.sel{border-color:#4fe3ae;color:#fff;box-shadow:0 0 0 1px #4fe3ae inset;}
-  .big{display:block;width:100%;margin-top:18px;background:#4fe3ae;color:#0b0b10;border:none;font-family:inherit;font-size:21px;font-weight:bold;letter-spacing:1px;padding:19px;cursor:pointer;touch-action:none;border-radius:8px;min-height:64px;}
+  .big{touch-action:pan-y;display:block;width:100%;margin-top:18px;background:#4fe3ae;color:#0b0b10;border:none;font-family:inherit;font-size:21px;font-weight:bold;letter-spacing:1px;padding:19px;cursor:pointer;border-radius:8px;min-height:64px;}
   .big.ghost{background:transparent;color:#4fe3ae;border:2px solid #4fe3ae;margin-top:10px;}
   .howto{font-size:14.5px;color:#aeb9c4;line-height:1.7;margin-top:18px;border-top:1px solid #2a2f38;padding-top:12px;}
   .howto b{color:#e8edf2;}
@@ -66,7 +66,7 @@
   .ring.pulse{animation:ringpulse .28s ease-out;}
   @keyframes ringpulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(79,227,174,.55);}100%{transform:scale(1.45);box-shadow:0 0 0 16px rgba(79,227,174,0);}}
   .drillbtns{display:flex;gap:10px;margin-top:12px;}
-  .minibtn{flex:1;background:transparent;color:#4fe3ae;border:2px solid #2a2f38;font-family:inherit;font-size:16.5px;font-weight:bold;padding:15px;cursor:pointer;touch-action:none;border-radius:8px;min-height:56px;}
+  .minibtn{touch-action:pan-y;flex:1;background:transparent;color:#4fe3ae;border:2px solid #2a2f38;font-family:inherit;font-size:16.5px;font-weight:bold;padding:15px;cursor:pointer;border-radius:8px;min-height:56px;}
   /* ---- results ---- */
   #res-head{text-align:center;font-size:16.5px;color:#aeb9c4;line-height:1.55;}
   #res-head .acc{font-size:56px;font-weight:bold;color:#4fe3ae;display:block;line-height:1.05;}
