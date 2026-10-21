@@ -9,8 +9,20 @@ window.ANNOUNCER_PROFILE = {
      prefers a warm adult male en-US voice, then any en-US voice. */
   ttsVoiceName: '',
   voicePref: 'en-US-male-warm',
-  rate: 0.98,
-  pitch: 0.95,
+  /* Client-TTS delivery of Static: brisk radio pace (demo v2 was
+     cut at speed 118) and a lowered pitch toward warm husky gravel.
+     The pre-rendered stingers carry his REAL voice; these values
+     steer the live-line placeholder as deep/brisk as the device
+     voice allows. */
+  rate: 1.15,
+  pitch: 0.8,
+  /* PRONUNCIATIONS (Jessie, 2026-10-21 — govern every voice
+     artifact): "its pronounced koodokens and eepo."
+     kudokens = KOO-doh-kenz, Ipo = EE-poh. The game respells ALL
+     spoken text through this map before it reaches any voice.
+     Keys are matched case-insensitively on word boundaries,
+     longest first. Print (Dinny's cards, captions) is exempt. */
+  pronunciations: { kudokens: 'koodokens', kudoken: 'koodoken', ipo: 'Eepo' },
   /* SPONSOR POOL — Static's reads, IN-UNIVERSE ONLY, 1940s sponsor
      patter. Mirrors announcer/SPONSOR-BOOK.md (roster + weights).
      Rotation: ~1 aside per 4 live lines, weighted; NEVER over a

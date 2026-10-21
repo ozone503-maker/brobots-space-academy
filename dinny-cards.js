@@ -19,5 +19,6 @@ window.DINNY_CARDS = {
   card_super_whiff: ["WHIFFED!"],
   card_winner:      ["{NAME} WINS"],
   card_takes:       ["TAKES {TOTAL}"],
+  card_matchup:     ["{P1} vs {P2}"],
   card_moontea:     ["MOON TEA"]
 };

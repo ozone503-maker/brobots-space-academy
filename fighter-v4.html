@@ -15,12 +15,12 @@
   #touchui{display:none;}
   .tbtn{pointer-events:auto;touch-action:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;
     background:rgba(22,26,34,0.94);border:2px solid rgba(211,218,224,0.65);color:#d3dae0;
-    font-family:"Courier New",monospace;font-weight:bold;border-radius:50%;width:54px;height:54px;font-size:22px;line-height:1;padding:0;}
-  .tbtn.abtn{font-size:13px;letter-spacing:0.5px;}
-  .tbtn.act{font-size:12.5px;letter-spacing:0.5px;}
-  .tbtn.act{border-radius:14px;width:86px;height:40px;}
+    font-family:"Courier New",monospace;font-weight:bold;border-radius:50%;width:64px;height:64px;font-size:24px;line-height:1;padding:0;}
+  .tbtn.abtn{font-size:14px;letter-spacing:0.5px;}
+  .tbtn.act{font-size:14px;letter-spacing:0.5px;}
+  .tbtn.act{border-radius:14px;width:104px;height:50px;}
   .tbtn.super{background:rgba(90,70,8,0.94);border-color:#ffd23f;color:#ffe97a;}
-  .tbtn.mini{width:38px;height:38px;font-size:13px;border-radius:10px;}
+  .tbtn.mini{width:48px;height:48px;font-size:14px;border-radius:10px;}
   .tbtn.on{background:rgba(79,227,174,0.5);border-color:#4fe3ae;color:#ffffff;}
   .tcl{display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;min-width:0;}
   .trow{display:flex;gap:8px;justify-content:center;align-items:center;min-width:0;max-width:100%;}
@@ -29,21 +29,21 @@
   body.touch #stagewrap{flex:0 1 auto;min-height:0;display:flex;align-items:flex-start;justify-content:center;background:#0b0b10;}
   body.touch canvas{width:auto;height:auto;max-width:100vw;max-height:100%;border:none;}
   body.touch #note{display:none;}
-  body.touch #touchui{flex:1 1 auto;min-height:max(178px,26dvh);box-sizing:border-box;background:#101016;border-top:2px solid #8e99a4;max-width:100vw;
+  body.touch #touchui{flex:1 1 auto;min-height:max(216px,28dvh);box-sizing:border-box;background:#101016;border-top:2px solid #8e99a4;max-width:100vw;
     flex-direction:row;align-items:stretch;justify-content:space-between;padding:6px 10px;gap:6px;}
   body.touch #touchui>.tcl{flex:0 1 auto;min-width:0;justify-content:space-evenly;}
   @media (max-width:430px){
     body.touch #touchui{padding:6px;gap:5px;}
     body.touch .tcl{gap:5px;}
     body.touch .trow{gap:5px;}
-    body.touch .tbtn{width:46px;height:46px;font-size:19px;}
-    body.touch .tbtn.abtn{font-size:11.5px;}
-    body.touch .tbtn.act{width:74px;height:36px;font-size:11.5px;}
-    body.touch .tbtn.mini{width:32px;height:32px;font-size:12px;}
+    body.touch .tbtn{width:56px;height:56px;font-size:21px;}
+    body.touch .tbtn.abtn{font-size:13px;}
+    body.touch .tbtn.act{width:92px;height:48px;font-size:13px;}
+    body.touch .tbtn.mini{width:48px;height:48px;font-size:13px;}
   }
   @media (pointer:coarse) and (min-width:560px) and (min-height:740px){
-    body.touch .tbtn{width:60px;height:60px;}
-    body.touch .tbtn.act{width:96px;height:46px;}
+    body.touch .tbtn{width:68px;height:68px;}
+    body.touch .tbtn.act{width:112px;height:54px;}
     body.touch .trow{gap:10px;}
     body.touch .tcl{gap:10px;}
   }
@@ -291,6 +291,7 @@ cvs.addEventListener('mousedown', function(e){
   mouse.clicked = true;
   initAudio();
 });
+cvs.addEventListener('touchstart', function(){ initAudio(); try { G.tapGo = true; } catch (e) {} }, { passive: true });
 function blankInput(){ return { move: 0, jump: false, crouch: false, block: false, pL: false, pM: false, pH: false, kL: false, kM: false, kH: false, spc: false }; }
 const INPUT = {
   read: function(){
@@ -469,8 +470,8 @@ function saveBalance(v){ _balMem = v; try { localStorage.setItem('bvha_kudoken',
    Queue max 2, card life ~2.6s. Physical comedy: flip/wobble entry,
    oversized straining pot card at POT >= 50, ~10% wrong-card (Moon Tea)
    gag on non-critical beats. */
-const DINNY_FALLBACK = { card_round:['ROUND {N}'], card_fight:['FIGHT!'], card_ko:['K.O.!'], card_drop:['KUDOKEN!'], card_claim:['+{AMT}'], card_gone:['GONE!'], card_pot:['POT: {POT}'], card_super:['{MOVE}!'], card_super_whiff:['WHIFFED!'], card_winner:['{NAME} WINS'], card_takes:['TAKES {TOTAL}'], card_moontea:['MOON TEA'] };
-const DINNY_PRI = { card_ko:3, card_winner:3, card_takes:3, card_super:2, card_super_whiff:2, card_drop:1, card_claim:1, card_gone:1, card_pot:1, card_round:0, card_fight:0, card_moontea:0 };
+const DINNY_FALLBACK = { card_round:['ROUND {N}'], card_fight:['FIGHT!'], card_ko:['K.O.!'], card_drop:['KUDOKEN!'], card_claim:['+{AMT}'], card_gone:['GONE!'], card_pot:['POT: {POT}'], card_super:['{MOVE}!'], card_super_whiff:['WHIFFED!'], card_winner:['{NAME} WINS'], card_takes:['TAKES {TOTAL}'], card_moontea:['MOON TEA'], card_matchup:['{P1} vs {P2}'] };
+const DINNY_PRI = { card_ko:3, card_winner:3, card_takes:3, card_super:2, card_super_whiff:2, card_drop:1, card_claim:1, card_gone:1, card_pot:1, card_round:0, card_fight:0, card_moontea:0, card_matchup:0 };
 const Dinny = {
   queue: [], cur: null, t: 0, dur: 156, lastPick: {},
   fill: function(s, vars){
@@ -515,9 +516,17 @@ const G = {
   stageId: 'spacefactory', roundWinner: null, endReason: '', perfect: false, paused: false, end: null,
   pot: 0, purse: 0, balance: loadBalance(), potMilestone: 0, lastAward: 0,
   drop: null, dropNext: 480,
-  stats: null, stageState: null
+  stats: null, stageState: null,
+  /* camera (fix pass 2026-10-21): world->screen framing for the fight
+     scene. Physics stays in 960x540 world coords; the camera zooms and
+     pans so fighters read ~55-65% of the play-area height on a phone. */
+  cam: { cx: 480, cy: 296, z: 1.45 },
+  /* broadcast pacing (fix pass): match end -> 'settle' (victory scene)
+     -> 'intermission' (sponsor read + matchup card, player-gated).
+     pending parks the next step; NOTHING auto-chains into a fight. */
+  pending: null, announceIntro: false, sponsorDone: false, settleAward: 0, tapGo: false
 };
-function freshStats(){ return { firstHit: false, fightFrames: 0, roundMin1: 1, roundMin2: 1, decMin1: 1, decMin2: 1 }; }
+function freshStats(){ return { firstHit: false, fightFrames: 0, roundMin1: 1, roundMin2: 1, decMin1: 1, decMin2: 1, hits1: 0, hits2: 0, bestCombo: 0 }; }
 function addPot(n, why){
   const before = G.pot;
   G.pot += n;
@@ -563,8 +572,13 @@ function startMatch(pDef, cDef, rung){
   G.stats = freshStats();
   G.stageState = freshStageState();
   G.drop = null; G.dropNext = 480;
+  /* broadcast pacing: every match is ANNOUNCED (Static introduces the
+     fighters + stakes at intro; Dinny holds the matchup card), and the
+     previous match's intermission state is fully cleared. */
+  G.pending = null; G.sponsorDone = false; G.tapGo = false; G.announceIntro = true;
+  G.cam.cx = 480; G.cam.z = 960 / 660; G.cam.cy = FLOOR + 14 - (540 / G.cam.z) / 2;
   Dinny.queue.length = 0; Dinny.cur = null;
-  Dinny.show('card_moontea', {});
+  Dinny.show('card_matchup', {});
   Dinny.show('card_round', { N: 1 });
   G.screen = 'fight';
 }
@@ -623,20 +637,59 @@ function advanceMatch(){
     if (playerWon){
       G.ladIdx++;
       if (G.ladIdx >= G.ladder.length){
-        G.screen = 'end';
         G.end = { title: 'BROBOTS CHAMPION!', sub: G.playerDef.name + ' cleared the whole ladder.', lines: ['The island has a new champion.', 'You took ' + award + ' kudoken (pot + purse). Balance: ' + G.balance + '.', 'Announced by DINNY, ringside.'], def: G.playerDef, next: 'title', award: award };
+        G.pending = { kind: 'end' };
         return;
       }
-      startMatch(G.playerDef, G.ladder[G.ladIdx], G.ladIdx);
+      /* NO instant chain (Jessie: not bam-bam-bam like Netflix) — the
+         next rung waits in pending for the victory scene + intermission. */
+      G.pending = { kind: 'match', pDef: G.playerDef, cDef: G.ladder[G.ladIdx], rung: G.ladIdx };
     } else {
-      G.screen = 'end';
       G.end = { title: 'GAME OVER', sub: G.p2.def.name + ' takes it — and the whole pot. The ladder resets.', lines: ['Winner takes everything. You grabbed, you lost, it went to them.', 'Run it back — the island believes in you.', 'Announced by DINNY, ringside.'], def: G.p2.def, next: 'title', award: 0 };
+      G.pending = { kind: 'end' };
     }
   } else {
     const w = playerWon ? G.p1 : G.p2;
-    G.screen = 'end';
     G.end = { title: w.def.name + ' WINS!', sub: 'Versus CPU — final score ' + G.p1.wins + '-' + G.p2.wins + '.', lines: [playerWon ? ('You took ' + award + ' kudoken (pot + purse). Balance: ' + G.balance + '.') : 'The CPU took the pot. Winner takes everything.', 'ENTER — back to fighter select', 'ESC — title screen', 'Announced by DINNY, ringside.'], def: w.def, next: 'select', award: award };
+    G.pending = { kind: 'rematch', pDef: G.playerDef, cDef: G.p2.def, rung: 2 };
   }
+}
+/* ---------------- broadcast pacing: settle + intermission ----------------
+   The televised-fight-card cadence (Jessie, 2026-10-21): a fight does
+   NOT hand off to the next fight. matchEnd -> SETTLE (victory scene:
+   winner poses, gathers the pot coin-by-coin while Dinny's winner +
+   final-pot cards ride and the tally counts up; Static recaps the
+   fight stats) -> INTERMISSION (Static's sponsor read; the NEXT
+   matchup card on screen; the bout starts ONLY on the player's tap —
+   ENTER / tap / NEXT FIGHT — with a generous 25s auto timer purely as
+   a backstop). ESC bails to select/title per mode. */
+function stakesText(){
+  if (G.mode === 'arcade') return 'Rung ' + (G.ladIdx + 1) + ' of ' + G.ladder.length + ' on da ladder — purse ' + G.purse + ' kudokens, winner takes everything';
+  return 'An exhibition bout — purse ' + G.purse + ' kudokens, winner takes everything';
+}
+function enterSettle(){
+  G.phase = 'settle'; G.phaseT = 0;
+  const w = (G.p1.wins >= 2) ? G.p1 : G.p2;
+  if (w && w.state !== 'ko'){ w.atk = null; w.spKind = null; w.vx = 0; w.state = 'win'; }
+  G.settleAward = G.pot + G.purse;
+  G.sponsorDone = false;
+}
+function spawnCoinHome(){
+  const w = (G.p1.wins >= 2) ? G.p1 : G.p2;
+  if (!w) return;
+  G.parts.push({ x: W / 2 + rnd(-36, 36), y: FLOOR - 12, vx: rnd(-0.5, 0.5), vy: rnd(-2.2, -1.1), life: 110, col: '#ffd23f', size: rnd(2.6, 4.4), home: w });
+}
+function runPending(){
+  const p = G.pending; G.pending = null;
+  if (!p){ G.screen = 'title'; return; }
+  if (p.kind === 'match' || p.kind === 'rematch') startMatch(p.pDef, p.cDef, p.rung);
+  else G.screen = 'end';
+}
+function exitIntermission(){
+  const p = G.pending; G.pending = null;
+  if (p && (p.kind === 'rematch' || (p.kind === 'end' && G.end && G.end.next === 'select'))){
+    G.sel = { row: 0, col: 0, phase: 'p1', p1: null }; G.screen = 'select';
+  } else G.screen = 'title';
 }
 
 /* ---------------- particles ---------------- */
@@ -650,7 +703,12 @@ function burst(x, y, col, n){ spark(x, y, col, n); spark(x, y, '#ffffff', Math.f
 function updateParticles(){
   for (let i = G.parts.length - 1; i >= 0; i--){
     const p = G.parts[i];
-    p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.life--;
+    if (p.home){ /* victory-scene kudoken streaming home to the winner */
+      const tx = p.home.x, ty = p.home.y - p.home.def.h * 0.55;
+      p.vx += clamp(tx - p.x, -9, 9) * 0.014; p.vy += clamp(ty - p.y, -9, 9) * 0.014;
+      if (Math.abs(tx - p.x) < 16 && Math.abs(ty - p.y) < 16) p.life = Math.min(p.life, 2);
+    }
+    p.x += p.vx; p.y += p.vy; if (!p.home) p.vy += 0.12; p.life--;
     if (p.life <= 0) G.parts.splice(i, 1);
   }
 }
@@ -673,31 +731,121 @@ const COMMENTARY_ENDPOINT = '/api/commentary'; /* set '' to disable live tier */
 const Voice = {
   muted: false, lastLiveAt: 0, inFlight: false, disabled: false, cache: {}, caption: null, captionT: 0, low1: false, low2: false,
   profile: function(){
-    const d = { name: '', ttsVoiceName: '', rate: 1.05, pitch: 1.0, styleNotes: 'Ringside play-by-play announcer. Big energy on big moments, terse between them.' };
+    const d = { name: '', ttsVoiceName: '', rate: 1.15, pitch: 0.8, styleNotes: 'Ringside play-by-play announcer. Big energy on big moments, terse between them.', pronunciations: { kudokens: 'koodokens', kudoken: 'koodoken', ipo: 'Eepo' } };
     if (typeof window !== 'undefined' && window.ANNOUNCER_PROFILE){ for (const k in d) if (window.ANNOUNCER_PROFILE[k] !== undefined) d[k] = window.ANNOUNCER_PROFILE[k]; if (window.ANNOUNCER_PROFILE.sponsors) d.sponsors = window.ANNOUNCER_PROFILE.sponsors; }
     return d;
   },
+  /* PRONUNCIATIONS (Jessie, 2026-10-21 — govern EVERY voice artifact):
+     "its pronounced koodokens and eepo." kudokens = KOO-doh-kenz,
+     Ipo = EE-poh. ALL spoken text routes through this respelling map
+     (map lives in announcer-profile.js). Captions keep true spelling;
+     only the utterance is respelled. Dinny's cards are print — exempt. */
+  pronounce: function(text){
+    const map = this.profile().pronunciations || {};
+    let s = String(text);
+    const keys = Object.keys(map).sort(function(a, b){ return b.length - a.length; });
+    for (let i = 0; i < keys.length; i++){
+      s = s.replace(new RegExp('\\b' + keys[i] + '\\b', 'gi'), map[keys[i]]);
+    }
+    return s;
+  },
+  /* STATIC IS A MAN — warm, husky, gravelly (1940s radio). The old
+     picker fell through to the device default (Android's default is a
+     female robot) whenever its short en-US name list missed. Now:
+     score every loaded voice, hard-penalize female voices/names,
+     reward male names + en-US, avoid the platform default, and keep
+     re-picking as voices stream in (voiceschanged). */
+  _pv: null,
+  pickVoice: function(){
+    if (this._pv) return this._pv;
+    let vs = [];
+    try { vs = (typeof speechSynthesis !== 'undefined' && speechSynthesis.getVoices) ? speechSynthesis.getVoices() : []; } catch (e) {}
+    if (!vs.length) return null;
+    const p = this.profile();
+    if (p.ttsVoiceName){ for (let i = 0; i < vs.length; i++) if (vs[i].name === p.ttsVoiceName){ this._pv = vs[i]; return vs[i]; } }
+    const FEM = /female|samantha|victoria|karen|moira|tessa|fiona|zira|susan|catherine|allison|ava\b|serena|kate|zira|veena|lekha/i;
+    const MALE = /david|daniel|george|arthur|brian|guy|christopher|eric|matthew|james|thomas|richard|alex|fred|ryan|aaron|arthur/i;
+    let best = null, bestScore = -1e9;
+    for (let i = 0; i < vs.length; i++){
+      const v = vs[i]; let sc = 0;
+      if (FEM.test(v.name)) sc -= 600;
+      if (/\bmale\b/i.test(v.name)) sc += 220;
+      if (MALE.test(v.name)) sc += 100;
+      if (/^en[-_]US/i.test(v.lang || '')) sc += 40; else if (/^en/i.test(v.lang || '')) sc += 15;
+      if (v.default) sc -= 60; /* the platform default is the robot lady on Android */
+      if (sc > bestScore){ bestScore = sc; best = v; }
+    }
+    if (best && bestScore > -500) this._pv = best;
+    return best;
+  },
   speak: function(line){
-    this.caption = line; this.captionT = 300;
+    this.caption = line; this.captionT = 340;
     if (this.muted) return;
     try {
       if (typeof speechSynthesis === 'undefined') return;
       const p = this.profile();
-      const u = new SpeechSynthesisUtterance(line);
-      u.rate = p.rate || 1.05; u.pitch = p.pitch === undefined ? 1.0 : p.pitch;
-      const vs = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
-      let chosen = null;
-      if (p.ttsVoiceName){ for (let i = 0; i < vs.length; i++) if (vs[i].name === p.ttsVoiceName){ chosen = vs[i]; break; } }
-      if (!chosen && vs.length){ /* STATIC: prefer a warm adult male en-US voice */
-        const warm = /david|guy|christopher|eric|brian|matthew|justin|joey|male/i;
-        for (let i = 0; i < vs.length; i++) if (/^en[-_]US/i.test(vs[i].lang || '') && warm.test(vs[i].name)){ chosen = vs[i]; break; }
-        if (!chosen) for (let i = 0; i < vs.length; i++) if (/^en[-_]US/i.test(vs[i].lang || '')){ chosen = vs[i]; break; }
-      }
+      const u = new SpeechSynthesisUtterance(this.pronounce(line));
+      u.rate = p.rate || 1.15; u.pitch = p.pitch === undefined ? 0.8 : p.pitch;
+      const chosen = this.pickVoice();
       if (chosen) u.voice = chosen;
       speechSynthesis.cancel(); speechSynthesis.speak(u);
     } catch (e) {}
   },
-  stinger: function(text){ this.speak(text); },
+  /* STINGERS — the universal calls (ROUND/FIGHT/K.O.) are PRE-RENDERED
+     in Static's real voice (server-side TTS, warm husky male @118 +
+     radio band treatment) and shipped as audio files. This is the
+     genuine Static voice; live LLM lines below still ride client TTS
+     (see pickVoice) until the real-voice endpoint lands. */
+  stingerAudio: {},
+  stingerFile: function(text){
+    const t = String(text).toUpperCase();
+    if (t.indexOf('ROUND 1') === 0) return 'round1';
+    if (t.indexOf('ROUND 2') === 0) return 'round2';
+    if (t.indexOf('ROUND 3') === 0) return 'round3';
+    if (t.indexOf('FIGHT') === 0) return 'fight';
+    if (t.indexOf('K.O') === 0) return 'ko';
+    return '';
+  },
+  stinger: function(text){
+    this.caption = text; this.captionT = 210;
+    if (this.muted) return;
+    const f = this.stingerFile(text);
+    if (f && typeof Audio !== 'undefined'){
+      try {
+        let au = this.stingerAudio[f];
+        if (!au){ au = new Audio(ASSET_BASE + 'audio/stinger-' + f + '.mp3'); au.preload = 'auto'; this.stingerAudio[f] = au; }
+        au.currentTime = 0;
+        const pr = au.play();
+        if (pr && pr.catch) pr.catch(function(){});
+        return;
+      } catch (e) {}
+    }
+    this.speak(text);
+  },
+  /* SPONSOR BEAT — the between-fights read: ONE sponsor from the
+     book (weighted, enabled, canonical billings), read in full. This
+     is the designed home for sponsor copy (intermission only). */
+  sponsorRead: function(){
+    const p = this.profile();
+    const pool = (p.sponsors || []).filter(function(s){ return s.enabled !== false && (s.weight || 0) > 0 && s.read; });
+    if (!pool.length) return;
+    let tot = 0; for (let i = 0; i < pool.length; i++) tot += pool[i].weight;
+    let r = Math.random() * tot, pick = pool[pool.length - 1];
+    for (let i = 0; i < pool.length; i++){ r -= pool[i].weight; if (r <= 0){ pick = pool[i]; break; } }
+    this.speak(pick.read);
+  },
+  /* VICTORY RECAP — Static wraps the fight with its STATS during the
+     victory scene: winner's landed hits, biggest combo, fight time,
+     and the pot it grew to. Generated through the same live tier. */
+  recap: function(){
+    if (!G.p1 || !G.p2 || !G.stats) return;
+    const w = (G.p1.wins >= 2) ? G.p1 : G.p2;
+    const secs = Math.max(1, Math.round(G.stats.fightFrames / 60));
+    const time = Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2);
+    const hits = (w === G.p1) ? G.stats.hits1 : G.stats.hits2;
+    const st = w.def.name + ' landed ' + hits + ' hits, biggest combo ' + Math.max(1, G.stats.bestCombo) + ', all pau in ' + time + ' — and da pot wen grow to ' + (G.pot + G.purse) + ' kudokens';
+    this.live('victory_recap', { A: w.def.name, EXTRA: st, STATS: st }, true);
+  },
   crackle: function(){ /* tiny WebAudio noise crackle under spike lines (STATIC's signal) */
     if (this.muted || !AC) return;
     try {
@@ -721,12 +869,14 @@ const Voice = {
     super_spent: ['{A} wen let loose {MOVE}!', 'Hea come {MOVE} from {A} — kzzzt — how about dat!', '{A} wen burn da super — {MOVE}!'],
     super_whiffed: ['{MOVE} only wen hit da air!', 'Auwe, one expensive whiff from {A}!', '{A} wen swing at da breeze with {MOVE}!'],
     low_health: ['{A} stay in da danger zone, eh!', '{A} stay hanging by one thread, brah!', 'One more clean hit might finish {A}!'],
-    match_end: ['{A} wen take em — winner takes everything, shoots!', 'All pau! {A} wen win da bout!', '{A} stand tall at da final bell, how about dat!']
+    match_end: ['{A} wen take em — winner takes everything, shoots!', 'All pau! {A} wen win da bout!', '{A} stand tall at da final bell, how about dat!'],
+    match_intro: ['Good evening, folks, wherever you may be! {A} versus {B} — {STAKES}!', 'Hea we go, brah — {A} against {B}! {STAKES}!', 'From FlashTown with aloha, {A} meets {B}! {STAKES}!'],
+    victory_recap: ['What a bout, folks! {STATS}!', 'Lemme tell you how it wen, neighbors — {STATS}!', 'Da numbers tell da story, eh — {STATS}!']
   },
   fillFb: function(cat, v){
     const arr = this.fallback[cat] || ['What a moment!'];
     let s = arr[Math.floor(Math.random() * arr.length)];
-    return s.replace('{A}', v.A || '').replace('{N}', v.N || '').replace('{POT}', v.POT || '').replace('{MOVE}', v.MOVE || '');
+    return s.replace('{A}', v.A || '').replace('{B}', v.B || '').replace('{N}', v.N || '').replace('{POT}', v.POT || '').replace('{MOVE}', v.MOVE || '').replace('{STAKES}', v.STAKES || '').replace('{STATS}', v.STATS || '');
   },
   pickSponsor: function(){
     /* weighted pick from the ENABLED pool in announcer-profile.js.
@@ -739,9 +889,9 @@ const Voice = {
     for (let i = 0; i < pool.length; i++){ r -= pool[i].weight; if (r <= 0) return pool[i].name; }
     return pool[pool.length - 1].name;
   },
-  live: function(cat, v){
+  live: function(cat, v, urgent){
     const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
-    if (this.disabled || !COMMENTARY_ENDPOINT || this.inFlight || (now - this.lastLiveAt) < 7000){ this.speak(this.fillFb(cat, v)); return; }
+    if (this.disabled || !COMMENTARY_ENDPOINT || this.inFlight || (!urgent && (now - this.lastLiveAt) < 7000)){ this.speak(this.fillFb(cat, v)); return; }
     const bucket = cat + '|' + (v.A || '') + '|' + Math.round((v.HP || 100) / 25) + '|' + Math.round((v.POT || 0) / 10);
     if (this.cache[bucket]){ this.speak(this.cache[bucket]); return; }
     this.inFlight = true; this.lastLiveAt = now;
@@ -750,7 +900,7 @@ const Voice = {
     const sponsor = (cat !== 'super_spent' && cat !== 'super_whiffed' && Math.random() < 0.25) ? this.pickSponsor() : '';
     const body = { event: cat, p1: G.p1 ? G.p1.def.name : '', p2: G.p2 ? G.p2.def.name : '',
       hp1: G.p1 ? Math.round(G.p1.hp / G.p1.maxhp * 100) : 100, hp2: G.p2 ? Math.round(G.p2.hp / G.p2.maxhp * 100) : 100,
-      pot: G.pot, round: G.round, extra: (v.MOVE || v.N || ''), sponsor: sponsor, styleNotes: this.profile().styleNotes };
+      pot: G.pot, round: G.round, extra: (v.EXTRA || v.MOVE || v.N || v.STAKES || ''), sponsor: sponsor, styleNotes: this.profile().styleNotes };
     let done = false;
     const finish = function(line){ if (done) return; done = true; self.inFlight = false; if (line) self.cache[bucket] = line; self.speak(line || self.fillFb(cat, v)); };
     try {
@@ -769,6 +919,8 @@ const Voice = {
     if (type === 'round_start') this.stinger('ROUND ' + G.round);
     else if (type === 'fight_start') this.stinger('FIGHT!');
     else if (type === 'ko') this.stinger('K.O.!');
+    else if (type === 'match_intro') this.live('match_intro', v, true);
+    else if (type === 'victory_recap') this.live('victory_recap', v, true);
     else if (type === 'first_hit'){ if (Math.random() < 0.6) this.live('first_hit', v); }
     else if (type === 'combo_milestone') this.live('combo', v);
     else if (type === 'drop_claim') this.live('drop_claim', v);
@@ -781,6 +933,9 @@ const Voice = {
     /* drop_spawn stays Dinny's card beat (visual), no voice line */
   }
 };
+/* voices stream in async on Android — invalidate the cached pick so
+   Static's male voice wins as soon as the full list lands. */
+try { if (typeof speechSynthesis !== 'undefined' && speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', function(){ Voice._pv = null; Voice.pickVoice(); }); } catch (e) {}
 
 /* ---------------- combat ---------------- */
 function hurtBox(f){
@@ -795,6 +950,7 @@ function trackHit(att){
   /* combo milestone: consecutive hits by same attacker within 90f */
   if (G.lastHitBy === att && (G.frame - (G.lastHitAt || 0)) < 90) G.comboCount = (G.comboCount || 0) + 1; else G.comboCount = 1;
   G.lastHitBy = att; G.lastHitAt = G.frame;
+  if (G.stats) G.stats.bestCombo = Math.max(G.stats.bestCombo, G.comboCount);
   if (G.comboCount === 3 || G.comboCount === 5) Voice.emit('combo_milestone', { A: att.def.name, N: G.comboCount });
   if (G.stats && !G.stats.firstHit){ G.stats.firstHit = true; addPot(2); Voice.emit('first_hit', { A: att.def.name, HP: att.hp / att.maxhp * 100 }); }
 }
@@ -810,6 +966,7 @@ function applyHit(att, def, dmg, stun, kb, kind, launch){
   if (def.def.id === 'vidu' && def.markedT > 0) {} /* marker is on the marked one; handled below via att-side */
   if (att.markedT > 0) {} /* attacker marked does not reduce own damage */
   if (def.markedT > 0) dmg *= 1.3; /* VIDU: EDEN CALLS mark — +30% taken */
+  if (G.stats){ if (att === G.p1) G.stats.hits1++; else G.stats.hits2++; } /* victory-scene recap counts landed hits */
   const contactX = def.x - att.face * def.def.w;
   const contactY = def.y - def.def.h * 0.55;
   const facingAtt = Math.sign(att.x - def.x) === def.face;
@@ -1363,12 +1520,19 @@ function stepFight(){
   updateFighter(a, b);
   updateFighter(b, a);
   updateProjectiles(); updateFx(); updateDrops(); updateStageLife();
-  separate(); updateFacing(); updateParticles();
+  separate(); updateFacing(); updateParticles(); updateCam();
   G.shake *= 0.82; if (G.shake < 0.4) G.shake = 0;
   [a, b].forEach(function(f){ if (f.dHp > f.hp) f.dHp = Math.max(f.hp, f.dHp - 0.28); });
   G.phaseT++;
   if (G.phase === 'intro'){
-    if (G.phaseT === 2) Voice.emit('round_start', {});
+    if (G.phaseT === 2){
+      /* ANNOUNCE THE MATCH (pacing feature, not decoration): round 1 of
+         a match gets Static's introduction (fighters + stakes) and
+         Dinny's matchup card already rides from startMatch. Later
+         rounds keep the plain ROUND stinger. */
+      if (G.round === 1 && G.announceIntro){ G.announceIntro = false; Voice.emit('match_intro', { A: a.def.name, B: b.def.name, STAKES: stakesText() }); }
+      else Voice.emit('round_start', {});
+    }
     if (G.phaseT === 54) sfx.fight();
     if (G.phaseT >= 82){ G.phase = 'fight'; G.phaseT = 0; Dinny.show('card_fight', {}); Voice.emit('fight_start', {}); }
   } else if (G.phase === 'fight'){
@@ -1390,8 +1554,41 @@ function stepFight(){
     }
   } else if (G.phase === 'matchEnd'){
     if (G.phaseT === 60) Voice.emit('match_end', { A: (a.wins >= 2 ? a : b).def.name });
-    if (G.phaseT >= 150) advanceMatch();
+    if (G.phaseT >= 150){ advanceMatch(); enterSettle(); }
+  } else if (G.phase === 'settle'){
+    /* VICTORY SCENE: the winner collects — kudoken coins stream from
+       the arena floor into his hands while the payout tally counts up,
+       Dinny's winner + final-pot cards ride (queued by advanceMatch),
+       and Static recaps the fight stats mid-scene. */
+    if (G.phaseT === 100) Voice.recap();
+    if (G.phaseT % 5 === 0 && G.phaseT < 170) spawnCoinHome();
+    if (G.phaseT >= 230){ G.phase = 'intermission'; G.phaseT = 0; }
+  } else if (G.phase === 'intermission'){
+    /* SPONSOR BEAT + NEXT-FIGHT GATE: Static reads ONE sponsor from
+       the book; the next bout does NOT autoplay — player tap (ENTER /
+       canvas tap) starts it, 25s auto timer is only a backstop. */
+    if (G.phaseT === 2 && !G.sponsorDone){ G.sponsorDone = true; Voice.sponsorRead(); }
+    if (pressed.Escape) exitIntermission();
+    else if (pressed.Enter || pressed.KeyA || mouse.clicked || G.tapGo || G.phaseT >= 1500){ G.tapGo = false; runPending(); }
   }
+}
+/* ---------------- camera: tight broadcast framing ----------------
+   World physics untouched (960x540). The camera targets a view width
+   from fighter separation (+ headroom for jump apexes), clamped so
+   Tank reads ~55-65% of the play-area height when engaged, and pans
+   to keep both fighters framed. Smoothed — no jitter, no cuts. */
+function updateCam(){
+  const a = G.p1, b = G.p2;
+  if (!a || !b) return;
+  const dist = Math.abs(a.x - b.x);
+  let vw = clamp(dist + 300, 520, 960);
+  const topY = Math.min(a.y - a.def.h, b.y - b.def.h);
+  vw = clamp(Math.max(vw, ((FLOOR + 66) - topY) * (W / H)), 520, 960);
+  const tz = W / vw, vh = H / tz;
+  const tcx = clamp((a.x + b.x) / 2, vw / 2, W - vw / 2);
+  const tcy = clamp(FLOOR + 14 - vh / 2, vh / 2, H - vh / 2);
+  const cam = G.cam, k = 0.07;
+  cam.z += (tz - cam.z) * k; cam.cx += (tcx - cam.cx) * k; cam.cy += (tcy - cam.cy) * k;
 }
 
 /* ============================================================
@@ -1579,56 +1776,56 @@ function drawDrop(c){
 /* ---------------- HUD ---------------- */
 function hpColor(p){ return p > 0.5 ? '#37d067' : (p > 0.25 ? '#ffd23f' : '#e2483d'); }
 function hpBar(c, f, x, y, wdt, right){
-  R(c, x, y, wdt, 18, '#101014');
+  R(c, x, y, wdt, 24, '#101014');
   const pct = clamp(f.hp / f.maxhp, 0, 1), cpct = clamp(f.dHp / f.maxhp, 0, 1);
-  if (!right){ R(c, x, y, wdt * cpct, 18, '#e8e3d5'); R(c, x, y, wdt * pct, 18, hpColor(pct)); }
-  else { R(c, x + wdt - wdt * cpct, y, wdt * cpct, 18, '#e8e3d5'); R(c, x + wdt - wdt * pct, y, wdt * pct, 18, hpColor(pct)); }
-  c.strokeStyle = '#8e99a4'; c.lineWidth = 2; c.strokeRect(x, y, wdt, 18);
+  if (!right){ R(c, x, y, wdt * cpct, 24, '#e8e3d5'); R(c, x, y, wdt * pct, 24, hpColor(pct)); }
+  else { R(c, x + wdt - wdt * cpct, y, wdt * cpct, 24, '#e8e3d5'); R(c, x + wdt - wdt * pct, y, wdt * pct, 24, hpColor(pct)); }
+  c.strokeStyle = '#8e99a4'; c.lineWidth = 2; c.strokeRect(x, y, wdt, 24);
 }
 function superGem(c, f, x, y){
   /* ONE super per match: gem lit + pulsing until spent, dark after */
   c.save(); c.translate(x, y); c.rotate(Math.PI / 4);
   const lit = !f.superUsed;
-  const s = lit ? 9 + Math.sin(G.frame * 0.22) * 1.6 : 9;
+  const s = lit ? 12 + Math.sin(G.frame * 0.22) * 2 : 12;
   R(c, -s / 1.4, -s / 1.4, s * 1.42, s * 1.42, lit ? '#ffd23f' : '#2c2c33');
   c.strokeStyle = lit ? '#ffe97a' : '#5a646e'; c.lineWidth = 2; c.strokeRect(-s / 1.4, -s / 1.4, s * 1.42, s * 1.42);
   c.restore();
-  txt(c, 'SUPER', x, y + 22, 9.5, lit ? '#ffd23f' : '#5a646e');
+  txt(c, 'SUPER', x, y + 27, 12, lit ? '#ffd23f' : '#5a646e');
 }
 function drawHUD(c){
-  hpBar(c, G.p1, 24, 18, 360, false);
-  hpBar(c, G.p2, W - 24 - 360, 18, 360, true);
-  txt(c, G.p1.def.name, 24, 50, 15, '#d3dae0', 'left');
-  txt(c, G.p2.def.name, W - 24, 50, 15, '#d3dae0', 'right');
-  superGem(c, G.p1, 44, 76);
-  superGem(c, G.p2, W - 44, 76);
+  hpBar(c, G.p1, 24, 16, 372, false);
+  hpBar(c, G.p2, W - 24 - 372, 16, 372, true);
+  txt(c, G.p1.def.name, 24, 58, 17, '#d3dae0', 'left');
+  txt(c, G.p2.def.name, W - 24, 58, 17, '#d3dae0', 'right');
+  superGem(c, G.p1, 46, 88);
+  superGem(c, G.p2, W - 46, 88);
   for (let i = 0; i < 2; i++){
-    CIR(c, 74 + i * 17, 70, 5.5, i < G.p1.wins ? '#ffd23f' : 'rgba(255,255,255,0.18)');
-    CIR(c, W - 74 - i * 17, 70, 5.5, i < G.p2.wins ? '#ffd23f' : 'rgba(255,255,255,0.18)');
+    CIR(c, 82 + i * 19, 82, 6.5, i < G.p1.wins ? '#ffd23f' : 'rgba(255,255,255,0.18)');
+    CIR(c, W - 82 - i * 19, 82, 6.5, i < G.p2.wins ? '#ffd23f' : 'rgba(255,255,255,0.18)');
   }
-  R(c, W / 2 - 34, 12, 68, 44, '#101014');
-  c.strokeStyle = '#8e99a4'; c.lineWidth = 2; c.strokeRect(W / 2 - 34, 12, 68, 44);
-  txt(c, String(Math.max(0, Math.ceil(G.timer / 60))), W / 2, 35, 29, G.timer < 600 ? '#ff5a4e' : '#f5efe2');
-  txt(c, G.mode === 'arcade' ? ('RUNG ' + (G.ladIdx + 1) + ' / ' + G.ladder.length + ' — ' + STAGE_NAMES[G.stageId]) : ('VERSUS CPU — ' + STAGE_NAMES[G.stageId]), W / 2, 68, 11.5, '#9aa5b0');
+  R(c, W / 2 - 40, 10, 80, 52, '#101014');
+  c.strokeStyle = '#8e99a4'; c.lineWidth = 2; c.strokeRect(W / 2 - 40, 10, 80, 52);
+  txt(c, String(Math.max(0, Math.ceil(G.timer / 60))), W / 2, 38, 34, G.timer < 600 ? '#ff5a4e' : '#f5efe2');
+  txt(c, G.mode === 'arcade' ? ('RUNG ' + (G.ladIdx + 1) + ' / ' + G.ladder.length + ' — ' + STAGE_NAMES[G.stageId]) : ('VERSUS CPU — ' + STAGE_NAMES[G.stageId]), W / 2, 78, 13, '#9aa5b0');
   /* the pot — prominent, always visible. Winner takes pot + purse. */
-  const pw = 252;
-  R(c, W / 2 - pw / 2, H - 52, pw, 38, 'rgba(13,16,20,0.92)');
-  c.strokeStyle = '#ffd23f'; c.lineWidth = 2; c.strokeRect(W / 2 - pw / 2, H - 52, pw, 38);
-  txt(c, 'POT ' + G.pot + '  +  PURSE ' + G.purse + '  =  ' + (G.pot + G.purse), W / 2, H - 33, 16, '#ffd23f');
-  txt(c, 'BALANCE ' + G.balance + ' KUDOKEN', 24, H - 24, 12, '#9aa5b0', 'left');
-  txt(c, 'WINNER TAKES EVERYTHING', W - 24, H - 24, 11, '#7d8791', 'right');
+  const pw = 300;
+  R(c, W / 2 - pw / 2, H - 58, pw, 44, 'rgba(13,16,20,0.92)');
+  c.strokeStyle = '#ffd23f'; c.lineWidth = 2; c.strokeRect(W / 2 - pw / 2, H - 58, pw, 44);
+  txt(c, 'POT ' + G.pot + '  +  PURSE ' + G.purse + '  =  ' + (G.pot + G.purse), W / 2, H - 36, 20, '#ffd23f');
+  txt(c, 'BALANCE ' + G.balance + ' KUDOKEN', 24, H - 22, 14, '#9aa5b0', 'left');
+  txt(c, 'WINNER TAKES EVERYTHING', W - 24, H - 22, 12.5, '#7d8791', 'right');
 }
 /* ---------------- Dinny booth bug: MUTE frog + placard ---------------- */
 function drawDinny(c){
   const card = Dinny.cur;
   const bx = 10, deskY = H - 8;
   const strain = (card && card.big) ? Math.sin(G.frame * 0.5) * 2 + 5 : 0;
-  if (dinnyImg._ok) c.drawImage(dinnyImg, bx, deskY - 96 + strain, 83, 96);
+  if (dinnyImg._ok) c.drawImage(dinnyImg, bx, deskY - 120 + strain, 104, 120);
   else { /* fallback: coqui in the locked PINK SUIT + tie */
-    R(c, bx + 16, deskY - 62 + strain, 50, 54, '#e58bb1'); R(c, bx + 36, deskY - 62 + strain, 9, 54, '#f5efe2'); R(c, bx + 39, deskY - 58 + strain, 4, 16, '#b8302a');
-    CIR(c, bx + 41, deskY - 74 + strain, 17, '#7fae4c');
+    R(c, bx + 20, deskY - 78 + strain, 62, 68, '#e58bb1'); R(c, bx + 45, deskY - 78 + strain, 11, 68, '#f5efe2'); R(c, bx + 49, deskY - 73 + strain, 5, 20, '#b8302a');
+    CIR(c, bx + 51, deskY - 92 + strain, 21, '#7fae4c');
   }
-  txt(c, 'DINNY — RING CARDS', bx + 41, deskY - 100 + strain, 8.5, 'rgba(211,218,224,0.75)');
+  txt(c, 'DINNY — RING CARDS', bx + 51, deskY - 124 + strain, 10.5, 'rgba(211,218,224,0.75)');
   if (!card){
     /* Ring card guy default: between beats he holds the POT card — the
        live match pot, exactly in sync with the HUD counter. On menus /
@@ -1640,13 +1837,13 @@ function drawDinny(c){
     const sTxt = inMatch ? Dinny.fill('POT: {POT}', {}) : 'MOON TEA';
     const bigPot = inMatch && G.pot >= 50;
     const sc0 = bigPot ? 1.35 : 1.0;
-    const cw0 = Math.max(104, sTxt.length * 13 + 24) * sc0, ch0 = 42 * sc0;
+    const cw0 = Math.max(124, sTxt.length * 15.5 + 29) * sc0, ch0 = 50 * sc0;
     const strain0 = bigPot ? Math.sin(G.frame * 0.5) * 2 + 4 : 0;
     const flipS = Dinny.potFlipT > 0 ? Math.max(0.1, Math.sin((9 - Dinny.potFlipT) / 9 * Math.PI * 0.5)) : 1;
-    c.save(); c.translate(bx + 96 + cw0 / 2, deskY - 96 + ch0 / 2 + strain0); c.rotate(-0.045 + Math.sin(G.frame * 0.09) * 0.015 + (bigPot ? Math.sin(G.frame * 0.5) * 0.018 : 0)); c.scale(flipS, 1);
+    c.save(); c.translate(bx + 118 + cw0 / 2, deskY - 118 + ch0 / 2 + strain0); c.rotate(-0.045 + Math.sin(G.frame * 0.09) * 0.015 + (bigPot ? Math.sin(G.frame * 0.5) * 0.018 : 0)); c.scale(flipS, 1);
     R(c, -cw0 / 2, -ch0 / 2, cw0, ch0, '#f5efe2'); c.strokeStyle = '#8a6a42'; c.lineWidth = 2.5; c.strokeRect(-cw0 / 2, -ch0 / 2, cw0, ch0);
-    txt(c, sTxt, 0, -3, 17 * sc0, '#191c26');
-    txt(c, inMatch ? 'KUDOKEN IN THE POT' : 'BY THORNY TOAD', 0, 12 * sc0, 7.5, '#c2703d');
+    txt(c, sTxt, 0, -4, 21 * sc0, '#191c26');
+    txt(c, inMatch ? 'KUDOKEN IN THE POT' : 'BY THORNY TOAD', 0, 14 * sc0, 9.5, '#c2703d');
     c.restore();
     return;
   }
@@ -1656,17 +1853,17 @@ function drawDinny(c){
   const text = showGag ? 'MOON TEA' : card.text;
   const big = card.big && !showGag;
   const scale = big ? 1.42 : 1.0;
-  const cw = Math.max(120, text.length * 15 + 30) * scale, ch = 52 * scale;
-  const cx = bx + 96, cy = deskY - 118 + strain;
+  const cw = Math.min(336, Math.max(132, text.length * 17.5 + 36) * scale), ch = 62 * scale;
+  const cx = bx + 118, cy = deskY - 140 + strain;
   c.save();
   c.translate(cx + cw / 2, cy + ch / 2);
   c.rotate(-0.045 + Math.sin(G.frame * 0.09) * 0.018 + (big ? Math.sin(G.frame * 0.5) * 0.02 : 0));
   c.scale(Math.max(0.08, Math.sin(flip * Math.PI * 0.5)), 1);
   R(c, -cw / 2, -ch / 2, cw, ch, '#f5efe2');
   c.strokeStyle = '#8a6a42'; c.lineWidth = 3; c.strokeRect(-cw / 2, -ch / 2, cw, ch);
-  txt(c, text, 0, card.small ? -6 : 1, Math.min(25 * scale, (cw - 16) / Math.max(4, text.length) * 1.9), '#191c26');
-  if (card.small && !showGag) txt(c, card.small, 0, 15 * scale, 10.5, '#5a4632');
-  txt(c, 'MOON TEA', 0, ch / 2 - 7, 7.5, '#c2703d'); /* sponsor print on every card border */
+  txt(c, text, 0, card.small ? -7 : 1, Math.min(29 * scale, (cw - 18) / Math.max(4, text.length) * 1.9), '#191c26');
+  if (card.small && !showGag) txt(c, card.small, 0, 17 * scale, 12.5, '#5a4632');
+  txt(c, 'MOON TEA', 0, ch / 2 - 8, 9, '#c2703d'); /* sponsor print on every card border */
   c.restore();
 }
 /* ---------------- STATIC — the radio on the booth desk ----------------
@@ -1677,6 +1874,7 @@ function drawStatic(c){
   const x = 352, y = H - 8, t = G.frame;
   const onAir = Voice.captionT > 0;
   c.save();
+  c.translate(x + 32, y); c.scale(1.25, 1.25); c.translate(-(x + 32), -y); /* booth bug scaled up with the fix pass */
   /* antenna */
   c.strokeStyle = '#c9a227'; c.lineWidth = 2.5;
   const ax = x + 44 + Math.sin(t * 0.07) * 6;
@@ -1706,17 +1904,19 @@ function drawStatic(c){
 function drawCaption(c){
   if (!Voice.caption || Voice.captionT <= 0) return;
   const s = Voice.caption;
-  const wdt = Math.min(860, s.length * 8.4 + 90);
-  const y = H - 100;
-  R(c, W / 2 - wdt / 2, y, wdt, 30, 'rgba(8,8,14,0.88)');
-  c.strokeStyle = '#c9a227'; c.lineWidth = 1.6; c.strokeRect(W / 2 - wdt / 2, y, wdt, 30);
-  CIR(c, W / 2 - wdt / 2 + 16, y + 15, 4.5, (G.frame % 40 < 22) ? '#ff3b30' : '#5c1a1a');
-  txt(c, s, W / 2 + 8, y + 16, 14.5, '#f5efe2');
+  const wdt = Math.min(880, s.length * 9.8 + 110);
+  const y = H - 112;
+  R(c, W / 2 - wdt / 2, y, wdt, 38, 'rgba(8,8,14,0.88)');
+  c.strokeStyle = '#c9a227'; c.lineWidth = 1.6; c.strokeRect(W / 2 - wdt / 2, y, wdt, 38);
+  CIR(c, W / 2 - wdt / 2 + 17, y + 19, 5, (G.frame % 40 < 22) ? '#ff3b30' : '#5c1a1a');
+  txt(c, s, W / 2 + 9, y + 20, 17, '#f5efe2');
 }
 function drawFight(){
   const c = ctx;
   c.save();
   if (G.shake > 0.3) c.translate(rnd(-G.shake, G.shake), rnd(-G.shake, G.shake));
+  const cam = G.cam;
+  c.translate(W / 2, H / 2); c.scale(cam.z, cam.z); c.translate(-cam.cx, -cam.cy);
   drawStageBase(c);
   drawLiving(c);
   drawFighter(c, G.p2);
@@ -1732,18 +1932,51 @@ function drawFight(){
   if (G.phase === 'intro'){
     if (G.phaseT < 54){
       const sc = 1 + Math.max(0, 10 - G.phaseT) * 0.05;
-      c.save(); c.translate(W / 2, 190); c.scale(sc, sc); txtStroke(c, 'ROUND ' + G.round, 0, 0, 54, '#f5efe2'); c.restore();
-      txt(c, STAGE_NAMES[G.stageId], W / 2, 238, 21, '#ffd23f');
-      txt(c, G.p1.def.name + '  vs  ' + G.p2.def.name, W / 2, 270, 16, '#c8cfd6');
-    } else txtStroke(c, 'FIGHT!', W / 2, 200, 58, '#4fe3ae');
+      c.save(); c.translate(W / 2, 190); c.scale(sc, sc); txtStroke(c, 'ROUND ' + G.round, 0, 0, 62, '#f5efe2'); c.restore();
+      txt(c, STAGE_NAMES[G.stageId], W / 2, 240, 24, '#ffd23f');
+      txt(c, G.p1.def.name + '  vs  ' + G.p2.def.name, W / 2, 274, 18, '#c8cfd6');
+    } else txtStroke(c, 'FIGHT!', W / 2, 200, 66, '#4fe3ae');
   } else if (G.phase === 'roundEnd'){
     const label = G.endReason === 'double' ? 'DOUBLE K.O.' : (G.endReason === 'time' ? 'TIME UP' : 'K.O.');
     const sc = 1 + Math.max(0, 12 - G.phaseT) * 0.05;
-    c.save(); c.translate(W / 2, 190); c.scale(sc, sc); txtStroke(c, label, 0, 0, 64, '#ff5a4e'); c.restore();
-    if (G.perfect) txt(c, 'PERFECT!', W / 2, 246, 24, '#ffd23f');
-    else if (G.roundWinner) txt(c, G.roundWinner.def.name + ' TAKES THE ROUND', W / 2, 246, 17, '#d3dae0');
+    c.save(); c.translate(W / 2, 190); c.scale(sc, sc); txtStroke(c, label, 0, 0, 72, '#ff5a4e'); c.restore();
+    if (G.perfect) txt(c, 'PERFECT!', W / 2, 248, 27, '#ffd23f');
+    else if (G.roundWinner) txt(c, G.roundWinner.def.name + ' TAKES THE ROUND', W / 2, 248, 19, '#d3dae0');
   } else if (G.phase === 'matchEnd'){
-    txtStroke(c, (G.p1.wins >= 2 ? G.p1 : G.p2).def.name + ' WINS!', W / 2, 200, 46, '#ffd23f');
+    txtStroke(c, (G.p1.wins >= 2 ? G.p1 : G.p2).def.name + ' WINS!', W / 2, 200, 52, '#ffd23f');
+  } else if (G.phase === 'settle'){
+    /* VICTORY SCENE tally — the payout made physical: count-up of the
+       whole take (pot + purse) over the winner's coin collection. */
+    const w = (G.p1.wins >= 2 ? G.p1 : G.p2);
+    const shown = Math.floor(G.settleAward * clamp(G.phaseT / 110, 0, 1));
+    R(c, W / 2 - 250, 112, 500, 104, 'rgba(8,10,14,0.80)');
+    c.strokeStyle = '#ffd23f'; c.lineWidth = 2; c.strokeRect(W / 2 - 250, 112, 500, 104);
+    txt(c, w.def.name + ' COLLECTS THE POT', W / 2, 138, 20, '#f5efe2');
+    txt(c, shown + ' KUDOKEN', W / 2, 172, 36, '#ffd23f');
+    txt(c, 'pot ' + G.pot + '  +  purse ' + G.purse + '  —  winner takes everything', W / 2, 200, 13.5, '#9aa5b0');
+  } else if (G.phase === 'intermission'){
+    /* NEXT-FIGHT GATE — televised-card pause: matchup card up, sponsor
+       read in the caption bar, bout waits for the player's tap. */
+    const p = G.pending;
+    R(c, 0, 0, W, H, 'rgba(5,6,10,0.46)');
+    R(c, W / 2 - 290, 118, 580, 196, 'rgba(8,10,14,0.88)');
+    c.strokeStyle = '#4fe3ae'; c.lineWidth = 2; c.strokeRect(W / 2 - 290, 118, 580, 196);
+    if (p && p.kind === 'match'){
+      txt(c, 'NEXT UP — RUNG ' + (p.rung + 1) + ' OF ' + G.ladder.length, W / 2, 148, 15, '#4fe3ae');
+      txtStroke(c, p.pDef.name + '  vs  ' + p.cDef.name, W / 2, 190, 30, '#f5efe2');
+      txt(c, 'purse ' + (10 + 5 * p.rung) + ' kudoken · winner takes the pot · the island picks the arena', W / 2, 226, 13.5, '#9aa5b0');
+    } else if (p && p.kind === 'rematch'){
+      txt(c, 'VERSUS CPU — THE RUNBACK', W / 2, 148, 15, '#4fe3ae');
+      txtStroke(c, p.pDef.name + '  vs  ' + p.cDef.name, W / 2, 190, 30, '#f5efe2');
+      txt(c, (G.end ? G.end.title + '  ·  ' : '') + 'same fighters, fresh pot', W / 2, 226, 13.5, '#9aa5b0');
+    } else {
+      txt(c, G.end ? G.end.title : 'FULL TIME', W / 2, 160, 30, '#ffd23f');
+      txt(c, G.end ? G.end.sub : '', W / 2, 204, 14.5, '#d3dae0');
+      txt(c, 'the final card is written', W / 2, 232, 13, '#9aa5b0');
+    }
+    const secs = Math.max(0, Math.ceil((1500 - G.phaseT) / 60));
+    if (Math.sin(G.frame * 0.07) > -0.35) txt(c, (p && p.kind === 'end') ? 'RESULTS ▸' : 'NEXT FIGHT ▸', W / 2, 268, 22, '#ffd23f');
+    txt(c, 'ENTER or TAP to continue · auto in ' + secs + 's' + (p && p.kind === 'rematch' ? ' · ESC — change fighter' : ' · ESC — ' + (G.mode === 'arcade' ? 'title' : 'select')), W / 2, 296, 12.5, '#7d8791');
   }
   if (G.paused){
     R(c, 0, 0, W, H, 'rgba(5,5,10,0.62)');
