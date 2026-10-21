@@ -3,61 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CLENCHWEAVE DRILL — gesture recognizer test</title>
+<title>Thumb Test — help pick how the fighting game reads your thumbs</title>
 <style>
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:#0b0b10;color:#d3dae0;font-family:"Courier New",Courier,monospace;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+  html,body{margin:0;padding:0;background:#0b0b10;color:#e8edf2;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
   #app{max-width:560px;margin:0 auto;padding:14px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
-  h1{font-size:26px;letter-spacing:2px;margin:6px 0 2px;text-align:center;}
+  h1{font-size:30px;letter-spacing:1px;margin:6px 0 2px;text-align:center;}
   h1 span{color:#4fe3ae;}
-  h2{font-size:15px;letter-spacing:2px;color:#4fe3ae;margin:22px 0 8px;border-bottom:1px solid #2a2f38;padding-bottom:4px;}
-  .sub{text-align:center;color:#8e99a4;font-size:13px;line-height:1.55;margin:4px 0 10px;}
-  .glabel{font-size:12px;letter-spacing:2px;color:#8e99a4;margin:14px 0 6px;}
-  .btnrow{display:flex;flex-direction:column;gap:8px;}
-  .pick{background:#14161c;border:2px solid #2a2f38;color:#d3dae0;font-family:inherit;font-size:16px;font-weight:bold;padding:12px;text-align:left;cursor:pointer;touch-action:none;}
-  .pick small{display:block;font-weight:normal;font-size:12px;color:#8e99a4;margin-top:3px;}
+  h2{font-size:16px;letter-spacing:1px;color:#4fe3ae;margin:22px 0 8px;border-bottom:1px solid #2a2f38;padding-bottom:4px;}
+  .sub{text-align:center;color:#aeb9c4;font-size:15.5px;line-height:1.55;margin:4px 0 12px;}
+  .glabel{font-size:14px;font-weight:bold;letter-spacing:1px;color:#aeb9c4;margin:16px 0 6px;}
+  .btnrow{display:flex;flex-direction:column;gap:10px;}
+  .pick{background:#14161c;border:2px solid #2a2f38;color:#e8edf2;font-family:inherit;font-size:18px;font-weight:bold;padding:16px;text-align:left;cursor:pointer;touch-action:none;min-height:64px;border-radius:8px;}
+  .pick small{display:block;font-weight:normal;font-size:13.5px;color:#aeb9c4;margin-top:4px;line-height:1.5;}
   .pick.sel{border-color:#4fe3ae;color:#fff;box-shadow:0 0 0 1px #4fe3ae inset;}
-  .big{display:block;width:100%;margin-top:18px;background:#4fe3ae;color:#0b0b10;border:none;font-family:inherit;font-size:18px;font-weight:bold;letter-spacing:1px;padding:15px;cursor:pointer;touch-action:none;}
+  .big{display:block;width:100%;margin-top:18px;background:#4fe3ae;color:#0b0b10;border:none;font-family:inherit;font-size:21px;font-weight:bold;letter-spacing:1px;padding:19px;cursor:pointer;touch-action:none;border-radius:8px;min-height:64px;}
   .big.ghost{background:transparent;color:#4fe3ae;border:2px solid #4fe3ae;margin-top:10px;}
-  .howto{font-size:12.5px;color:#8e99a4;line-height:1.65;margin-top:18px;border-top:1px solid #2a2f38;padding-top:12px;}
-  .howto b{color:#d3dae0;}
+  .howto{font-size:14.5px;color:#aeb9c4;line-height:1.7;margin-top:18px;border-top:1px solid #2a2f38;padding-top:12px;}
+  .howto b{color:#e8edf2;}
   .hidden{display:none !important;}
   /* ---- drill ---- */
-  #hud{display:flex;justify-content:space-between;font-size:13px;color:#8e99a4;letter-spacing:1px;padding:2px 0 6px;}
+  #hud{display:flex;justify-content:space-between;font-size:14.5px;color:#aeb9c4;padding:2px 0 6px;}
   #hud b{color:#4fe3ae;}
   #prompt-wrap{text-align:center;padding:8px 4px 4px;border:2px solid transparent;}
   #prompt-wrap.flash{animation:flashbg .45s steps(2) infinite;border-color:#ff5a4e;}
   @keyframes flashbg{0%{background:rgba(255,90,78,.20);}100%{background:rgba(255,90,78,.03);}}
-  #prompt{font-size:40px;font-weight:bold;letter-spacing:1px;line-height:1.1;}
-  #prompt-sub{font-size:12.5px;color:#8e99a4;margin-top:5px;min-height:16px;line-height:1.45;}
+  #prompt{font-size:clamp(38px,11.5vw,56px);font-weight:bold;letter-spacing:.5px;line-height:1.12;}
+  #prompt-sub{font-size:15px;color:#aeb9c4;margin-top:6px;min-height:20px;line-height:1.5;}
   #timerbar{height:6px;background:#1a1d24;margin-top:8px;}
   #timerfill{height:100%;width:0%;background:#4fe3ae;}
-  #intent{margin-top:10px;border:2px solid #4fe3ae;color:#fff;background:rgba(79,227,174,.07);padding:11px 8px;text-align:center;font-size:16.5px;font-weight:bold;letter-spacing:.5px;min-height:46px;}
-  #intent small{display:block;font-weight:normal;font-size:11.5px;color:#8e99a4;margin-top:2px;}
-  #zone{position:relative;flex:1 1 auto;min-height:290px;margin-top:12px;border:2px solid #2a2f38;background:#0e0f14;touch-action:none;overflow:hidden;}
+  #cue{height:104px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .cue-arrow{display:inline-block;font-size:72px;line-height:1;color:#4fe3ae;}
+  .cue-arrow.short{font-size:46px;}
+  .cue-arrow.long{font-size:96px;}
+  .cue-arrow.flat{animation:cueFlat 1.1s ease-in-out infinite;}
+  @keyframes cueFlat{0%{transform:translateX(-30px);opacity:.25;}60%{opacity:1;}100%{transform:translateX(30px);opacity:.25;}}
+  .cue-arrow.up{animation:cueUp 1.1s ease-in-out infinite;}
+  @keyframes cueUp{0%{transform:translate(-22px,22px);opacity:.25;}60%{opacity:1;}100%{transform:translate(22px,-22px);opacity:.25;}}
+  .cue-hold{display:inline-block;width:52px;height:52px;border:5px solid #4fe3ae;border-radius:50%;margin-right:14px;vertical-align:middle;}
+  .cue-hold.fast{animation:holdGrow .7s ease-in-out infinite;}
+  .cue-hold.med{animation:holdGrow 1.4s ease-in-out infinite;}
+  .cue-hold.slow{animation:holdGrow 2.4s ease-in-out infinite;}
+  @keyframes holdGrow{0%{transform:scale(.5);opacity:.45;}75%{transform:scale(1.18);opacity:1;}100%{transform:scale(1.18);opacity:.85;}}
+  .cue-where{font-size:24px;font-weight:bold;vertical-align:middle;color:#e8edf2;}
+  .cue-plus{font-size:42px;margin:0 12px;vertical-align:middle;color:#aeb9c4;}
+  .cue-guard{display:inline-block;font-size:84px;line-height:1;color:#4fe3ae;animation:cueGuard 1s ease-in-out infinite;}
+  @keyframes cueGuard{0%,100%{transform:translateX(14px);opacity:.5;}50%{transform:translateX(-18px);opacity:1;}}
+  .sq-l,.sq-r{display:inline-block;font-size:64px;line-height:1;color:#4fe3ae;}
+  .sq-l{animation:sqL 1.2s ease-in-out infinite;}
+  .sq-r{animation:sqR 1.2s ease-in-out infinite;}
+  @keyframes sqL{0%,100%{transform:translateX(-8px);}50%{transform:translateX(16px);}}
+  @keyframes sqR{0%,100%{transform:translateX(8px);}50%{transform:translateX(-16px);}}
+  #intent{margin-top:6px;border:2px solid #4fe3ae;color:#fff;background:rgba(79,227,174,.07);padding:12px 8px;text-align:center;font-size:19px;font-weight:bold;letter-spacing:.5px;min-height:52px;border-radius:8px;}
+  #intent small{display:block;font-weight:normal;font-size:13px;color:#aeb9c4;margin-top:3px;}
+  #zone{position:relative;flex:1 1 auto;min-height:270px;margin-top:12px;border:2px solid #2a2f38;background:#0e0f14;touch-action:none;overflow:hidden;border-radius:8px;}
   #zone-mid{position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed #2a2f38;}
-  #zone-hmid{position:absolute;left:50%;right:0;top:50%;border-top:1px dotted #232833;}
-  .field-label{position:absolute;top:8px;font-size:11px;letter-spacing:1.5px;color:#5d6672;pointer-events:none;}
+  #zone-hmid{position:absolute;left:50%;right:0;top:50%;border-top:2px dotted #232833;}
+  .field-label{position:absolute;top:8px;font-size:12.5px;font-weight:bold;letter-spacing:1px;color:#77828e;pointer-events:none;}
   .field-label.fl{left:10px;} .field-label.fr{right:10px;text-align:right;}
   .ring{position:absolute;width:58px;height:58px;margin-left:-29px;margin-top:-29px;border:3px solid #4fe3ae;border-radius:50%;pointer-events:none;opacity:.9;}
   .ring.l{border-color:#7d8ea3;}
   .ring.pulse{animation:ringpulse .28s ease-out;}
   @keyframes ringpulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(79,227,174,.55);}100%{transform:scale(1.45);box-shadow:0 0 0 16px rgba(79,227,174,0);}}
+  .drillbtns{display:flex;gap:10px;margin-top:12px;}
+  .minibtn{flex:1;background:transparent;color:#4fe3ae;border:2px solid #2a2f38;font-family:inherit;font-size:16.5px;font-weight:bold;padding:15px;cursor:pointer;touch-action:none;border-radius:8px;min-height:56px;}
   /* ---- results ---- */
-  #res-head{text-align:center;font-size:15px;color:#8e99a4;}
-  #res-head .acc{font-size:52px;font-weight:bold;color:#4fe3ae;display:block;line-height:1.05;}
+  #res-head{text-align:center;font-size:16.5px;color:#aeb9c4;line-height:1.55;}
+  #res-head .acc{font-size:56px;font-weight:bold;color:#4fe3ae;display:block;line-height:1.05;}
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
-  .stat{background:#14161c;border:1px solid #2a2f38;padding:10px;}
-  .stat .v{font-size:22px;font-weight:bold;color:#fff;}
-  .stat .k{font-size:11px;letter-spacing:1.5px;color:#8e99a4;margin-top:2px;}
+  .stat{background:#14161c;border:1px solid #2a2f38;padding:10px;border-radius:8px;}
+  .stat .v{font-size:23px;font-weight:bold;color:#fff;}
+  .stat .k{font-size:11.5px;letter-spacing:1px;color:#aeb9c4;margin-top:2px;}
   table{border-collapse:collapse;margin:6px auto;width:100%;}
-  th,td{border:1px solid #2a2f38;padding:7px 6px;text-align:center;font-size:14px;}
-  th{color:#8e99a4;font-size:12px;letter-spacing:1px;}
+  th,td{border:1px solid #2a2f38;padding:7px 6px;text-align:center;font-size:14.5px;}
+  th{color:#aeb9c4;font-size:12.5px;letter-spacing:.5px;}
   td.mc{font-weight:bold;color:#fff;}
   td.diag{background:rgba(79,227,174,.14);}
   td.off1{background:rgba(232,163,61,.13);}
-  textarea{width:100%;height:170px;background:#0e0f14;color:#d3dae0;border:1px solid #2a2f38;font-family:inherit;font-size:12px;padding:10px;line-height:1.5;}
-  .note{font-size:12px;color:#8e99a4;line-height:1.55;}
+  textarea{width:100%;height:170px;background:#0e0f14;color:#d3dae0;border:1px solid #2a2f38;font-family:"Courier New",Courier,monospace;font-size:12px;padding:10px;line-height:1.5;border-radius:8px;}
+  .note{font-size:13.5px;color:#aeb9c4;line-height:1.6;}
 </style>
 </head>
 <body>
@@ -65,33 +89,33 @@
 
   <!-- ============ SETUP ============ -->
   <section id="screen-setup">
-    <h1>CLENCHWEAVE <span>DRILL</span></h1>
-    <p class="sub">A gesture-recognizer test range for BROBOTS FIGHTER.<br>
-    Three ways to read a thumb. One winner. No buttons were harmed.</p>
+    <h1>THUMB <span>TEST</span></h1>
+    <p class="sub">Help pick how the fighting game reads your thumbs. Takes 1 minute.</p>
 
-    <div class="glabel">RECOGNIZER MODE</div>
+    <div class="glabel">HOW WILL YOU HIT?</div>
     <div class="btnrow">
-      <button class="pick sel" id="mode-a">A · DISPLACEMENT<small>swipe length = strength · flat swipe = punch, steep = kick</small></button>
-      <button class="pick" id="mode-b">B · DURATION<small>hold time = strength · detent clicks at MEDIUM and HEAVY · land high = hands, low = feet</small></button>
-      <button class="pick" id="mode-c">C · HYBRID<small>swipe sets strength instantly · keep holding to load it up · release commits what the indicator shows</small></button>
+      <button class="pick sel" id="mode-a">SWIPE WAY<small>Short swipe = soft hit · long swipe = hard hit. Sideways = punch, up = kick.</small></button>
+      <button class="pick" id="mode-b">HOLD WAY<small>Tap = soft · hold a moment = medium · hold long = hard. Top half = punch, bottom half = kick.</small></button>
+      <button class="pick" id="mode-c">MIX WAY<small>Swipe to start it, keep holding to charge it up, let go to throw it.</small></button>
     </div>
 
-    <div class="glabel">SESSION TYPE</div>
+    <div class="glabel">HOW FAST?</div>
     <div class="btnrow">
-      <button class="pick sel" id="type-calm">CALM<small>untimed prompts — learn the gestures</small></button>
-      <button class="pick" id="type-pressure">PRESSURE<small>1.2 second window per prompt + INCOMING! guard calls</small></button>
+      <button class="pick sel" id="type-calm">TAKE YOUR TIME<small>No clock. Get the feel of it first.</small></button>
+      <button class="pick" id="type-pressure">FAST ROUNDS<small>About a second per move, like a real fight — plus surprise BLOCK! calls.</small></button>
     </div>
 
-    <button class="big" id="btn-start">START — 24 TRIALS</button>
+    <button class="big" id="btn-start">START</button>
+    <p class="sub">24 quick rounds. Miss one? There's a Skip button.</p>
 
     <div id="compare-setup"></div>
 
     <p class="howto">
-      <b>HOW IT WORKS</b><br>
-      Left half of the range = <b>DRIVE</b>. Hold your left thumb dragged <b>away</b> (&#9664;) to enter <b>GUARD</b> — releasing a guard can never fire an attack, by design.<br>
-      Right half = <b>WEAVE</b>. That thumb attacks; the mode above decides how it is read.<br>
-      <b>CLENCH</b> (the special): put both thumbs down and squeeze them toward each other.<br>
-      The green strip is the <b>intent indicator</b> — it always shows what the game thinks you're doing, live. No score is shown during a session. Results land at the end.
+      <b>THE WHOLE DEAL, IN PLAIN WORDS</b><br>
+      Left side of the box = <b>blocking</b>: press your left thumb there, slide it outward, and hold.<br>
+      Right side = <b>hitting</b>. The three ways above are three different ways for the game to read that thumb — that's what's being tested.<br>
+      <b>Special move:</b> put both thumbs down and slide them toward each other.<br>
+      The green box always shows what the game thinks you're doing, live, as you do it. No score until the end.
     </p>
   </section>
 
@@ -103,29 +127,36 @@
       <div id="prompt-sub"></div>
       <div id="timerbar"><div id="timerfill"></div></div>
     </div>
-    <div id="intent">INTENT: —</div>
+    <div id="cue"></div>
+    <div id="intent">Ready</div>
     <div id="zone">
       <div id="zone-mid"></div>
       <div id="zone-hmid"></div>
-      <div class="field-label fl">&#9664; DRIVE · hold away = GUARD</div>
-      <div class="field-label fr">WEAVE &#9654;</div>
+      <div class="field-label fl">&#9664; BLOCK — slide out &amp; hold</div>
+      <div class="field-label fr">HIT &#9654;</div>
+    </div>
+    <div class="drillbtns">
+      <button class="minibtn" id="btn-skip">Skip this one</button>
+      <button class="minibtn" id="btn-quit">Stop</button>
     </div>
   </section>
 
   <!-- ============ RESULTS ============ -->
   <section id="screen-results" class="hidden">
-    <h1>RESULTS</h1>
+    <h1>ALL DONE!</h1>
     <div id="res-head"></div>
+    <p class="note"><b>What happens next:</b> Jessie reads these numbers and picks the way the game will read thumbs. Want to help more? Go back and try another way — every way you test makes the pick surer.</p>
     <div class="stats" id="res-stats"></div>
-    <h2>STRENGTH CONFUSION — intended (rows) vs detected (cols)</h2>
+    <h2>SOFT · MEDIUM · HARD — WHAT YOU MEANT vs WHAT THE GAME SAW</h2>
     <div id="res-matrix"></div>
     <p class="note" id="res-matrix-note"></p>
-    <h2>COMPARE MODES — THIS DEVICE</h2>
+    <h2>THE THREE WAYS — SCORES ON THIS PHONE</h2>
     <div id="res-compare"></div>
-    <h2>COPY RESULTS</h2>
+    <h2>SEND YOUR RESULTS</h2>
+    <p class="note">Tap the button below, then paste it to Jessie — that's how your numbers reach him.</p>
     <textarea id="res-copy" readonly></textarea>
-    <button class="big" id="btn-copy">COPY SUMMARY</button>
-    <button class="big ghost" id="btn-again">NEW SESSION</button>
+    <button class="big" id="btn-copy">COPY MY RESULTS</button>
+    <button class="big ghost" id="btn-again">TRY ANOTHER WAY</button>
   </section>
 
 </div>
@@ -263,6 +294,8 @@ function fireDetent(rec, kind){
 }
 
 /* ---------- intent indicator ---------- */
+function wayName(m){ return m === 'A' ? 'Swipe way' : m === 'B' ? 'Hold way' : 'Mix way'; }
+function setCue(html){ var c = $('cue'); if(c) c.innerHTML = html; }
 function rightRec(){
   var best = null;
   for(var id in S.pointers){ var r = S.pointers[id]; if(r.field === 'R' && (!best || r.t0 > best.t0)) best = r; }
@@ -271,16 +304,16 @@ function rightRec(){
 function updateIntent(){
   var el = $('intent'); if(!el) return;
   var txt, sub = '';
-  if(S.clench.latched){ txt = 'SPECIAL — CLENCH!'; }
-  else if(S.guard.active){ txt = 'GUARD'; sub = 'release returns to neutral — a guard release never attacks'; }
+  if(S.clench.latched){ txt = 'SPECIAL MOVE!'; }
+  else if(S.guard.active){ txt = 'Blocking'; sub = 'Let go whenever — blocking never throws a punch'; }
   else {
     var r = rightRec();
     if(r){
-      txt = STR[currentClass(r)] + ' · ' + currentLimb(r);
-      sub = 'release to commit';
-    } else { txt = '—'; sub = 'WEAVE field (right) attacks · DRIVE field (left) guards'; }
+      txt = STR[currentClass(r)] + ' ' + currentLimb(r).toLowerCase();
+      sub = 'Let go to throw it';
+    } else { txt = 'Ready'; sub = 'Right side: hit · Left side: block'; }
   }
-  el.textContent = 'INTENT: ' + txt;
+  el.textContent = txt;
   if(sub){
     var s = document.createElement('small');
     s.textContent = sub;
@@ -462,7 +495,7 @@ function startSession(mode, type, trialsOverride){
     trialStart:0, deadline:0, guardEnteredAt:0, attackFired:false, done:false
   };
   showScreen('drill');
-  $('hud-mode').innerHTML = 'MODE <b>' + mode + '</b> · ' + type;
+  $('hud-mode').textContent = wayName(mode) + ' · ' + (type === 'PRESSURE' ? 'fast rounds' : 'take your time');
   nextTrial();
 }
 function nextTrial(){
@@ -472,22 +505,34 @@ function nextTrial(){
   ss.trialStart = T();
   ss.deadline = ss.trialStart + (ss.type === 'PRESSURE' ? TH.pressureMs : TH.calmMs);
   ss.guardEnteredAt = 0; ss.attackFired = false;
-  $('hud-count').textContent = 'TRIAL ' + (ss.idx + 1) + ' / ' + ss.trials.length;
+  $('hud-count').textContent = 'Step ' + (ss.idx + 1) + ' of ' + ss.trials.length;
   var p = $('prompt'), sub = $('prompt-sub'), wrap = $('prompt-wrap');
   wrap.classList.remove('flash');
   var cur = ss.current;
   if(cur.kind === 'ATTACK'){
-    p.textContent = cur.strength + ' · ' + cur.limb;
-    sub.textContent = ss.mode === 'A' ? 'right thumb: swipe — length = strength · flat = PUNCH, steep = KICK'
-      : ss.mode === 'B' ? 'right thumb: tap = LIGHT, hold = MEDIUM, long hold = HEAVY · land high = PUNCH, low = KICK'
-      : 'right thumb: swipe sets strength — keep holding to load it higher';
+    var kick = cur.limb === 'KICK';
+    if(ss.mode === 'A'){
+      p.textContent = (cur.strength === 'LIGHT' ? 'SHORT ' : cur.strength === 'HEAVY' ? 'LONG ' : '') + 'SWIPE ' + (kick ? '↗' : '➡');
+      sub.textContent = 'Right thumb: short = soft hit, long = hard hit. ' + (kick ? "Swipe UP — that's a kick." : "Swipe SIDEWAYS — that's a punch.");
+      setCue('<span class="cue-arrow ' + (kick ? 'up' : 'flat') + (cur.strength === 'LIGHT' ? ' short' : cur.strength === 'HEAVY' ? ' long' : '') + '">' + (kick ? '↗' : '➡') + '</span>');
+    } else if(ss.mode === 'B'){
+      p.textContent = cur.strength === 'LIGHT' ? 'TAP' : cur.strength === 'MEDIUM' ? 'HOLD' : 'HOLD LONGER';
+      sub.textContent = 'Right thumb: tap = soft · hold a moment = medium · hold long = hard. Land on the ' + (kick ? "BOTTOM half — that's a kick." : "TOP half — that's a punch.");
+      setCue('<span class="cue-hold ' + (cur.strength === 'LIGHT' ? 'fast' : cur.strength === 'MEDIUM' ? 'med' : 'slow') + '"></span><span class="cue-where">' + (kick ? '⬇ bottom' : '⬆ top') + '</span>');
+    } else {
+      p.textContent = 'SWIPE, THEN HOLD';
+      sub.textContent = 'Right thumb: swipe, then keep holding to charge it up — let go to throw. ' + (kick ? 'Steep swipe = kick.' : 'Flat swipe = punch.');
+      setCue('<span class="cue-arrow flat">➡</span><span class="cue-plus">+</span><span class="cue-hold med"></span>');
+    }
   } else if(cur.kind === 'GUARD'){
-    if(ss.type === 'PRESSURE'){ p.textContent = 'INCOMING!'; wrap.classList.add('flash'); }
-    else p.textContent = 'GUARD!';
-    sub.textContent = 'left thumb: drag away (◀) and hold — then release clean';
+    if(ss.type === 'PRESSURE'){ p.textContent = 'INCOMING! BLOCK!'; wrap.classList.add('flash'); }
+    else p.textContent = 'BLOCK!';
+    sub.textContent = 'Left thumb: press on the left side, slide it outward, and hold — then let go.';
+    setCue('<span class="cue-guard">⬅</span>');
   } else {
-    p.textContent = 'SPECIAL';
-    sub.textContent = 'clench: both thumbs down, squeeze them toward each other';
+    p.textContent = 'SQUEEZE!';
+    sub.textContent = 'Both thumbs down at once — then slide them toward each other.';
+    setCue('<span class="sq-l">➡</span><span class="sq-r">⬅</span>');
   }
   updateIntent();
 }
@@ -583,15 +628,15 @@ function saveSessionSummary(sum){
 function compareHTML(){
   var a = loadSessions(), latest = {};
   for(var i = a.length - 1; i >= 0; i--){ if(!latest[a[i].mode]) latest[a[i].mode] = a[i]; }
-  if(!latest.A && !latest.B && !latest.C) return '<p class="note">No sessions on this device yet. Run one mode, then come back and run the others — this table fills in.</p>';
+  if(!latest.A && !latest.B && !latest.C) return '<p class="note">Nothing tested on this phone yet. Finish one way and this table starts filling in.</p>';
   var rows = '';
   ['A','B','C'].forEach(function(m){
     var s = latest[m];
-    rows += '<tr><th>' + m + '</th><td>' + (s ? Math.round(s.accuracy) + '%' : '—') + '</td><td>' +
+    rows += '<tr><th>' + wayName(m) + '</th><td>' + (s ? Math.round(s.accuracy) + '%' : '—') + '</td><td>' +
       (s && s.guardSafety != null ? Math.round(s.guardSafety) + '%' : '—') + '</td><td>' +
-      (s ? s.type : '—') + '</td><td>' + (s ? s.when : '—') + '</td></tr>';
+      (s ? (s.type === 'PRESSURE' ? 'fast rounds' : 'take your time') : '—') + '</td><td>' + (s ? s.when : '—') + '</td></tr>';
   });
-  return '<table><tr><th>MODE</th><th>ACCURACY</th><th>GUARD SAFETY</th><th>SESSION</th><th>WHEN</th></tr>' + rows + '</table>';
+  return '<table><tr><th>WAY</th><th>GOT IT RIGHT</th><th>BLOCKING SAFE</th><th>ROUNDS</th><th>WHEN</th></tr>' + rows + '</table>';
 }
 function matrixHTML(st){
   var head = '<table><tr><th></th><th>→ LIGHT</th><th>→ MEDIUM</th><th>→ HEAVY</th></tr>';
@@ -627,20 +672,20 @@ function finishSession(){
   var when = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
   saveSessionSummary({ mode:ss.mode, type:ss.type, accuracy:st.accuracy,
     guardSafety: st.guardN ? st.guardSafe / st.guardN * 100 : null, when:when });
-  $('res-head').innerHTML = 'MODE <b>' + ss.mode + '</b> · ' + ss.type +
-    '<span class="acc">' + Math.round(st.accuracy) + '%</span>exact-match accuracy · ' + st.correct + ' of ' + st.n + ' trials';
+  $('res-head').innerHTML = 'You tested the <b>' + wayName(ss.mode) + '</b>' +
+    '<span class="acc">' + Math.round(st.accuracy) + '%</span>You got ' + st.correct + ' of ' + st.n + ' moves exactly right — thank you!';
   function stat(v, k){ return '<div class="stat"><div class="v">' + v + '</div><div class="k">' + k + '</div></div>'; }
   $('res-stats').innerHTML =
-    stat(pct(st.oneStepNum, st.oneStepDen), 'ONE-STEP-OFF (of detected attacks)') +
-    stat(pct(st.limbNum, st.limbDen), 'LIMB ACCURACY') +
-    stat(pct(st.guardSafe, st.guardN), 'GUARD SAFETY — no accidental attacks') +
-    stat(pct(st.specOk, st.specN), 'CLENCH DETECTION') +
-    stat(st.meanMs != null ? Math.round(st.meanMs) + ' ms' : '—', 'MEAN INPUT TIME') +
-    stat(st.guardOk + '/' + st.guardN, 'GUARD SUCCESSES');
+    stat(pct(st.oneStepNum, st.oneStepDen), 'NEAR MISSES (just one step off)') +
+    stat(pct(st.limbNum, st.limbDen), 'PUNCH vs KICK — CALLED RIGHT') +
+    stat(pct(st.guardSafe, st.guardN), 'BLOCKING STAYED SAFE — no surprise punches') +
+    stat(pct(st.specOk, st.specN), 'SQUEEZE MOVE — GAME SAW IT') +
+    stat(st.meanMs != null ? Math.round(st.meanMs) + ' ms' : '—', 'AVERAGE TIME PER MOVE') +
+    stat(st.guardOk + '/' + st.guardN, 'BLOCKS THAT WORKED');
   $('res-matrix').innerHTML = matrixHTML(st);
   $('res-matrix-note').textContent = st.otherAtt ?
-    st.otherAtt + ' attack trial(s) ended with no attack detected (special, guard-only, or timeout) and are not in the matrix.' :
-    'Every attack trial produced a detected attack.';
+    st.otherAtt + ' round(s) ended with no hit seen, so they are not in the table above.' :
+    'Every round, the game saw your hit.';
   $('res-compare').innerHTML = compareHTML();
   $('res-copy').value = summaryText(ss, st);
   showScreen('results');
@@ -651,7 +696,7 @@ function showScreen(name){
   $('screen-setup').classList.toggle('hidden', name !== 'setup');
   $('screen-drill').classList.toggle('hidden', name !== 'drill');
   $('screen-results').classList.toggle('hidden', name !== 'results');
-  if(name === 'setup') $('compare-setup').innerHTML = '<h2>COMPARE MODES — THIS DEVICE</h2>' + compareHTML();
+  if(name === 'setup') $('compare-setup').innerHTML = '<h2>HOW THE THREE WAYS SCORED — THIS PHONE</h2>' + compareHTML();
 }
 function pickMode(m){
   S.selMode = m;
@@ -671,6 +716,8 @@ function wire(){
   $('type-calm').addEventListener('click', function(){ pickType('CALM'); });
   $('type-pressure').addEventListener('click', function(){ pickType('PRESSURE'); });
   $('btn-start').addEventListener('click', function(){ startSession(S.selMode, S.selType); });
+  $('btn-skip').addEventListener('click', function(){ if(trialActive()) recordResult({ dType:'NONE', correct:false, inputMs:null }); });
+  $('btn-quit').addEventListener('click', function(){ if(S.session){ S.session.done = true; S.session.current = null; } showScreen('setup'); });
   $('btn-again').addEventListener('click', function(){ showScreen('setup'); });
   $('btn-copy').addEventListener('click', function(){
     var ta = $('res-copy');
