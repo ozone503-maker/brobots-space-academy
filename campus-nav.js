@@ -32,6 +32,22 @@
       else nav.insertBefore(a, nav.querySelector('a.contact'));
     }
 
+    if (!nav.querySelector('a[href="faq.html"]')) {
+      var faq = document.createElement('a');
+      faq.href = 'faq.html';
+      faq.textContent = 'FAQ';
+      if ((location.pathname || '').indexOf('faq') !== -1) {
+        faq.className = 'current';
+        faq.setAttribute('aria-current', 'page');
+        nav.querySelectorAll('a.current').forEach(function (x) {
+          if (x !== faq) { x.classList.remove('current'); x.removeAttribute('aria-current'); }
+        });
+      }
+      var cta = nav.querySelector('a.contact');
+      if (cta) nav.insertBefore(faq, cta);
+      else nav.appendChild(faq);
+    }
+
     if (!btn) return;
 
     function setOpen(open) {
