@@ -1,9 +1,9 @@
 /* Shared campus sticky nav — mobile toggle + contact routing + console link */
 (function () {
   function init() {
-    document.querySelectorAll('a[href^="mailto:hello@brobots.space"]').forEach(function (a) {
+    document.querySelectorAll('a[href^="mailto:brobots.space@gmail.com"]').forEach(function (a) {
       var label = (a.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-      if (a.classList.contains('contact') || label === 'contact' || label === 'hello@brobots.space') {
+      if (a.classList.contains('contact') || label === 'contact' || label === 'brobots.space@gmail.com') {
         a.setAttribute('href', 'index.html#talk');
       }
     });
