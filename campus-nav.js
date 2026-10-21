@@ -48,6 +48,22 @@
       else nav.appendChild(faq);
     }
 
+    if (!nav.querySelector('a[href="fighter.html"]')) {
+      var fighter = document.createElement('a');
+      fighter.href = 'fighter.html';
+      fighter.textContent = 'Fighter';
+      if ((location.pathname || '').indexOf('fighter') !== -1) {
+        fighter.className = 'current';
+        fighter.setAttribute('aria-current', 'page');
+        nav.querySelectorAll('a.current').forEach(function (x) {
+          if (x !== fighter) { x.classList.remove('current'); x.removeAttribute('aria-current'); }
+        });
+      }
+      var contactCta = nav.querySelector('a.contact');
+      if (contactCta) nav.insertBefore(fighter, contactCta);
+      else nav.appendChild(fighter);
+    }
+
     if (!btn) return;
 
     function setOpen(open) {
