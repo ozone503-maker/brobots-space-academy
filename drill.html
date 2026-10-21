@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CLENCHWEAVE DRILL — gesture recognizer test</title>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#0b0b10;color:#d3dae0;font-family:"Courier New",Courier,monospace;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+  #app{max-width:560px;margin:0 auto;padding:14px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+  h1{font-size:26px;letter-spacing:2px;margin:6px 0 2px;text-align:center;}
+  h1 span{color:#4fe3ae;}
+  h2{font-size:15px;letter-spacing:2px;color:#4fe3ae;margin:22px 0 8px;border-bottom:1px solid #2a2f38;padding-bottom:4px;}
+  .sub{text-align:center;color:#8e99a4;font-size:13px;line-height:1.55;margin:4px 0 10px;}
+  .glabel{font-size:12px;letter-spacing:2px;color:#8e99a4;margin:14px 0 6px;}
+  .btnrow{display:flex;flex-direction:column;gap:8px;}
+  .pick{background:#14161c;border:2px solid #2a2f38;color:#d3dae0;font-family:inherit;font-size:16px;font-weight:bold;padding:12px;text-align:left;cursor:pointer;touch-action:none;}
+  .pick small{display:block;font-weight:normal;font-size:12px;color:#8e99a4;margin-top:3px;}
+  .pick.sel{border-color:#4fe3ae;color:#fff;box-shadow:0 0 0 1px #4fe3ae inset;}
+  .big{display:block;width:100%;margin-top:18px;background:#4fe3ae;color:#0b0b10;border:none;font-family:inherit;font-size:18px;font-weight:bold;letter-spacing:1px;padding:15px;cursor:pointer;touch-action:none;}
+  .big.ghost{background:transparent;color:#4fe3ae;border:2px solid #4fe3ae;margin-top:10px;}
+  .howto{font-size:12.5px;color:#8e99a4;line-height:1.65;margin-top:18px;border-top:1px solid #2a2f38;padding-top:12px;}
+  .howto b{color:#d3dae0;}
+  .hidden{display:none !important;}
+  /* ---- drill ---- */
+  #hud{display:flex;justify-content:space-between;font-size:13px;color:#8e99a4;letter-spacing:1px;padding:2px 0 6px;}
+  #hud b{color:#4fe3ae;}
+  #prompt-wrap{text-align:center;padding:8px 4px 4px;border:2px solid transparent;}
+  #prompt-wrap.flash{animation:flashbg .45s steps(2) infinite;border-color:#ff5a4e;}
+  @keyframes flashbg{0%{background:rgba(255,90,78,.20);}100%{background:rgba(255,90,78,.03);}}
+  #prompt{font-size:40px;font-weight:bold;letter-spacing:1px;line-height:1.1;}
+  #prompt-sub{font-size:12.5px;color:#8e99a4;margin-top:5px;min-height:16px;line-height:1.45;}
+  #timerbar{height:6px;background:#1a1d24;margin-top:8px;}
+  #timerfill{height:100%;width:0%;background:#4fe3ae;}
+  #intent{margin-top:10px;border:2px solid #4fe3ae;color:#fff;background:rgba(79,227,174,.07);padding:11px 8px;text-align:center;font-size:16.5px;font-weight:bold;letter-spacing:.5px;min-height:46px;}
+  #intent small{display:block;font-weight:normal;font-size:11.5px;color:#8e99a4;margin-top:2px;}
+  #zone{position:relative;flex:1 1 auto;min-height:290px;margin-top:12px;border:2px solid #2a2f38;background:#0e0f14;touch-action:none;overflow:hidden;}
+  #zone-mid{position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed #2a2f38;}
+  #zone-hmid{position:absolute;left:50%;right:0;top:50%;border-top:1px dotted #232833;}
+  .field-label{position:absolute;top:8px;font-size:11px;letter-spacing:1.5px;color:#5d6672;pointer-events:none;}
+  .field-label.fl{left:10px;} .field-label.fr{right:10px;text-align:right;}
+  .ring{position:absolute;width:58px;height:58px;margin-left:-29px;margin-top:-29px;border:3px solid #4fe3ae;border-radius:50%;pointer-events:none;opacity:.9;}
+  .ring.l{border-color:#7d8ea3;}
+  .ring.pulse{animation:ringpulse .28s ease-out;}
+  @keyframes ringpulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(79,227,174,.55);}100%{transform:scale(1.45);box-shadow:0 0 0 16px rgba(79,227,174,0);}}
+  /* ---- results ---- */
+  #res-head{text-align:center;font-size:15px;color:#8e99a4;}
+  #res-head .acc{font-size:52px;font-weight:bold;color:#4fe3ae;display:block;line-height:1.05;}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+  .stat{background:#14161c;border:1px solid #2a2f38;padding:10px;}
+  .stat .v{font-size:22px;font-weight:bold;color:#fff;}
+  .stat .k{font-size:11px;letter-spacing:1.5px;color:#8e99a4;margin-top:2px;}
+  table{border-collapse:collapse;margin:6px auto;width:100%;}
+  th,td{border:1px solid #2a2f38;padding:7px 6px;text-align:center;font-size:14px;}
+  th{color:#8e99a4;font-size:12px;letter-spacing:1px;}
+  td.mc{font-weight:bold;color:#fff;}
+  td.diag{background:rgba(79,227,174,.14);}
+  td.off1{background:rgba(232,163,61,.13);}
+  textarea{width:100%;height:170px;background:#0e0f14;color:#d3dae0;border:1px solid #2a2f38;font-family:inherit;font-size:12px;padding:10px;line-height:1.5;}
+  .note{font-size:12px;color:#8e99a4;line-height:1.55;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ SETUP ============ -->
+  <section id="screen-setup">
+    <h1>CLENCHWEAVE <span>DRILL</span></h1>
+    <p class="sub">A gesture-recognizer test range for BROBOTS FIGHTER.<br>
+    Three ways to read a thumb. One winner. No buttons were harmed.</p>
+
+    <div class="glabel">RECOGNIZER MODE</div>
+    <div class="btnrow">
+      <button class="pick sel" id="mode-a">A · DISPLACEMENT<small>swipe length = strength · flat swipe = punch, steep = kick</small></button>
+      <button class="pick" id="mode-b">B · DURATION<small>hold time = strength · detent clicks at MEDIUM and HEAVY · land high = hands, low = feet</small></button>
+      <button class="pick" id="mode-c">C · HYBRID<small>swipe sets strength instantly · keep holding to load it up · release commits what the indicator shows</small></button>
+    </div>
+
+    <div class="glabel">SESSION TYPE</div>
+    <div class="btnrow">
+      <button class="pick sel" id="type-calm">CALM<small>untimed prompts — learn the gestures</small></button>
+      <button class="pick" id="type-pressure">PRESSURE<small>1.2 second window per prompt + INCOMING! guard calls</small></button>
+    </div>
+
+    <button class="big" id="btn-start">START — 24 TRIALS</button>
+
+    <div id="compare-setup"></div>
+
+    <p class="howto">
+      <b>HOW IT WORKS</b><br>
+      Left half of the range = <b>DRIVE</b>. Hold your left thumb dragged <b>away</b> (&#9664;) to enter <b>GUARD</b> — releasing a guard can never fire an attack, by design.<br>
+      Right half = <b>WEAVE</b>. That thumb attacks; the mode above decides how it is read.<br>
+      <b>CLENCH</b> (the special): put both thumbs down and squeeze them toward each other.<br>
+      The green strip is the <b>intent indicator</b> — it always shows what the game thinks you're doing, live. No score is shown during a session. Results land at the end.
+    </p>
+  </section>
+
+  <!-- ============ DRILL ============ -->
+  <section id="screen-drill" class="hidden" style="display:flex;flex-direction:column;flex:1;">
+    <div id="hud"><span id="hud-mode"></span><span id="hud-count"></span></div>
+    <div id="prompt-wrap">
+      <div id="prompt">READY</div>
+      <div id="prompt-sub"></div>
+      <div id="timerbar"><div id="timerfill"></div></div>
+    </div>
+    <div id="intent">INTENT: —</div>
+    <div id="zone">
+      <div id="zone-mid"></div>
+      <div id="zone-hmid"></div>
+      <div class="field-label fl">&#9664; DRIVE · hold away = GUARD</div>
+      <div class="field-label fr">WEAVE &#9654;</div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="screen-results" class="hidden">
+    <h1>RESULTS</h1>
+    <div id="res-head"></div>
+    <div class="stats" id="res-stats"></div>
+    <h2>STRENGTH CONFUSION — intended (rows) vs detected (cols)</h2>
+    <div id="res-matrix"></div>
+    <p class="note" id="res-matrix-note"></p>
+    <h2>COMPARE MODES — THIS DEVICE</h2>
+    <div id="res-compare"></div>
+    <h2>COPY RESULTS</h2>
+    <textarea id="res-copy" readonly></textarea>
+    <button class="big" id="btn-copy">COPY SUMMARY</button>
+    <button class="big ghost" id="btn-again">NEW SESSION</button>
+  </section>
+
+</div>
+<script>
+(function(){
+'use strict';
+/* ================= CLENCHWEAVE DRILL =================
+   Gesture-recognizer test range. Modes:
+     A DISPLACEMENT — swipe length = strength, swipe angle = limb
+     B DURATION     — hold time = strength (detent feedback), landing zone = limb
+     C HYBRID       — displacement class instantly + hold raises it; release commits the shown class
+   Invariant: a guard release can NEVER produce an attack. Attacks are emitted
+   from exactly one code path (right-field pointer release), and a left-field
+   guard touch has no route to it. Clench-consumed touches commit nothing.
+*/
+function $(id){ return document.getElementById(id); }
+function T(){ return (typeof performance!=='undefined' && performance.now) ? performance.now() : Date.now(); }
+
+var TH = {
+  dispL: 40, dispH: 110,           /* px: <40 L, 40-110 M, >110 H */
+  anglePunch: 35,                  /* deg from horizontal: <= punch, else kick */
+  tapDist: 12,                     /* px: below this a mode-A touch is a tap = PUNCH */
+  durL: 180, durH: 550,            /* ms: <180 L, 180-550 M, >550 H (detents AT thresholds) */
+  raiseMs: 400,                    /* hybrid: +1 class per 400ms held */
+  guardDx: -28,                    /* px: left-thumb dx <= this = GUARD */
+  guardBackDx: -10,                /* px: sliding back above this ends guard */
+  clenchShrink: 50,                /* px: gap must shrink this much = SPECIAL */
+  pressureMs: 1200,
+  calmMs: 20000,
+  trials: 24
+};
+var STR = ['LIGHT','MEDIUM','HEAVY'];
+
+/* ---------- audio / haptics (detents) ---------- */
+var AC = null;
+function click(freq){
+  try{
+    var Ctx = (typeof AudioContext!=='undefined') ? AudioContext :
+              ((typeof webkitAudioContext!=='undefined') ? webkitAudioContext : null);
+    if(!Ctx) return;
+    if(!AC) AC = new Ctx();
+    if(AC.resume) AC.resume();
+    var o = AC.createOscillator(), g = AC.createGain();
+    o.type = 'square'; o.frequency.value = freq || 1200;
+    g.gain.value = 0.045;
+    o.connect(g); g.connect(AC.destination);
+    var t = AC.currentTime;
+    o.start(t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+    o.stop(t + 0.06);
+  }catch(e){}
+}
+function buzz(ms){ try{ if(typeof navigator!=='undefined' && navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+
+/* ---------- state ---------- */
+var S = {
+  selMode: 'A', selType: 'CALM',
+  pointers: {},            /* pointerId -> rec */
+  guard: { active:false, byId:null, since:0 },
+  clench: { latched:false, refGap:0, pair:null },
+  session: null,           /* {mode,type,trials,idx,results,trialStart,deadline,guardEnteredAt,attackFired,done} */
+  events: [],              /* recognizer event log (tests + debugging) */
+  detentLog: []            /* {kind:'M'|'H'|'RAISE', t} */
+};
+function logEvent(ev){ ev.t = T(); S.events.push(ev); if(S.events.length > 600) S.events.shift(); }
+
+/* ---------- classification helpers ---------- */
+function dispClass(d){ return d < TH.dispL ? 0 : (d <= TH.dispH ? 1 : 2); }
+function durClass(ms){ return ms < TH.durL ? 0 : (ms <= TH.durH ? 1 : 2); }
+function distOf(rec){ var dx = rec.x - rec.sx, dy = rec.y - rec.sy; return Math.sqrt(dx*dx + dy*dy); }
+function vectorLimb(rec){
+  var dx = rec.x - rec.sx, dy = rec.y - rec.sy, d = Math.sqrt(dx*dx + dy*dy);
+  if(d < TH.tapDist) return 'PUNCH';
+  var ang = Math.atan2(Math.abs(dy), Math.abs(dx)) * 180 / Math.PI;
+  return ang <= TH.anglePunch ? 'PUNCH' : 'KICK';
+}
+function hybridClass(rec){
+  var base = dispClass(distOf(rec));
+  return Math.max(base, rec.floor || 0);
+}
+function currentClass(rec){
+  var m = S.session ? S.session.mode : S.selMode;
+  if(rec.field !== 'R') return 0;
+  if(m === 'A') return dispClass(distOf(rec));
+  if(m === 'B') return durClass(T() - rec.t0);
+  return hybridClass(rec);
+}
+function currentLimb(rec){
+  var m = S.session ? S.session.mode : S.selMode;
+  if(m === 'B') return rec.limbB || 'PUNCH';
+  return vectorLimb(rec);
+}
+
+/* ---------- zone / fields ---------- */
+function zoneRect(){
+  var z = $('zone');
+  if(z && z.getBoundingClientRect){
+    var r = z.getBoundingClientRect();
+    if(r && r.width > 0) return r;
+  }
+  return { left:0, top:0, width:800, height:600 };
+}
+function fieldOf(x){ var r = zoneRect(); return (x < r.left + r.width / 2) ? 'L' : 'R'; }
+
+function makeRing(x, y, field){
+  var z = $('zone'); if(!z || !document.createElement) return null;
+  var r = zoneRect();
+  var el = document.createElement('div');
+  el.className = 'ring' + (field === 'L' ? ' l' : '');
+  el.style.left = (x - r.left) + 'px';
+  el.style.top = (y - r.top) + 'px';
+  z.appendChild(el);
+  return el;
+}
+function moveRing(rec){
+  if(!rec.ring) return;
+  var r = zoneRect();
+  rec.ring.style.left = (rec.x - r.left) + 'px';
+  rec.ring.style.top = (rec.y - r.top) + 'px';
+}
+function pulseRing(rec){
+  if(!rec.ring || !rec.ring.classList) return;
+  rec.ring.classList.remove('pulse');
+  rec.ring.classList.add('pulse');
+}
+function dropRing(rec){
+  if(rec.ring && rec.ring.parentNode) rec.ring.parentNode.removeChild(rec.ring);
+  rec.ring = null;
+}
+function fireDetent(rec, kind){
+  S.detentLog.push({ kind:kind, t:T() });
+  click(kind === 'M' ? 1500 : (kind === 'H' ? 950 : 1250));
+  buzz(12);
+  pulseRing(rec);
+}
+
+/* ---------- intent indicator ---------- */
+function rightRec(){
+  var best = null;
+  for(var id in S.pointers){ var r = S.pointers[id]; if(r.field === 'R' && (!best || r.t0 > best.t0)) best = r; }
+  return best;
+}
+function updateIntent(){
+  var el = $('intent'); if(!el) return;
+  var txt, sub = '';
+  if(S.clench.latched){ txt = 'SPECIAL — CLENCH!'; }
+  else if(S.guard.active){ txt = 'GUARD'; sub = 'release returns to neutral — a guard release never attacks'; }
+  else {
+    var r = rightRec();
+    if(r){
+      txt = STR[currentClass(r)] + ' · ' + currentLimb(r);
+      sub = 'release to commit';
+    } else { txt = '—'; sub = 'WEAVE field (right) attacks · DRIVE field (left) guards'; }
+  }
+  el.textContent = 'INTENT: ' + txt;
+  if(sub){
+    var s = document.createElement('small');
+    s.textContent = sub;
+    el.appendChild(s);
+  }
+}
+
+/* ---------- guard (a STATE, not an event) ---------- */
+function enterGuard(rec){
+  if(S.guard.active) return;
+  S.guard.active = true; S.guard.byId = rec.id; S.guard.since = T();
+  logEvent({ type:'GUARD_ON' });
+  buzz(8);
+  onGuardEntered(T());
+  updateIntent();
+}
+function endGuard(rec, how){
+  if(!S.guard.active || S.guard.byId !== rec.id) return;
+  S.guard.active = false; S.guard.byId = null;
+  logEvent({ type:'GUARD_OFF', how:how });
+  /* Deliberately NO attack path here. Guard exit is a pure state change. */
+  onGuardReleased(T());
+  updateIntent();
+}
+
+/* ---------- clench ---------- */
+function activePair(){
+  var ids = Object.keys(S.pointers);
+  if(ids.length !== 2) return null;
+  return [S.pointers[ids[0]], S.pointers[ids[1]]];
+}
+function gapOf(a, b){ var dx = a.x - b.x, dy = a.y - b.y; return Math.sqrt(dx*dx + dy*dy); }
+function checkClench(){
+  if(S.clench.latched) return;
+  var p = activePair(); if(!p) return;
+  if(!S.clench.pair || S.clench.pair[0] !== p[0].id || S.clench.pair[1] !== p[1].id){
+    S.clench.pair = [p[0].id, p[1].id];
+    S.clench.refGap = gapOf(p[0], p[1]);
+    return;
+  }
+  if(S.clench.refGap - gapOf(p[0], p[1]) >= TH.clenchShrink){
+    S.clench.latched = true;
+    p[0].consumed = true; p[1].consumed = true;   /* these touches can no longer commit anything */
+    logEvent({ type:'SPECIAL' });
+    click(700); buzz(30);
+    onSpecial(T());
+    updateIntent();
+  }
+}
+
+/* ---------- attacks: the ONLY emit path ---------- */
+function commitAttack(rec){
+  var m = S.session ? S.session.mode : S.selMode;
+  var cls, limb;
+  if(m === 'A'){ cls = dispClass(distOf(rec)); limb = vectorLimb(rec); }
+  else if(m === 'B'){ cls = durClass(T() - rec.t0); limb = rec.limbB || 'PUNCH'; }
+  else { cls = hybridClass(rec); limb = vectorLimb(rec); }
+  var ev = { type:'ATTACK', strength:STR[cls], cls:cls, limb:limb, mode:m };
+  logEvent(ev);
+  onAttack(ev);
+  updateIntent();
+}
+
+/* ---------- pointer handlers ---------- */
+function pd(e){
+  if(e && e.preventDefault) e.preventDefault();
+  var id = (e.pointerId != null) ? e.pointerId : 'm';
+  if(S.pointers[id]) return;
+  var r = zoneRect();
+  var field = fieldOf(e.clientX);
+  var rec = {
+    id:id, field:field,
+    sx:e.clientX, sy:e.clientY, x:e.clientX, y:e.clientY,
+    t0:T(), floor:0, lastRaise:T(),
+    detentM:false, detentH:false, consumed:false, limbB:null, ring:null
+  };
+  if(field === 'R' && (S.session ? S.session.mode : S.selMode) === 'B'){
+    rec.limbB = (e.clientY < r.top + r.height / 2) ? 'PUNCH' : 'KICK';
+  }
+  rec.ring = makeRing(e.clientX, e.clientY, field);
+  S.pointers[id] = rec;
+  S.clench.pair = null;   /* new pair geometry */
+  click(0);                /* warms the AudioContext inside a user gesture; freq ignored below */
+  updateIntent();
+}
+function pm(e){
+  var id = (e.pointerId != null) ? e.pointerId : 'm';
+  var rec = S.pointers[id]; if(!rec) return;
+  if(e && e.preventDefault) e.preventDefault();
+  rec.x = e.clientX; rec.y = e.clientY;
+  moveRing(rec);
+  if(rec.field === 'L'){
+    var dx = rec.x - rec.sx;
+    if(!S.guard.active && dx <= TH.guardDx) enterGuard(rec);
+    else if(S.guard.active && S.guard.byId === id && dx > TH.guardBackDx) endGuard(rec, 'slide-back');
+  }
+  checkClench();
+  updateIntent();
+}
+function pu(e){
+  var id = (e.pointerId != null) ? e.pointerId : 'm';
+  var rec = S.pointers[id]; if(!rec) return;
+  if(e && e.preventDefault) e.preventDefault();
+  rec.x = e.clientX; rec.y = e.clientY;
+  if(rec.field === 'L'){
+    endGuard(rec, 'release');       /* guard release: state change only, never an attack */
+  } else if(rec.field === 'R'){
+    if(!rec.consumed) commitAttack(rec);
+  }
+  dropRing(rec);
+  delete S.pointers[id];
+  if(Object.keys(S.pointers).length === 0){
+    S.clench.latched = false; S.clench.pair = null;
+  }
+  updateIntent();
+}
+function pc(e){
+  var id = (e.pointerId != null) ? e.pointerId : 'm';
+  var rec = S.pointers[id]; if(!rec) return;
+  if(rec.field === 'L') endGuard(rec, 'cancel');
+  /* A cancelled right touch commits nothing. */
+  dropRing(rec);
+  delete S.pointers[id];
+  if(Object.keys(S.pointers).length === 0){ S.clench.latched = false; S.clench.pair = null; }
+  updateIntent();
+}
+
+/* ---------- hold tick: detents, hybrid raise, deadlines ---------- */
+function tick(){
+  var m = S.session ? S.session.mode : S.selMode;
+  for(var id in S.pointers){
+    var rec = S.pointers[id];
+    if(rec.field !== 'R' || rec.consumed) continue;
+    if(m === 'B'){
+      var el = T() - rec.t0;
+      if(el >= TH.durL && !rec.detentM){ rec.detentM = true; fireDetent(rec, 'M'); }
+      if(el >= TH.durH && !rec.detentH){ rec.detentH = true; fireDetent(rec, 'H'); }
+    } else if(m === 'C'){
+      if(T() - rec.lastRaise >= TH.raiseMs){
+        var shown = hybridClass(rec);
+        if(shown < 2){ rec.floor = shown + 1; fireDetent(rec, 'RAISE'); }
+        rec.lastRaise = T();
+      }
+    }
+  }
+  if(rightRec() || S.guard.active) updateIntent();
+  /* session deadlines */
+  var ss = S.session;
+  if(ss && !ss.done && ss.current){
+    var remain = ss.deadline - T();
+    var fill = $('timerfill');
+    if(fill) fill.style.width = (ss.type === 'PRESSURE' ? Math.max(0, remain / TH.pressureMs * 100) : 0) + '%';
+    if(remain <= 0){
+      if(ss.current.kind === 'GUARD' && ss.guardEnteredAt && !ss.attackFired){
+        recordResult({ dType:'GUARD', correct:true, guardClean:true, inputMs:ss.guardEnteredAt - ss.trialStart });
+      } else {
+        recordResult({ dType:'NONE', correct:false, inputMs:null });
+      }
+    }
+  }
+}
+
+/* ================= TRIAL ENGINE ================= */
+function buildTrials(){
+  var deck = [];
+  var combos = [['LIGHT','PUNCH'],['LIGHT','KICK'],['MEDIUM','PUNCH'],['MEDIUM','KICK'],['HEAVY','PUNCH'],['HEAVY','KICK']];
+  for(var r = 0; r < 3; r++) for(var i = 0; i < combos.length; i++)
+    deck.push({ kind:'ATTACK', strength:combos[i][0], limb:combos[i][1] });
+  for(var g = 0; g < 3; g++) deck.push({ kind:'GUARD' });
+  for(var s = 0; s < 3; s++) deck.push({ kind:'SPECIAL' });
+  for(var k = deck.length - 1; k > 0; k--){ var j = Math.floor(Math.random() * (k + 1)); var tmp = deck[k]; deck[k] = deck[j]; deck[j] = tmp; }
+  return deck;
+}
+function startSession(mode, type, trialsOverride){
+  S.session = {
+    mode:mode, type:type,
+    trials: trialsOverride || buildTrials(),
+    idx:0, results:[], current:null,
+    trialStart:0, deadline:0, guardEnteredAt:0, attackFired:false, done:false
+  };
+  showScreen('drill');
+  $('hud-mode').innerHTML = 'MODE <b>' + mode + '</b> · ' + type;
+  nextTrial();
+}
+function nextTrial(){
+  var ss = S.session; if(!ss) return;
+  if(ss.idx >= ss.trials.length){ finishSession(); return; }
+  ss.current = ss.trials[ss.idx];
+  ss.trialStart = T();
+  ss.deadline = ss.trialStart + (ss.type === 'PRESSURE' ? TH.pressureMs : TH.calmMs);
+  ss.guardEnteredAt = 0; ss.attackFired = false;
+  $('hud-count').textContent = 'TRIAL ' + (ss.idx + 1) + ' / ' + ss.trials.length;
+  var p = $('prompt'), sub = $('prompt-sub'), wrap = $('prompt-wrap');
+  wrap.classList.remove('flash');
+  var cur = ss.current;
+  if(cur.kind === 'ATTACK'){
+    p.textContent = cur.strength + ' · ' + cur.limb;
+    sub.textContent = ss.mode === 'A' ? 'right thumb: swipe — length = strength · flat = PUNCH, steep = KICK'
+      : ss.mode === 'B' ? 'right thumb: tap = LIGHT, hold = MEDIUM, long hold = HEAVY · land high = PUNCH, low = KICK'
+      : 'right thumb: swipe sets strength — keep holding to load it higher';
+  } else if(cur.kind === 'GUARD'){
+    if(ss.type === 'PRESSURE'){ p.textContent = 'INCOMING!'; wrap.classList.add('flash'); }
+    else p.textContent = 'GUARD!';
+    sub.textContent = 'left thumb: drag away (◀) and hold — then release clean';
+  } else {
+    p.textContent = 'SPECIAL';
+    sub.textContent = 'clench: both thumbs down, squeeze them toward each other';
+  }
+  updateIntent();
+}
+function recordResult(r){
+  var ss = S.session; if(!ss || ss.done || !ss.current) return;
+  var cur = ss.current;
+  r.kind = cur.kind;
+  r.iStr = cur.strength || null;
+  r.iLimb = cur.limb || null;
+  if(r.dType == null) r.dType = 'NONE';
+  if(r.correct == null) r.correct = false;
+  if(r.guardClean == null) r.guardClean = false;
+  ss.results.push(r);
+  ss.current = null;
+  ss.idx++;
+  nextTrial();
+}
+/* recognizer -> trial engine bridges */
+function trialActive(){ return S.session && !S.session.done && S.session.current; }
+function onAttack(ev){
+  if(!trialActive()) return;
+  var ss = S.session, cur = ss.current;
+  ss.attackFired = true;
+  if(cur.kind === 'ATTACK'){
+    recordResult({ dType:'ATTACK', dStr:ev.strength, dLimb:ev.limb,
+      correct:(ev.strength === cur.strength && ev.limb === cur.limb),
+      inputMs: ev.t - ss.trialStart });
+  } else if(cur.kind === 'GUARD'){
+    recordResult({ dType:'ATTACK', dStr:ev.strength, dLimb:ev.limb, correct:false,
+      guardAttack:true, inputMs: ev.t - ss.trialStart });
+  } else {
+    recordResult({ dType:'ATTACK', dStr:ev.strength, dLimb:ev.limb, correct:false,
+      inputMs: ev.t - ss.trialStart });
+  }
+}
+function onSpecial(t){
+  if(!trialActive()) return;
+  var ss = S.session, cur = ss.current;
+  if(cur.kind === 'SPECIAL') recordResult({ dType:'SPECIAL', correct:true, inputMs: t - ss.trialStart });
+  else if(cur.kind === 'ATTACK') recordResult({ dType:'SPECIAL', correct:false, inputMs: t - ss.trialStart });
+  else recordResult({ dType:'SPECIAL', correct:false, inputMs: t - ss.trialStart });
+}
+function onGuardEntered(t){
+  if(!trialActive()) return;
+  var ss = S.session;
+  if(ss.current.kind === 'GUARD' && !ss.guardEnteredAt) ss.guardEnteredAt = t;
+}
+function onGuardReleased(t){
+  if(!trialActive()) return;
+  var ss = S.session;
+  if(ss.current.kind === 'GUARD' && ss.guardEnteredAt && !ss.attackFired){
+    recordResult({ dType:'GUARD', correct:true, guardClean:true, inputMs: ss.guardEnteredAt - ss.trialStart });
+  }
+}
+
+/* ================= STATS + RESULTS ================= */
+function sIdx(s){ return s === 'LIGHT' ? 0 : (s === 'MEDIUM' ? 1 : 2); }
+function computeStats(results){
+  var st = { n:results.length, correct:0, matrix:[[0,0,0],[0,0,0],[0,0,0]], otherAtt:0,
+    oneStepNum:0, oneStepDen:0, limbNum:0, limbDen:0,
+    guardN:0, guardSafe:0, guardOk:0, specN:0, specOk:0, msSum:0, msN:0 };
+  for(var i = 0; i < results.length; i++){
+    var r = results[i];
+    if(r.correct) st.correct++;
+    if(r.inputMs != null){ st.msSum += r.inputMs; st.msN++; }
+    if(r.kind === 'ATTACK'){
+      if(r.dType === 'ATTACK'){
+        st.matrix[sIdx(r.iStr)][sIdx(r.dStr)]++;
+        st.oneStepDen++; st.limbDen++;
+        if(Math.abs(sIdx(r.iStr) - sIdx(r.dStr)) === 1) st.oneStepNum++;
+        if(r.dLimb === r.iLimb) st.limbNum++;
+      } else st.otherAtt++;
+    } else if(r.kind === 'GUARD'){
+      st.guardN++;
+      if(!r.guardAttack) st.guardSafe++;
+      if(r.correct) st.guardOk++;
+    } else if(r.kind === 'SPECIAL'){
+      st.specN++;
+      if(r.correct) st.specOk++;
+    }
+  }
+  st.accuracy = st.n ? st.correct / st.n * 100 : 0;
+  st.meanMs = st.msN ? st.msSum / st.msN : null;
+  return st;
+}
+function pct(n, d){ return d ? Math.round(n / d * 100) + '%' : '—'; }
+function loadSessions(){
+  try{ var s = localStorage.getItem('clenchweave.sessions'); return s ? JSON.parse(s) : []; }catch(e){ return []; }
+}
+function saveSessionSummary(sum){
+  try{ var a = loadSessions(); a.push(sum); localStorage.setItem('clenchweave.sessions', JSON.stringify(a)); }catch(e){}
+}
+function compareHTML(){
+  var a = loadSessions(), latest = {};
+  for(var i = a.length - 1; i >= 0; i--){ if(!latest[a[i].mode]) latest[a[i].mode] = a[i]; }
+  if(!latest.A && !latest.B && !latest.C) return '<p class="note">No sessions on this device yet. Run one mode, then come back and run the others — this table fills in.</p>';
+  var rows = '';
+  ['A','B','C'].forEach(function(m){
+    var s = latest[m];
+    rows += '<tr><th>' + m + '</th><td>' + (s ? Math.round(s.accuracy) + '%' : '—') + '</td><td>' +
+      (s && s.guardSafety != null ? Math.round(s.guardSafety) + '%' : '—') + '</td><td>' +
+      (s ? s.type : '—') + '</td><td>' + (s ? s.when : '—') + '</td></tr>';
+  });
+  return '<table><tr><th>MODE</th><th>ACCURACY</th><th>GUARD SAFETY</th><th>SESSION</th><th>WHEN</th></tr>' + rows + '</table>';
+}
+function matrixHTML(st){
+  var head = '<table><tr><th></th><th>→ LIGHT</th><th>→ MEDIUM</th><th>→ HEAVY</th></tr>';
+  var body = '';
+  for(var i = 0; i < 3; i++){
+    body += '<tr><th>' + STR[i] + ' →</th>';
+    for(var j = 0; j < 3; j++){
+      var cls = 'mc' + (i === j ? ' diag' : (Math.abs(i - j) === 1 ? ' off1' : ''));
+      body += '<td class="' + cls + '" data-v="' + st.matrix[i][j] + '">' + st.matrix[i][j] + '</td>';
+    }
+    body += '</tr>';
+  }
+  return head + body + '</table>';
+}
+function summaryText(ss, st){
+  var L = [];
+  L.push('CLENCHWEAVE DRILL — MODE ' + ss.mode + ' (' + (ss.mode === 'A' ? 'DISPLACEMENT' : ss.mode === 'B' ? 'DURATION' : 'HYBRID') + ') · ' + ss.type);
+  L.push('Trials: ' + st.n + ' · Accuracy: ' + Math.round(st.accuracy) + '% (' + st.correct + '/' + st.n + ')');
+  L.push('Strength confusion (intended -> detected):');
+  for(var i = 0; i < 3; i++) L.push('  ' + STR[i] + ' -> L ' + st.matrix[i][0] + ' · M ' + st.matrix[i][1] + ' · H ' + st.matrix[i][2]);
+  if(st.otherAtt) L.push('  (attack trials with no attack detected: ' + st.otherAtt + ')');
+  L.push('One-step-off rate: ' + pct(st.oneStepNum, st.oneStepDen) + ' · Limb accuracy: ' + pct(st.limbNum, st.limbDen));
+  L.push('Guard safety: ' + pct(st.guardSafe, st.guardN) + ' (guard successes ' + st.guardOk + '/' + st.guardN + ')');
+  L.push('Clench detection: ' + pct(st.specOk, st.specN));
+  L.push('Mean input time: ' + (st.meanMs != null ? Math.round(st.meanMs) + ' ms' : '—'));
+  L.push('Thresholds: A <' + TH.dispL + ' / ' + TH.dispL + '-' + TH.dispH + ' / >' + TH.dispH + 'px · B <' + TH.durL + ' / ' + TH.durL + '-' + TH.durH + ' / >' + TH.durH + 'ms · C swipe class +1 per ' + TH.raiseMs + 'ms held');
+  return L.join('\n');
+}
+function finishSession(){
+  var ss = S.session; if(!ss || ss.done) return;
+  ss.done = true;
+  var st = computeStats(ss.results);
+  var when = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  saveSessionSummary({ mode:ss.mode, type:ss.type, accuracy:st.accuracy,
+    guardSafety: st.guardN ? st.guardSafe / st.guardN * 100 : null, when:when });
+  $('res-head').innerHTML = 'MODE <b>' + ss.mode + '</b> · ' + ss.type +
+    '<span class="acc">' + Math.round(st.accuracy) + '%</span>exact-match accuracy · ' + st.correct + ' of ' + st.n + ' trials';
+  function stat(v, k){ return '<div class="stat"><div class="v">' + v + '</div><div class="k">' + k + '</div></div>'; }
+  $('res-stats').innerHTML =
+    stat(pct(st.oneStepNum, st.oneStepDen), 'ONE-STEP-OFF (of detected attacks)') +
+    stat(pct(st.limbNum, st.limbDen), 'LIMB ACCURACY') +
+    stat(pct(st.guardSafe, st.guardN), 'GUARD SAFETY — no accidental attacks') +
+    stat(pct(st.specOk, st.specN), 'CLENCH DETECTION') +
+    stat(st.meanMs != null ? Math.round(st.meanMs) + ' ms' : '—', 'MEAN INPUT TIME') +
+    stat(st.guardOk + '/' + st.guardN, 'GUARD SUCCESSES');
+  $('res-matrix').innerHTML = matrixHTML(st);
+  $('res-matrix-note').textContent = st.otherAtt ?
+    st.otherAtt + ' attack trial(s) ended with no attack detected (special, guard-only, or timeout) and are not in the matrix.' :
+    'Every attack trial produced a detected attack.';
+  $('res-compare').innerHTML = compareHTML();
+  $('res-copy').value = summaryText(ss, st);
+  showScreen('results');
+}
+
+/* ================= screens / wiring ================= */
+function showScreen(name){
+  $('screen-setup').classList.toggle('hidden', name !== 'setup');
+  $('screen-drill').classList.toggle('hidden', name !== 'drill');
+  $('screen-results').classList.toggle('hidden', name !== 'results');
+  if(name === 'setup') $('compare-setup').innerHTML = '<h2>COMPARE MODES — THIS DEVICE</h2>' + compareHTML();
+}
+function pickMode(m){
+  S.selMode = m;
+  $('mode-a').classList.toggle('sel', m === 'A');
+  $('mode-b').classList.toggle('sel', m === 'B');
+  $('mode-c').classList.toggle('sel', m === 'C');
+}
+function pickType(t){
+  S.selType = t;
+  $('type-calm').classList.toggle('sel', t === 'CALM');
+  $('type-pressure').classList.toggle('sel', t === 'PRESSURE');
+}
+function wire(){
+  $('mode-a').addEventListener('click', function(){ pickMode('A'); });
+  $('mode-b').addEventListener('click', function(){ pickMode('B'); });
+  $('mode-c').addEventListener('click', function(){ pickMode('C'); });
+  $('type-calm').addEventListener('click', function(){ pickType('CALM'); });
+  $('type-pressure').addEventListener('click', function(){ pickType('PRESSURE'); });
+  $('btn-start').addEventListener('click', function(){ startSession(S.selMode, S.selType); });
+  $('btn-again').addEventListener('click', function(){ showScreen('setup'); });
+  $('btn-copy').addEventListener('click', function(){
+    var ta = $('res-copy');
+    try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(ta.value); $('btn-copy').textContent = 'COPIED ✓'; return; } }catch(e){}
+    try{ ta.focus(); ta.select(); document.execCommand('copy'); $('btn-copy').textContent = 'COPIED ✓'; }catch(e){}
+  });
+  var z = $('zone');
+  z.addEventListener('pointerdown', pd);
+  z.addEventListener('pointermove', pm);
+  z.addEventListener('pointerup', pu);
+  z.addEventListener('pointercancel', pc);
+  if(typeof window !== 'undefined' && window.addEventListener){
+    window.addEventListener('pointermove', pm);
+    window.addEventListener('pointerup', pu);
+    window.addEventListener('pointercancel', pc);
+  }
+  updateIntent();
+  showScreen('setup');
+}
+wire();
+var tickTimer = setInterval(tick, 30);
+
+/* test/debug handle */
+var DRILL = { S:S, TH:TH, pointerDown:pd, pointerMove:pm, pointerUp:pu, pointerCancel:pc,
+  tick:tick, startSession:startSession, buildTrials:buildTrials, computeStats:computeStats,
+  finishSession:finishSession, showScreen:showScreen, version:'1.0' };
+if(typeof window !== 'undefined') window.DRILL = DRILL;
+if(typeof globalThis !== 'undefined') globalThis.DRILL = DRILL;
+})();
+</script>
+</body>
+</html>
