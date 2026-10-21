@@ -18,15 +18,17 @@ window.ANNOUNCER_PROFILE = {
      no invented sponsors, ever. Jessie edits the pool here. */
   sponsors: [
     /* HOUSE — full weight */
-    { name: 'Fruity Puppy', line: 'fresh biological skincare, made at FlashTown', weight: 3, enabled: true, read: 'Folks, between innings, do your face one favor — Fruity Puppy. Fresh from da farm, straight to your skin. How about that!' },
+    { name: 'Fruity Puppy Skin Nutrition', line: 'cream from Hawaii — fresh biological skincare, made at FlashTown', weight: 3, enabled: true, read: 'Folks, between innings, do your face one favor — Fruity Puppy Skin Nutrition, cream from Hawaii. Fresh from da farm, straight to your skin. How about that!' },
     { name: 'Moon Tea', line: "Thorny Toad's botanical face spray (Dinny's product — standing boost)", weight: 4, enabled: true, read: "Moon Tea, by Thorny Toad. One spray, an' da whole night get cooler. Dinny ovah there holding da card — he no talk, but da boy can sell." },
     { name: 'Thorny Toad Face Juice', line: "Erv's product; he doesn't moisturize, he sprays", weight: 3, enabled: true, read: "Thorny Toad Face Juice — Erv's own. He no smile for nobody, but his skin? Impeccable." },
     { name: 'Desert Squirt', line: 'Thorny Toad spray — Texas tangerine + prickly pear', weight: 3, enabled: true, read: "Desert Squirt — Texas tangerine, prickly pear, an' jus' enough bite fo' remind you da desert stay watching." },
     { name: 'Lava-Guava Bomb Balm', line: 'the jungle defunkolator', weight: 3, enabled: true, read: "Lava-Guava Bomb Balm, da jungle defunkolator! Even da volcano funk gotta tap out sometime, friends." },
     { name: 'Kudoken', line: 'the unofficial token of GALACTIVISM', weight: 3, enabled: true, read: "Tonight's pot is brought to you by Kudoken — da unofficial token of Galactivism. Energy is currency, folks." },
-    { name: 'BROBOTS', line: "Jessie's web-design + AI-agent studio", weight: 3, enabled: true, read: "BROBOTS — let da robots do da work, keep da energy human. Somebody write dat down, dat's poetry." },
+    { name: 'Fruity Puppy Outlet Mall', line: 'the Fruity Puppy outlet mall', weight: 3, enabled: true, read: "Fruity Puppy Outlet Mall — where da creative work finds its customers, friends. Window-shop all you like, da robots no mind." },
+    { name: 'Monkey Jockey rescue dog racing', line: 'rescue dog racing, Monkey Jockey style', weight: 3, enabled: true, read: "Monkey Jockey rescue dog racing — da fastest rescue dogs in da islands, an' every one of 'em a champion. Dat monkey can ride!" },
+    { name: 'BROBOTS Space Factory', line: "Jessie's web-design + AI-agent studio", weight: 3, enabled: true, read: "BROBOTS Space Factory — let da robots do da work, keep da energy human. Somebody write dat down, dat's poetry." },
     { name: 'FlashTown', line: 'the farm and sanctuary where all of this lives', weight: 3, enabled: true, read: "From beautiful FlashTown, where da taro grow an' da robots train — you listening to a classic tonight, neighbors." },
-    { name: 'Biorama', line: 'sovereign personal micro-sites; the bowl is the product', weight: 3, enabled: true, read: "Biorama — your own little bowl on da internet, an' nobody can evict you from your own pond. I like dat." },
+    { name: 'Biorama', line: 'Digital Homesteading — sovereign personal micro-sites; the bowl is the product', weight: 3, enabled: true, read: "Biorama — Digital Homesteading. Your own little bowl on da internet, an' nobody can evict you from your own pond. I like dat." },
     /* FARM & NEIGHBORS — medium weight */
     { name: 'Rooster Island', line: "Ryan McKenzie's farm; home of Erv", weight: 2, enabled: true, read: "Rooster Island — where da roosters wake up before da sun even t'ink about it. Erv's hometown, an' dey proud of da boy. Mostly." },
     { name: 'Eden Nova', line: "Vidu's stilt-house farm", weight: 2, enabled: true, read: "Eden Nova — da trees so good, da crowd start dancing before da fight even pau. Watch da treeline, folks." },

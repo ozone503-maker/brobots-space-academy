@@ -36,13 +36,15 @@ const HARD_RULES =
    entry, verbatim. No invented sponsors, ever. Friends & clients
    are weight ZERO / disabled until Jessie confirms. */
 const SPONSORS = [
-  { name: "Fruity Puppy", weight: 3, enabled: true },
+  { name: "Fruity Puppy Skin Nutrition", weight: 3, enabled: true },
   { name: "Moon Tea", weight: 4, enabled: true },
   { name: "Thorny Toad Face Juice", weight: 3, enabled: true },
   { name: "Desert Squirt", weight: 3, enabled: true },
   { name: "Lava-Guava Bomb Balm", weight: 3, enabled: true },
   { name: "Kudoken", weight: 3, enabled: true },
-  { name: "BROBOTS", weight: 3, enabled: true },
+  { name: "Fruity Puppy Outlet Mall", weight: 3, enabled: true },
+  { name: "Monkey Jockey rescue dog racing", weight: 3, enabled: true },
+  { name: "BROBOTS Space Factory", weight: 3, enabled: true },
   { name: "FlashTown", weight: 3, enabled: true },
   { name: "Biorama", weight: 3, enabled: true },
   { name: "Rooster Island", weight: 2, enabled: true },
