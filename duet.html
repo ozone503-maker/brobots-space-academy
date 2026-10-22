@@ -131,7 +131,7 @@ function chime(n){ for(var i=0;i<(n||3);i++)(function(i){ setTimeout(function(){
 function buzz(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
 
 /* ---------- game state ---------- */
-var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.58, px:0, pz:.45, guarding:false, clenchAt:0, rollUntil:0, ko:false, locked:false, lockT:0, down:false, downAt50:false, downAt20:false, lastHitT:0 };
+var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.58, px:0, pz:.45, guarding:false, clenchAt:0, rollUntil:0, ko:false, locked:false, lockT:0, down:false, downAt50:false, downAt20:false, lastHitT:0, beat:false };
 function setBars(){ $('hpP').style.width=Math.max(0,G.hpP)+'%'; $('hpF').style.width=Math.max(0,G.hpF)+'%'; $('energyI').style.width=G.energy+'%'; $('potN').textContent=G.pot; }
 function banner(t,sub,ms){ var b=$('banner'),s=$('sub-banner'); b.textContent=t; s.textContent=sub||''; b.style.opacity=1; s.style.opacity=sub?1:0; setTimeout(function(){ b.style.opacity=0; s.style.opacity=0; },ms||1100); }
 function coins(n,x,y,big){ for(var i=0;i<n;i++){ (function(i){ var c=document.createElement('div'); c.className='coin'; c.textContent='K'; c.style.left=(x-10)+'px'; c.style.top=(y-10)+'px'; stage.appendChild(c);
@@ -208,7 +208,7 @@ function drawFoe(){ G.dist=.88-G.pz*.62; var sc=.5+G.dist*.85; foe.style.transfo
 drawFoe();
 
 /* ---------- strikes ---------- */
-function foeHit(dmg,coinN,x,y,big){ if(G.ko||G.down) return; G.lastHitT=performance.now(); G.hpF-=dmg; foe.animate([{transform:foe.style.transform+' translateX(0)'},{transform:'translateX('+(Math.random()*14-7)+'px) rotate('+(Math.random()*3-1.5)+'deg)'},{transform:'translateX(0)'}],{duration:190});
+function foeHit(dmg,coinN,x,y,big){ if(G.ko||G.down||G.beat) return; G.lastHitT=performance.now(); G.hpF-=dmg; foe.animate([{transform:foe.style.transform+' translateX(0)'},{transform:'translateX('+(Math.random()*14-7)+'px) rotate('+(Math.random()*3-1.5)+'deg)'},{transform:'translateX(0)'}],{duration:190});
   coins(coinN,x,y,big); G.pot+=coinN; thud(big); buzz(big?40:18); setBars(); checkKO(); if(!G.ko){ if(G.hpF<50&&!G.downAt50){ G.downAt50=true; knockdown(); } else if(G.hpF<20&&!G.downAt20){ G.downAt20=true; knockdown(); } } }
 function firePunch(side,kind){ var p=fistPos(side), el=side==='L'?fistL:fistR, big=kind==='LONG';
   var clinch = G.dist<.36;
@@ -239,7 +239,7 @@ function fireRoll(dir){ var now=performance.now(); G.rollUntil=now+420;
   banner('','',10); spark(); }
 
 /* ---------- foe brain: telegraphed punches ---------- */
-function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
+function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked&&!G.beat){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
     var isKick = G.dist>.52, leg=$('foe-legR');
     if(isKick){ leg.animate([{transform:'rotate(0deg)'},{transform:'rotate(-16deg)',offset:.45},{transform:'rotate(58deg)',offset:.7},{transform:'rotate(0deg)'}],{duration:760,easing:'ease-in-out'}); }
     else arm.animate([{transform:'rotate(0deg)'},{transform:'rotate('+(useL?38:-38)+'deg)',offset:.55},{transform:'rotate(0deg)'}],{duration:640,easing:'ease-in-out'});
@@ -257,7 +257,7 @@ function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!',
   setTimeout(function(){ G.ko=false; G.hpF=100; G.downAt50=false; G.downAt20=false; G.hpP=Math.min(100,G.hpP+18); foe.getAnimations().forEach(function(a){a.cancel();}); foe.style.opacity=1;
     foe.style.filter='hue-rotate('+Math.floor(Math.random()*300)+'deg)';
     foe.animate([{transform:'translateX('+(Math.random()<.5?-130:130)+'vw) scale(.9)'},{transform:'translateX(0)'}],{duration:420,easing:'cubic-bezier(.2,.8,.3,1)'});
-    G.px=0; G.pz=.4; drawFoe(); setBars(); banner('ON SIGHT!','new beef — no bell, no talk',1000); },1500); } }
+    G.px=0; G.pz=.4; drawFoe(); setBars(); startBeat(1200); },1500); } }
 function knockdown(){ G.down=true; G.locked=false;
   foe.animate([{transform:foe.style.transform},{transform:'rotate(86deg) translateY(26px)',opacity:.75}],{duration:320,easing:'ease-in',fill:'forwards'});
   var n=0; banner('DOWN!','the count begins…',800); thud(true);
@@ -269,7 +269,12 @@ setInterval(function(){ if(G.energy<100){ G.energy=Math.min(100,G.energy+1.4); s
   if(!G.ko&&!G.down&&G.dist<.36&&now-G.lastHitT>650){ if(!G.locked){ G.locked=true; G.lockT=now; banner('CLINCHED!','hook out — or shove him off',800); } }
   else if(G.locked&&G.dist>=.42){ G.locked=false; }
   if(G.locked) foe.style.transform += ''; },120);
-setBars(); foeLoop(); setTimeout(function(){ banner('ON SIGHT!','its on — right now',1200); },450);
+setBars(); foeLoop();
+var BEATS=['this town aint big enough for the two of us','…you. here?','plates down. eyes up.','wrong place. wrong day.','the room just got small'];
+function startBeat(ms){ G.beat=true; var sub=BEATS[Math.floor(Math.random()*BEATS.length)];
+  banner('…',sub,ms||1300);
+  setTimeout(function(){ G.beat=false; banner('ON SIGHT!','',800); beep(196,.12,'sawtooth',.08); },ms||1300); }
+setTimeout(function(){ startBeat(1500); },350);
 })();
 </script>
 </body>
