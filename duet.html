@@ -42,8 +42,8 @@
     color:#ffd34d;text-shadow:0 4px 0 #b3540a,0 8px 24px #000;opacity:0;z-index:40;pointer-events:none;transition:opacity .15s;}
   #sub-banner{position:absolute;top:34%;margin-top:64px;left:0;right:0;text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;color:#b6ffdf;opacity:0;z-index:40;pointer-events:none;transition:opacity .15s;text-shadow:0 2px 8px #000;}
   /* player limbs */
-  .fist{position:absolute;width:92px;height:92px;z-index:20;pointer-events:none;transform:translate(-50%,-50%);}
-  .boot{position:absolute;width:96px;height:64px;z-index:19;pointer-events:none;opacity:0;transform:translate(-50%,0);}
+  .fist{position:absolute;width:92px;height:92px;z-index:20;pointer-events:none;transform:translate(-50%,-50%);opacity:.72;filter:drop-shadow(0 0 6px rgba(79,227,174,.45));}
+  .boot{position:absolute;width:96px;height:64px;z-index:19;pointer-events:none;opacity:0;transform:translate(-50%,0);filter:drop-shadow(0 0 6px rgba(79,227,174,.45));}
   #shield{position:absolute;left:50%;bottom:12%;width:300px;height:230px;margin-left:-150px;z-index:18;opacity:0;transition:opacity .1s;pointer-events:none;}
   /* kick rails */
   .rail{position:absolute;top:16%;bottom:14%;width:34px;z-index:5;border:1px solid #2a3850;border-radius:17px;
@@ -197,7 +197,7 @@ function drawLimbs(){ var now=performance.now();
     if(G.guarding) guardShift = side==='L'? (W*.5-p.x)*.55 : (W*.5-p.x)*.55;
     el.style.left=(p.x+guardShift)+'px'; el.style.top=(p.y + load*16)+'px';
     el.style.transform='translate(-50%,-50%) scale('+(1+load*.35)+') rotate('+(side==='L'?-8:8)+'deg)';
-    el.style.opacity = G.ko? .25 : 1; });
+    el.style.opacity = G.ko? .18 : .72; });
   foe.style.zIndex = 10; }
 function drawFoe(){ var s=.55+G.dist*.75; foe.style.transform='translateX('+(G.orbit*W*.30)+'px) rotate('+(G.orbit*-7)+'deg) scale('+s+') translateY('+((1-G.dist)*10)+'px)'; drawWorld(); }
 drawFoe();
@@ -234,8 +234,10 @@ function foeLoop(){ setTimeout(function(){ if(!G.ko){ var armL=$('foe-armL'), ar
       else { G.hpP-=8; $('flash').style.opacity=1; setTimeout(function(){ $('flash').style.opacity=0; },140); thud(true); buzz(60); stage.animate([{transform:'translate(0,0)'},{transform:'translate(7px,-4px)'},{transform:'translate(-6px,3px)'},{transform:'translate(0,0)'}],{duration:220}); }
       setBars(); if(G.hpP<=0) playerDown(); },470);
   } foeLoop(); }, 2100+Math.random()*1600); }
-function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!','+25 kudokens — winner takes the pot',1800); foe.style.transform='rotate(82deg) scale(.8)'; foe.style.opacity=.55; chime(9); coins(16,W/2,H*.4,true); setBars();
-  setTimeout(function(){ G.ko=false; G.hpF=100; G.hpP=Math.min(100,G.hpP+30); foe.style.transform=''; foe.style.opacity=1; drawFoe(); setBars(); },2600); } }
+function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!','RING KING LAUNCH — +25 kudokens',1900); chime(9); coins(16,W/2,H*.4,true); setBars();
+  foe.animate([{transform:foe.style.transform,opacity:1},{transform:'translateY(-72vh) rotate(340deg) scale(.55)',opacity:.9,offset:.8},{transform:'translateY(-78vh) rotate(390deg) scale(.5)',opacity:0}],{duration:750,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
+  setTimeout(function(){ thud(true); buzz(70); stage.animate([{transform:'translate(0,0)'},{transform:'translate(0,7px)'},{transform:'translate(0,0)'}],{duration:200}); },760);
+  setTimeout(function(){ G.ko=false; G.hpF=100; G.hpP=Math.min(100,G.hpP+30); foe.getAnimations().forEach(function(a){a.cancel();}); foe.style.opacity=1; drawFoe(); setBars(); banner('NEXT CHALLENGER','he climbed back in',1100); },2800); } }
 function playerDown(){ banner('DOWN!','shake it off…',1400); G.hpP=45; setBars(); }
 setInterval(function(){ if(G.energy<100){ G.energy=Math.min(100,G.energy+1.4); setBars(); } if(!active('L')&&!active('R')) drawLimbs(); },120);
 setBars(); foeLoop();
