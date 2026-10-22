@@ -75,8 +75,8 @@
     <svg viewBox="0 0 200 260" width="230" height="300">
       <ellipse cx="100" cy="248" rx="56" ry="8" fill="#000" opacity=".5"/>
       <rect x="84" y="150" width="13" height="86" rx="6" fill="#5a4632"/>
-      <rect x="104" y="150" width="13" height="86" rx="6" fill="#6b543a"/>
-      <rect x="80" y="228" width="24" height="10" rx="4" fill="#2b2119"/><rect x="100" y="228" width="24" height="10" rx="4" fill="#2b2119"/>
+      <g id="foe-legR" style="transform-origin:110px 152px"><rect x="104" y="150" width="13" height="86" rx="6" fill="#6b543a"/><rect x="100" y="228" width="24" height="10" rx="4" fill="#2b2119"/></g>
+      <rect x="80" y="228" width="24" height="10" rx="4" fill="#2b2119"/>
       <g id="foe-armL"><rect x="38" y="86" width="14" height="56" rx="7" fill="#8a6d43"/><circle cx="45" cy="146" r="13" fill="#5d4630"/></g>
       <g id="foe-armR"><rect x="148" y="86" width="14" height="56" rx="7" fill="#8a6d43"/><circle cx="155" cy="146" r="13" fill="#5d4630"/></g>
       <rect x="62" y="74" width="76" height="84" rx="14" fill="#77603c"/>
@@ -223,10 +223,14 @@ function firePunch(side,kind){ var p=fistPos(side), el=side==='L'?fistL:fistR, b
   setTimeout(function(){ foeHit((big?11:6)+(clinch?3:0), big?4:2, target.x, target.y, big); if(clinch){ banner('CLINCH HOOK!','',480); G.locked=false; } }, big?130:100); }
 function fireKick(side,zone,len){ var b=side==='L'?bootL:bootR, big=len==='LONG';
   var ty = zone==='HIGH'? H*.34 : zone==='MID'? H*.48 : H*.60;
-  b.style.left=(side==='L'? W*.34 : W*.66)+'px'; b.style.bottom='auto'; b.style.top=(H*.80)+'px'; b.style.opacity=1;
-  b.animate([{transform:'translate(-50%,0) scale(1)',opacity:1},{transform:'translate('+(side==='L'? W*.14 : -W*.14)+'px,'+(ty-H*.80)+'px) scale('+(big?1.45:1.2)+')',opacity:1},{transform:'translate(-50%,0)',opacity:0}],{duration:big?340:260,easing:'ease-out'});
+  var knee = G.locked || G.dist<.36;
+  var teep = !big && !knee && G.dist>=.52;
+  b.style.left=(side==='L'? W*.34 : W*.66)+'px'; b.style.bottom='auto'; b.style.top=(H*.80)+'px'; b.style.opacity=.8;
+  b.animate([{transform:'translate(-50%,0) scale(1)',opacity:.8},{transform:'translate('+(side==='L'? W*.14 : -W*.14)+'px,'+(ty-H*.80)+'px) scale('+(big?1.45:1.2)+')',opacity:.8},{transform:'translate(-50%,0)',opacity:0}],{duration:big?340:260,easing:'ease-out'});
   zoom(1.05,220);
-  setTimeout(function(){ foeHit(big?13:8, big?5:3, W/2, ty, big); },120); }
+  setTimeout(function(){ if(knee){ foeHit(12,4,W/2,ty,true); banner('KNEE!','out of the clinch',620); G.locked=false; }
+    else if(teep){ foeHit(5,2,W/2,ty,false); banner('TEEP!','keep him honest',520); G.pz=Math.max(0,G.pz-.13); drawFoe(); }
+    else { foeHit(big?13:8, big?5:3, W/2, ty, big); if(big) banner('ROUNDHOUSE!','',520); } },120); }
 function fireClench(){ G.energy=0; setBars(); zoom(.93,120); setTimeout(function(){ zoom(1.14,420); },130);
   banner('CLENCH!','SUPER — energy spent',900); beep(196,.3,'sawtooth',.12); buzz(90);
   setTimeout(function(){ foeHit(22,14,W/2,H*.42,true); chime(6); },260); }
@@ -236,14 +240,16 @@ function fireRoll(dir){ var now=performance.now(); G.rollUntil=now+420;
 
 /* ---------- foe brain: telegraphed punches ---------- */
 function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
-    arm.animate([{transform:'rotate(0deg)'},{transform:'rotate('+(useL?38:-38)+'deg)',offset:.55},{transform:'rotate(0deg)'}],{duration:640,easing:'ease-in-out'});
+    var isKick = G.dist>.52, leg=$('foe-legR');
+    if(isKick){ leg.animate([{transform:'rotate(0deg)'},{transform:'rotate(-16deg)',offset:.45},{transform:'rotate(58deg)',offset:.7},{transform:'rotate(0deg)'}],{duration:760,easing:'ease-in-out'}); }
+    else arm.animate([{transform:'rotate(0deg)'},{transform:'rotate('+(useL?38:-38)+'deg)',offset:.55},{transform:'rotate(0deg)'}],{duration:640,easing:'ease-in-out'});
     var pxAtAim=G.px, pzAtAim=G.pz;
     setTimeout(function(){ if(G.ko) return;
       if(performance.now()<G.rollUntil){ banner('WHIFF!','rolled it',650); G.pot+=1; coins(1,W/2,H*.45,false); }
       else if(Math.abs(G.px-pxAtAim)>.20 || Math.abs(G.pz-pzAtAim)>.30){ banner('WHIFF!','moved off the line',650); G.pot+=1; coins(1,W/2,H*.45,false); }
-      else if(G.guarding){ spark(); buzz(25); G.pot+=2; banner('BLOCKED!','+2 bonus kudokens',650); coins(2,W/2,H*.5,false); }
-      else { G.hpP-=8; $('flash').style.opacity=1; setTimeout(function(){ $('flash').style.opacity=0; },140); thud(true); buzz(60); stage.animate([{transform:'translate(0,0)'},{transform:'translate(7px,-4px)'},{transform:'translate(-6px,3px)'},{transform:'translate(0,0)'}],{duration:220}); }
-      setBars(); if(G.hpP<=0) playerDown(); },470);
+      else if(G.guarding){ spark(); buzz(25); if(isKick){ G.pot+=3; banner('CHECKED!','shin on shin — +3',650); coins(3,W/2,H*.5,false); } else { G.pot+=2; banner('BLOCKED!','+2 bonus kudokens',650); coins(2,W/2,H*.5,false); } }
+      else { G.hpP-=(isKick?10:8); if(isKick){ G.pz=Math.max(0,G.pz-.16); drawFoe(); } $('flash').style.opacity=1; setTimeout(function(){ $('flash').style.opacity=0; },140); thud(true); buzz(60); stage.animate([{transform:'translate(0,0)'},{transform:'translate(7px,-4px)'},{transform:'translate(-6px,3px)'},{transform:'translate(0,0)'}],{duration:220}); }
+      setBars(); if(G.hpP<=0) playerDown(); }, isKick?600:470);
   } foeLoop(); }, 2100+Math.random()*1600); }
 function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!','RING KING LAUNCH — +25 kudokens',1900); chime(9); coins(16,W/2,H*.4,true); setBars();
   foe.animate([{transform:foe.style.transform,opacity:1},{transform:'translateY(-72vh) rotate(340deg) scale(.55)',opacity:.9,offset:.8},{transform:'translateY(-78vh) rotate(390deg) scale(.5)',opacity:0}],{duration:750,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
