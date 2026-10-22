@@ -124,6 +124,8 @@ function buzz(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
 
 /* ---------- game state ---------- */
 var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.58, px:0, pz:.45, guarding:false, clenchAt:0, rollUntil:0, ko:false, locked:false, lockT:0, down:false, downAt50:false, downAt20:false, lastHitT:0, beat:false };
+var F={lat:0,depth:0,mode:'hold',until:0,dir:1};
+function dEff(){ return Math.max(.18, Math.min(.95, (.88-G.pz*.62) + F.depth)); }
 function setBars(){ $('hpP').style.width=Math.max(0,G.hpP)+'%'; $('hpF').style.width=Math.max(0,G.hpF)+'%'; $('energyI').style.width=G.energy+'%'; $('potN').textContent=G.pot; }
 function banner(t,sub,ms){ var b=$('banner'),s=$('sub-banner'); b.textContent=t; s.textContent=sub||''; b.style.opacity=1; s.style.opacity=sub?1:0; setTimeout(function(){ b.style.opacity=0; s.style.opacity=0; },ms||1100); }
 function coins(n,x,y,big){ for(var i=0;i<n;i++){ (function(i){ var c=document.createElement('div'); c.className='coin'; c.textContent='K'; c.style.left=(x-10)+'px'; c.style.top=(y-10)+'px'; stage.appendChild(c);
@@ -196,14 +198,16 @@ function drawLimbs(){ var now=performance.now();
     el.style.transform='translate(-50%,-50%) scale('+(1+load*.35)+') rotate('+(side==='L'?-8:8)+'deg)';
     el.style.opacity = G.ko? .18 : .72; });
   foe.style.zIndex = 10; }
-function drawFoe(){ G.dist=.88-G.pz*.62; var sc=.5+G.dist*.85; foe.style.transform='translateX('+(-G.px*W*.36)+'px) rotate('+(G.px*5)+'deg) scale('+sc+') translateY('+((1-G.dist)*10)+'px)'; drawWorld(); drawRopes(); }
+function drawFoe(){ G.dist=dEff(); var sc=.5+G.dist*.85; foe.style.transform='translateX('+(-G.px*W*.36 + F.lat*W*.20)+'px) rotate('+(G.px*5 + F.lat*4)+'deg) scale('+sc+') translateY('+((1-G.dist)*10)+'px)'; drawWorld(); drawRopes(); }
 drawFoe();
 
 /* ---------- strikes ---------- */
-function foeHit(dmg,coinN,x,y,big){ if(G.ko||G.down||G.beat) return; G.lastHitT=performance.now(); G.hpF-=dmg; foe.animate([{transform:foe.style.transform+' translateX(0)'},{transform:'translateX('+(Math.random()*14-7)+'px) rotate('+(Math.random()*3-1.5)+'deg)'},{transform:'translateX(0)'}],{duration:190});
+function foeHit(dmg,coinN,x,y,big,raw){ if(G.ko||G.down||G.beat) return;
+  if(!raw){ var rd = (G.types&&G.types.length>=3&&G.types[0]===G.types[1]&&G.types[1]===G.types[2]) ? .42 : .08; if(F.mode==='retreat') rd+=.15;
+    if(Math.random()<rd){ banner('READ IT!','Gavin saw that one coming',540); spark(); return; } } G.lastHitT=performance.now(); G.hpF-=dmg; foe.animate([{transform:foe.style.transform+' translateX(0)'},{transform:'translateX('+(Math.random()*14-7)+'px) rotate('+(Math.random()*3-1.5)+'deg)'},{transform:'translateX(0)'}],{duration:190});
   coins(coinN,x,y,big); G.pot+=coinN; thud(big); buzz(big?40:18); setBars(); checkKO(); if(!G.ko){ if(G.hpF<50&&!G.downAt50){ G.downAt50=true; knockdown(); } else if(G.hpF<20&&!G.downAt20){ G.downAt20=true; knockdown(); } } }
-function firePunch(side,kind){ var p=fistPos(side), el=side==='L'?fistL:fistR, big=kind==='LONG';
-  var clinch = G.dist<.36;
+function firePunch(side,kind){ G.lastStrikeT=performance.now(); G.types=G.types||[]; G.types.push('P'); if(G.types.length>3) G.types.shift(); var p=fistPos(side), el=side==='L'?fistL:fistR, big=kind==='LONG';
+  var clinch = dEff()<.38;
   var other = active(side==='L'?'R':'L');
   if(clinch && other && other.maxUp>42){ // SHOVE — both hands drive him off
     banner('SHOVE!','wrestled him off',700); thud(true); buzz(50);
@@ -212,20 +216,20 @@ function firePunch(side,kind){ var p=fistPos(side), el=side==='L'?fistL:fistR, b
   var arc = clinch? (side==='L'?-34:34) : 0;
   el.animate([{transform:'translate(-50%,-50%) scale(1.15)'},{transform:'translate('+(target.x-p.x-46+arc)+'px,'+(target.y-p.y-46)+'px) scale('+(big?1.5:1.25)+') rotate('+arc+'deg)'},{transform:'translate(-50%,-50%)'}],{duration:big?300:230,easing:'ease-out'});
   if(big) zoom(1.07,240);
-  setTimeout(function(){ foeHit((big?11:6)+(clinch?3:0), big?4:2, target.x, target.y, big); if(clinch){ banner('CLINCH HOOK!','',480); G.locked=false; } }, big?130:100); }
-function fireKick(side,zone,len){ var b=side==='L'?bootL:bootR, big=len==='LONG';
+  setTimeout(function(){ if(dEff()>.66 && !clinch){ banner('OUT OF RANGE','too far — step in first',470); thud(false); return; } foeHit((big?11:6)+(clinch?3:0), big?4:2, target.x, target.y, big); if(clinch){ banner('CLINCH HOOK!','',480); G.locked=false; } }, big?130:100); }
+function fireKick(side,zone,len){ G.lastStrikeT=performance.now(); G.types=G.types||[]; G.types.push('K'); if(G.types.length>3) G.types.shift(); var b=side==='L'?bootL:bootR, big=len==='LONG';
   var ty = zone==='HIGH'? H*.34 : zone==='MID'? H*.48 : H*.60;
   var knee = G.locked || G.dist<.36;
-  var teep = !big && !knee && G.dist>=.52;
+  var teep = !big && !knee && dEff()>=.48 && dEff()<=.88;
   b.style.left=(side==='L'? W*.34 : W*.66)+'px'; b.style.bottom='auto'; b.style.top=(H*.80)+'px'; b.style.opacity=.8;
   b.animate([{transform:'translate(-50%,0) scale(1)',opacity:.8},{transform:'translate('+(side==='L'? W*.14 : -W*.14)+'px,'+(ty-H*.80)+'px) scale('+(big?1.45:1.2)+')',opacity:.8},{transform:'translate(-50%,0)',opacity:0}],{duration:big?340:260,easing:'ease-out'});
   zoom(1.05,220);
-  setTimeout(function(){ if(knee){ foeHit(12,4,W/2,ty,true); banner('KNEE!','out of the clinch',620); G.locked=false; }
+  setTimeout(function(){ var dd=dEff(); if(!knee && dd<.30){ banner('SMOTHERED','too close for a kick',470); foeHit(2,0,W/2,ty,false); return; } if(!knee && dd>.92){ banner('OUT OF RANGE','kicking at weather',470); return; } if(knee){ foeHit(12,4,W/2,ty,true); banner('KNEE!','out of the clinch',620); G.locked=false; }
     else if(teep){ foeHit(5,2,W/2,ty,false); banner('TEEP!','keep him honest',520); G.pz=Math.max(0,G.pz-.13); drawFoe(); }
     else { foeHit(big?13:8, big?5:3, W/2, ty, big); if(big) banner('ROUNDHOUSE!','',520); } },120); }
 function fireClench(){ G.energy=0; setBars(); zoom(.93,120); setTimeout(function(){ zoom(1.14,420); },130);
   banner('CLENCH!','SUPER — energy spent',900); beep(196,.3,'sawtooth',.12); buzz(90);
-  setTimeout(function(){ foeHit(22,14,W/2,H*.42,true); chime(6); },260); }
+  setTimeout(function(){ foeHit(22,14,W/2,H*.42,true,true); chime(6); },260); }
 function fireRoll(dir){ var now=performance.now(); G.rollUntil=now+420;
   foe.animate([{transform:'translateX(0)'},{transform:'translateX('+(dir==='L'?26:-26)+'px)'},{transform:'translateX(0)'}],{duration:380});
   banner('','',10); spark(); }
@@ -241,7 +245,7 @@ function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked&&!G.beat
       else if(Math.abs(G.px-pxAtAim)>.20 || Math.abs(G.pz-pzAtAim)>.30){ banner('WHIFF!','moved off the line',650); G.pot+=1; coins(1,W/2,H*.45,false); }
       else if(G.guarding){ spark(); buzz(25); if(isKick){ G.pot+=3; banner('CHECKED!','shin on shin — +3',650); coins(3,W/2,H*.5,false); } else { G.pot+=2; banner('BLOCKED!','+2 bonus kudokens',650); coins(2,W/2,H*.5,false); } }
       else { G.hpP-=(isKick?10:8); if(isKick){ G.pz=Math.max(0,G.pz-.16); drawFoe(); } $('flash').style.opacity=1; setTimeout(function(){ $('flash').style.opacity=0; },140); thud(true); buzz(60); stage.animate([{transform:'translate(0,0)'},{transform:'translate(7px,-4px)'},{transform:'translate(-6px,3px)'},{transform:'translate(0,0)'}],{duration:220}); }
-      setBars(); if(G.hpP<=0) playerDown(); }, isKick?600:470);
+      setBars(); if(G.hpP<=0) playerDown(); }, isKick ? ((dEff()>.48&&dEff()<.82)?430:580) : 470);
   } foeLoop(); }, 2100+Math.random()*1600); }
 function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!','RING KING LAUNCH — +25 kudokens',1900); chime(9); coins(16,W/2,H*.4,true); setBars();
   foe.animate([{transform:foe.style.transform,opacity:1},{transform:'translateY(-72vh) rotate(340deg) scale(.55)',opacity:.9,offset:.8},{transform:'translateY(-78vh) rotate(390deg) scale(.5)',opacity:0}],{duration:750,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
@@ -258,9 +262,20 @@ function knockdown(){ G.down=true; G.locked=false;
 function playerDown(){ banner('DOWN!','shake it off…',1400); G.hpP=45; setBars(); }
 setInterval(function(){ if(G.energy<100){ G.energy=Math.min(100,G.energy+1.4); setBars(); } if(!active('L')&&!active('R')) drawLimbs();
   var now=performance.now();
-  if(!G.ko&&!G.down&&G.dist<.36&&now-G.lastHitT>650){ if(!G.locked){ G.locked=true; G.lockT=now; banner('CLINCHED!','hook out — or shove him off',800); } }
-  else if(G.locked&&G.dist>=.42){ G.locked=false; }
-  if(G.locked) foe.style.transform += ''; },120);
+  if(!G.ko&&!G.down&&dEff()<.34&&now-G.lastHitT>1500&&now-(G.lastStrikeT||0)>900&&now>(G.clinchCD||0)){ if(!G.locked){ G.locked=true; G.lockT=now; banner('CLINCHED!','hook out — or shove him off',800); } }
+  else if(G.locked&&dEff()>=.44){ G.locked=false; G.clinchCD=now+2000; }
+  if(G.locked) foe.style.transform += '';
+  if(G.locked&&now-G.lockT>1600){ G.locked=false; G.clinchCD=now+3500; G.pz=Math.max(0,G.pz-.18); banner('HE SHOVES OFF','clinch broken',550); drawFoe(); }
+  if(!G.ko&&!G.down&&!G.beat){ if(now>F.until){ var dd=dEff(), rr=Math.random();
+      if(dd<.40) F.mode = rr<.62?'retreat':(rr<.85?'circle':'hold');
+      else if(dd>.66) F.mode = rr<.60?'advance':(rr<.82?'circle':'hold');
+      else F.mode = rr<.34?'circle':(rr<.52?'advance':(rr<.70?'retreat':'hold'));
+      if(F.mode==='circle') F.dir = Math.random()<.5?-1:1;
+      F.until = now + 650+Math.random()*850; }
+    if(F.mode==='retreat') F.depth=Math.min(.26,F.depth+.020);
+    else if(F.mode==='advance') F.depth=Math.max(-.30,F.depth-.020);
+    if(F.mode==='circle') F.lat=Math.max(-.85,Math.min(.85,F.lat+F.dir*.045)); else F.lat*=.94;
+    if(F.mode!=='hold') drawFoe(); } },120);
 setBars(); foeLoop();
 var BEATS=['postgame. his lot. his rules.','this town aint big enough for the two of us','…you. here?','plates down. eyes up.','wrong place. wrong day.','the room just got small'];
 function startBeat(ms){ G.beat=true; var sub=BEATS[Math.floor(Math.random()*BEATS.length)];
