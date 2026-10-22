@@ -131,7 +131,7 @@ function chime(n){ for(var i=0;i<(n||3);i++)(function(i){ setTimeout(function(){
 function buzz(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
 
 /* ---------- game state ---------- */
-var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.58, px:0, pz:.45, guarding:false, clenchAt:0, rollUntil:0, ko:false };
+var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.58, px:0, pz:.45, guarding:false, clenchAt:0, rollUntil:0, ko:false, locked:false, lockT:0, down:false, downAt50:false, downAt20:false, lastHitT:0 };
 function setBars(){ $('hpP').style.width=Math.max(0,G.hpP)+'%'; $('hpF').style.width=Math.max(0,G.hpF)+'%'; $('energyI').style.width=G.energy+'%'; $('potN').textContent=G.pot; }
 function banner(t,sub,ms){ var b=$('banner'),s=$('sub-banner'); b.textContent=t; s.textContent=sub||''; b.style.opacity=1; s.style.opacity=sub?1:0; setTimeout(function(){ b.style.opacity=0; s.style.opacity=0; },ms||1100); }
 function coins(n,x,y,big){ for(var i=0;i<n;i++){ (function(i){ var c=document.createElement('div'); c.className='coin'; c.textContent='K'; c.style.left=(x-10)+'px'; c.style.top=(y-10)+'px'; stage.appendChild(c);
@@ -208,8 +208,8 @@ function drawFoe(){ G.dist=.88-G.pz*.62; var sc=.5+G.dist*.85; foe.style.transfo
 drawFoe();
 
 /* ---------- strikes ---------- */
-function foeHit(dmg,coinN,x,y,big){ if(G.ko) return; G.hpF-=dmg; foe.animate([{transform:foe.style.transform+' translateX(0)'},{transform:'translateX('+(Math.random()*14-7)+'px) rotate('+(Math.random()*3-1.5)+'deg)'},{transform:'translateX(0)'}],{duration:190});
-  coins(coinN,x,y,big); G.pot+=coinN; thud(big); buzz(big?40:18); setBars(); checkKO(); }
+function foeHit(dmg,coinN,x,y,big){ if(G.ko||G.down) return; G.lastHitT=performance.now(); G.hpF-=dmg; foe.animate([{transform:foe.style.transform+' translateX(0)'},{transform:'translateX('+(Math.random()*14-7)+'px) rotate('+(Math.random()*3-1.5)+'deg)'},{transform:'translateX(0)'}],{duration:190});
+  coins(coinN,x,y,big); G.pot+=coinN; thud(big); buzz(big?40:18); setBars(); checkKO(); if(!G.ko){ if(G.hpF<50&&!G.downAt50){ G.downAt50=true; knockdown(); } else if(G.hpF<20&&!G.downAt20){ G.downAt20=true; knockdown(); } } }
 function firePunch(side,kind){ var p=fistPos(side), el=side==='L'?fistL:fistR, big=kind==='LONG';
   var clinch = G.dist<.36;
   var other = active(side==='L'?'R':'L');
@@ -220,7 +220,7 @@ function firePunch(side,kind){ var p=fistPos(side), el=side==='L'?fistL:fistR, b
   var arc = clinch? (side==='L'?-34:34) : 0;
   el.animate([{transform:'translate(-50%,-50%) scale(1.15)'},{transform:'translate('+(target.x-p.x-46+arc)+'px,'+(target.y-p.y-46)+'px) scale('+(big?1.5:1.25)+') rotate('+arc+'deg)'},{transform:'translate(-50%,-50%)'}],{duration:big?300:230,easing:'ease-out'});
   if(big) zoom(1.07,240);
-  setTimeout(function(){ foeHit((big?11:6)+(clinch?3:0), big?4:2, target.x, target.y, big); if(clinch) banner('CLINCH HOOK!','',480); }, big?130:100); }
+  setTimeout(function(){ foeHit((big?11:6)+(clinch?3:0), big?4:2, target.x, target.y, big); if(clinch){ banner('CLINCH HOOK!','',480); G.locked=false; } }, big?130:100); }
 function fireKick(side,zone,len){ var b=side==='L'?bootL:bootR, big=len==='LONG';
   var ty = zone==='HIGH'? H*.34 : zone==='MID'? H*.48 : H*.60;
   b.style.left=(side==='L'? W*.34 : W*.66)+'px'; b.style.bottom='auto'; b.style.top=(H*.80)+'px'; b.style.opacity=1;
@@ -235,7 +235,7 @@ function fireRoll(dir){ var now=performance.now(); G.rollUntil=now+420;
   banner('','',10); spark(); }
 
 /* ---------- foe brain: telegraphed punches ---------- */
-function foeLoop(){ setTimeout(function(){ if(!G.ko){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
+function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
     arm.animate([{transform:'rotate(0deg)'},{transform:'rotate('+(useL?38:-38)+'deg)',offset:.55},{transform:'rotate(0deg)'}],{duration:640,easing:'ease-in-out'});
     var pxAtAim=G.px, pzAtAim=G.pz;
     setTimeout(function(){ if(G.ko) return;
@@ -249,8 +249,17 @@ function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!',
   foe.animate([{transform:foe.style.transform,opacity:1},{transform:'translateY(-72vh) rotate(340deg) scale(.55)',opacity:.9,offset:.8},{transform:'translateY(-78vh) rotate(390deg) scale(.5)',opacity:0}],{duration:750,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
   setTimeout(function(){ thud(true); buzz(70); stage.animate([{transform:'translate(0,0)'},{transform:'translate(0,7px)'},{transform:'translate(0,0)'}],{duration:200}); },760);
   setTimeout(function(){ G.ko=false; G.hpF=100; G.hpP=Math.min(100,G.hpP+30); foe.getAnimations().forEach(function(a){a.cancel();}); foe.style.opacity=1; drawFoe(); setBars(); banner('NEXT CHALLENGER','he climbed back in',1100); },2800); } }
+function knockdown(){ G.down=true; G.locked=false;
+  foe.animate([{transform:foe.style.transform},{transform:'rotate(86deg) translateY(26px)',opacity:.75}],{duration:320,easing:'ease-in',fill:'forwards'});
+  var n=0; banner('DOWN!','the count begins…',800); thud(true);
+  var iv=setInterval(function(){ n++; if(n<=4){ banner(String(n),'',420); beep(300+n*60,.08,'square',.06); }
+    if(n>=5){ clearInterval(iv); G.down=false; G.hpF=Math.min(88,G.hpF+16); foe.getAnimations().forEach(function(a){a.cancel();}); foe.style.opacity=1; drawFoe(); setBars(); banner('HE\'S UP!','second wind — +16',900); } },560); }
 function playerDown(){ banner('DOWN!','shake it off…',1400); G.hpP=45; setBars(); }
-setInterval(function(){ if(G.energy<100){ G.energy=Math.min(100,G.energy+1.4); setBars(); } if(!active('L')&&!active('R')) drawLimbs(); },120);
+setInterval(function(){ if(G.energy<100){ G.energy=Math.min(100,G.energy+1.4); setBars(); } if(!active('L')&&!active('R')) drawLimbs();
+  var now=performance.now();
+  if(!G.ko&&!G.down&&G.dist<.36&&now-G.lastHitT>650){ if(!G.locked){ G.locked=true; G.lockT=now; banner('CLINCHED!','hook out — or shove him off',800); } }
+  else if(G.locked&&G.dist>=.42){ G.locked=false; }
+  if(G.locked) foe.style.transform += ''; },120);
 setBars(); foeLoop();
 })();
 </script>
