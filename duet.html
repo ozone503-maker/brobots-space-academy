@@ -9,8 +9,7 @@
   html,body{margin:0;padding:0;height:100%;background:#07070c;overflow:hidden;touch-action:none;
     font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:#e8edf2;
     -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
-  #stage{position:fixed;inset:0;overflow:hidden;background:
-    radial-gradient(120% 90% at 50% 0%, #1b2a3d 0%, #0b1220 55%, #07070c 100%);
+  #stage{position:fixed;inset:0;overflow:hidden;background:#07070c url('fighter-v4-assets/stages/arlington-golden.png') center 28%/cover no-repeat;
     transform-origin:50% 62%;transition:transform .18s ease-out;}
   /* backdrop silhouettes */
   .ridge{position:absolute;left:0;right:0;bottom:34%;height:26%;opacity:.5;
@@ -64,6 +63,12 @@
   #ropeL{left:0;top:0;bottom:0;width:10px;background:linear-gradient(90deg,#ff5d7a,transparent);}
   #ropeR{right:0;top:0;bottom:0;width:10px;background:linear-gradient(-90deg,#ff5d7a,transparent);}
   #ropeT{left:0;right:0;top:0;height:10px;background:linear-gradient(180deg,#ff5d7a,transparent);}
+  .volcano,.lava{display:none;}
+  .ridge{opacity:.12;}
+  #floor{background:linear-gradient(180deg,rgba(10,14,24,.18),rgba(7,9,15,.9) 72%);border-top:1px solid rgba(255,211,77,.28);}
+  #foe img{display:block;width:100%;height:100%;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 12px 16px rgba(0,0,0,.5));}
+  #foeAtk{display:none;}
+  #foeName{position:absolute;top:36px;right:12px;text-align:right;font-size:10px;font-weight:800;letter-spacing:2px;color:#ffb3c0;z-index:30;pointer-events:none;text-shadow:0 2px 6px #000;}
   #flash{position:absolute;inset:0;background:radial-gradient(circle,transparent 55%,rgba(255,40,70,.55));opacity:0;z-index:28;pointer-events:none;transition:opacity .1s;}
 </style>
 </head>
@@ -72,22 +77,8 @@
   <div class="ridge plx"></div><div class="volcano plx"></div><div class="lava plx"></div><div id="floor"></div>
 
   <div id="foe"><div class="sway">
-    <svg viewBox="0 0 200 260" width="230" height="300">
-      <ellipse cx="100" cy="248" rx="56" ry="8" fill="#000" opacity=".5"/>
-      <rect x="84" y="150" width="13" height="86" rx="6" fill="#5a4632"/>
-      <g id="foe-legR" style="transform-origin:110px 152px"><rect x="104" y="150" width="13" height="86" rx="6" fill="#6b543a"/><rect x="100" y="228" width="24" height="10" rx="4" fill="#2b2119"/></g>
-      <rect x="80" y="228" width="24" height="10" rx="4" fill="#2b2119"/>
-      <g id="foe-armL"><rect x="38" y="86" width="14" height="56" rx="7" fill="#8a6d43"/><circle cx="45" cy="146" r="13" fill="#5d4630"/></g>
-      <g id="foe-armR"><rect x="148" y="86" width="14" height="56" rx="7" fill="#8a6d43"/><circle cx="155" cy="146" r="13" fill="#5d4630"/></g>
-      <rect x="62" y="74" width="76" height="84" rx="14" fill="#77603c"/>
-      <rect x="62" y="74" width="76" height="84" rx="14" fill="url(#rust)"/>
-      <circle cx="100" cy="112" r="9" fill="#ffd34d"/><circle cx="100" cy="112" r="4" fill="#fff3b0"/>
-      <rect x="70" y="22" width="60" height="46" rx="10" fill="#8a6d43"/>
-      <rect x="78" y="38" width="44" height="12" rx="6" fill="#151312"/>
-      <circle cx="90" cy="44" r="4.5" fill="#ffe93d"/><circle cx="110" cy="44" r="4.5" fill="#ffe93d"/>
-      <path d="M64 24 Q100 2 136 24 L136 30 Q100 14 64 30 Z" fill="#3a2e1e"/>
-      <defs><radialGradient id="rust" cx="40%" cy="30%"><stop offset="0%" stop-color="#a3804f" stop-opacity=".55"/><stop offset="100%" stop-color="#4a3823" stop-opacity=".65"/></radialGradient></defs>
-    </svg>
+    <img id="foeIdle" src="fighter-v4-assets/fighters/gavin-cut.webp" alt="Gavin Dawson">
+    <img id="foeAtk" src="fighter-v4-assets/fighters/gavin-atk.webp" alt="">
   </div></div>
 
   <svg id="shield" viewBox="0 0 300 230"><path d="M40 20 A150 150 0 0 1 260 20 L260 60 A150 150 0 0 0 40 60 Z" fill="none"/><path d="M30 210 L60 60 A120 120 0 0 1 240 60 L270 210" stroke="#4fe3ae" stroke-width="7" fill="rgba(79,227,174,.07)" stroke-linecap="round"/></svg>
@@ -106,6 +97,7 @@
     <div class="bar foe"><i id="hpF"></i></div>
   </div>
   <div id="energy"><i id="energyI"></i></div><div id="energy-lbl">ENERGY</div>
+  <div id="foeName">GAVIN "THE GENERAL" DAWSON</div>
   <div id="banner"></div><div id="sub-banner"></div>
   <div class="rope" id="ropeL"></div><div class="rope" id="ropeR"></div><div class="rope" id="ropeT"></div>
   <div id="flash"></div>
@@ -239,10 +231,10 @@ function fireRoll(dir){ var now=performance.now(); G.rollUntil=now+420;
   banner('','',10); spark(); }
 
 /* ---------- foe brain: telegraphed punches ---------- */
-function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked&&!G.beat){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
-    var isKick = G.dist>.52, leg=$('foe-legR');
-    if(isKick){ leg.animate([{transform:'rotate(0deg)'},{transform:'rotate(-16deg)',offset:.45},{transform:'rotate(58deg)',offset:.7},{transform:'rotate(0deg)'}],{duration:760,easing:'ease-in-out'}); }
-    else arm.animate([{transform:'rotate(0deg)'},{transform:'rotate('+(useL?38:-38)+'deg)',offset:.55},{transform:'rotate(0deg)'}],{duration:640,easing:'ease-in-out'});
+function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked&&!G.beat){ var isKick = G.dist>.52;
+    var idle=$('foeIdle'), atk=$('foeAtk'); idle.style.display='none'; atk.style.display='block';
+    atk.animate([{transform:'translateX(0) scale(1)'},{transform:'translateX('+(isKick?4:-6)+'px) scale(1.05)',offset:.55},{transform:'translateX('+(isKick?-18:18)+'px) scale(1.12)',offset:.78},{transform:'translateX(0) scale(1)'}],{duration:isKick?760:640,easing:'ease-in-out'});
+    setTimeout(function(){ atk.style.display='none'; idle.style.display='block'; }, isKick?790:670);
     var pxAtAim=G.px, pzAtAim=G.pz;
     setTimeout(function(){ if(G.ko) return;
       if(performance.now()<G.rollUntil){ banner('WHIFF!','rolled it',650); G.pot+=1; coins(1,W/2,H*.45,false); }
@@ -255,7 +247,7 @@ function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!',
   foe.animate([{transform:foe.style.transform,opacity:1},{transform:'translateY(-72vh) rotate(340deg) scale(.55)',opacity:.9,offset:.8},{transform:'translateY(-78vh) rotate(390deg) scale(.5)',opacity:0}],{duration:750,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
   setTimeout(function(){ thud(true); buzz(70); stage.animate([{transform:'translate(0,0)'},{transform:'translate(0,7px)'},{transform:'translate(0,0)'}],{duration:200}); },760);
   setTimeout(function(){ G.ko=false; G.hpF=100; G.downAt50=false; G.downAt20=false; G.hpP=Math.min(100,G.hpP+18); foe.getAnimations().forEach(function(a){a.cancel();}); foe.style.opacity=1;
-    foe.style.filter='hue-rotate('+Math.floor(Math.random()*300)+'deg)';
+    foe.style.filter='';
     foe.animate([{transform:'translateX('+(Math.random()<.5?-130:130)+'vw) scale(.9)'},{transform:'translateX(0)'}],{duration:420,easing:'cubic-bezier(.2,.8,.3,1)'});
     G.px=0; G.pz=.4; drawFoe(); setBars(); startBeat(1200); },1500); } }
 function knockdown(){ G.down=true; G.locked=false;
@@ -270,7 +262,7 @@ setInterval(function(){ if(G.energy<100){ G.energy=Math.min(100,G.energy+1.4); s
   else if(G.locked&&G.dist>=.42){ G.locked=false; }
   if(G.locked) foe.style.transform += ''; },120);
 setBars(); foeLoop();
-var BEATS=['this town aint big enough for the two of us','…you. here?','plates down. eyes up.','wrong place. wrong day.','the room just got small'];
+var BEATS=['postgame. his lot. his rules.','this town aint big enough for the two of us','…you. here?','plates down. eyes up.','wrong place. wrong day.','the room just got small'];
 function startBeat(ms){ G.beat=true; var sub=BEATS[Math.floor(Math.random()*BEATS.length)];
   banner('…',sub,ms||1300);
   setTimeout(function(){ G.beat=false; banner('ON SIGHT!','',800); beep(196,.12,'sawtooth',.08); },ms||1300); }
