@@ -254,7 +254,10 @@ function foeLoop(){ setTimeout(function(){ if(!G.ko&&!G.down&&!G.locked){ var ar
 function checkKO(){ if(G.hpF<=0 && !G.ko){ G.ko=true; G.pot+=25; banner('K.O.!','RING KING LAUNCH — +25 kudokens',1900); chime(9); coins(16,W/2,H*.4,true); setBars();
   foe.animate([{transform:foe.style.transform,opacity:1},{transform:'translateY(-72vh) rotate(340deg) scale(.55)',opacity:.9,offset:.8},{transform:'translateY(-78vh) rotate(390deg) scale(.5)',opacity:0}],{duration:750,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
   setTimeout(function(){ thud(true); buzz(70); stage.animate([{transform:'translate(0,0)'},{transform:'translate(0,7px)'},{transform:'translate(0,0)'}],{duration:200}); },760);
-  setTimeout(function(){ G.ko=false; G.hpF=100; G.hpP=Math.min(100,G.hpP+30); foe.getAnimations().forEach(function(a){a.cancel();}); foe.style.opacity=1; drawFoe(); setBars(); banner('NEXT CHALLENGER','he climbed back in',1100); },2800); } }
+  setTimeout(function(){ G.ko=false; G.hpF=100; G.downAt50=false; G.downAt20=false; G.hpP=Math.min(100,G.hpP+18); foe.getAnimations().forEach(function(a){a.cancel();}); foe.style.opacity=1;
+    foe.style.filter='hue-rotate('+Math.floor(Math.random()*300)+'deg)';
+    foe.animate([{transform:'translateX('+(Math.random()<.5?-130:130)+'vw) scale(.9)'},{transform:'translateX(0)'}],{duration:420,easing:'cubic-bezier(.2,.8,.3,1)'});
+    G.px=0; G.pz=.4; drawFoe(); setBars(); banner('ON SIGHT!','new beef — no bell, no talk',1000); },1500); } }
 function knockdown(){ G.down=true; G.locked=false;
   foe.animate([{transform:foe.style.transform},{transform:'rotate(86deg) translateY(26px)',opacity:.75}],{duration:320,easing:'ease-in',fill:'forwards'});
   var n=0; banner('DOWN!','the count begins…',800); thud(true);
@@ -266,7 +269,7 @@ setInterval(function(){ if(G.energy<100){ G.energy=Math.min(100,G.energy+1.4); s
   if(!G.ko&&!G.down&&G.dist<.36&&now-G.lastHitT>650){ if(!G.locked){ G.locked=true; G.lockT=now; banner('CLINCHED!','hook out — or shove him off',800); } }
   else if(G.locked&&G.dist>=.42){ G.locked=false; }
   if(G.locked) foe.style.transform += ''; },120);
-setBars(); foeLoop();
+setBars(); foeLoop(); setTimeout(function(){ banner('ON SIGHT!','its on — right now',1200); },450);
 })();
 </script>
 </body>
