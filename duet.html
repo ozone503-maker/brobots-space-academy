@@ -60,6 +60,10 @@
     background:radial-gradient(circle at 35% 35%,#fff2b0,#ffd34d 55%,#c98f12);border:1px solid #8a6206;
     font-size:11px;font-weight:900;color:#7a5600;display:flex;align-items:center;justify-content:center;}
   #hint{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:12px;color:#77879c;letter-spacing:1px;z-index:30;pointer-events:none;}
+  .rope{position:absolute;z-index:15;pointer-events:none;opacity:0;transition:opacity .15s;}
+  #ropeL{left:0;top:0;bottom:0;width:10px;background:linear-gradient(90deg,#ff5d7a,transparent);}
+  #ropeR{right:0;top:0;bottom:0;width:10px;background:linear-gradient(-90deg,#ff5d7a,transparent);}
+  #ropeT{left:0;right:0;top:0;height:10px;background:linear-gradient(180deg,#ff5d7a,transparent);}
   #flash{position:absolute;inset:0;background:radial-gradient(circle,transparent 55%,rgba(255,40,70,.55));opacity:0;z-index:28;pointer-events:none;transition:opacity .1s;}
 </style>
 </head>
@@ -103,6 +107,7 @@
   </div>
   <div id="energy"><i id="energyI"></i></div><div id="energy-lbl">ENERGY</div>
   <div id="banner"></div><div id="sub-banner"></div>
+  <div class="rope" id="ropeL"></div><div class="rope" id="ropeR"></div><div class="rope" id="ropeT"></div>
   <div id="flash"></div>
   <div id="hint">BROBOT DUET — no instructions. just touch it.</div>
   <div class="dot" id="dotL"></div><div class="dot" id="dotR"></div>
@@ -126,7 +131,7 @@ function chime(n){ for(var i=0;i<(n||3);i++)(function(i){ setTimeout(function(){
 function buzz(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
 
 /* ---------- game state ---------- */
-var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.55, orbit:0, guarding:false, clenchAt:0, rollUntil:0, ko:false };
+var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.58, px:0, pz:.45, guarding:false, clenchAt:0, rollUntil:0, ko:false };
 function setBars(){ $('hpP').style.width=Math.max(0,G.hpP)+'%'; $('hpF').style.width=Math.max(0,G.hpF)+'%'; $('energyI').style.width=G.energy+'%'; $('potN').textContent=G.pot; }
 function banner(t,sub,ms){ var b=$('banner'),s=$('sub-banner'); b.textContent=t; s.textContent=sub||''; b.style.opacity=1; s.style.opacity=sub?1:0; setTimeout(function(){ b.style.opacity=0; s.style.opacity=0; },ms||1100); }
 function coins(n,x,y,big){ for(var i=0;i<n;i++){ (function(i){ var c=document.createElement('div'); c.className='coin'; c.textContent='K'; c.style.left=(x-10)+'px'; c.style.top=(y-10)+'px'; stage.appendChild(c);
@@ -178,14 +183,14 @@ function pairLogic(changed){ var a=active('L'), b=active('R'); if(!a||!b||neutra
   // roll: opposed verticals
   if(now>G.rollUntil){ var aUp=a.y0-a.y, bUp=b.y0-b.y, aDn=a.y-a.y0, bDn=b.y-b.y0;
     if(aUp>42&&bDn>42) fireRoll('L'); else if(bUp>42&&aDn>42) fireRoll('R'); }
-  // walk: both thumbs travel together vertically
+  // free roam: the pair's average lean steers the body on the whole plane (Ring King)
   var avgDy=((a.y-a.y0)+(b.y-b.y0))/2;
-  if(avgDy<-30) G.dist=Math.max(.18,G.dist-.012); else if(avgDy>30) G.dist=Math.min(.85,G.dist+.012);
-  // circle: both thumbs slide sideways together — the pair is the stick
   var avgDx=((a.x-a.x0)+(b.x-b.x0))/2;
-  if(Math.abs(avgDx)>26) G.orbit=Math.max(-1,Math.min(1, G.orbit + avgDx*.00042));
+  if(avgDy<-26) G.pz=Math.min(1,G.pz+.013); else if(avgDy>26) G.pz=Math.max(0,G.pz-.013);
+  if(Math.abs(avgDx)>24) G.px=Math.max(-1,Math.min(1, G.px + avgDx*.00046));
   drawFoe(); }
-function drawWorld(){ var els=document.querySelectorAll('.plx'); for(var i=0;i<els.length;i++) els[i].style.transform='translateX('+(-G.orbit*30)+'px)'; }
+function drawWorld(){ var els=document.querySelectorAll('.plx'); for(var i=0;i<els.length;i++) els[i].style.transform='translateX('+(-G.px*30)+'px)'; }
+function drawRopes(){ $('ropeL').style.opacity=Math.max(0,(-G.px-.72)*3.2); $('ropeR').style.opacity=Math.max(0,(G.px-.72)*3.2); $('ropeT').style.opacity=Math.max(0,(.14-G.pz)*5); }
 
 /* ---------- limb rendering: fists mirror thumbs (offset up-screen) ---------- */
 function fistPos(side){ var r=active(side); var home = side==='L'? {x:W*.30,y:H*.86} : {x:W*.70,y:H*.86};
@@ -199,17 +204,23 @@ function drawLimbs(){ var now=performance.now();
     el.style.transform='translate(-50%,-50%) scale('+(1+load*.35)+') rotate('+(side==='L'?-8:8)+'deg)';
     el.style.opacity = G.ko? .18 : .72; });
   foe.style.zIndex = 10; }
-function drawFoe(){ var s=.55+G.dist*.75; foe.style.transform='translateX('+(G.orbit*W*.30)+'px) rotate('+(G.orbit*-7)+'deg) scale('+s+') translateY('+((1-G.dist)*10)+'px)'; drawWorld(); }
+function drawFoe(){ G.dist=.88-G.pz*.62; var sc=.5+G.dist*.85; foe.style.transform='translateX('+(-G.px*W*.36)+'px) rotate('+(G.px*5)+'deg) scale('+sc+') translateY('+((1-G.dist)*10)+'px)'; drawWorld(); drawRopes(); }
 drawFoe();
 
 /* ---------- strikes ---------- */
 function foeHit(dmg,coinN,x,y,big){ if(G.ko) return; G.hpF-=dmg; foe.animate([{transform:foe.style.transform+' translateX(0)'},{transform:'translateX('+(Math.random()*14-7)+'px) rotate('+(Math.random()*3-1.5)+'deg)'},{transform:'translateX(0)'}],{duration:190});
   coins(coinN,x,y,big); G.pot+=coinN; thud(big); buzz(big?40:18); setBars(); checkKO(); }
 function firePunch(side,kind){ var p=fistPos(side), el=side==='L'?fistL:fistR, big=kind==='LONG';
+  var clinch = G.dist<.36;
+  var other = active(side==='L'?'R':'L');
+  if(clinch && other && other.maxUp>42){ // SHOVE — both hands drive him off
+    banner('SHOVE!','wrestled him off',700); thud(true); buzz(50);
+    foeHit(2,1,W/2,H*.45,false); G.pz=Math.max(0,G.pz-.34); other.maxUp=0; drawFoe(); return; }
   var target={ x:W/2+(side==='L'?-46:46), y:H*(0.30+G.dist*.18) };
-  el.animate([{transform:'translate(-50%,-50%) scale(1.15)'},{transform:'translate('+(target.x-p.x-46)+'px,'+(target.y-p.y-46)+'px) scale('+(big?1.5:1.25)+')'},{transform:'translate(-50%,-50%)'}],{duration:big?300:230,easing:'ease-out'});
+  var arc = clinch? (side==='L'?-34:34) : 0;
+  el.animate([{transform:'translate(-50%,-50%) scale(1.15)'},{transform:'translate('+(target.x-p.x-46+arc)+'px,'+(target.y-p.y-46)+'px) scale('+(big?1.5:1.25)+') rotate('+arc+'deg)'},{transform:'translate(-50%,-50%)'}],{duration:big?300:230,easing:'ease-out'});
   if(big) zoom(1.07,240);
-  setTimeout(function(){ foeHit(big?11:6, big?4:2, target.x, target.y, big); }, big?130:100); }
+  setTimeout(function(){ foeHit((big?11:6)+(clinch?3:0), big?4:2, target.x, target.y, big); if(clinch) banner('CLINCH HOOK!','',480); }, big?130:100); }
 function fireKick(side,zone,len){ var b=side==='L'?bootL:bootR, big=len==='LONG';
   var ty = zone==='HIGH'? H*.34 : zone==='MID'? H*.48 : H*.60;
   b.style.left=(side==='L'? W*.34 : W*.66)+'px'; b.style.bottom='auto'; b.style.top=(H*.80)+'px'; b.style.opacity=1;
@@ -226,10 +237,10 @@ function fireRoll(dir){ var now=performance.now(); G.rollUntil=now+420;
 /* ---------- foe brain: telegraphed punches ---------- */
 function foeLoop(){ setTimeout(function(){ if(!G.ko){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
     arm.animate([{transform:'rotate(0deg)'},{transform:'rotate('+(useL?38:-38)+'deg)',offset:.55},{transform:'rotate(0deg)'}],{duration:640,easing:'ease-in-out'});
-    var orbitAtAim=G.orbit;
+    var pxAtAim=G.px, pzAtAim=G.pz;
     setTimeout(function(){ if(G.ko) return;
       if(performance.now()<G.rollUntil){ banner('WHIFF!','rolled it',650); G.pot+=1; coins(1,W/2,H*.45,false); }
-      else if(Math.abs(G.orbit-orbitAtAim)>.22){ banner('WHIFF!','circled away',650); G.pot+=1; coins(1,W/2,H*.45,false); }
+      else if(Math.abs(G.px-pxAtAim)>.20 || Math.abs(G.pz-pzAtAim)>.30){ banner('WHIFF!','moved off the line',650); G.pot+=1; coins(1,W/2,H*.45,false); }
       else if(G.guarding){ spark(); buzz(25); G.pot+=2; banner('BLOCKED!','+2 bonus kudokens',650); coins(2,W/2,H*.5,false); }
       else { G.hpP-=8; $('flash').style.opacity=1; setTimeout(function(){ $('flash').style.opacity=0; },140); thud(true); buzz(60); stage.animate([{transform:'translate(0,0)'},{transform:'translate(7px,-4px)'},{transform:'translate(-6px,3px)'},{transform:'translate(0,0)'}],{duration:220}); }
       setBars(); if(G.hpP<=0) playerDown(); },470);
