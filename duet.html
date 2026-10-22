@@ -65,7 +65,7 @@
 </head>
 <body>
 <div id="stage">
-  <div class="ridge"></div><div class="volcano"></div><div class="lava"></div><div id="floor"></div>
+  <div class="ridge plx"></div><div class="volcano plx"></div><div class="lava plx"></div><div id="floor"></div>
 
   <div id="foe"><div class="sway">
     <svg viewBox="0 0 200 260" width="230" height="300">
@@ -126,7 +126,7 @@ function chime(n){ for(var i=0;i<(n||3);i++)(function(i){ setTimeout(function(){
 function buzz(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
 
 /* ---------- game state ---------- */
-var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.55, guarding:false, clenchAt:0, rollUntil:0, ko:false };
+var G={ hpP:100, hpF:100, pot:0, energy:100, dist:.55, orbit:0, guarding:false, clenchAt:0, rollUntil:0, ko:false };
 function setBars(){ $('hpP').style.width=Math.max(0,G.hpP)+'%'; $('hpF').style.width=Math.max(0,G.hpF)+'%'; $('energyI').style.width=G.energy+'%'; $('potN').textContent=G.pot; }
 function banner(t,sub,ms){ var b=$('banner'),s=$('sub-banner'); b.textContent=t; s.textContent=sub||''; b.style.opacity=1; s.style.opacity=sub?1:0; setTimeout(function(){ b.style.opacity=0; s.style.opacity=0; },ms||1100); }
 function coins(n,x,y,big){ for(var i=0;i<n;i++){ (function(i){ var c=document.createElement('div'); c.className='coin'; c.textContent='K'; c.style.left=(x-10)+'px'; c.style.top=(y-10)+'px'; stage.appendChild(c);
@@ -181,7 +181,11 @@ function pairLogic(changed){ var a=active('L'), b=active('R'); if(!a||!b||neutra
   // walk: both thumbs travel together vertically
   var avgDy=((a.y-a.y0)+(b.y-b.y0))/2;
   if(avgDy<-30) G.dist=Math.max(.18,G.dist-.012); else if(avgDy>30) G.dist=Math.min(.85,G.dist+.012);
+  // circle: both thumbs slide sideways together — the pair is the stick
+  var avgDx=((a.x-a.x0)+(b.x-b.x0))/2;
+  if(Math.abs(avgDx)>26) G.orbit=Math.max(-1,Math.min(1, G.orbit + avgDx*.00042));
   drawFoe(); }
+function drawWorld(){ var els=document.querySelectorAll('.plx'); for(var i=0;i<els.length;i++) els[i].style.transform='translateX('+(-G.orbit*30)+'px)'; }
 
 /* ---------- limb rendering: fists mirror thumbs (offset up-screen) ---------- */
 function fistPos(side){ var r=active(side); var home = side==='L'? {x:W*.30,y:H*.86} : {x:W*.70,y:H*.86};
@@ -195,7 +199,7 @@ function drawLimbs(){ var now=performance.now();
     el.style.transform='translate(-50%,-50%) scale('+(1+load*.35)+') rotate('+(side==='L'?-8:8)+'deg)';
     el.style.opacity = G.ko? .25 : 1; });
   foe.style.zIndex = 10; }
-function drawFoe(){ var s=.55+G.dist*.75; foe.style.transform='scale('+s+') translateY('+((1-G.dist)*10)+'px)'; }
+function drawFoe(){ var s=.55+G.dist*.75; foe.style.transform='translateX('+(G.orbit*W*.30)+'px) rotate('+(G.orbit*-7)+'deg) scale('+s+') translateY('+((1-G.dist)*10)+'px)'; drawWorld(); }
 drawFoe();
 
 /* ---------- strikes ---------- */
@@ -222,8 +226,10 @@ function fireRoll(dir){ var now=performance.now(); G.rollUntil=now+420;
 /* ---------- foe brain: telegraphed punches ---------- */
 function foeLoop(){ setTimeout(function(){ if(!G.ko){ var armL=$('foe-armL'), armR=$('foe-armR'), useL=Math.random()<.5, arm=useL?armL:armR;
     arm.animate([{transform:'rotate(0deg)'},{transform:'rotate('+(useL?38:-38)+'deg)',offset:.55},{transform:'rotate(0deg)'}],{duration:640,easing:'ease-in-out'});
+    var orbitAtAim=G.orbit;
     setTimeout(function(){ if(G.ko) return;
       if(performance.now()<G.rollUntil){ banner('WHIFF!','rolled it',650); G.pot+=1; coins(1,W/2,H*.45,false); }
+      else if(Math.abs(G.orbit-orbitAtAim)>.22){ banner('WHIFF!','circled away',650); G.pot+=1; coins(1,W/2,H*.45,false); }
       else if(G.guarding){ spark(); buzz(25); G.pot+=2; banner('BLOCKED!','+2 bonus kudokens',650); coins(2,W/2,H*.5,false); }
       else { G.hpP-=8; $('flash').style.opacity=1; setTimeout(function(){ $('flash').style.opacity=0; },140); thud(true); buzz(60); stage.animate([{transform:'translate(0,0)'},{transform:'translate(7px,-4px)'},{transform:'translate(-6px,3px)'},{transform:'translate(0,0)'}],{duration:220}); }
       setBars(); if(G.hpP<=0) playerDown(); },470);
