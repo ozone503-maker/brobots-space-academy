@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>CORE — mechanism prototype (gates 1+2)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#101014;overflow:hidden;touch-action:none;
+    font-family:ui-monospace,Menlo,Consolas,monospace;color:#cfd2d8;-webkit-user-select:none;user-select:none}
+  #cv{position:fixed;inset:0;display:block}
+  #hud{position:fixed;top:8px;left:10px;right:10px;pointer-events:none;font-size:12px;line-height:1.5}
+  #hud b{color:#fff}
+  #log{position:fixed;left:10px;bottom:64px;width:min(78vw,430px);font-size:11px;line-height:1.45;
+    color:#9fe8a9;pointer-events:none;text-shadow:0 1px 2px #000}
+  #log .dim{color:#7d8590}
+  #bar{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;gap:8px;align-items:center;
+    justify-content:center;background:rgba(0,0,0,.45)}
+  #bar button{pointer-events:auto;background:#23232b;color:#e8eaee;border:1px solid #3a3a46;border-radius:8px;
+    padding:9px 14px;font:inherit;font-size:12px}
+  #bar button.on{background:#3d5a80;border-color:#6ea8ff;color:#fff}
+  #hint{position:fixed;bottom:58px;left:0;right:0;text-align:center;font-size:12px;color:#aab;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="hud"><b>CORE</b> — gates 1+2: he stands, walks in, steps, stumbles, falls by balance.<br>
+your fists: touch your half of the screen, drag to move, <b>flick hard to punch</b>. slow touch = gentle push.</div>
+<div id="log"></div>
+<div id="hint">left thumb = left fist · right thumb = right fist</div>
+<div id="bar">
+  <button id="btnDbg">DEBUG: OFF</button>
+  <button id="btnReset">RESET HIM</button>
+</div>
+<script>
+'use strict';
+/* ================= CORE — articulated momentum prototype =================
+   Body: Verlet points in 3D, distance constraints, stance springs, CoM vs
+   support polygon balance. Player: two kinematic ghost fists (solid) driven
+   by thumbs; flick = trajectory; swept sphere-vs-capsule contact; impulse =
+   effective mass x relative velocity along the contact normal.
+   No damage table. No hit states. The physics produces the result.        */
+
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0;
+function resize(){ W = cv.width = innerWidth; H = cv.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+const V3 = {
+  add:(a,b)=>({x:a.x+b.x,y:a.y+b.y,z:a.z+b.z}),
+  sub:(a,b)=>({x:a.x-b.x,y:a.y-b.y,z:a.z-b.z}),
+  mul:(a,s)=>({x:a.x*s,y:a.y*s,z:a.z*s}),
+  len:a=>Math.hypot(a.x,a.y,a.z),
+  norm:a=>{const l=Math.hypot(a.x,a.y,a.z)||1;return{x:a.x/l,y:a.y/l,z:a.z/l};},
+  dot:(a,b)=>a.x*b.x+a.y*b.y+a.z*b.z
+};
+function proj(p){ const s = (H*0.62)/Math.max(0.35,p.z); return { x: W/2 + p.x*s, y: H*0.86 - p.y*s, s }; }
+
+/* ---------------- the body ---------------- */
+const NAMES = ['head','neck','chest','pelvis','shL','elL','haL','shR','elR','haR','knL','anL','ftL','knR','anR','ftR'];
+const MASS  = { head:3, neck:2, chest:6, pelvis:6, shL:1.2, elL:1, haL:0.8, shR:1.2, elR:1, haR:0.8,
+                knL:1.6, anL:1, ftL:0.7, knR:1.6, anR:1, ftR:0.7 };
+let P = [];           // points {p, pp, m}
+const HOME_Z = 1.75;  // his preferred fighting distance
+let root = { x:0, z:3.1 };         // stance anchor he walks with
+let facing = -1;                    // he faces the camera (-z)
+
+const REST = { // local pose offsets (x right, y up, z toward camera-negative = his forward)
+  head:{x:0,y:1.66,z:-0.02}, neck:{x:0,y:1.50,z:0}, chest:{x:0,y:1.33,z:0}, pelvis:{x:0,y:0.98,z:0},
+  shL:{x:-0.21,y:1.45,z:0}, elL:{x:-0.33,y:1.18,z:-0.10}, haL:{x:-0.24,y:1.24,z:-0.30},
+  shR:{x:0.21,y:1.45,z:0},  elR:{x:0.33,y:1.18,z:-0.10},  haR:{x:0.24,y:1.24,z:-0.30},
+  knL:{x:-0.15,y:0.50,z:-0.05}, anL:{x:-0.16,y:0.05,z:0.10}, ftL:{x:-0.16,y:0.03,z:-0.10},
+  knR:{x:0.15,y:0.50,z:0.02},  anR:{x:0.16,y:0.05,z:-0.14}, ftR:{x:0.16,y:0.03,z:-0.32}
+};
+const BONES = [ // [a, b, stiffness]
+  ['neck','head',.9],['chest','neck',.9],['chest','pelvis',.85],
+  ['chest','shL',.8],['shL','elL',.8],['elL','haL',.8],
+  ['chest','shR',.8],['shR','elR',.8],['elR','haR',.8],
+  ['pelvis','knL',.8],['knL','anL',.8],['anL','ftL',.7],
+  ['pelvis','knR',.8],['knR','anR',.8],['anR','ftR',.7],
+  ['pelvis','shL',.5],['pelvis','shR',.5],['shL','shR',.6],['knL','knR',.35]
+];
+let CONS = [];
+function idx(n){ return NAMES.indexOf(n); }
+function buildBody(){
+  P = NAMES.map(n => { const r = REST[n];
+    const p = { x: r.x + root.x, y: r.y, z: r.z + root.z };
+    return { p:{...p}, pp:{...p}, m: MASS[n] }; });
+  CONS = BONES.map(([a,b,k]) => { const ia=idx(a), ib=idx(b);
+    return { a:ia, b:ib, rest: V3.len(V3.sub(P[ia].p, P[ib].p)), k }; });
+  feet.L = { planted:{...P[idx('ftL')].p}, stepping:false, t:0, from:null, to:null };
+  feet.R = { planted:{...P[idx('ftR')].p}, stepping:false, t:0, from:null, to:null };
+  fallen = 0; fallT = 0;
+}
+const feet = { L:null, R:null };
+let fallen = 0, fallT = 0;
+
+function com(){ let m=0, c={x:0,y:0,z:0};
+  for (const q of P){ c.x+=q.p.x*q.m; c.y+=q.p.y*q.m; c.z+=q.p.z*q.m; m+=q.m; }
+  return { x:c.x/m, y:c.y/m, z:c.z/m }; }
+function supportInfo(){
+  const a = P[idx('ftL')].p, b = P[idx('ftR')].p, c = com();
+  // distance from CoM ground projection to the feet segment (x,z plane)
+  const abx=b.x-a.x, abz=b.z-a.z, L2=abx*abx+abz*abz||1e-6;
+  let t=((c.x-a.x)*abx+(c.z-a.z)*abz)/L2; t=Math.max(0,Math.min(1,t));
+  const dx=c.x-(a.x+abx*t), dz=c.z-(a.z+abz*t);
+  return { dist: Math.hypot(dx,dz), a, b, c };
+}
+
+/* stance targets in world space */
+function stanceTargets(){
+  const T = {};
+  for (const n of NAMES){ const r = REST[n];
+    T[n] = { x: r.x + root.x, y: r.y, z: r.z + root.z }; }
+  T.ftL = {...feet.L.planted}; T.ftR = {...feet.R.planted};
+  T.anL = { x: feet.L.planted.x, y: 0.05, z: feet.L.planted.z + 0.20 };
+  T.anR = { x: feet.R.planted.x, y: 0.05, z: feet.R.planted.z + 0.20 };
+  return T;
+}
+const SPRING = { pelvis:.16, chest:.14, neck:.12, head:.10, shL:.10, shR:.10,
+                 elL:.10, elR:.10, haL:.12, haR:.12, knL:.07, knR:.07, anL:.15, anR:.15, ftL:.3, ftR:.3 };
+
+function stepFoot(side){
+  const f = feet[side]; if (f.stepping) return;
+  const r = REST[side==='L'?'ftL':'ftR'];
+  f.from = {...P[idx(side==='L'?'ftL':'ftR')].p};
+  f.to = { x: r.x + root.x, y: 0.03, z: r.z + root.z };
+  f.stepping = true; f.t = 0;
+}
+
+function physics(dt){
+  const g = -9.8, damp = 0.995;
+  for (const q of P){
+    const vx=(q.p.x-q.pp.x)*damp, vy=(q.p.y-q.pp.y)*damp, vz=(q.p.z-q.pp.z)*damp;
+    q.pp = {...q.p};
+    q.p.x+=vx; q.p.y+=vy+g*dt*dt; q.p.z+=vz;
+  }
+  // his walk: close distance until HOME_Z
+  if (!fallen && root.z > HOME_Z) root.z = Math.max(HOME_Z, root.z - 0.22*dt);
+  // balance judgement
+  const si = supportInfo();
+  const offBalance = si.dist > 0.30;
+  if (!fallen && offBalance){ fallT += dt; if (fallT > 0.30) fallen = 1; } else fallT = Math.max(0, fallT - dt*2);
+  const muscle = fallen ? 0.06 : 1;
+  // foot stepping: step when a foot is far from its stance target or balance demands it
+  for (const side of ['L','R']){
+    const f = feet[side], fi = idx(side==='L'?'ftL':'ftR'), r = REST[side==='L'?'ftL':'ftR'];
+    const target = { x: r.x + root.x, z: r.z + root.z };
+    const dNow = Math.hypot(f.planted.x-target.x, f.planted.z-target.z);
+    const other = feet[side==='L'?'R':'L'];
+    if (!fallen && !f.stepping && !other.stepping && (dNow > 0.30 || (offBalance && dNow > 0.12))) stepFoot(side);
+    if (f.stepping){
+      f.t += dt/0.22;
+      const t = Math.min(1, f.t), arc = Math.sin(t*Math.PI)*0.13;
+      P[fi].p.x = f.from.x + (f.to.x-f.from.x)*t;
+      P[fi].p.z = f.from.z + (f.to.z-f.from.z)*t;
+      P[fi].p.y = 0.03 + arc; P[fi].pp = {...P[fi].p};
+      if (t>=1){ f.stepping=false; f.planted={...f.to}; }
+    }
+  }
+  const T = stanceTargets();
+  for (let it=0; it<10; it++){
+    // stance springs (soft: a preferred posture the body can be knocked out of)
+    if (it===0) for (const n of NAMES){
+      const i=idx(n), k=(SPRING[n]||0.08)*muscle;
+      if ((n==='ftL'&&feet.L.stepping)||(n==='ftR'&&feet.R.stepping)) continue;
+      P[i].p.x += (T[n].x-P[i].p.x)*k; P[i].p.y += (T[n].y-P[i].p.y)*k; P[i].p.z += (T[n].z-P[i].p.z)*k;
+    }
+    for (const c of CONS){
+      const A=P[c.a], B=P[c.b];
+      const d = V3.sub(B.p, A.p), L = V3.len(d)||1e-6, diff=(L-c.rest)/L*c.k;
+      const wA=A.m/(A.m+B.m), wB=B.m/(A.m+B.m);
+      A.p = V3.add(A.p, V3.mul(d, diff*wB)); B.p = V3.sub(B.p, V3.mul(d, diff*wA));
+    }
+    // ground: nothing below the floor
+    for (const q of P) if (q.p.y < 0.035) q.p.y = 0.035;
+  }
+  // fallen bookkeeping: lie there a moment, then reset (get-up is gate 4)
+  if (fallen){ fallT += 0;
+    if (P[idx('pelvis')].p.y < 0.40){ fallHold += dt; if (fallHold > 1.8){ root.z = 3.1; buildBody(); } }
+  } else fallHold = 0;
+}
+let fallHold = 0;
+
+/* ---------------- player fists ---------------- */
+const HIT_V = 2.2;              // m/s: below this, a touch is a touch, not a hit
+function makeFist(side){
+  const hx = side==='L' ? -0.34 : 0.34;
+  return { side, home:{x:hx, y:0.42, z:0.55}, p:{x:hx,y:0.42,z:0.55}, prev:{x:hx,y:0.42,z:0.55},
+           vel:{x:0,y:0,z:0}, state:'home', ptr:null, trail:[], latched:false, cool:0 };
+}
+const fists = [ makeFist('L'), makeFist('R') ];
+let contacts = [];   // {x,y(world), t, text}
+let hitLog = [];
+function logHit(s){ hitLog.unshift(s); hitLog = hitLog.slice(0,5);
+  document.getElementById('log').innerHTML =
+    hitLog.map((h,i)=> i? '<span class="dim">'+h+'</span>' : h).join('<br>'); }
+
+/* swept sphere (fist path prev->p) vs his capsules: earliest contact */
+const CAPS = [ ['head','neck',0.115,'head'],['neck','chest',0.13,'neck'],['chest','pelvis',0.165,'torso'],
+  ['chest','shL',0.07,'shoulder'],['shL','elL',0.055,'arm'],['elL','haL',0.05,'forearm'],
+  ['chest','shR',0.07,'shoulder'],['shR','elR',0.055,'arm'],['elR','haR',0.05,'forearm'],
+  ['pelvis','knL',0.085,'thigh'],['knL','anL',0.06,'shin'],['anL','ftL',0.05,'foot'],
+  ['pelvis','knR',0.085,'thigh'],['knR','anR',0.06,'shin'],['anR','ftR',0.05,'foot'] ];
+function segSeg(p1,q1,p2,q2){
+  const d1=V3.sub(q1,p1), d2=V3.sub(q2,p2), r=V3.sub(p1,p2);
+  const a=V3.dot(d1,d1), e=V3.dot(d2,d2), f=V3.dot(d2,r);
+  let s=0, t=0;
+  const c=V3.dot(d1,r), b=V3.dot(d1,d2), den=a*e-b*b;
+  if (den>1e-9) s=Math.max(0,Math.min(1,(b*f-c*e)/den));
+  t = e>1e-9 ? (b*s+f)/e : 0; t=Math.max(0,Math.min(1,t));
+  s = a>1e-9 ? Math.max(0,Math.min(1,(b*t-c)/a)) : 0;
+  const c1=V3.add(p1,V3.mul(d1,s)), c2=V3.add(p2,V3.mul(d2,t));
+  return { d: V3.len(V3.sub(c1,c2)), c1, c2, s, t };
+}
+function fistContact(f){
+  if (f.latched) return;
+  const speed = V3.len(f.vel);
+  let best = null;
+  for (const [an,bn,rad,part] of CAPS){
+    const A=P[idx(an)].p, B=P[idx(bn)].p;
+    const r = segSeg(f.prev, f.p, A, B);
+    if (r.d < rad + 0.085 && (!best || r.s < best.r.s)) best = { r, A, B, an, bn, part };
+  }
+  if (!best) return;
+  f.latched = true;
+  const n = V3.norm(V3.sub(best.r.c2, best.r.c1));         // fist -> body
+  const vn = V3.dot(f.vel, n);
+  const mEff = 1.2;
+  const J = mEff * Math.max(0, vn);
+  // impulse into the struck segment's two points, weighted by closeness
+  const wB = best.r.t, wA = 1-wB;
+  for (const [pt,w] of [[best.A,wA],[best.B,wB]]){
+    const q = P.find(qq => qq.p===pt); if (!q) continue;
+    const dv = J * w / q.m;
+    q.p.x += n.x*dv*0.016; q.p.y += n.y*dv*0.016; q.p.z += n.z*dv*0.016;
+    q.pp.x -= n.x*dv*0.9;  q.pp.y -= n.y*dv*0.9;  q.pp.z -= n.z*dv*0.9;
+  }
+  f.vel = V3.mul(f.vel, 0.15);   // momentum spent
+  const dmg = Math.max(0, Math.round((speed - HIT_V) * mEff * 2.2));
+  const sp = proj(best.r.c2);
+  contacts.push({ x: sp.x, y: sp.y, t: 0, big: speed > 6 });
+  if (speed >= HIT_V) logHit('HIT '+best.part+' — v '+speed.toFixed(1)+' m/s → J '+J.toFixed(1)+' → '+dmg);
+  else logHit('<span class="dim">touch '+best.part+' — too slow to count ('+speed.toFixed(1)+' m/s)</span>');
+  return best;
+}
+
+function fistStep(f, dt){
+  f.prev = {...f.p};
+  if (f.state==='strike'){
+    f.p = V3.add(f.p, V3.mul(f.vel, dt));
+    f.t += dt;
+    fistContact(f);
+    if (f.t > 0.30 || f.p.z > root.z + 0.45) f.state = 'retract';
+  } else if (f.state==='retract'){
+    const k = 1 - Math.pow(0.0001, dt);
+    f.p.x += (f.home.x-f.p.x)*k; f.p.y += (f.home.y-f.p.y)*k; f.p.z += (f.home.z-f.p.z)*k;
+    f.vel = {x:0,y:0,z:0};
+    if (V3.len(V3.sub(f.p,f.home)) < 0.03){ f.state='home'; f.latched=false; }
+  } else if (f.ptr !== null && f.target){
+    // held: follow the thumb in the home plane
+    const k = 1 - Math.pow(0.000001, dt);
+    f.p.x += (f.target.x-f.p.x)*k; f.p.y += (f.target.y-f.p.y)*k; f.p.z += (f.home.z-f.p.z)*k;
+    f.vel = V3.mul(V3.sub(f.p, f.prev), 1/Math.max(dt,1e-4));
+    fistContact(f);   // a held fist can still shove him — momentum decides
+  } else {
+    const k = 1 - Math.pow(0.001, dt);
+    f.p.x += (f.home.x-f.p.x)*k; f.p.y += (f.home.y-f.p.y)*k; f.p.z += (f.home.z-f.p.z)*k;
+    f.vel = {x:0,y:0,z:0}; f.latched = false;
+  }
+}
+
+/* ---------------- input: thumbs ---------------- */
+const ptrs = new Map();
+function unproject(sx, sy, z){ const s=(H*0.62)/z; return { x:(sx-W/2)/s, y:(H*0.86-sy)/s, z }; }
+cv.addEventListener('pointerdown', e => {
+  cv.setPointerCapture(e.pointerId);
+  const side = e.clientX < W/2 ? 'L' : 'R';
+  const f = fists[side==='L'?0:1]; if (f.ptr !== null) return;
+  f.ptr = e.pointerId; f.side = side;
+  ptrs.set(e.pointerId, { f, x:e.clientX, y:e.clientY, t:performance.now(), vx:0, vy:0, hist:[] });
+  f.target = unproject(e.clientX, e.clientY, f.home.z);
+});
+cv.addEventListener('pointermove', e => {
+  const r = ptrs.get(e.pointerId); if (!r) return;
+  const now = performance.now(), dtm = Math.max(1, now-r.t);
+  r.vx = (e.clientX-r.x)/dtm*1000; r.vy = (e.clientY-r.y)/dtm*1000;
+  r.x = e.clientX; r.y = e.clientY; r.t = now;
+  r.hist.push({x:e.clientX,y:e.clientY,t:now}); if (r.hist.length>8) r.hist.shift();
+  r.f.target = unproject(e.clientX, e.clientY, r.f.home.z);
+  const sp = Math.hypot(r.vx, r.vy);
+  if (r.f.state==='home' && sp > 1500) fireFist(r.f, r);   // fast swipe fires mid-touch
+});
+function endPtr(e){
+  const r = ptrs.get(e.pointerId); if (!r) return;
+  const sp = Math.hypot(r.vx, r.vy);
+  if (r.f.state==='home' && sp > 800) fireFist(r.f, r);     // release flick fires
+  r.f.ptr = null; r.f.target = null; ptrs.delete(e.pointerId);
+}
+cv.addEventListener('pointerup', endPtr);
+cv.addEventListener('pointercancel', endPtr);
+function fireFist(f, r){
+  // aim: where the thumb is, read in HIS plane; speed: the flick itself
+  const aim = unproject(r.x, r.y, Math.max(0.9, root.z - 0.05));
+  const from = {...f.p};
+  const dir = V3.norm(V3.sub(aim, from));
+  const spdPx = Math.hypot(r.vx, r.vy);
+  const sHome = (H*0.62)/f.home.z;
+  let spd = Math.max(4.5, Math.min(11, spdPx / sHome * 2.6));
+  f.vel = V3.mul(dir, spd); f.state='strike'; f.t=0; f.latched=false;
+}
+
+/* ---------------- drawing ---------------- */
+let DEBUG = false;
+document.getElementById('btnDbg').onclick = e => { DEBUG=!DEBUG; e.target.textContent = 'DEBUG: '+(DEBUG?'ON':'OFF'); e.target.classList.toggle('on', DEBUG); };
+document.getElementById('btnReset').onclick = () => { root.z = 3.1; buildBody(); };
+const DRAW_BONES = BONES.map(([a,b])=>[idx(a),idx(b)]);
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  // floor line at his feet depth + horizon feel
+  const fl = proj({x:0,y:0,z:root.z});
+  ctx.strokeStyle='#26262e'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(0,fl.y); ctx.lineTo(W,fl.y); ctx.stroke();
+  // body
+  const pts = P.map(q => proj(q.p));
+  ctx.lineCap='round';
+  for (const [a,b] of DRAW_BONES){
+    const big = (a===idx('chest')&&b===idx('pelvis')) || (a===idx('chest')&&b===idx('neck'));
+    ctx.strokeStyle = big ? '#8f96a3' : '#767d89';
+    ctx.lineWidth = big ? 15 : 9;
+    ctx.beginPath(); ctx.moveTo(pts[a].x,pts[a].y); ctx.lineTo(pts[b].x,pts[b].y); ctx.stroke();
+  }
+  for (let i=0;i<P.length;i++){
+    ctx.fillStyle = NAMES[i]==='head' ? '#aab2bf' : '#79818e';
+    ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, NAMES[i]==='head'?13:5.5, 0, 7); ctx.fill();
+  }
+  // contact flashes
+  for (const c of contacts){ c.t += 1/60;
+    ctx.strokeStyle = 'rgba(255,'+(c.big?'90':'210')+',90,'+Math.max(0,1-c.t*2.4)+')';
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(c.x, c.y, 8+c.t*46, 0, 7); ctx.stroke(); }
+  contacts = contacts.filter(c=>c.t<0.5);
+  // fists: solid, bare, drawn — knuckle bumps, no gloves
+  for (const f of fists){
+    const s = proj(f.p), R = 0.105*s.s;
+    ctx.fillStyle = '#e8e2d6';
+    ctx.strokeStyle = '#2a2a30'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(s.x, s.y, R, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#d9d2c2';
+    for (let k=0;k<4;k++){ const a = -2.2 + k*0.5;
+      ctx.beginPath(); ctx.arc(s.x + Math.sin(a)*R*0.62, s.y - Math.cos(a)*R*0.72, R*0.30, 0, 7); ctx.fill(); }
+    ctx.fillStyle = '#cfc7b4';
+    ctx.beginPath(); ctx.arc(s.x + (f.side==='L'?-R*0.72:R*0.72), s.y + R*0.25, R*0.34, 0, 7); ctx.fill();
+  }
+  if (DEBUG){
+    const si = supportInfo();
+    const ca = proj(si.a), cb = proj(si.b), cc = proj(si.c), cg = proj({x:si.c.x,y:0,z:si.c.z});
+    ctx.strokeStyle = si.dist>0.30 ? '#ff5f56' : '#39d353'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(ca.x,ca.y); ctx.lineTo(cb.x,cb.y); ctx.stroke();
+    ctx.fillStyle = '#ffd60a'; ctx.beginPath(); ctx.arc(cc.x,cc.y,6,0,7); ctx.fill();
+    ctx.fillStyle = '#ff9f0a'; ctx.beginPath(); ctx.arc(cg.x,cg.y,5,0,7); ctx.fill();
+    ctx.strokeStyle='rgba(255,214,10,.5)'; ctx.beginPath(); ctx.moveTo(cc.x,cc.y); ctx.lineTo(cg.x,cg.y); ctx.stroke();
+    ctx.fillStyle='#ffd60a'; ctx.font='12px monospace';
+    ctx.fillText('CoM→ground '+si.dist.toFixed(2)+'m '+(fallen?'FALLEN':(si.dist>0.30?'LOSING IT':'balanced')), 12, H-120);
+    for (const [an,bn,rad] of CAPS){ const A=proj(P[idx(an)].p), B=proj(P[idx(bn)].p);
+      ctx.strokeStyle='rgba(110,168,255,.35)'; ctx.lineWidth=rad*2*((A.s+B.s)/2);
+      ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke(); }
+  }
+}
+
+/* ---------------- main loop ---------------- */
+buildBody();
+let last = performance.now(), acc = 0;
+function loop(now){
+  requestAnimationFrame(loop);
+  acc += Math.min(0.1, (now-last)/1000); last = now;
+  const dt = 1/60; let n = 0;
+  while (acc >= dt && n < 3){ physics(dt); for (const f of fists) fistStep(f, dt); acc -= dt; n++; }
+  draw();
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
