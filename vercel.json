@@ -281,6 +281,16 @@
       "permanent": true
     },
     {
+      "source": "/usaenergypartners",
+      "destination": "/usaenergypartners.html",
+      "permanent": true
+    },
+    {
+      "source": "/usaenergypartners/",
+      "destination": "/usaenergypartners.html",
+      "permanent": true
+    },
+    {
       "source": "/spots",
       "destination": "/spots.html",
       "permanent": true
