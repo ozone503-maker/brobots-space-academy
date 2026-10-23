@@ -52,10 +52,23 @@
 .uep-faq h3{margin:0 0 6px;color:#fff;font-size:16.5px}
 .uep-faq p{margin:0;color:#D3DAE0;line-height:1.55;font-size:15px}
 .uep-foot{margin-top:60px;border-top:1px solid #2a2f36;padding-top:18px;color:#9AA5B0;font-family:'Courier Prime',monospace;font-size:12.5px;line-height:1.7}
+
+.uep-car{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px 16px;-webkit-overflow-scrolling:touch;align-items:stretch}
+.uep-slide{flex:0 0 302px;scroll-snap-align:start;display:flex}
+.uep-slide .uep-card{width:100%;display:flex;flex-direction:column}
+.uep-slide .uep-quote{min-height:84px}
+.uep-more{margin-top:auto;padding-top:10px}
+.uep-more summary{cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:1px;color:#e09a52;list-style:none}
+.uep-more summary::-webkit-details-marker{display:none}
+.uep-more summary::after{content:' +'}
+.uep-more[open ] summary::after{content:' −'}
+.uep-more div{color:#D3DAE0;font-size:13.5px;line-height:1.55;margin-top:8px}
+.uep-more b{color:#fff}
+.uep-hint{font-family:'Courier Prime',monospace;font-size:11.5px;color:#9AA5B0;letter-spacing:1px;margin-top:2px}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"What did the five AI platforms actually audit?","acceptedAnswer":{"@type":"Answer","text":"Each platform independently audited usaenergypartners.com from the same brief and the same score definition: how likely AI assistants are to find, understand, trust, and recommend the business when Texas business owners ask about commercial electricity costs. Scores: Robot 17, Claude 18, Gemini 18, Grok 22, ChatGPT 54 out of 100."}},
+{"@type":"Question","name":"What did the five AI platforms actually audit?","acceptedAnswer":{"@type":"Answer","text":"Each platform independently audited usaenergypartners.com from the same brief and the same score definition: how likely AI assistants are to find, understand, trust, and recommend the business when Texas business owners ask about commercial electricity costs. Scores: Muse 17, Claude 18, Gemini 18, Grok 22, ChatGPT 54 out of 100."}},
 {"@type":"Question","name":"Why is ChatGPT's score 54 when the others are 17 to 22?","acceptedAnswer":{"@type":"Answer","text":"ChatGPT found the same gaps as the other four platforms. It weighted USAEP's clear positioning more heavily and treated the missing evidence as a trust ceiling rather than invisibility. The disagreement is reported openly because a five-platform audit is credible only if the outlier stays on the board."}},
 {"@type":"Question","name":"What does the $4,995 package include?","acceptedAnswer":{"@type":"Answer","text":"A complete rebuild of the USA Energy Partners web presence: a modern site with a dedicated page for each service, the SAO pack (30 buyer questions answered on-site with FAQ schema), a custom AI chatbot trained on USAEP that promotes the free electricity cost review, an authority section with a blog and Texas energy news, the proof layer (case studies, testimonials, PUCT registration, Google Business Profile), and the company's existing video on the homepage."}},
 {"@type":"Question","name":"What does BROBOTS need from USA Energy Partners to build it?","acceptedAnswer":{"@type":"Answer","text":"One short call with Chris, the PUCT broker registration number, and the real numbers behind the results — starting with the client who was overpaying by $10,000 a year. BROBOTS brings the audits, the video, the design, and the build."}},
@@ -85,14 +98,32 @@
 
 <div class="uep-sec">
 <h2 class="uep-h2">We Asked Five AIs to Audit USA Energy Partners</h2>
-<p class="uep-lede">Robot (the BROBOTS audit engine), Grok, Claude, ChatGPT, and Gemini each audited usaenergypartners.com independently, same brief, same score definition, no peeking. The score measures one thing: when a Texas business owner asks an AI how to lower commercial electricity costs, does USAEP get recommended?</p>
+<p class="uep-lede">Muse (the BROBOTS audit engine), Grok, Claude, ChatGPT, and Gemini each audited usaenergypartners.com independently, same brief, same score definition, no peeking. The score measures one thing: when a Texas business owner asks an AI how to lower commercial electricity costs, does USAEP get recommended?</p>
 
-<div class="uep-grid">
-  <div class="uep-card"><div class="uep-plat">ROBOT · BROBOTS ENGINE</div><div class="uep-score">17<small>/100</small></div><p class="uep-quote">"AI doesn't know you exist. When customers ask, someone else gets the call."</p><span class="uep-band">INVISIBLE</span></div>
-  <div class="uep-card"><div class="uep-plat">CLAUDE</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">"I can't verify their PUCT broker registration, client results or how to contact them from their website."</p><span class="uep-band">INVISIBLE</span></div>
-  <div class="uep-card"><div class="uep-plat">GEMINI</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">"The live site functions as an unverified corporate placeholder."</p><span class="uep-band">INVISIBLE</span></div>
-  <div class="uep-card"><div class="uep-plat">GROK</div><div class="uep-score">22<small>/100</small></div><p class="uep-quote">"Zero named people, contact details, case studies, client results, process explanations, or trust signals that an AI could cite."</p><span class="uep-band">INVISIBLE</span></div>
-  <div class="uep-card"><div class="uep-plat">CHATGPT</div><div class="uep-score">54<small>/100</small></div><p class="uep-quote">"Little supporting evidence, customer proof, company/person detail, or current educational material to establish strong recommendation-level trust."</p><span class="uep-band ok">IN THE RUNNING</span></div>
+<p class="uep-hint">SWIPE OR SCROLL SIDEWAYS · EVERY AUDIT, SAME SIZE · OPEN “FULL AUDIT NOTES” ON ANY CARD FOR THE REST OF THAT AUDIT</p>
+<div class="uep-car">
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">MUSE · BROBOTS ENGINE</div><div class="uep-score">17<small>/100</small></div><p class="uep-quote">"AI doesn't know you exist. When customers ask, someone else gets the call."</p><span class="uep-band">INVISIBLE</span>
+<details class="uep-more"><summary>FULL AUDIT NOTES</summary><div><b>Measured, not opinion:</b> the only crawl-based audit of the five. Page title is literally "USAEP Homepage." First heading a crawler finds: "Contact Us." 2,316 words on the homepage. No phone number anywhere. No testimonials, no case studies, no Q&amp;A content, no business or FAQ schema.<br><b>Category scores:</b> Clarity 19 · Authority 21 · Relevance 3 · Consistency 0 · AI Readability 42 · Question Coverage 0.<br><b>What passed:</b> HTTPS, sitemap, founding date stated, zero broken links. The plumbing works; the house is empty.<br><b>Honest note:</b> 17 is a floor. Without API keys the 30-question test and profile/speed checks went unmeasured, and one engine check has a known bug. The structural zeros were measured directly and are real.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">CLAUDE</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">"I can't verify their PUCT broker registration, client results or how to contact them from their website."</p><span class="uep-band">INVISIBLE</span>
+<details class="uep-more"><summary>FULL AUDIT NOTES</summary><div><b>What AI would say today:</b> a real-sounding brokerage it cannot verify, so it recommends better-documented competitors instead.<br><b>Unique catches:</b> the fee model is never stated (commission or fee-based? buyers ask, the site doesn't answer); the name itself collides with lookalikes (U.S. Energy Partners, acquired by Catalyst Power in 2021; USA Energy at usaenergy.io); a timeline entry is mislabeled "1981" beside a 1986 event; and in Claude's own searches USAEP did not surface at all, while the similarly named companies did.<br><b>Top fixes:</b> display the PUCT registration, name the people, publish results with evidence.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">GEMINI</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">"The live site functions as an unverified corporate placeholder."</p><span class="uep-band">INVISIBLE</span>
+<details class="uep-more"><summary>FULL AUDIT NOTES</summary><div><b>What AI would say today:</b> the business cannot be verified as actively operating; buyers get directed to transparent regional brokers instead.<br><b>Top fixes:</b> add schema and entity data (LLMs cannot index "We Are Wisdom"); name a human and publish a real email (Chris is absent entirely); embed verified case studies (bare percentages read as unverified text); update the 2019 copyright; break services out of buried lists; purge filler ("Service is a journey not a destination!!"); bring the ERCOT material past 2016; build a backlink footprint (today: zero).<br><b>QC note:</b> Gemini named one wrong competitor (a Texas oil &amp; gas operator, not a broker). We caught it and excluded it from the consensus.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">GROK</div><div class="uep-score">22<small>/100</small></div><p class="uep-quote">"Zero named people, contact details, case studies, client results, process explanations, or trust signals that an AI could cite."</p><span class="uep-band">INVISIBLE</span>
+<details class="uep-more"><summary>FULL AUDIT NOTES</summary><div><b>What AI would say today:</b> strong historic ERCOT context wrapped around an unverified placeholder; nothing on the site an assistant can safely cite.<br><b>Unique catches:</b> PUCT broker registration never stated (caught independently by Claude too); surfaced a verified real competitor, Alden Energy of Addison, TX, which publishes the phone, address, process, and FAQ that USAEP's site lacks.<br><b>QC note:</b> one ownership claim in Grok's notes could not be confirmed from a primary source. Excluded from the consensus.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">CHATGPT</div><div class="uep-score">54<small>/100</small></div><p class="uep-quote">"Little supporting evidence, customer proof, company/person detail, or current educational material to establish strong recommendation-level trust."</p><span class="uep-band ok">IN THE RUNNING</span>
+<details class="uep-more"><summary>FULL AUDIT NOTES</summary><div><b>Why 54, not 18:</b> ChatGPT found the same gaps as the other four. It weighted USAEP's clear positioning more heavily and treated the missing evidence as a trust ceiling rather than invisibility. A judgment difference, reported as found.<br><b>Its name for the disease:</b> "evidence density." Many assertions, almost nothing verifiable.<br><b>Its opportunity note:</b> USAEP could own its own terminology ("Energy Mitigation," power factor, contract language) with real educational depth, and nobody in the category is doing it.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">COMPETITOR · ENGINE AUDIT</div><div class="uep-score">6<small>/100</small></div><p class="uep-quote"><b style="color:#fff">Alden Energy</b> (Addison, TX). The best human-facing site in the category, and to a crawler, it is zero words.</p><span class="uep-band">INVISIBLE</span>
+<details class="uep-more"><summary>FULL AUDIT NOTES</summary><div>Same BROBOTS engine, same conditions, same day. Alden publishes everything USAEP doesn't: phone, address, process, FAQ. But the site is rendered entirely in JavaScript, so the raw HTML a crawler reads contains <b>zero words</b>. Built for humans, invisible to machines. Proof that having the facts is not enough; AI has to be able to read them.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">COMPETITOR · ENGINE AUDIT</div><div class="uep-score">36<small>/100</small></div><p class="uep-quote"><b style="color:#fff">Energy Ogre</b>. The category's strongest content, and its robots.txt blocks the AI crawlers by name.</p><span class="uep-band">INVISIBLE</span>
+<details class="uep-more"><summary>FULL AUDIT NOTES</summary><div>Same engine, same conditions, same day. The best content of the three audits: real relevance and authority, a consistent phone number. Then its robots.txt <b>blocks GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot, ChatGPT-User, and Google-Extended by name</b>. The category leader is literally telling AI to stay out. The whole Texas brokerage category is failing AI; the first firm that builds for AI takes it.</div></details></div></div>
+
 </div>
 <p class="uep-note">Median score: <b style="color:#fff">18 / 100</b>. Four platforms landed within five points of each other. ChatGPT's 54 is the outlier, it found the same gaps and weighted the clear positioning more heavily. It's reported, not buried: a five-platform audit is only credible if the disagreement stays on the board.</p>
 
@@ -137,16 +168,8 @@
 </div>
 
 <div class="uep-sec">
-<h2 class="uep-h2">The Competitor Reports</h2>
-<p class="uep-lede">Same engine, same conditions, same day. This is the part nobody expected: <b style="color:#fff">the whole Texas brokerage category is failing AI.</b> The first firm that builds for AI takes the category.</p>
-
-<table class="uep-table">
-<tr><th>COMPANY</th><th>ENGINE SCORE</th><th>WHAT THE AUDIT FOUND</th></tr>
-<tr><td><b style="color:#fff">USA Energy Partners</b></td><td><span class="uep-big">17</span> / 100</td><td>Real services, real claims, no evidence layer. No people, no proof, no schema, no answers. At least the site is fully crawlable, every word of it can be read by AI. There just isn't enough of it.</td></tr>
-<tr><td><b style="color:#fff">Alden Energy</b> (Addison, TX)</td><td><span class="uep-big">6</span> / 100</td><td>The human-facing site is the best in this table, phone, address, process, FAQ all published. But it's rendered entirely in JavaScript: to a crawler that doesn't run scripts, the homepage is <b style="color:#fff">zero words</b>. Built for humans, invisible to machines.</td></tr>
-<tr><td><b style="color:#fff">Energy Ogre</b></td><td><span class="uep-big">36</span> / 100</td><td>The strongest content of the three, real relevance and authority scores, a consistent phone number. And then its robots.txt <b style="color:#fff">blocks GPTBot, ClaudeBot, PerplexityBot, and ChatGPT's crawlers by name</b>. The category's content leader is literally telling AI to stay out.</td></tr>
-</table>
-<p class="uep-note">Method: all three engine audits run October 23, 2026, raw-HTML crawl view, identical settings. Other names AI reaches for instead today, per the platforms: ElectricityPlans.com, Priority Power Management, EnergyBot, NRG, Rhythm Energy. They don't win because they're better brokers. They win because they publish facts an AI can quote without risk. Every one of those facts is publishable by USAEP, most of them already exist inside the company.</p>
+<h2 class="uep-h2">The Category Is Wide Open</h2>
+<p class="uep-lede">The two competitor audits ride in the carousel above, run by the same engine under identical settings on October 23, 2026 (raw-HTML crawl view). Alden Energy: <b style="color:#fff">6/100</b>. Energy Ogre: <b style="color:#fff">36/100</b>. USA Energy Partners: <b style="color:#fff">17/100</b>. Nobody in Texas energy brokerage is built for AI. The names AI reaches for instead today (ElectricityPlans.com, Priority Power Management, EnergyBot, NRG, Rhythm Energy) don't win because they're better brokers. They win because they publish facts an AI can quote without risk. Every one of those facts is publishable by USAEP, and most of them already exist inside the company.</p>
 </div>
 
 <div class="uep-sec">
@@ -189,10 +212,18 @@
 <h3 style="color:#fff;font-size:18px;margin:24px 0 4px">Proof this factory ships</h3>
 <ul class="uep-inc">
 <li><b>Client sites live today:</b> <a href="https://ecowellog.com" style="color:#e09a52">EcoWell Oil &amp; Gas</a> · <a href="https://cassidysilva.life" style="color:#e09a52">Cassidy Silva Insurance</a> · <a href="https://aura-about-you.vercel.app" style="color:#e09a52">Aura About You</a> · <a href="https://brobots.space/spots.html" style="color:#e09a52">BROBOTS commercial spots</a></li>
-<li><b>Our own properties, scored by Gemini under the same brief on the same day:</b> brobots.space <b>92</b> · biorama.space <b>90</b> · fruitypuppy.com <b>88</b> · kudoken.space <b>85</b> · monkeyjockey.space <b>82</b>. USA Energy Partners, same platform, same brief: <b>18</b>. Gemini scored this pitch page itself 92/100.</li>
 <li><b>This very project:</b> five-platform audit designed, run, QC'd, and published as this page in a single day, October 23, 2026</li>
 <li><b>The audit engine itself</b> is a BROBOTS build: 38 checks, 20 business niches, free for anyone to run at brobots.space/sao-audit.html</li>
 </ul>
+<p class="uep-hint" style="margin-top:18px">OUR OWN SCORES · GEMINI · SAME BRIEF · SAME DAY · SWIPE SIDEWAYS</p>
+<div class="uep-car">
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">BROBOTS.SPACE</div><div class="uep-score">92<small>/100</small></div><p class="uep-quote">"Near-perfect AI visibility: distinct, human-filtered truth signals over generic technical jargon." Gemini scored this very pitch page 92.</p><span class="uep-band ok">AI'S PICK</span></div></div>
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">BIORAMA.SPACE</div><div class="uep-score">90<small>/100</small></div><p class="uep-quote">"A fully decentralized, self-sovereign architecture that provides bulletproof programmatic trust signals to AI engines."</p><span class="uep-band ok">AI'S PICK</span></div></div>
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">FRUITPUPPY.COM</div><div class="uep-score">88<small>/100</small></div><p class="uep-quote">"Exceptionally dense, transparent, structured ingredient profiles that provide explicit truth signals to AI search models."</p><span class="uep-band ok">AI'S PICK</span></div></div>
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">KUDOKEN.SPACE</div><div class="uep-score">85<small>/100</small></div><p class="uep-quote">"Hard cryptographic truth signals: an explicit, crawlable ERC-20 contract address and active block explorer links."</p><span class="uep-band ok">AI'S PICK</span></div></div>
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">MONKEYJOCKEY.SPACE</div><div class="uep-score">82<small>/100</small></div><p class="uep-quote">"Deterministic execution rules stated plainly: same seed, same race. A legitimate simulator, not an unverified web3 vehicle."</p><span class="uep-band ok">AI'S PICK</span></div></div>
+<div class="uep-slide"><div class="uep-card" style="border-color:#5a2b2b"><div class="uep-plat" style="color:#ff5a5a">USA ENERGY PARTNERS</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">Same platform, same brief, same day. That gap, 82 to 92 versus 18, is the product being sold on this page.</p><span class="uep-band">INVISIBLE</span></div></div>
+</div>
 <h3 style="color:#fff;font-size:18px;margin:24px 0 4px">Keep it running (optional, from the same menu)</h3>
 <ul class="uep-inc">
 <li><b>Monthly service</b>, site updates, audits, and performance tracking; DIY agent access $99/mo</li>
@@ -206,7 +237,7 @@
 
 <div class="uep-sec">
 <h2 class="uep-h2">Straight Answers</h2>
-<div class="uep-faq"><h3>What did the five AI platforms actually audit?</h3><p>Each platform independently audited usaenergypartners.com from the same brief and the same score definition: how likely AI assistants are to find, understand, trust, and recommend the business when Texas business owners ask about commercial electricity costs. Scores: Robot 17, Claude 18, Gemini 18, Grok 22, ChatGPT 54 out of 100.</p></div>
+<div class="uep-faq"><h3>What did the five AI platforms actually audit?</h3><p>Each platform independently audited usaenergypartners.com from the same brief and the same score definition: how likely AI assistants are to find, understand, trust, and recommend the business when Texas business owners ask about commercial electricity costs. Scores: Muse 17, Claude 18, Gemini 18, Grok 22, ChatGPT 54 out of 100.</p></div>
 <div class="uep-faq"><h3>Why is ChatGPT's score 54 when the others are 17 to 22?</h3><p>ChatGPT found the same gaps as the other four. It weighted USAEP's clear positioning more heavily and treated the missing evidence as a trust ceiling rather than invisibility. The disagreement is reported openly, a five-platform audit is credible only if the outlier stays on the board.</p></div>
 <div class="uep-faq"><h3>What does BROBOTS need from USA Energy Partners?</h3><p>One short call with Chris, the PUCT broker registration number, and the real numbers behind the results, starting with the client who was overpaying by $10,000 a year. BROBOTS brings the audits, the video, the design, and the build.</p></div>
 <div class="uep-faq"><h3>How is success measured after launch?</h3><p>The same five-platform audit runs again 90 days after launch, under the same conditions (same brief, same score definition, same engine settings), and the scores are published side by side with this report. The target: out of the Invisible band and into In the Running (50+), with AI's Pick (75+) as the stretch goal.</p></div>
@@ -217,7 +248,7 @@
 
 <div class="uep-foot">
 PREPARED BY BROBOTS SPACE FACTORY · PEOPLE HELPING ROBOTS HELPING PEOPLE · BROBOTS.SPACE<br>
-AUDITS RUN 2026-10-23 · ROBOT (BROBOTS SAO ENGINE) · GROK · CLAUDE · CHATGPT · GEMINI<br>
+AUDITS RUN 2026-10-23 · MUSE (BROBOTS SAO ENGINE) · GROK · CLAUDE · CHATGPT · GEMINI<br>
 THIS IS A PRIVATE PRESENTATION PAGE. IT IS NOT LINKED FROM ANYWHERE AND IS NOT INDEXED.<br>
 © 2026 BROBOTS. USA ENERGY PARTNERS NAME AND MARKS BELONG TO THEIR OWNERS.
 </div>
