@@ -1,0 +1,82 @@
+BROBOTS FREE AGENT STARTER PACK
+UNIVERSAL BUSINESS CONTEXT FILE
+
+INSTRUCTIONS
+Fill in what you know. Delete lines that do not apply. Write UNKNOWN instead of guessing. Update this file whenever your offers, prices, hours, service area, or priorities change. Every agent should work from this same source of truth.
+
+BUSINESS
+Business name: [LEGAL OR TRADING NAME]
+Website: [URL]
+Location: [CITY, STATE / COUNTRY]
+Service area: [WHERE YOU SERVE]
+Time zone: [TIME ZONE]
+Hours: [HOURS]
+Phone: [PHONE]
+Email: [EMAIL]
+Owner / decision maker: [NAME AND ROLE]
+
+WHAT WE SELL
+Main products or services:
+1. [SERVICE + WHO IT IS FOR]
+2. [SERVICE + WHO IT IS FOR]
+3. [SERVICE + WHO IT IS FOR]
+
+Current offers and prices:
+- [OFFER: PRICE, WHAT IS INCLUDED, TERMS]
+- [OFFER: PRICE, WHAT IS INCLUDED, TERMS]
+
+What we do NOT sell or do:
+- [EXCLUSION]
+- [EXCLUSION]
+
+CUSTOMERS
+Ideal customer: [BE SPECIFIC]
+Common customer problems:
+- [PROBLEM]
+- [PROBLEM]
+- [PROBLEM]
+
+Customers we are not a fit for:
+- [NOT A FIT]
+- [NOT A FIT]
+
+PROOF WE CAN USE
+Verified results: [RESULT, DATE, CONTEXT]
+Named testimonials: [NAME + EXACT APPROVED WORDS]
+Case studies: [LINK OR SUMMARY]
+Credentials / registrations: [ONLY REAL, CURRENT CREDENTIALS]
+Years in business / founding date: [FACT]
+
+VOICE
+How we sound: [EXAMPLE: DIRECT, FUNNY, NO CORPORATE JARGON]
+Words and phrases we use:
+- [PHRASE]
+- [PHRASE]
+
+Words, claims, and topics to avoid:
+- [AVOID]
+- [AVOID]
+
+Write three short samples in your real voice here:
+1. [PASTE SAMPLE]
+2. [PASTE SAMPLE]
+3. [PASTE SAMPLE]
+
+OPERATIONS
+Current priorities for the next 30 days:
+1. [PRIORITY]
+2. [PRIORITY]
+3. [PRIORITY]
+
+Tools and sources the agent may use:
+- [CALENDAR / INBOX / CRM / TASK LIST / ANALYTICS / FILES]
+- [PUBLIC SOURCES TO WATCH]
+
+Important people and projects:
+- [NAME / PROJECT / WHY IT MATTERS]
+
+Rules that never change:
+- Never invent facts, prices, dates, results, people, or customer statements.
+- Draft customer-facing messages for human approval. Do not send or post automatically.
+- If information is missing, label it UNKNOWN and ask for it.
+- Use only the facts in this file, the user's current input, or sources the agent actually checked.

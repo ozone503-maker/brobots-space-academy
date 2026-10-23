@@ -281,6 +281,16 @@
       "permanent": true
     },
     {
+      "source": "/free-agents",
+      "destination": "/free-agents.html",
+      "permanent": true
+    },
+    {
+      "source": "/free-agents/",
+      "destination": "/free-agents.html",
+      "permanent": true
+    },
+    {
       "source": "/usaenergypartners",
       "destination": "/usaenergypartners.html",
       "permanent": true
