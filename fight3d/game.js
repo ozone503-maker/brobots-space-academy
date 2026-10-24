@@ -303,7 +303,7 @@ const OJ = buildOpponent();
 const JOINTS = ['hips', 'spine', 'chest', 'neck', 'head', 'sL', 'eL', 'sR', 'eR', 'tL', 'kL', 'tR', 'kR'];
 function pose(o, base) { const p = { y: 0, rx: 0 }; if (base) Object.assign(p, JSON.parse(JSON.stringify(base))); for (const j of JOINTS) if (!p[j]) p[j] = [0, 0, 0]; for (const k in o) p[k] = Array.isArray(o[k]) ? o[k].slice() : o[k]; return p; }
 const P = {};
-P.guard = pose({ spine: [10, 0, 0], neck: [-5, 0, 0], head: [5, 0, 0], sL: [-45, 0, 12], eL: [-118, 0, 0], sR: [-45, 0, -12], eR: [-118, 0, 0], tL: [-22, 0, -4], kL: [28, 0, 0], tR: [8, 0, 4], kR: [22, 0, 0], y: -0.05, chest: [0, -8, 0] });
+P.guard = pose({ spine: [10, 0, 0], neck: [-5, 0, 0], head: [5, 0, 0], sL: [-62, 0, 14], eL: [-132, 0, 0], sR: [-62, 0, -14], eR: [-132, 0, 0], tL: [-22, 0, -4], kL: [28, 0, 0], tR: [8, 0, 4], kR: [22, 0, 0], y: -0.05, chest: [0, -8, 0] });
 P.block = pose({ spine: [18, 0, 0], head: [20, 0, 0], sL: [-72, 0, 18], eL: [-135, 0, 0], sR: [-72, 0, -18], eR: [-135, 0, 0], y: -0.09, tL: [-30, 0, -4], kL: [40, 0, 0], tR: [0, 0, 4], kR: [36, 0, 0] }, P.guard);
 P.jab_w = pose({ chest: [0, 6, 0], sL: [-55, 0, 10], eL: [-125, 0, 0] }, P.guard);
 P.jab_s = pose({ chest: [0, -28, 0], sL: [-88, 0, -6], eL: [-6, 0, 0], spine: [14, 0, 0] }, P.guard);
@@ -348,7 +348,24 @@ const ghost = new THREE.Group(); scene.add(ghost);
   for (const s of [-1, 1]) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.09, 14, 10), ghostMat); d.position.set(s * 0.25, 1.44, 0); ghost.add(d);
     const leg = new THREE.Mesh(new THREE.CapsuleGeometry(0.09, 0.7, 4, 10), ghostMat); leg.position.set(s * 0.12, 0.5, 0); ghost.add(leg); }
 }
-const ghostLegs = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 1, 10, 1, true), ghostMat); m.visible = false; camera.add(m); return m; });
+const legMat = new THREE.MeshBasicMaterial({ color: 0x8fe6ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false });
+const legCore = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
+const ghostLegs = [0, 1].map(() => { // ghost leg: thigh + shin + foot, camera space (feet stay ghost, just brighter)
+  const g = new THREE.Group(); g.visible = false; camera.add(g);
+  const seg = (r0, r1) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r0, r1, 1, 14, 1), legMat); const c = new THREE.Mesh(new THREE.CylinderGeometry(r0 * 0.45, r1 * 0.45, 1, 8, 1), legCore); m.add(c); g.add(m); return m; };
+  const thigh = seg(0.075, 0.095), shin = seg(0.05, 0.07);
+  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), legMat); foot.scale.set(1, 0.7, 1.5); g.add(foot);
+  const knee = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 10), legMat); g.add(knee);
+  return { g, thigh, shin, foot, knee };
+});
+function placeSeg(m, a, b) { m.position.copy(a).add(b).multiplyScalar(0.5); m.scale.set(1, a.distanceTo(b), 1); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize()); }
+const LEGP = { // camera-space [hip, knee, foot]; chamber = knee pulled up, extend = foot driven at him
+  rest: [[0.16, -0.95, -0.3], [0.15, -0.8, -0.5], [0.15, -0.95, -0.55]],
+  chamber: [[0.16, -0.62, -0.45], [0.11, -0.17, -0.78], [0.13, -0.33, -0.62]],
+  extend: [[0.14, -0.6, -0.5], [0.08, -0.2, -0.95], [0.03, -0.04, -1.45]],
+};
+const _v = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+function legPose(side, a, b, t, h) { for (let i = 0; i < 3; i++) { const A = LEGP[a][i], B = LEGP[b][i]; _v[i].set(lerp(A[0], B[0], t) * (side ? 1 : -1), lerp(A[1], B[1], t) + (i ? (h - 0.5) * 0.25 * (a !== 'rest' || t > 0.3 ? 1 : 0) : 0), lerp(A[2], B[2], t)); } return _v; }
 const ghostArms = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 1, 10, 1, true), ghostMat); scene.add(m); return m; });
 const skinMat = new THREE.MeshPhysicalMaterial({ color: 0xd99a6c, roughness: 0.5, sheen: 0.7, sheenRoughness: 0.5, sheenColor: new THREE.Color(0xff7a5a), clearcoat: 0.15, clearcoatRoughness: 0.7 });
 const knuckleMat = new THREE.MeshPhysicalMaterial({ color: 0xe8a77a, roughness: 0.42, sheen: 0.6, sheenColor: new THREE.Color(0xff8060) });
@@ -369,8 +386,8 @@ function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward)
 const fists = [buildFist(-1), buildFist(1)];
 const handLight = new THREE.PointLight(0xffd0a0, 1.2, 2.5, 2); camera.add(handLight); handLight.position.set(0, 0.2, 0.1);
 const HP = { // hand poses in camera space [x,y,z, rx, ry, rz]
-  guardL: [-0.13, -0.3, -0.7, 0.2, 0.2, -0.3], guardR: [0.14, -0.32, -0.68, 0.2, -0.2, 0.3],
-  blockL: [-0.07, -0.13, -0.42, 1.2, 0.3, -0.2], blockR: [0.07, -0.14, -0.43, 1.2, -0.3, 0.2],
+  guardL: [-0.15, -0.035, -0.85, 0.55, 0.25, -0.35], guardR: [0.15, -0.04, -0.83, 0.55, -0.25, 0.35],
+  blockL: [-0.075, -0.05, -0.42, 1.25, 0.3, -0.2], blockR: [0.075, -0.06, -0.43, 1.25, -0.3, 0.2],
   jabW: [-0.13, -0.27, -0.55, 0.2, 0.1, -0.4], jabS: [-0.04, -0.12, -1.25, 0.05, 0, -1.5],
   hookW: [0.34, -0.3, -0.5, 0.0, -0.6, 0.2], hookM: [0.3, -0.13, -1.0, 0, -0.9, 1.4], hookS: [-0.02, -0.1, -1.18, 0, 0.6, 1.5],
   upW: [0.14, -0.55, -0.58, 1.2, 0, 0.2], upS: [0.03, -0.02, -1.12, -0.9, 0, 0.3],
@@ -442,7 +459,7 @@ function startMove(f, k) {
   if (k === 'super') { if (f.superUsed || f.meter < T.superCost) return false; f.superUsed = true; f.meter = 0; }
   f.state = 'atk'; f.move = MOVES[k]; f.mk = k; f.st = 0; f.hitDone = false; f.whiffed = false; f.blocking = false;
   f.spd = clamp(f.inp.spd || 1, T.speedMin, T.speedMax);
-  if (f.isPlayer) (window.__acts = window.__acts || []).push({ k, hand: f.inp.hand ?? null, spd: +f.spd.toFixed(2), chambered: !!(f.inp.kick && f.inp.kick.chambered), t: Math.round(performance.now()) });
+  if (f.isPlayer) (window.__acts = window.__acts || []).push({ k, hand: f.inp.hand ?? null, spd: +f.spd.toFixed(2), chambered: k === 'kick' && !!(f.inp.kick && f.inp.kick.chambered), t: Math.round(performance.now()) });
   if (f.isPlayer) { f.hand = f.inp.hand ?? (k === 'jab' ? 0 : 1); f.path = f.inp.path || ({ jab: KEY_PATHS.KeyR[1], hook: KEY_PATHS.KeyJ[1], upper: KEY_PATHS.KeyM[1] })[k] || null; f.inp.path = null; f.inp.hand = undefined; f.kick = k === 'kick' ? f.inp.kick : null;
     if (k === 'kick' && f.kick && f.kick.chambered) f.move = Object.assign({}, MOVES.kick, { s: 5 }); }
   return true;
@@ -582,10 +599,10 @@ const FLICK_MS = 320, FLICK_MIN = 28, PUNCH_PX = 30, COMMIT_PX = 160, TAP_MS = 3
 const PI = { guard: false, roamX: 0, roamY: 0, superCharge: 0, chamber: [null, null] }; // chamber[side] = height 0..1
 function appRect() { return app.getBoundingClientRect(); }
 function railHit(x, y, r) {
-  const rw = 30, inset = r.width * 0.06, top = r.height * 0.6, bot = r.height * 0.92;
+  const c = r.width * 0.06 + 15, zw = 28, top = r.height * 0.6 - 14, bot = r.height * 0.92 + 14; // 56px touch zone around a slim strip
   if (y < top || y > bot) return -1;
-  if (x > inset && x < inset + rw) return 0;
-  if (x > r.width - inset - rw && x < r.width - inset) return 1;
+  if (Math.abs(x - c) <= zw) return 0;
+  if (Math.abs(x - (r.width - c)) <= zw) return 1;
   return -1;
 }
 function railHeight(y, r) { const top = r.height * 0.6, bot = r.height * 0.92; return clamp(1 - (y - top) / (bot - top), 0, 1); }
@@ -602,7 +619,13 @@ function pMove(e) {
   const st = ptrs.get(e.pointerId); if (!st) return;
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
   st.pts.push({ x, y, t: now }); if (st.pts.length > 80) st.pts.shift();
-  if (st.rail && PI.chamber[st.side] !== null) PI.chamber[st.side] = railHeight(y, r);
+  if (st.rail) {
+    const dx = (x - st.x0) * (st.side ? -1 : 1), dy = y - st.y0; // dx > 0 = inward
+    const ch = PI.chamber[st.side] !== null, ddx = ch ? (x - st.chX) * (st.side ? -1 : 1) : dx, ddy = ch ? y - st.chY : dy;
+    if (!st.fired && ddx > 20 && ddx > Math.abs(ddy) * 1.2) { if (ch) PI.chamber[st.side] = null; st.rail = false; st.trail.kind = 'arm'; dbg('rail touch moved inward -> punch'); }
+    else if (PI.chamber[st.side] !== null) PI.chamber[st.side] = railHeight(y, r);
+    else if (!st.fired && Math.abs(dy) >= 45 && Math.abs(dy) > Math.abs(dx)) { st.fired = true; fireKick(st, r, 'flick'); }
+  }
   // commit early: a clear single-thumb stroke throws as soon as it is long enough (no waiting for lift-off)
   if (!st.rail && !st.fired && !st.multi && Math.hypot(x - st.x0, y - st.y0) >= COMMIT_PX) armRelease(st, r, 'commit');
 }
@@ -619,13 +642,12 @@ function pUp(e) {
   const last = st.pts[st.pts.length - 1], dx = last.x - st.x0, dy = last.y - st.y0, dur = now - st.t0, d = Math.hypot(dx, dy);
   const twoHeld = st.wasTwo;
   if (st.rail) {
-    window.__lastRail = null;
+    if (st.fired) return;
     const side = st.side, chambered = PI.chamber[side] !== null;
-    const [, , v] = recentVel(st, 150);
-    const h = chambered ? PI.chamber[side] : railHeight(last.y, r);
-    PI.chamber[side] = null; window.__lastRail = { v, d, dur, chambered };
-    if (v > 0.45 || (!chambered && d > FLICK_MIN && dur < FLICK_MS)) firePlayer('kick', side, speedScale(v), { h, chambered }, 'rail v=' + v.toFixed(2));
-    else dbg('rail lift, no kick v=' + v.toFixed(2));
+    const ref = chambered ? st.chY : st.y0, along = Math.abs(last.y - (ref ?? st.y0));
+    window.__lastRail = { d, dur, along, chambered };
+    if (along >= 18 || (!chambered && d >= 18)) fireKick(st, r, chambered ? 'chambered' : 'slide');
+    else { PI.chamber[side] = null; dbg(chambered ? 'chamber released (no slide) - leg down' : 'rail tap - no kick'); }
     return;
   }
   window.__lastUp = { dur, d, multi: st.multi, rail: st.rail };
@@ -644,6 +666,12 @@ function armRelease(st, r, why) {
     st.fired = true; pts = [[0, 0], [0, -0.04], [0, -0.08]].map(p => [p[0] * (st.side ? -1 : 1), p[1]]);
     firePlayer(null, st.side, 1, { pts }, 'tap');
   } else dbg('ignored: d=' + Math.round(d) + ' dur=' + Math.round(dur));
+}
+function fireKick(st, r, why) {
+  const side = st.side, chambered = PI.chamber[side] !== null, last = st.pts[st.pts.length - 1];
+  const h = chambered ? PI.chamber[side] : railHeight(last.y, r); PI.chamber[side] = null;
+  const [, , v] = recentVel(st, 150);
+  firePlayer('kick', side, speedScale(Math.max(v, 0.6)), { h, chambered }, 'kick ' + why + ' v=' + v.toFixed(2));
 }
 function speedScale(v) { return clamp(lerp(T.speedMin, T.speedMax, clamp((v - 0.3) / 2.0, 0, 1)), T.speedMin, T.speedMax); }
 // Frame-data tier comes from the path's geometry (needed so existing startup/active/recovery data stays);
@@ -683,7 +711,7 @@ function readTouch() {
   const now = performance.now(), r = appRect();
   const arms = [...ptrs.values()].filter(s => !s.rail);
   for (const s of ptrs.values()) if (s.rail && PI.chamber[s.side] === null && now - s.t0 > HOLD_MS) {
-    const l = s.pts[s.pts.length - 1]; if (Math.hypot(l.x - s.x0, l.y - s.y0) < STILL_PX * 2) { PI.chamber[s.side] = railHeight(l.y, r); s.trail.kind = 'chamber'; }
+    const l = s.pts[s.pts.length - 1]; if (!s.fired && Math.hypot(l.x - s.x0, l.y - s.y0) < STILL_PX * 2) { PI.chamber[s.side] = railHeight(l.y, r); s.chY = l.y; s.chX = l.x; s.trail.kind = 'chamber'; dbg('chamber ' + (s.side ? 'R' : 'L')); }
   }
   PI.guard = false; PI.roamX = PI.roamY = 0;
   let charging = false;
@@ -750,12 +778,21 @@ function drawTrails() {
   tctx.setTransform(dpr, 0, 0, dpr, 0, 0); tctx.clearRect(0, 0, w, h);
   // rails (compact, inboard, unlabeled)
   if (G.mode !== 'title' && G.mode !== 'end') {
-    const inset = w * 0.06, rw = 30, top = h * 0.6, bot = h * 0.92;
+    const top = h * 0.6, bot = h * 0.92, pulse = G.mode === 'intro' ? 0.5 + 0.5 * Math.sin(G.phaseT * 0.25) : 0;
     for (const side of [0, 1]) {
-      const x = side ? w - inset - rw : inset;
-      tctx.fillStyle = 'rgba(255,255,255,0.05)'; tctx.strokeStyle = 'rgba(255,255,255,0.18)'; tctx.lineWidth = 1.5;
-      tctx.beginPath(); tctx.roundRect(x + rw * 0.3, top, rw * 0.4, bot - top, rw * 0.2); tctx.fill(); tctx.stroke();
-      const c = PI.chamber[side]; if (c !== null) { tctx.fillStyle = 'rgba(120,220,255,0.55)'; tctx.beginPath(); tctx.arc(x + rw / 2, bot - c * (bot - top), 9, 0, 7); tctx.fill(); }
+      const cx = side ? w - (w * 0.06 + 15) : w * 0.06 + 15;
+      let pressed = false; for (const p of ptrs.values()) if (p.rail && p.side === side) pressed = true;
+      const ch = PI.chamber[side], kicking = F[0].state === 'atk' && F[0].mk === 'kick' && F[0].hand === side;
+      const glow = kicking ? 1 : pressed || ch !== null ? 0.8 : 0.32 + pulse * 0.55;
+      tctx.save(); tctx.shadowColor = 'rgba(90,210,255,' + glow + ')'; tctx.shadowBlur = 8 + 16 * glow;
+      const g = tctx.createLinearGradient(0, top, 0, bot); g.addColorStop(0, 'rgba(120,225,255,' + (0.15 + glow * 0.5) + ')'); g.addColorStop(1, 'rgba(60,160,255,' + (0.3 + glow * 0.6) + ')');
+      tctx.fillStyle = g; tctx.beginPath(); tctx.roundRect(cx - 4, top, 8, bot - top, 4); tctx.fill(); tctx.restore();
+      // tiny foot glyph at the bottom of the strip
+      tctx.save(); tctx.translate(cx, bot + 13); if (side) tctx.scale(-1, 1); tctx.fillStyle = 'rgba(170,235,255,' + (0.45 + glow * 0.5) + ')';
+      tctx.beginPath(); tctx.ellipse(0, 0, 4, 7, -0.25, 0, 7); tctx.fill();
+      for (let k = 0; k < 4; k++) { tctx.beginPath(); tctx.arc(-3 + k * 2.4, -9 + Math.abs(k - 1.2) * 0.8, 1.3, 0, 7); tctx.fill(); }
+      tctx.restore();
+      if (ch !== null) { tctx.fillStyle = 'rgba(200,245,255,0.95)'; tctx.shadowColor = '#5cf'; tctx.shadowBlur = 14; tctx.beginPath(); tctx.arc(cx, bot - ch * (bot - top), 10, 0, 7); tctx.fill(); tctx.shadowBlur = 0; }
     }
   }
   const now = performance.now(), COL = { arm: '255,240,210', rail: '160,220,255', chamber: '120,220,255', guard: '140,255,170', super: '255,90,190', roam: '255,255,255' };
@@ -903,17 +940,18 @@ function updateVisuals(dt) {
   // ghost leg: chamber / kick
   const kickSide = me.state === 'atk' && me.mk === 'kick' ? me.hand : -1;
   for (const side of [0, 1]) {
-    const leg = ghostLegs[side];
-    let ext = -1, h = 0.5;
-    if (side === kickSide) { const m = me.move, s = me.st; h = me.kick ? me.kick.h : 0.5; ext = s <= m.s ? 0.25 * ease(s / m.s) + (me.kick && me.kick.chambered ? 0.25 : 0) : s <= m.s + m.a ? 1 : 1 - ease((s - m.s - m.a) / m.r); }
-    else if (PI.chamber[side] !== null && !AUTO) { ext = 0.45; h = PI.chamber[side]; }
-    leg.visible = ext >= 0;
-    if (leg.visible) {
-      const hip = new THREE.Vector3((side ? 1 : -1) * 0.14, -1.0, -0.15), foot = new THREE.Vector3((side ? 1 : -1) * 0.1 * (1 - ext), lerp(-0.85, -0.42 + h * 0.4, ext * 0.6 + 0.4), lerp(-0.35, -1.25, ext));
-      const mid = hip.clone().add(foot).multiplyScalar(0.5); leg.position.copy(mid); leg.scale.set(1, hip.distanceTo(foot), 1);
-      leg.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), foot.clone().sub(hip).normalize());
-    }
+    const leg = ghostLegs[side]; let v = null;
+    if (side === kickSide) {
+      const m = me.move, st = me.st, h = me.kick ? me.kick.h : 0.5, ch = me.kick && me.kick.chambered;
+      if (st <= m.s) v = ch ? legPose(side, 'chamber', 'extend', ease(st / m.s) * 0.3, h) : legPose(side, 'rest', 'chamber', ease(st / m.s), h);
+      else if (st <= m.s + m.a) v = legPose(side, 'chamber', 'extend', ease((st - m.s) / Math.max(1, m.a - 1)), h);
+      else v = legPose(side, 'extend', 'rest', ease((st - m.s - m.a) / m.r), h);
+      legMat.opacity = 0.7;
+    } else if (PI.chamber[side] !== null && !AUTO) { v = legPose(side, 'rest', 'chamber', 1, PI.chamber[side]); }
+    leg.g.visible = !!v;
+    if (v) { placeSeg(leg.thigh, v[0], v[1]); placeSeg(leg.shin, v[1], v[2]); leg.knee.position.copy(v[1]); leg.foot.position.copy(v[2]); }
   }
+  if (kickSide < 0) legMat.opacity = 0.55;
   setFist(L, lp[0], lp[1], lp[2]); setFist(R, rp[0], rp[1], rp[2]);
   const s0 = sway(0), s1 = sway(2); if (me.state !== 'atk') { L.position.x += s0[0]; L.position.y += s0[1]; R.position.x += s1[0]; R.position.y += s1[1]; }
   if (down) { L.position.y -= camDrop * 0.4; R.position.y -= camDrop * 0.4; }
