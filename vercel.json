@@ -301,6 +301,16 @@
       "permanent": true
     },
     {
+      "source": "/usaep-demo.html",
+      "destination": "/usaep-demo",
+      "statusCode": 301
+    },
+    {
+      "source": "/usaep-demo/",
+      "destination": "/usaep-demo",
+      "statusCode": 301
+    },
+    {
       "source": "/usaenergypartners.html",
       "destination": "/usaenergypartners",
       "statusCode": 301
@@ -364,6 +374,10 @@
     {
       "source": "/usaenergypartners-plain",
       "destination": "/usaenergypartners-plain.html"
+    },
+    {
+      "source": "/usaep-demo",
+      "destination": "/usaep-demo.html"
     }
   ]
 }
