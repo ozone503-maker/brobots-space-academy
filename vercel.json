@@ -291,6 +291,16 @@
       "permanent": true
     },
     {
+      "source": "/easy-explanations-for-humans",
+      "destination": "/easy-explanations-for-humans.html",
+      "permanent": true
+    },
+    {
+      "source": "/easy-explanations-for-humans/",
+      "destination": "/easy-explanations-for-humans.html",
+      "permanent": true
+    },
+    {
       "source": "/usaenergypartners",
       "destination": "/usaenergypartners.html",
       "permanent": true
