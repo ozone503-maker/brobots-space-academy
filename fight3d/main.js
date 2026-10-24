@@ -1,15 +1,15 @@
 // fight3d/main.js: entry point. Round/match flow (start/end round, tick), window.FIGHT test hook,
 // fixed 60Hz loop and adaptive quality.
 import * as THREE from 'three';
-import { $, AUTO, qs } from './util.js?v=079d986';
-import { DIFF, T } from './moves.js?v=079d986';
-import { ac, camera, composer, renderer, resize, scene, setPR, setUseBloom, sfx, sun, useBloom } from './stage.js?v=079d986';
-import { OJ, fists } from './fighters.js?v=079d986';
-import { showBanner, updateHUD } from './hud.js?v=079d986';
-import { F, G, resetPositions, separate, stepFighter } from './combat.js?v=079d986';
-import { think } from './cpu.js?v=079d986';
-import { applyPose, curPose, updateVisuals } from './anim.js?v=079d986';
-import { PI, drawTrails, readPlayer } from './input.js?v=079d986';
+import { $, AUTO, qs } from './util.js?v=894c647';
+import { DIFF, T } from './moves.js?v=894c647';
+import { ac, camera, composer, renderer, resize, scene, setPR, setUseBloom, sfx, sun, useBloom } from './stage.js?v=894c647';
+import { OJ, fists } from './fighters.js?v=894c647';
+import { showBanner, updateHUD } from './hud.js?v=894c647';
+import { F, G, resetPositions, separate, stepFighter } from './combat.js?v=894c647';
+import { think } from './cpu.js?v=894c647';
+import { applyPose, curPose, updateVisuals } from './anim.js?v=894c647';
+import { PI, drawTrails, readPlayer } from './input.js?v=894c647';
 
 window.FIGHT = { G, F, THREE, camera, get fists() { return fists; }, get PI() { return PI; }, get fps() { return G.fps; } };
 function startMatch() {

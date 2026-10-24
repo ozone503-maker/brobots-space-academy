@@ -1,12 +1,12 @@
 // fight3d/anim.js: poses + pose mixing, fist keyframes (HP/FK), leg poses, hit sparks, camera,
 // walk cycle, hinged fall, and the per-frame visual update (updateVisuals). Touch-down fist cock state.
 import * as THREE from 'three';
-import { D2R, clamp, ease, lerp, rnd } from './util.js?v=079d986';
-import { FLOW, T } from './moves.js?v=079d986';
-import { FLOOR, camera, flames, ocean, palms, particles, ringSpot, scene, softTex, sun, torchLight, uTime, updateVolcano } from './stage.js?v=079d986';
-import { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg } from './fighters.js?v=079d986';
-import { F, G, dirTo } from './combat.js?v=079d986';
-import { last } from './main.js?v=079d986';
+import { D2R, clamp, ease, lerp, rnd } from './util.js?v=894c647';
+import { FLOW, T } from './moves.js?v=894c647';
+import { FLOOR, camera, flames, ocean, palms, particles, ringSpot, scene, softTex, sun, torchLight, uTime, updateVolcano } from './stage.js?v=894c647';
+import { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg } from './fighters.js?v=894c647';
+import { F, G, dirTo } from './combat.js?v=894c647';
+import { last } from './main.js?v=894c647';
 
 function pose(o, base) { const p = { y: 0, rx: 0 }; if (base) Object.assign(p, JSON.parse(JSON.stringify(base))); for (const j of JOINTS) if (!p[j]) p[j] = [0, 0, 0]; for (const k in o) p[k] = Array.isArray(o[k]) ? o[k].slice() : o[k]; return p; }
 const P = {};

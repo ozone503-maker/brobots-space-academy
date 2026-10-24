@@ -1,6 +1,6 @@
 // fight3d/moves.js: pure data. Tuning (T), CPU reaction delays (DIFF), move frame data incl. sweep rules (MOVES),
 // light-move set (LIGHT) and per-move swipe flow ranges (FLOW/flowT). No side effects.
-import { clamp } from './util.js?v=079d986';
+import { clamp } from './util.js?v=894c647';
 
 // ================= TUNING =================
 const T = {

@@ -1,6 +1,6 @@
 // fight3d/cpu.js: Gavin's AI (think). Difficulty = reaction delay only.
-import { clamp, rnd } from './util.js?v=079d986';
-import { canAct, dist } from './combat.js?v=079d986';
+import { clamp, rnd } from './util.js?v=894c647';
+import { canAct, dist } from './combat.js?v=894c647';
 
 // ---------------- CPU AI (difficulty = reaction delay only) ----------------
 function snapshot(f) { return { state: f.state, st: f.st, s: f.move ? f.move.s : 0, mk: f.mk, whiffed: f.whiffed, a: f.move ? f.move.a : 0 }; }

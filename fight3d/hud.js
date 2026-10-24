@@ -1,8 +1,8 @@
 // fight3d/hud.js: HUD bars/timer/meter (updateHUD), banners, and the ?debug=1 overlay (dbg, window.__dbgLines).
 // The build stamp (#build) is static in fight3d.html.
-import { $, qs } from './util.js?v=079d986';
-import { T } from './moves.js?v=079d986';
-import { F, G } from './combat.js?v=079d986';
+import { $, qs } from './util.js?v=894c647';
+import { T } from './moves.js?v=894c647';
+import { F, G } from './combat.js?v=894c647';
 
 const DEBUG = qs.has('debug'); let dbgEl = null; const dbgLines = [];
 function dbg(t) { if (!DEBUG) return; if (!dbgEl) { dbgEl = document.createElement('pre'); dbgEl.id = 'dbg'; document.getElementById('app').appendChild(dbgEl); }

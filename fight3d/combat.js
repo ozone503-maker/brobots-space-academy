@@ -1,12 +1,12 @@
 // fight3d/combat.js: fighter state (F, G), state machine (stepFighter), startMove/dodge, hit resolution,
 // stun, knockdowns (trip sweeps don't count), KO.
 import * as THREE from 'three';
-import { $, clamp, lerp, rnd } from './util.js?v=079d986';
-import { FLOW, LIGHT, MOVES, T } from './moves.js?v=079d986';
-import { FLOOR, sfx } from './stage.js?v=079d986';
-import { dbg, showBanner } from './hud.js?v=079d986';
-import { spark } from './anim.js?v=079d986';
-import { endRound } from './main.js?v=079d986';
+import { $, clamp, lerp, rnd } from './util.js?v=894c647';
+import { FLOW, LIGHT, MOVES, T } from './moves.js?v=894c647';
+import { FLOOR, sfx } from './stage.js?v=894c647';
+import { dbg, showBanner } from './hud.js?v=894c647';
+import { spark } from './anim.js?v=894c647';
+import { endRound } from './main.js?v=894c647';
 
 // ---------------- fighters + combat ----------------
 function mkFighter(name, isPlayer) {
