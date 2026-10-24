@@ -64,6 +64,18 @@ form label{display:block;font-weight:600;margin:12px 0 4px}
 form input,form textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font:inherit}
 footer{background:var(--navy);color:#c6d3de;padding:32px 0;font-size:15px}
 footer .demo{margin-top:14px;font-size:13px;color:#8fa3b5}
+.h1b{color:#7fd8a3}
+.subhead{font-size:21px!important;font-weight:700;color:#fff!important;margin:0 0 8px!important}
+.trust{padding:36px 0;background:#fff;border-bottom:1px solid var(--line)}
+.trust-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:28px;align-items:start}
+@media(max-width:820px){.trust-grid{grid-template-columns:1fr}}
+.chris{display:flex;gap:16px;align-items:center;background:var(--bg);border-radius:12px;padding:18px}
+.chris .photo{width:96px;height:96px;flex:0 0 96px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px}
+.puct{display:inline-block;margin-top:8px;background:var(--navy);color:#fff;border-radius:6px;padding:4px 10px;font-size:14px}
+.puct .ph{color:var(--ink)}
+.rep{margin:28px 0 0}
+.sticky{display:none}
+@media(max-width:820px){.sticky{display:block;position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid var(--line)}.sticky .btn{display:block;text-align:center}body{padding-bottom:76px}}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","name":"USA Energy Partners","alternateName":"USAEP","url":"https://www.usaenergypartners.com","description":"Texas commercial energy brokerage offering rate negotiation, contract language optimization, power factor correction and tax-exempt studies.","areaServed":{"@type":"State","name":"Texas"},"employee":{"@type":"Person","name":"Chris"},"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Rate Negotiation"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Contract Language Optimization"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Power Factor Correction"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tax-Exempt Studies"}},{"@type":"Offer","name":"Free review of business electricity costs","price":"0","priceCurrency":"USD"}]}
@@ -74,23 +86,32 @@ footer .demo{margin-top:14px;font-size:13px;color:#8fa3b5}
 {"@type":"Question","name":"What is power factor correction?","acceptedAnswer":{"@type":"Answer","text":"Power is often not used efficiently, and the utility can penalize the user for it. USA Energy Partners identifies and rectifies the cause, stopping unnecessary penalties."}},
 {"@type":"Question","name":"What is a tax-exempt study?","acceptedAnswer":{"@type":"Answer","text":"A sales-and-use tax study identifies whether your business qualifies for tax-exempt status on electricity, and can help recover a portion of incorrectly paid funds."}},
 {"@type":"Question","name":"What happens after I sign a contract?","acceptedAnswer":{"@type":"Answer","text":"USA Energy Partners stays your advocate and single point of contact. If there is an issue, it is their responsibility to address it and get it fixed on your behalf."}},
-{"@type":"Question","name":"How do I start?","acceptedAnswer":{"@type":"Answer","text":"Request a free review of your business electricity costs through the contact form."}}
+{"@type":"Question","name":"How do I start?","acceptedAnswer":{"@type":"Answer","text":"Upload your last electricity bill through the free review form."}}
 ]}
 </script>
 </head>
 <body>
 <header class="top"><div class="wrap">
 <a class="brand" href="#top">USA Energy <span>Partners</span></a>
-<nav><a href="#services">Services</a><a href="#process">How it works</a><a href="#faq">FAQ</a><a href="#contact">Contact</a><a class="btn" href="#contact">Free review</a></nav>
+<nav><a href="#services">Services</a><a href="#process">How it works</a><a href="#faq">FAQ</a><a href="#contact">Contact</a><a class="btn" href="#review">Free review</a></nav>
 </div></header>
 
 <section class="hero" id="top"><div class="wrap">
 <div>
-<h1>Texas Commercial<br>Energy Brokerage</h1>
-<p>Stop overpaying for electricity. Rate negotiation, contract language, power factor correction and tax-exempt studies for Texas businesses.</p>
-<div class="ctas"><a class="btn" href="#contact">Get your free electricity cost review</a><a class="btn ghost" href="#services">See our services</a></div>
+<h1>Most Texas businesses<br>overpay for power<br><span class="h1b">We find it, free</span></h1>
+<p class="subhead">Texas commercial energy brokerage</p>
+<p>Rate negotiation, contract language, power factor correction and tax-exempt studies for Texas businesses.</p>
+<div class="ctas"><a class="btn" href="#review">Upload your last bill for a free review</a><a class="btn ghost" href="#services">See our services</a></div>
 </div>
 <video controls preload="none" playsinline poster="/media/spots/usaep-spot-poster.jpg"><source src="/media/spots/usaep-spot.mp4" type="video/mp4"></video>
+</div></section>
+
+<section class="trust"><div class="wrap trust-grid">
+<div class="chris"><div class="photo ph">[Photo of Chris]</div><div><b>Chris</b><br><span class="ph">[title]</span><br>Phone: <span class="ph">[Phone]</span><br><span class="puct">Licensed Texas broker · PUCT <span class="ph">[PUCT registration #]</span></span></div></div>
+<div class="story"><h2>One client was overpaying<br>$10,000 a year</h2>
+<p>That story is in our video. Here it is in full: <span class="ph">[problem, what the analysis found, the result, client name or industry with permission]</span></p>
+<p class="rep"><a class="btn" href="#review">Upload your last bill for a free review</a></p>
+</div>
 </div></section>
 
 <section><div class="wrap">
@@ -103,6 +124,7 @@ footer .demo{margin-top:14px;font-size:13px;color:#8fa3b5}
 <div class="metric"><b>100%</b>Peace of mind and business ease</div>
 </div>
 <p style="color:var(--muted);font-size:14px;margin-top:12px">Success metrics as stated by USA Energy Partners. Methodology: <span class="ph">[how these are measured, timeframe, sample size]</span></p>
+<p class="rep"><a class="btn" href="#review">Upload your last bill for a free review</a></p>
 </div></section>
 
 <section class="alt svc" id="services"><div class="wrap">
@@ -119,11 +141,7 @@ footer .demo{margin-top:14px;font-size:13px;color:#8fa3b5}
 <div class="svc-detail svc" id="contract-language"><div><h3>Contract language optimization</h3><p>A business may get the "best rate ever," but if the contract type and language are not customized correctly, there can be serious financial implications.</p></div><div><ul><li>Contract type matched to how your business uses power</li><li>Terms reviewed before you sign</li><li>Example: <span class="ph">[real contract case study]</span></li></ul></div></div>
 <div class="svc-detail svc" id="power-factor"><div><h3>Power factor correction</h3><p>Power is often not used efficiently, and the utility company is penalizing you, the user. We know how to identify and rectify this, stopping unnecessary penalties.</p></div><div><ul><li>Find the cause of inefficient use</li><li>Fix it, and the penalties stop</li><li>Example: <span class="ph">[real power factor case study]</span></li></ul></div></div>
 <div class="svc-detail svc" id="tax-exempt"><div><h3>Tax-exempt studies</h3><p>We provide access to sales-and-use tax studies to identify whether your business qualifies for tax-exempt status, and to recover a portion of incorrectly paid funds.</p></div><div><ul><li>Find out if you qualify</li><li>Recover money paid in error</li><li>Example: <span class="ph">[real tax study case study]</span></li></ul></div></div>
-</div></section>
-
-<section><div class="wrap">
-<h2>One client was overpaying<br>$10,000 a year</h2>
-<p class="lead">That story is in our video. Here it is in full: <span class="ph">[problem, what the analysis found, the result, client name or industry with permission]</span></p>
+<p class="rep"><a class="btn" href="#review">Upload your last bill for a free review</a></p>
 </div></section>
 
 <section class="alt" id="process"><div class="wrap">
@@ -136,6 +154,7 @@ footer .demo{margin-top:14px;font-size:13px;color:#8fa3b5}
 <li><b>Service</b>After you sign, we stay your advocate and single point of contact.</li>
 </ol>
 <p style="color:var(--muted);font-size:15px;margin-top:18px">How we are paid: <span class="ph">[fee model, e.g. commission or fee-based]</span>. Licensed Texas broker: PUCT registration <span class="ph">[PUCT registration #]</span>.</p>
+<p class="rep"><a class="btn" href="#review">Upload your last bill for a free review</a></p>
 </div></section>
 
 <section id="faq"><div class="wrap">
@@ -144,28 +163,30 @@ footer .demo{margin-top:14px;font-size:13px;color:#8fa3b5}
 <details><summary>What is power factor correction?</summary><p>Power is often not used efficiently, and the utility can penalize the user for it. We identify and rectify the cause, stopping unnecessary penalties.</p></details>
 <details><summary>What is a tax-exempt study?</summary><p>A sales-and-use tax study identifies whether your business qualifies for tax-exempt status, and can help recover a portion of incorrectly paid funds.</p></details>
 <details><summary>What happens after I sign a contract?</summary><p>We stay your advocate and single point of contact. If there is an issue, it is our responsibility to address it and get it fixed on your behalf.</p></details>
-<details><summary>How do I start?</summary><p>Request a free review of your business electricity costs using the form below.</p></details>
+<details><summary>How do I start?</summary><p>Upload your last electricity bill using the form below and we will review it for free.</p></details>
+<p class="rep"><a class="btn" href="#review">Upload your last bill for a free review</a></p>
 </div></section>
 
 <section class="cta-band"><div class="wrap">
 <h2>Find out what you're overpaying</h2>
 <p>A free review of your business electricity costs. No obligation.</p>
-<a class="btn" href="#contact">Request my free review</a>
+<a class="btn" href="#review">Upload your last bill for a free review</a>
 </div></section>
 
 <section id="contact"><div class="wrap contact">
 <div>
 <h2>Talk to Chris</h2>
-<p class="lead" style="margin-bottom:16px">Tell us about your business and we'll review your electricity costs for free.</p>
+<p class="lead" style="margin-bottom:16px">Send your last bill and we'll review your electricity costs for free.</p>
 <p><b>Chris</b>, <span class="ph">[title]</span><br>Email: <span class="ph">[Email]</span><br>Phone: <span class="ph">[Phone]</span><br>Office: <span class="ph">[Address]</span><br>PUCT registration: <span class="ph">[PUCT registration #]</span></p>
 </div>
-<form onsubmit="event.preventDefault();this.querySelector('.ok').hidden=false">
-<label for="n">Name</label><input id="n" required>
-<label for="c">Company</label><input id="c">
-<label for="e">Email</label><input id="e" type="email" required>
-<label for="m">Anything we should know?</label><textarea id="m" rows="4"></textarea>
-<p><button class="btn" type="submit">Request my free review</button></p>
-<p class="ok" hidden>Demo form: this preview does not send. <span class="ph">[connect to USAEP inbox]</span></p>
+<form id="review" onsubmit="event.preventDefault();this.querySelector('.ok').hidden=false">
+<h3 style="margin:0 0 4px;color:var(--navy);font-size:22px">Upload your last bill<br>for a free review</h3>
+<label for="bill">Your last electricity bill (PDF or photo)</label><input id="bill" name="bill" type="file" accept="application/pdf,image/*" required>
+<label for="n">Name</label><input id="n" name="name" required>
+<label for="e">Email</label><input id="e" name="email" type="email" required>
+<label for="ph">Phone</label><input id="ph" name="phone" type="tel">
+<p><button class="btn" type="submit">Send my bill for a free review</button></p>
+<p class="ok" hidden>Demo form: this preview does not send anything. <span class="ph">[connect to USAEP inbox]</span></p>
 </form>
 </div></section>
 
@@ -173,5 +194,6 @@ footer .demo{margin-top:14px;font-size:13px;color:#8fa3b5}
 © 2026 USA Energy Partners. Texas commercial energy brokerage.
 <div class="demo">Demo built by BROBOTS</div>
 </div></footer>
+<div class="sticky"><a class="btn" href="#review">Upload your last bill for a free review</a></div>
 </body>
 </html>
