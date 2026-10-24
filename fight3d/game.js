@@ -27,7 +27,7 @@ const MOVES = {
   kMid:  { s: 10, a: 4, r: 18, dmg: 50,  bal: 14, hs: 20, bs: 14, stop: 11, reach: 1.8,  shake: 0.1,  meter: 9,  ht: 1.15, body: 1 },
   kSide: { s: 11, a: 4, r: 19, dmg: 52,  bal: 20, hs: 20, bs: 14, stop: 11, reach: 1.9,  shake: 0.12, meter: 9,  ht: 1.1, body: 1, push: 0.1 },
   kRound:{ s: 15, a: 5, r: 22, dmg: 68,  bal: 18, hs: 24, bs: 16, stop: 14, reach: 1.85, shake: 0.15, meter: 11, ht: 1.5 },
-  kSweep:{ s: 17, a: 4, r: 34, dmg: 40,  bal: 10, hs: 20, bs: 12, stop: 12, reach: 1.75, shake: 0.14, meter: 8,  ht: 0.3, sweep: 1 },
+  kSweep:{ s: 22, a: 4, r: 34, whiffR: 22, dmg: 22,  bal: 10, hs: 20, bs: 12, stop: 12, reach: 1.75, shake: 0.14, meter: 8,  ht: 0.3, sweep: 1 },
   super: { s: 16, a: 6, r: 30, dmg: 150, bal: 40, hs: 40, bs: 24, stop: 22, reach: 1.7,  shake: 0.25, meter: 0, unblock: 0.45 },
 };
 // ==========================================
@@ -359,14 +359,21 @@ const ghost = new THREE.Group(); scene.add(ghost);
 }
 const legMat = new THREE.MeshBasicMaterial({ color: 0x8fe6ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false });
 const legCore = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
+const legSkin = new THREE.MeshPhysicalMaterial({ color: 0x9a6a4c, roughness: 0.7, sheen: 0.25, sheenColor: new THREE.Color(0xc0705a) });
 const ghostLegs = [0, 1].map(() => { // ghost leg: thigh + shin + foot, camera space (feet stay ghost, just brighter)
   const g = new THREE.Group(); g.visible = false; camera.add(g);
-  const seg = (r0, r1) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r0, r1, 1, 14, 1), legMat); const c = new THREE.Mesh(new THREE.CylinderGeometry(r0 * 0.45, r1 * 0.45, 1, 8, 1), legCore); m.add(c); g.add(m); return m; };
-  const thigh = seg(0.11, 0.135), shin = seg(0.075, 0.1);
-  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.095, 16, 12), legMat); foot.scale.set(1, 0.7, 1.6); g.add(foot);
-  const knee = new THREE.Mesh(new THREE.SphereGeometry(0.1, 14, 10), legMat); g.add(knee);
+  const seg = (r0, r1) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r0, r1, 1, 14, 1), legMat); const c = new THREE.Mesh(new THREE.CylinderGeometry(r0 * 0.45, r1 * 0.45, 1, 8, 1), legCore); g.add(m); return m; };
+  const thigh = seg(0.11, 0.135);
+  const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.058, 0.085, 1, 16, 1), legSkin); g.add(shin);
+  const calf = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 10), legSkin); calf.scale.set(0.95, 2.2, 1.0); calf.position.set(0, 0.12, 0.02); shin.add(calf);
+  const foot = new THREE.Group(); g.add(foot); // foot: heel + sole + toes, pointing along -z in camera space
+  const sole = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.12, 6, 12), legSkin); sole.rotation.x = Math.PI / 2; sole.scale.set(1.1, 1, 0.7); sole.position.set(0, -0.02, -0.06); foot.add(sole);
+  for (let i = 0; i < 4; i++) { const t = new THREE.Mesh(new THREE.SphereGeometry(0.02, 10, 8), legSkin); t.position.set((i - 1.5) * 0.026, -0.025, -0.16 + Math.abs(i - 1.5) * 0.01); foot.add(t); }
+  const knee = new THREE.Mesh(new THREE.SphereGeometry(0.085, 14, 10), legSkin); g.add(knee);
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(0.13, 14, 10), legMat); glow.scale.set(1, 0.7, 1.4); glow.visible = false; foot.add(glow); // small ghost aura = tracer
   return { g, thigh, shin, foot, knee };
 });
+const _fd = new THREE.Vector3(), _fz = new THREE.Vector3(0, 0, -1);
 function placeSeg(m, a, b) { m.position.copy(a).add(b).multiplyScalar(0.5); m.scale.set(1, a.distanceTo(b), 1); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize()); }
 const LEGP = { // camera-space [hip, knee, foot]; chamber = knee pulled up, extend = foot driven at him
   rest: [[0.16, -0.95, -0.3], [0.15, -0.8, -0.5], [0.15, -0.95, -0.55]],
@@ -525,7 +532,9 @@ function resolveHit(a, d) {
   const counter = d.state === 'atk' && d.st < d.move.s;
   let scale = Math.min(T.speedMax * T.counterMul, clamp(a.spd, T.speedMin, T.speedMax) * (counter ? T.counterMul : 1));
   const htNow = a.isPlayer && a.ht ? a.ht : 0;
-  const underGuard = htNow && htNow < 1.38 && !d.isPlayer; // Gavin's guard is high: body/low shots get under it
+  if (m.sweep && !d.isPlayer && canAct(d) && !d.blocking && rnd() < 0.3) { a.whiffed = true; d.vy = 0; d.hop = 18; dbg('Gavin hopped the sweep'); return; }
+  if (m.sweep && d.blocking && canAct(d)) { d.state = 'block'; d.st = -6; a.whiffed = true; spark(hitPos, 0.5, 0x88ccff); sfx('block'); dbg('sweep checked'); return; }
+  const underGuard = htNow && htNow < 1.38 && !d.isPlayer && !m.sweep; // Gavin's guard is high: body/low shots get under it
   if (underGuard && d.blocking) { scale *= 0.8; dbg('under guard @' + htNow.toFixed(2)); }
   if (d.blocking && canAct(d) && !m.unblock && !underGuard) {
     d.hp -= m.dmg * T.chip; d.bal -= m.bal * T.blockBal; d.balDelay = T.balRegenDelay; d.state = 'block'; d.st = -(d.isPlayer ? Math.min(m.bs, 8) : m.bs); d.meter = Math.min(100, d.meter + 3);
@@ -533,7 +542,7 @@ function resolveHit(a, d) {
     d.vx += fx * 0.03; d.vz += fz * 0.03;
   } else {
     if (d.blocking && m.unblock) scale *= m.unblock;
-    const dmg = Math.min(Math.round(m.dmg * scale), a.mk === 'super' ? T.hp * 0.2 : T.hp * 0.09); // hard cap per hit
+    const dmg = Math.min(Math.round(m.dmg * scale), a.mk === 'super' ? T.hp * 0.2 : m.sweep ? T.hp * 0.03 : T.hp * 0.09); // hard cap per hit; sweep ~3%
     d.hp -= dmg; d.bal -= Math.min(m.bal * scale, a.mk === 'super' ? 50 : 22);
     if (a.isPlayer || d.isPlayer) dbg('hit ' + a.mk + ' ' + dmg + ' dmg -> ' + (d.isPlayer ? 'you' : 'cpu') + ' ' + Math.max(0, Math.round(d.hp))); d.balDelay = T.balRegenDelay;
     a.meter = Math.min(100, a.meter + m.meter * scale); d.meter = Math.min(100, d.meter + m.meter * 0.5);
@@ -547,14 +556,15 @@ function resolveHit(a, d) {
     if (counter && a.isPlayer) showBanner('COUNTER', 30);
     if (m.push) { d.vx += fx * m.push; d.vz += fz * m.push; }
     if (d.hp <= 0) { d.hp = 0; knockdown(d, true); }
-    else if (d.bal <= 0 || m.sweep) knockdown(d, false); // a landed sweep takes his legs
+    else if (m.sweep) knockdown(d, false, true); // trip: down, but never counts toward the 3-knockdown KO
+    else if (d.bal <= 0) knockdown(d, false);
   }
 }
-function knockdown(f, ko) {
-  f.state = ko ? 'ko' : 'down'; f.st = 0; f.downs++; f.blocking = false; f.move = null;
+function knockdown(f, ko, trip) {
+  f.state = ko ? 'ko' : 'down'; f.st = 0; f.trip = !!trip; if (!trip) f.downs++; f.blocking = false; f.move = null;
   G.hitstop = 26; G.shake = 0.3; sfx('thud'); sfx('crowd', 1.2);
   if (ko || f.downs >= 3) { f.state = 'ko'; endRound(F.indexOf(f) === 0 ? 1 : 0, 'K.O.'); }
-  else showBanner('DOWN', 60);
+  else showBanner(trip ? 'TRIPPED' : 'DOWN', 60);
 }
 function stepFighter(f, o) {
   f.st++;
@@ -581,14 +591,14 @@ function stepFighter(f, o) {
       const m = f.move;
       if (f.st === m.s + 1 && !f.hitDone) { f.hitDone = true; resolveHit(f, o); }
       if (f.st >= 3 && f.st <= m.s) { const [fx, fz] = dirTo(f, o); f.x += fx * 0.006; f.z += fz * 0.006; } // step in
-      if (f.st >= m.s + m.a + m.r + (f.whiffed ? 6 : 0)) { f.state = 'idle'; f.st = 0; f.move = null; }
+      if (f.st >= m.s + m.a + m.r + (f.whiffed ? 6 + (m.whiffR || 0) : 0)) { f.state = 'idle'; f.st = 0; f.move = null; }
       else if (f.isPlayer && inp.atk && f.hitDone && LIGHT[f.mk] && f.st >= m.s + m.a + 3) { f.state = 'idle'; f.st = 0; f.move = null; } // spam stays responsive
       break; }
     case 'dodge': if (f.st >= 18) { f.state = 'idle'; f.st = 0; } break;
     case 'hit': if (f.st >= f.hs) { f.state = f.bal < 25 ? 'stagger' : 'idle'; f.st = 0; } break;
     case 'stagger': if (f.st >= (f.isPlayer ? 16 : 40)) { f.state = 'idle'; f.st = 0; } break;
     case 'down':
-      if (f.st >= T.downFrames) { f.state = 'getup'; f.st = 0; }
+      if (f.st >= (f.trip ? 90 : T.downFrames)) { f.state = 'getup'; f.st = 0; }
       break;
     case 'getup': if (f.st >= 40) { f.state = 'idle'; f.st = 0; f.bal = T.balMax * 0.6; } break;
   }
@@ -723,7 +733,9 @@ function release(st, why) {
   firePlayer(k, st.side, dir === 'tap' ? 1 : speedScale(v) * (0.94 + 0.12 * mod.L), dir + ' ' + why + ' d=' + Math.round(d) + ' t=' + mod.t.toFixed(2), mod);
 }
 function speedScale(v) { return clamp(lerp(T.speedMin, T.speedMax, clamp((v - 0.3) / 2.0, 0, 1)), T.speedMin, T.speedMax); }
+let lastSweepT = -1e9;
 function firePlayer(k, side, spd, why, mod) {
+  if (k === 'kSweep') { if (performance.now() - lastSweepT < 3000) { k = 'kMid'; why = (why || '') + ' sweep on cooldown'; } else lastSweepT = performance.now(); }
   if (k === 'super' && (F[0].superUsed || F[0].meter < T.superCost)) return;
   const p = F[0].inp; p.atkF = G.frames; p.atk = k; p.spd = Math.min(spd, T.speedMax); p.mod = mod || { t: 0.5, c: 0, L: 0.35, cv: 0 }; p.hand = k === 'super' ? 1 : side;
   lastFire = { k, side, t: performance.now() };
@@ -938,7 +950,7 @@ function oppTargetPose(f) {
     case 'down': case 'ko': { // hinged fall: knees buckle, torso tips, arms flop; then (down only) back to a kneel
       if (st < 12) return mixPose(P.guard, P.buckle, ease(st / 12), tmpPose);
       if (st < 34) return mixPose(P.buckle, P.down, ease((st - 12) / 22), tmpPose);
-      return st < 100 || f.state === 'ko' ? P.down : mixPose(P.down, P.kneel, ease((st - 100) / 40), tmpPose); }
+      { const kn = (f.trip ? 90 : T.downFrames) - 50; return st < kn || f.state === 'ko' ? P.down : mixPose(P.down, P.kneel, ease((st - kn) / 40), tmpPose); } }
     case 'getup': return mixPose(P.kneel, P.guard, ease(st / 40), tmpPose);
     case 'dodge': return f.dodgeDir < 0 ? P.slipR : P.slipL;
   }
@@ -968,7 +980,7 @@ function updateVisuals(dt) {
     OJ.sL.rotation.x += sw * 0.12 * a; OJ.sR.rotation.x += -sw * 0.12 * a;
     OJ.hips.position.y += (Math.abs(Math.cos(walkPh)) - 0.6) * 0.045 * a; OJ.spine.rotation.z += sw * 0.05 * a;
   }
-  OJ.root.position.set(ox, FLOOR, oz);
+  OJ.root.position.set(ox, FLOOR + (op.hop > 0 ? Math.sin(op.hop / 18 * Math.PI) * 0.28 : 0), oz); if (op.hop > 0) op.hop -= dt * 60;
   OJ.root.rotation.set(curPose.rx * D2R, Math.atan2(px - ox, pz - oz), 0, 'YXZ');
   if (curPose.rx < -5 || curPose.y < -0.3) { // rest on the canvas: never let any part sink through the floor
     OJ.root.updateMatrixWorld(true); _box.setFromObject(OJ.root);
@@ -1029,9 +1041,9 @@ function updateVisuals(dt) {
       v = _v;
     }
     leg.g.visible = !!v;
-    if (v) { placeSeg(leg.thigh, v[0], v[1]); placeSeg(leg.shin, v[1], v[2]); leg.knee.position.copy(v[1]); leg.foot.position.copy(v[2]); }
+    if (v) { placeSeg(leg.thigh, v[0], v[1]); placeSeg(leg.shin, v[1], v[2]); leg.knee.position.copy(v[1]); leg.foot.position.copy(v[2]); _fd.copy(v[2]).sub(v[1]).normalize(); _fd.y *= 0.4; _fd.normalize(); leg.foot.quaternion.setFromUnitVectors(_fz, _fd); }
   }
-  legMat.opacity = kickSide >= 0 ? 0.9 : 0.55; legMat.color.setHex(kickSide >= 0 ? 0xc8f4ff : 0x8fe6ff);
+  legMat.opacity = 0.12;
   setFist(L, lp[0], lp[1], lp[2]); setFist(R, rp[0], rp[1], rp[2]);
   const s0 = sway(0), s1 = sway(2); if (me.state !== 'atk') { L.position.x += s0[0]; L.position.y += s0[1]; R.position.x += s1[0]; R.position.y += s1[1]; }
   if (down) { L.position.y -= camDrop * 0.4; R.position.y -= camDrop * 0.4; }
