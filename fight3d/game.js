@@ -414,7 +414,10 @@ function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward)
     f.rotation.x = Math.PI / 2; f.position.set((i - 1.5) * 0.025 * -s, 0.004 - Math.abs(i - 1.5) * 0.004, -0.048 + Math.abs(i - 1.5) * 0.003); g.add(f);
     const k = new THREE.Mesh(new THREE.CapsuleGeometry(0.013, 0.012, 4, 8), skinMat); k.position.set((i - 1.5) * 0.025 * -s, -0.022, -0.04); g.add(k);
   }
-  const thumb = new THREE.Mesh(new THREE.CapsuleGeometry(0.014, 0.045, 4, 8), skinMat); thumb.rotation.z = Math.PI / 2; thumb.position.set(s * 0.012, -0.032, -0.03); g.add(thumb);
+  // thumb on the INNER side (toward screen centre): s=-1 left hand -> thumb at +x. Was s*… (outer side = mirrored hand).
+  const tIn = -s;
+  const thumbBase = new THREE.Mesh(new THREE.SphereGeometry(0.024, 14, 10), skinMat); thumbBase.scale.set(0.8, 0.9, 1.3); thumbBase.position.set(tIn * 0.046, -0.012, 0.0); g.add(thumbBase);
+  const thumb = new THREE.Mesh(new THREE.CapsuleGeometry(0.0145, 0.04, 4, 8), knuckleMat); thumb.rotation.set(0, 0, Math.PI / 2); thumb.position.set(tIn * 0.02, -0.03, -0.052); g.add(thumb);
   const wrist = new THREE.Mesh(new THREE.CapsuleGeometry(0.036, 0.11, 4, 12), skinMat); wrist.rotation.x = Math.PI / 2; wrist.position.set(0, -0.005, 0.1); g.add(wrist);
   g.traverse(o => { if (o.isMesh) o.castShadow = true; });
   g.scale.setScalar(0.85);
@@ -482,7 +485,7 @@ function mkFighter(name, isPlayer) {
 }
 const F = [mkFighter('YOU', true), mkFighter('GAVIN', false)];
 const G = { mode: 'title', round: 1, timer: T.roundTime, tf: 0, hitstop: 0, shake: 0, banner: '', bannerT: 0, phaseT: 0, diff: 'normal', matchesDone: 0, frames: 0, fps: 60, winner: null };
-window.FIGHT = { G, F, get PI() { return PI; }, get fps() { return G.fps; } };
+window.FIGHT = { G, F, THREE, camera, get fists() { return fists; }, get PI() { return PI; }, get fps() { return G.fps; } };
 
 function resetPositions() {
   F[0].x = 0; F[0].z = 1.0; F[1].x = 0; F[1].z = -1.0;
