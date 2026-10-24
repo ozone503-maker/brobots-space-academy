@@ -311,6 +311,16 @@
       "permanent": true
     },
     {
+      "source": "/pitch-explained",
+      "destination": "/pitch-explained.html",
+      "permanent": true
+    },
+    {
+      "source": "/pitch-explained/",
+      "destination": "/pitch-explained.html",
+      "permanent": true
+    },
+    {
       "source": "/spots",
       "destination": "/spots.html",
       "permanent": true
