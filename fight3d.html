@@ -14,35 +14,28 @@
 </head><body>
 <div id="app">
  <canvas id="c"></canvas>
+ <canvas id="trail"></canvas>
  <div id="hud" class="hide">
   <div class="bars">
    <div class="side p"><div class="nm">YOU</div><div class="hp"><i id="hp0"></i></div><div class="bal"><i id="bal0"></i></div><div class="pips" id="pip0"></div></div>
    <div class="mid"><div id="timer">60</div><div id="rnd">R1</div></div>
-   <div class="side c"><div class="nm" id="cpuName">KAI THE CRUSHER</div><div class="hp"><i id="hp1"></i></div><div class="bal"><i id="bal1"></i></div><div class="pips" id="pip1"></div></div>
+   <div class="side c"><div class="nm" id="cpuName">GAVIN DAWSON</div><div class="hp"><i id="hp1"></i></div><div class="bal"><i id="bal1"></i></div><div class="pips" id="pip1"></div></div>
   </div>
   <div class="meter"><span>SUPER</span><div><i id="sup0"></i></div></div>
   <div id="flash"></div>
   <div id="banner"></div>
-  <div id="stick"><div id="knob"></div></div>
-  <div id="pad">
-   <button data-a="super" id="bSuper" class="b sup">STAR</button>
-   <button data-a="upper" class="b up">UPPER</button>
-   <button data-a="jab" class="b jab">JAB</button>
-   <button data-a="hook" class="b hook">HOOK</button>
-   <button data-a="block" class="b blk">BLOCK</button>
   </div>
- </div>
  <div id="title" class="screen">
   <h1>VOLCANO RING</h1>
   <h2>Punch Out meets Ring King on the Big Island</h2>
   <ul>
-   <li><b>Left thumb</b> drag anywhere on the left half to walk and circle the ring</li>
-   <li><b>JAB</b> quick left, <b>HOOK</b> heavy right, <b>UPPER</b> slow and huge</li>
-   <li><b>Swipe</b> left or right on the right half to slip a punch, swipe up for an uppercut</li>
-   <li><b>BLOCK</b> hold it. Knock their balance bar empty to drop them</li>
-   <li><b>STAR</b> one super per match when the meter is full</li>
-   <li class="kb">Keyboard: WASD move, J jab, K hook, L upper, Space block, Q/E slip, U star</li>
+   <li><b>Left thumb</b> is your left arm, <b>right thumb</b> your right arm. Swipe and the fist follows your swipe. Faster swipe, harder hit</li>
+   <li>Thin rails near each edge are your legs: <b>press, hold and slide</b> to chamber the leg, <b>flick</b> along the rail to kick</li>
+   <li><b>Hold both thumbs</b> still and apart to raise your guard. Drag both together to move</li>
+   <li><b>Bring both thumbs together</b> and hold to charge your one super when the meter is full</li>
+   <li class="kb">Keyboard: WASD move, Space guard. Left hand R/F/V, right hand U/J/M (straight/side/up paths, Shift = fast). Z/X tap = kick, hold = chamber. Hold B = super. Mouse drag works like a thumb</li>
   </ul>
+
   <div class="diff"><button data-d="easy">EASY</button><button data-d="normal" class="on">NORMAL</button><button data-d="hard">HARD</button></div>
   <button id="go" class="go">FIGHT</button>
  </div>

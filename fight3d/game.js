@@ -19,6 +19,7 @@ const MOVES = {
   jab:   { s: 5,  a: 3, r: 9,  dmg: 45,  bal: 8,  hs: 14, bs: 9,  stop: 6,  reach: 1.6,  shake: 0.04, meter: 6 },
   hook:  { s: 9,  a: 4, r: 17, dmg: 100, bal: 22, hs: 20, bs: 14, stop: 10, reach: 1.5,  shake: 0.09, meter: 9 },
   upper: { s: 12, a: 4, r: 22, dmg: 130, bal: 32, hs: 24, bs: 16, stop: 13, reach: 1.35, shake: 0.13, meter: 11 },
+  kick:  { s: 11, a: 4, r: 20, dmg: 115, bal: 30, hs: 22, bs: 15, stop: 12, reach: 1.75, shake: 0.11, meter: 10 },
   super: { s: 16, a: 6, r: 30, dmg: 260, bal: 80, hs: 40, bs: 24, stop: 22, reach: 1.7,  shake: 0.25, meter: 0, unblock: 0.45 },
 };
 // ==========================================
@@ -347,6 +348,7 @@ const ghost = new THREE.Group(); scene.add(ghost);
   for (const s of [-1, 1]) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.09, 14, 10), ghostMat); d.position.set(s * 0.25, 1.44, 0); ghost.add(d);
     const leg = new THREE.Mesh(new THREE.CapsuleGeometry(0.09, 0.7, 4, 10), ghostMat); leg.position.set(s * 0.12, 0.5, 0); ghost.add(leg); }
 }
+const ghostLegs = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 1, 10, 1, true), ghostMat); m.visible = false; camera.add(m); return m; });
 const ghostArms = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 1, 10, 1, true), ghostMat); scene.add(m); return m; });
 const skinMat = new THREE.MeshPhysicalMaterial({ color: 0xd99a6c, roughness: 0.5, sheen: 0.7, sheenRoughness: 0.5, sheenColor: new THREE.Color(0xff7a5a), clearcoat: 0.15, clearcoatRoughness: 0.7 });
 const knuckleMat = new THREE.MeshPhysicalMaterial({ color: 0xe8a77a, roughness: 0.42, sheen: 0.6, sheenColor: new THREE.Color(0xff8060) });
@@ -424,9 +426,9 @@ function mkFighter(name, isPlayer) {
     blocking: false, dodge: 0, dodgeDir: 0, react: null, meter: 0, superUsed: false, wins: 0, downs: 0, spd: 1, vx: 0, vz: 0,
     inp: { mx: 0, mz: 0, block: false, atk: null, dodge: 0, spd: 1 }, ai: { t: 0, plan: [], strafe: 1, hist: [] } };
 }
-const F = [mkFighter('YOU', true), mkFighter('KAI', false)];
+const F = [mkFighter('YOU', true), mkFighter('GAVIN', false)];
 const G = { mode: 'title', round: 1, timer: T.roundTime, tf: 0, hitstop: 0, shake: 0, banner: '', bannerT: 0, phaseT: 0, diff: 'normal', matchesDone: 0, frames: 0, fps: 60, winner: null };
-window.FIGHT = { G, F, get fps() { return G.fps; } };
+window.FIGHT = { G, F, get PI() { return PI; }, get fps() { return G.fps; } };
 
 function resetPositions() {
   F[0].x = 0; F[0].z = 1.0; F[1].x = 0; F[1].z = -1.0;
@@ -440,6 +442,9 @@ function startMove(f, k) {
   if (k === 'super') { if (f.superUsed || f.meter < T.superCost) return false; f.superUsed = true; f.meter = 0; }
   f.state = 'atk'; f.move = MOVES[k]; f.mk = k; f.st = 0; f.hitDone = false; f.whiffed = false; f.blocking = false;
   f.spd = clamp(f.inp.spd || 1, T.speedMin, T.speedMax);
+  if (f.isPlayer) (window.__acts = window.__acts || []).push({ k, hand: f.inp.hand ?? null, spd: +f.spd.toFixed(2), chambered: !!(f.inp.kick && f.inp.kick.chambered), t: Math.round(performance.now()) });
+  if (f.isPlayer) { f.hand = f.inp.hand ?? (k === 'jab' ? 0 : 1); f.path = f.inp.path || ({ jab: KEY_PATHS.KeyR[1], hook: KEY_PATHS.KeyJ[1], upper: KEY_PATHS.KeyM[1] })[k] || null; f.inp.path = null; f.inp.hand = undefined; f.kick = k === 'kick' ? f.inp.kick : null;
+    if (k === 'kick' && f.kick && f.kick.chambered) f.move = Object.assign({}, MOVES.kick, { s: 5 }); }
   return true;
 }
 function startDodge(f, dir) {
@@ -451,7 +456,7 @@ function resolveHit(a, d) {
   if (d.state === 'dodge' && d.st >= 2 && d.st <= 13) { a.whiffed = true; return; }
   if (d.state === 'down' || d.state === 'ko') { a.whiffed = true; return; }
   const [fx, fz] = dirTo(a, d);
-  const hitPos = new THREE.Vector3(d.x - fx * 0.28, FLOOR + (a.mk === 'jab' || a.mk === 'super' || a.mk === 'upper' ? 1.62 : 1.35), d.z - fz * 0.28);
+  const hitPos = new THREE.Vector3(d.x - fx * 0.28, FLOOR + (a.mk === 'kick' ? 0.7 + 0.9 * (a.kick ? a.kick.h : 0.5) : a.mk === 'jab' || a.mk === 'super' || a.mk === 'upper' ? 1.62 : 1.35), d.z - fz * 0.28);
   const counter = d.state === 'atk' && d.st < d.move.s;
   let scale = a.spd * (counter ? T.counterMul : 1);
   if (d.blocking && canAct(d) && !m.unblock) {
@@ -557,66 +562,178 @@ function think(me, foe, delay) {
 }
 
 // ---------------- input ----------------
+// Settled scheme (mechanism brief): left thumb = left arm, right thumb = right arm.
+// The swipe path IS the strike path; swipe speed scales damage. No buttons, no move labels.
+// Compact kick rails inboard of each edge: long-press slide = chamber the leg, flick slide = fire.
+// Both thumbs held apart = guard (both forearms up). Both thumbs held together = charge the one super.
+// Both thumbs dragged = roam (combined-thumb average).
 const keys = {};
-const stick = { id: null, ox: 0, oy: 0, x: 0, y: 0 };
-const blockHeld = { touch: false };
-const swipe = {};
-addEventListener('keydown', e => {
-  keys[e.code] = true; ac();
+const app = $('app');
+const trailCv = $('trail'), tctx = trailCv.getContext('2d');
+const ptrs = new Map(); // pointerId -> state
+const trails = []; // {pts:[{x,y,t}], side, kind, dead}
+const FLICK_MS = 320, FLICK_MIN = 28, HOLD_MS = 200, STILL_PX = 22, TOGETHER_PX = 120, SUPER_CHARGE = 36;
+const PI = { guard: false, roamX: 0, roamY: 0, superCharge: 0, chamber: [null, null] }; // chamber[side] = height 0..1
+function appRect() { return app.getBoundingClientRect(); }
+function railHit(x, y, r) {
+  const rw = 46, inset = r.width * 0.07, top = r.height * 0.5, bot = r.height * 0.9;
+  if (y < top || y > bot) return -1;
+  if (x > inset && x < inset + rw) return 0;
+  if (x > r.width - inset - rw && x < r.width - inset) return 1;
+  return -1;
+}
+function railHeight(y, r) { const top = r.height * 0.5, bot = r.height * 0.9; return clamp(1 - (y - top) / (bot - top), 0, 1); }
+function pDown(e) {
+  if (G.mode === 'title' || G.mode === 'end') return;
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  ac(); e.preventDefault();
+  const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
+  const rail = railHit(x, y, r);
+  const st = { id: e.pointerId, side: rail >= 0 ? rail : (x < r.width / 2 ? 0 : 1), rail: rail >= 0, x0: x, y0: y, t0: now, pts: [{ x, y, t: now }], roam: false };
+  st.trail = { pts: st.pts, side: st.side, kind: st.rail ? 'rail' : 'arm', dead: 0 }; trails.push(st.trail);
+  ptrs.set(e.pointerId, st);
+  try { app.setPointerCapture(e.pointerId); } catch (_) { }
+}
+function pMove(e) {
+  const st = ptrs.get(e.pointerId); if (!st) return; e.preventDefault();
+  const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
+  st.pts.push({ x, y, t: now }); if (st.pts.length > 80) st.pts.shift();
+  if (st.rail && PI.chamber[st.side] !== null) PI.chamber[st.side] = railHeight(y, r);
+}
+function recentVel(st, ms) { // peak px/ms between samples in the last `ms`
+  const p = st.pts, b = p[p.length - 1]; let best = 0;
+  for (let i = p.length - 1; i > 0 && b.t - p[i].t <= ms; i--) {
+    const dt = Math.max(8, p[i].t - p[i - 1].t), v = Math.hypot(p[i].x - p[i - 1].x, p[i].y - p[i - 1].y) / dt; if (v > best) best = v; }
+  return [0, 0, best];
+}
+function pUp(e) {
+  const st = ptrs.get(e.pointerId); if (!st) return; ptrs.delete(e.pointerId); e.preventDefault();
+  st.trail.dead = performance.now();
+  const r = appRect(), now = performance.now();
+  const last = st.pts[st.pts.length - 1], dx = last.x - st.x0, dy = last.y - st.y0, dur = now - st.t0, d = Math.hypot(dx, dy);
+  const twoHeld = st.wasTwo;
+  if (st.rail) {
+    window.__lastRail = null;
+    const side = st.side, chambered = PI.chamber[side] !== null;
+    const [, , v] = recentVel(st, 150);
+    const h = chambered ? PI.chamber[side] : railHeight(last.y, r);
+    PI.chamber[side] = null; window.__lastRail = { v, d, dur, chambered };
+    if (v > 0.45 || (!chambered && d > FLICK_MIN && dur < FLICK_MS)) firePlayer('kick', side, speedScale(v), { h, chambered });
+    return;
+  }
+  window.__lastUp = { dur, d, roam: st.roam, two: twoHeld, rail: st.rail };
+  if (st.roam || twoHeld) return;
+  if (dur < FLICK_MS * 1.6 && d > FLICK_MIN) {
+    const v = d / Math.max(16, dur);
+    firePlayer(null, st.side, speedScale(v), { pts: st.pts.map(p => [(p.x - st.x0) / r.width, (p.y - st.y0) / r.height]) });
+  }
+}
+function speedScale(v) { return lerp(T.speedMin, T.speedMax, clamp((v - 0.35) / 2.2, 0, 1)); }
+// Frame-data tier comes from the path's geometry (needed so existing startup/active/recovery data stays);
+// what you SEE is the fist travelling the swipe path itself.
+function pathTier(pts) {
+  const e = pts[pts.length - 1]; let maxLat = 0;
+  for (const p of pts) { // lateral deviation from straight line start->end
+    const L = Math.hypot(e[0], e[1]) || 1e-6; const dev = Math.abs(p[0] * e[1] - p[1] * e[0]) / L; if (dev > maxLat) maxLat = dev; }
+  const ax = Math.abs(e[0]) * 0.5625 / 1, ay = Math.abs(e[1]); // width units -> comparable to height
+  if (maxLat > 0.035 || ax > ay * 1.3) return 'hook';
+  if (e[1] < 0 && ay > ax * 2.2 && ay > 0.17) return 'upper'; // long rising stroke = uppercut; short forward flick = straight
+  return 'jab';
+}
+function firePlayer(k, side, spd, extra) {
   const p = F[0].inp;
-  if (e.code === 'KeyJ') p.atk = 'jab'; if (e.code === 'KeyK') p.atk = 'hook'; if (e.code === 'KeyL') p.atk = 'upper'; if (e.code === 'KeyU') p.atk = 'super';
-  if (e.code === 'KeyQ') p.dodge = -1; if (e.code === 'KeyE') p.dodge = 1;
+  if (k === 'super') { if (F[0].superUsed || F[0].meter < T.superCost) return; p.atk = 'super'; p.spd = spd; p.hand = 1; p.path = null; return; }
+  if (k === 'kick') { p.atk = 'kick'; p.spd = spd; p.hand = side; p.kick = extra; p.path = null; return; }
+  p.atk = pathTier(extra.pts); p.spd = spd; p.hand = side; p.path = extra.pts;
+}
+app.addEventListener('pointerdown', pDown, { passive: false });
+app.addEventListener('pointermove', pMove, { passive: false });
+app.addEventListener('pointerup', pUp, { passive: false });
+app.addEventListener('pointercancel', pUp, { passive: false });
+app.addEventListener('contextmenu', e => e.preventDefault());
+// per-frame touch interpretation (holds, guard, super charge, roam, chamber)
+function readTouch() {
+  const now = performance.now(), r = appRect();
+  const arms = [...ptrs.values()].filter(s => !s.rail);
+  for (const s of ptrs.values()) if (s.rail && PI.chamber[s.side] === null && now - s.t0 > HOLD_MS) {
+    const l = s.pts[s.pts.length - 1]; if (Math.hypot(l.x - s.x0, l.y - s.y0) < STILL_PX * 2) { PI.chamber[s.side] = railHeight(l.y, r); s.trail.kind = 'chamber'; }
+  }
+  PI.guard = false; PI.roamX = PI.roamY = 0;
+  let charging = false;
+  if (arms.length >= 2) {
+    const [a, b] = arms; a.wasTwo = b.wasTwo = true;
+    const la = a.pts[a.pts.length - 1], lb = b.pts[b.pts.length - 1];
+    const da = [la.x - a.x0, la.y - a.y0], db = [lb.x - b.x0, lb.y - b.y0];
+    const avg = [(da[0] + db[0]) / 2, (da[1] + db[1]) / 2], m = Math.hypot(avg[0], avg[1]);
+    const sep = Math.hypot(la.x - lb.x, la.y - lb.y);
+    if (sep < TOGETHER_PX) { charging = true; a.trail.kind = b.trail.kind = 'super'; }
+    else if (m > STILL_PX) { PI.roamX = clamp(avg[0] / 50, -1, 1); PI.roamY = clamp(avg[1] / 50, -1, 1); a.roam = b.roam = true; a.trail.kind = b.trail.kind = 'roam'; }
+    else if (now - Math.max(a.t0, b.t0) > 90) { PI.guard = true; a.trail.kind = b.trail.kind = 'guard'; }
+  }
+  if (charging && !F[0].superUsed && F[0].meter >= T.superCost) {
+    if (++PI.superCharge === SUPER_CHARGE) firePlayer('super', 1, 1.2);
+  } else if (!charging) PI.superCharge = 0;
+}
+// keyboard / mouse fallbacks (desktop testing)
+const KEY_PATHS = { // [side, path in screen fractions]
+  KeyR: [0, [[0, 0], [0.01, -0.06], [0.02, -0.14]]], KeyF: [0, [[0, 0], [0.08, -0.03], [0.16, -0.02], [0.22, 0.01]]], KeyV: [0, [[0, 0], [0, -0.12], [0.005, -0.26]]],
+  KeyU: [1, [[0, 0], [-0.01, -0.06], [-0.02, -0.14]]], KeyJ: [1, [[0, 0], [-0.08, -0.03], [-0.16, -0.02], [-0.22, 0.01]]], KeyM: [1, [[0, 0], [0, -0.12], [-0.005, -0.26]]],
+};
+const keyHold = {};
+addEventListener('keydown', e => {
+  if (e.repeat) return;
+  keys[e.code] = true; ac();
+  if (G.mode !== 'fight') return;
+  if (KEY_PATHS[e.code]) { const [side, pts] = KEY_PATHS[e.code]; firePlayer(null, side, e.shiftKey ? T.speedMax : 1.05, { pts }); }
+  if (e.code === 'KeyZ' || e.code === 'KeyX') keyHold[e.code] = performance.now();
   if (e.code === 'Space') e.preventDefault();
 });
-addEventListener('keyup', e => { keys[e.code] = false; });
-const app = $('app');
-app.addEventListener('touchstart', e => {
-  ac(); if (G.mode === 'title' || G.mode === 'end') return;
-  const r = app.getBoundingClientRect();
-  for (const t of e.changedTouches) {
-    if (t.target.closest && t.target.closest('.b')) continue;
-    const x = t.clientX - r.left, y = t.clientY - r.top;
-    if (x < r.width * 0.5 && stick.id === null) {
-      stick.id = t.identifier; stick.ox = x; stick.oy = y; stick.x = 0; stick.y = 0;
-      const s = $('stick'); s.style.display = 'block'; s.style.left = x + 'px'; s.style.top = y + 'px';
-    } else swipe[t.identifier] = { x, y, t: performance.now() };
+addEventListener('keyup', e => {
+  keys[e.code] = false;
+  if ((e.code === 'KeyZ' || e.code === 'KeyX') && keyHold[e.code]) {
+    const side = e.code === 'KeyZ' ? 0 : 1, chambered = PI.chamber[side] !== null, h = chambered ? PI.chamber[side] : 0.5;
+    PI.chamber[side] = null; keyHold[e.code] = 0; if (G.mode === 'fight') firePlayer('kick', side, 1.1, { h, chambered });
   }
-  e.preventDefault();
-}, { passive: false });
-app.addEventListener('touchmove', e => {
-  const r = app.getBoundingClientRect();
-  for (const t of e.changedTouches) if (t.identifier === stick.id) {
-    let dx = t.clientX - r.left - stick.ox, dy = t.clientY - r.top - stick.oy; const m = Math.hypot(dx, dy), max = 45;
-    if (m > max) { dx *= max / m; dy *= max / m; }
-    stick.x = dx / max; stick.y = dy / max; $('knob').style.transform = `translate(${dx}px,${dy}px)`;
-  }
-  e.preventDefault();
-}, { passive: false });
-const endTouch = e => {
-  const r = app.getBoundingClientRect();
-  for (const t of e.changedTouches) {
-    if (t.identifier === stick.id) { stick.id = null; stick.x = stick.y = 0; $('stick').style.display = 'none'; $('knob').style.transform = ''; }
-    const s = swipe[t.identifier]; if (!s) continue; delete swipe[t.identifier];
-    const dx = t.clientX - r.left - s.x, dy = t.clientY - r.top - s.y, dt = Math.max(16, performance.now() - s.t), v = Math.hypot(dx, dy) / dt;
-    const p = F[0].inp;
-    if (Math.hypot(dx, dy) < 18) { p.atk = 'jab'; p.spd = 1; }
-    else if (Math.abs(dx) > Math.abs(dy)) p.dodge = dx < 0 ? -1 : 1;
-    else if (dy < 0) { p.atk = 'upper'; p.spd = lerp(T.speedMin, T.speedMax, clamp((v - 0.3) / 1.5, 0, 1)); }
-    else p.block = false;
-  }
-};
-app.addEventListener('touchend', endTouch); app.addEventListener('touchcancel', endTouch);
-document.querySelectorAll('#pad .b').forEach(b => {
-  const a = b.dataset.a;
-  const down = e => { e.preventDefault(); ac(); b.classList.add('on'); if (a === 'block') blockHeld.touch = true; else { F[0].inp.atk = a; F[0].inp.spd = 1.05; } };
-  const up = e => { e.preventDefault(); b.classList.remove('on'); if (a === 'block') blockHeld.touch = false; };
-  b.addEventListener('pointerdown', down); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
+  if (e.code === 'KeyB') { if (PI.keySuper >= SUPER_CHARGE) firePlayer('super', 1, 1.2); PI.keySuper = 0; }
 });
 function readPlayer() {
-  const p = F[0].inp;
-  let mx = stick.x, mz = -stick.y;
-  if (keys.KeyA) mx -= 1; if (keys.KeyD) mx += 1; if (keys.KeyW) mz += 1; if (keys.KeyS) mz -= 1;
-  p.mx = clamp(mx, -1, 1); p.mz = clamp(mz, -1, 1); p.block = !!keys.Space || blockHeld.touch;
+  readTouch();
+  const p = F[0].inp, now = performance.now();
+  for (const [c, side] of [['KeyZ', 0], ['KeyX', 1]]) if (keyHold[c] && now - keyHold[c] > HOLD_MS && PI.chamber[side] === null) PI.chamber[side] = 0.55;
+  PI.keySuper = keys.KeyB ? (PI.keySuper || 0) + 1 : 0;
+  let mx = PI.roamX, mz = -PI.roamY;
+  if (keys.KeyA || keys.ArrowLeft) mx -= 1; if (keys.KeyD || keys.ArrowRight) mx += 1; if (keys.KeyW || keys.ArrowUp) mz += 1; if (keys.KeyS || keys.ArrowDown) mz -= 1;
+  p.mx = clamp(mx, -1, 1); p.mz = clamp(mz, -1, 1); p.block = !!keys.Space || PI.guard;
+}
+// subtle thumb trails
+function drawTrails() {
+  const w = trailCv.clientWidth, h = trailCv.clientHeight, dpr = Math.min(2, devicePixelRatio || 1);
+  if (trailCv.width !== Math.round(w * dpr)) { trailCv.width = Math.round(w * dpr); trailCv.height = Math.round(h * dpr); }
+  tctx.setTransform(dpr, 0, 0, dpr, 0, 0); tctx.clearRect(0, 0, w, h);
+  // rails (compact, inboard, unlabeled)
+  if (G.mode !== 'title' && G.mode !== 'end') {
+    const inset = w * 0.07, rw = 46, top = h * 0.5, bot = h * 0.9;
+    for (const side of [0, 1]) {
+      const x = side ? w - inset - rw : inset;
+      tctx.fillStyle = 'rgba(255,255,255,0.05)'; tctx.strokeStyle = 'rgba(255,255,255,0.18)'; tctx.lineWidth = 1.5;
+      tctx.beginPath(); tctx.roundRect(x + rw * 0.3, top, rw * 0.4, bot - top, rw * 0.2); tctx.fill(); tctx.stroke();
+      const c = PI.chamber[side]; if (c !== null) { tctx.fillStyle = 'rgba(120,220,255,0.55)'; tctx.beginPath(); tctx.arc(x + rw / 2, bot - c * (bot - top), 9, 0, 7); tctx.fill(); }
+    }
+  }
+  const now = performance.now(), COL = { arm: '255,240,210', rail: '160,220,255', chamber: '120,220,255', guard: '140,255,170', super: '255,90,190', roam: '255,255,255' };
+  for (let i = trails.length - 1; i >= 0; i--) {
+    const tr = trails[i], age = tr.dead ? (now - tr.dead) / 260 : 0;
+    if (age >= 1) { trails.splice(i, 1); continue; }
+    const pts = tr.pts.filter(p => now - p.t < 380 || !tr.dead && p === tr.pts[tr.pts.length - 1]);
+    const col = COL[tr.kind] || COL.arm, a = 0.42 * (1 - age);
+    tctx.lineCap = 'round'; tctx.lineJoin = 'round';
+    for (let j = 1; j < pts.length; j++) {
+      const f = j / pts.length; tctx.strokeStyle = `rgba(${col},${a * f})`; tctx.lineWidth = 2 + 7 * f;
+      tctx.beginPath(); tctx.moveTo(pts[j - 1].x, pts[j - 1].y); tctx.lineTo(pts[j].x, pts[j].y); tctx.stroke();
+    }
+    const l = tr.pts[tr.pts.length - 1]; if (!tr.dead) { tctx.fillStyle = `rgba(${col},0.22)`; tctx.beginPath(); tctx.arc(l.x, l.y, 16, 0, 7); tctx.fill(); }
+  }
+  if (PI.superCharge > 0) { tctx.strokeStyle = 'rgba(255,90,190,0.7)'; tctx.lineWidth = 4; tctx.beginPath(); tctx.arc(w / 2, h * 0.62, 34, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.min(1, PI.superCharge / SUPER_CHARGE)); tctx.stroke(); }
 }
 
 // ---------------- flow ----------------
@@ -640,7 +757,7 @@ function afterRound() {
   if (F[0].wins >= 2 || F[1].wins >= 2 || G.round >= 3) {
     G.mode = 'end'; G.matchesDone++;
     const youWin = F[0].wins > F[1].wins;
-    $('endTxt').textContent = youWin ? 'YOU WIN' : (F[0].wins === F[1].wins ? 'DRAW' : 'KAI WINS');
+    $('endTxt').textContent = youWin ? 'YOU WIN' : (F[0].wins === F[1].wins ? 'DRAW' : 'GAVIN WINS');
     $('endSub').textContent = `Rounds ${F[0].wins} to ${F[1].wins}`;
     $('end').classList.remove('hide'); $('banner').classList.remove('show');
     if (AUTO) setTimeout(() => { if (G.mode === 'end') startMatch(); }, 4000);
@@ -661,7 +778,7 @@ function tick() { // one 60Hz logic frame
   if (G.mode !== 'fight') return;
   if (G.hitstop > 0) { G.hitstop--; return; }
   if (AUTO) think(F[0], F[1], 10); else readPlayer();
-  think(F[1], F[0], DIFF[G.diff]);
+  if (!qs.has('dummy')) think(F[1], F[0], DIFF[G.diff]); else { F[1].inp.atk = null; F[1].inp.block = false; F[1].inp.mx = F[1].inp.mz = 0; }
   stepFighter(F[0], F[1]); stepFighter(F[1], F[0]); separate();
   if (++G.tf >= 60) { G.tf = 0; G.timer--; if (G.timer <= 0) { G.timer = 0; const a = F[0].hp, b = F[1].hp; endRound(a === b ? -1 : a > b ? 0 : 1, 'TIME'); } }
 }
@@ -728,16 +845,35 @@ function updateVisuals(dt) {
   const sway = (i) => [Math.sin(t + i) * 0.008, Math.cos(t * 1.3 + i) * 0.01];
   let lp = [HP.guardL, HP.guardL, 0], rp = [HP.guardR, HP.guardR, 0];
   if (me.blocking || me.state === 'block') { lp = [HP.blockL, HP.blockL, 0]; rp = [HP.blockR, HP.blockR, 0]; }
-  if (me.state === 'atk') {
-    const m = me.move, s = me.st, k2 = me.mk;
-    const phase = (W, S, M) => s <= m.s ? [W, W, 0, ease(s / m.s)] : s <= m.s + m.a ? [W, S, ease((s - m.s) / 2), 1, M] : [S, HP.guardL, 0, 1 - ease((s - m.s - m.a) / m.r)];
-    if (k2 === 'jab') {
-      if (s <= m.s) lp = [HP.guardL, HP.jabW, ease(s / m.s)]; else if (s <= m.s + m.a) lp = [HP.jabW, HP.jabS, ease((s - m.s) / 2)]; else lp = [HP.jabS, HP.guardL, ease((s - m.s - m.a) / m.r)];
-    } else {
-      const W = k2 === 'hook' ? HP.hookW : k2 === 'upper' ? HP.upW : HP.supW, S = k2 === 'hook' ? HP.hookS : k2 === 'upper' ? HP.upS : HP.supS;
-      if (s <= m.s) rp = [HP.guardR, W, ease(s / m.s)];
-      else if (s <= m.s + m.a) { const u = ease((s - m.s) / 2); if (k2 === 'hook') rp = u < 0.5 ? [W, HP.hookM, u * 2] : [HP.hookM, S, (u - 0.5) * 2]; else rp = [W, S, u]; }
-      else rp = [S, HP.guardR, ease((s - m.s - m.a) / m.r)];
+  let lpath = null, rpath = null;
+  if (me.state === 'atk' && me.mk === 'super') {
+    const m = me.move, s = me.st, W = HP.supW, S = HP.supS;
+    if (s <= m.s) rp = [HP.guardR, W, ease(s / m.s)]; else if (s <= m.s + m.a) rp = [W, S, ease((s - m.s) / 2)]; else rp = [S, HP.guardR, ease((s - m.s - m.a) / m.r)];
+  } else if (me.state === 'atk' && me.path) {
+    // the fist travels the swipe path: screen x/y of the swipe -> camera x/y, extension -> depth
+    const m = me.move, s = me.st, pts = me.path, side = me.hand, G0 = side ? HP.guardR : HP.guardL;
+    let u, back = 0;
+    if (s <= m.s) u = 0.3 * ease(s / m.s); else if (s <= m.s + m.a) u = 0.3 + 0.7 * ease((s - m.s) / Math.max(1, m.a - 1)); else { u = 1; back = ease((s - m.s - m.a) / m.r); }
+    const fi = u * (pts.length - 1), i0 = Math.floor(fi), i1 = Math.min(pts.length - 1, i0 + 1), fr = fi - i0;
+    const e = pts[pts.length - 1], L = Math.max(0.05, Math.hypot(e[0] * 0.56, e[1]));
+    const sc = 0.55 / L * Math.min(1, L / 0.12 + 0.4); // normalise reach so short flicks still extend
+    const px2 = lerp(pts[i0][0], pts[i1][0], fr) * 0.56 * sc, py2 = lerp(pts[i0][1], pts[i1][1], fr) * sc;
+    const S = [G0[0] + px2 * 0.55, G0[1] - py2 * 0.45, G0[2] - 0.55 * u, G0[3] - 0.15 * u, G0[4] - px2 * 1.2, G0[5] + (side ? 1 : -1) * 1.2 * u];
+    const pose = [S, G0, back];
+    if (side) rp = pose; else lp = pose;
+  }
+  // ghost leg: chamber / kick
+  const kickSide = me.state === 'atk' && me.mk === 'kick' ? me.hand : -1;
+  for (const side of [0, 1]) {
+    const leg = ghostLegs[side];
+    let ext = -1, h = 0.5;
+    if (side === kickSide) { const m = me.move, s = me.st; h = me.kick ? me.kick.h : 0.5; ext = s <= m.s ? 0.25 * ease(s / m.s) + (me.kick && me.kick.chambered ? 0.25 : 0) : s <= m.s + m.a ? 1 : 1 - ease((s - m.s - m.a) / m.r); }
+    else if (PI.chamber[side] !== null && !AUTO) { ext = 0.45; h = PI.chamber[side]; }
+    leg.visible = ext >= 0;
+    if (leg.visible) {
+      const hip = new THREE.Vector3((side ? 1 : -1) * 0.14, -1.0, -0.15), foot = new THREE.Vector3((side ? 1 : -1) * 0.1 * (1 - ext), lerp(-0.85, -0.42 + h * 0.4, ext * 0.6 + 0.4), lerp(-0.35, -1.25, ext));
+      const mid = hip.clone().add(foot).multiplyScalar(0.5); leg.position.copy(mid); leg.scale.set(1, hip.distanceTo(foot), 1);
+      leg.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), foot.clone().sub(hip).normalize());
     }
   }
   setFist(L, lp[0], lp[1], lp[2]); setFist(R, rp[0], rp[1], rp[2]);
@@ -770,7 +906,7 @@ function updateHUD() {
   }
   $('timer').textContent = G.timer; $('rnd').textContent = 'ROUND ' + G.round;
   $('sup0').style.width = (F[0].superUsed ? 0 : F[0].meter) + '%';
-  $('bSuper').classList.toggle('ready', F[0].meter >= 100 && !F[0].superUsed);
+  $('sup0').parentNode.parentNode.classList.toggle('ready', F[0].meter >= 100 && !F[0].superUsed);
 }
 
 // ---------------- loop + adaptive quality ----------------
@@ -791,7 +927,7 @@ function frame(now) {
   acc += dt * speed; let n = 0;
   while (acc >= 1 / 60 && n < 12) { tick(); acc -= 1 / 60; n++; }
   if (G.mode === 'title') { const a = 0.37 + Math.sin(now / 5000) * 0.6; F[0].x = Math.sin(a) * 2.6; F[0].z = Math.cos(a) * 2.6; F[1].x = 0; F[1].z = 0; } else if (0) { F[0].x = Math.sin(now / 4000) * 2.4; F[0].z = Math.cos(now / 4000) * 2.4; F[1].x = 0; F[1].z = 0; }
-  updateVisuals(dt);
+  updateVisuals(dt); drawTrails();
   if (G.mode !== 'title') updateHUD();
   if (useBloom && composer) composer.render(dt); else renderer.render(scene, camera);
 }

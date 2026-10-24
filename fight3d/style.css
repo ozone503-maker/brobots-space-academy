@@ -19,18 +19,6 @@ html,body{margin:0;height:100%;background:#1a0826;overflow:hidden;touch-action:n
 #flash{position:absolute;inset:0;background:radial-gradient(transparent 40%,#ff0030cc);opacity:0;transition:opacity .25s}
 #banner{position:absolute;top:34%;width:100%;text-align:center;font-size:58px;font-weight:900;font-style:italic;letter-spacing:2px;color:#ffe14d;-webkit-text-stroke:2px #7a0f00;text-shadow:0 6px 0 #c0310a,0 0 30px #ff6a00;opacity:0;transform:scale(.6);transition:all .18s}
 #banner.show{opacity:1;transform:scale(1)}
-#stick{position:absolute;width:110px;height:110px;margin:-55px 0 0 -55px;border-radius:50%;border:2px solid #fff8;background:#ffffff14;display:none}
-#knob{position:absolute;left:30px;top:30px;width:50px;height:50px;border-radius:50%;background:#fffc}
-#pad{position:absolute;right:10px;bottom:max(18px,env(safe-area-inset-bottom));width:190px;height:230px;pointer-events:none}
-.b{position:absolute;pointer-events:auto;border-radius:50%;border:3px solid #fff;color:#fff;font-weight:900;font-size:13px;background:#0007;touch-action:none;box-shadow:0 0 14px #0008}
-.b.on{background:#fff4}
-.jab{width:74px;height:74px;right:96px;bottom:70px;background:#1b8cffaa}
-.hook{width:84px;height:84px;right:0;bottom:84px;background:#ff3b3baa}
-.up{width:70px;height:70px;right:50px;bottom:162px;background:#ff9a00aa}
-.blk{width:150px;height:52px;border-radius:26px;right:10px;bottom:0;background:#28c76faa}
-.sup{width:58px;height:58px;right:136px;bottom:166px;background:#666a;opacity:.4}
-.sup.ready{background:#ff3cac;opacity:1;animation:pulse .6s infinite alternate}
-@keyframes pulse{to{box-shadow:0 0 26px #ffd400}}
 .screen{position:absolute;inset:0;background:linear-gradient(#2a0f3a99,#000b 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;text-align:center}
 .screen h1{font-size:46px;font-style:italic;margin:0;color:#ffe14d;text-shadow:0 5px 0 #c0310a,0 0 30px #ff6a00}
 .screen h2{font-size:15px;margin:8px 0 14px;opacity:.9}
@@ -38,3 +26,6 @@ html,body{margin:0;height:100%;background:#1a0826;overflow:hidden;touch-action:n
 .diff button{margin:4px;padding:8px 12px;border-radius:8px;border:2px solid #fff;background:#0006;color:#fff;font-weight:800}
 .diff button.on{background:#ff6a00}
 .go{margin-top:14px;padding:14px 48px;font-size:24px;font-weight:900;border-radius:40px;border:3px solid #fff;background:linear-gradient(#ff7a00,#ff2a5c);color:#fff}
+#trail{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.meter.ready i{animation:pulse .6s infinite alternate}
+@keyframes pulse{to{box-shadow:0 0 14px #ffd400;filter:brightness(1.4)}}
