@@ -364,6 +364,11 @@
       "source": "/biorama/",
       "destination": "/biorama.html",
       "permanent": true
+    },
+    {
+      "source": "/bots/",
+      "destination": "/bots",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -378,6 +383,10 @@
     {
       "source": "/usaep-demo",
       "destination": "/usaep-demo.html"
+    },
+    {
+      "source": "/bots",
+      "destination": "/bots.html"
     }
   ]
 }
