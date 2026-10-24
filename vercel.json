@@ -388,5 +388,25 @@
       "source": "/bots",
       "destination": "/bots.html"
     }
+  ],
+  "headers": [
+    {
+      "source": "/fight3d.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/fight3d/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
   ]
 }

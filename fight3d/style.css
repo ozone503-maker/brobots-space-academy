@@ -31,3 +31,5 @@ html,body{margin:0;height:100%;background:#1a0826;overflow:hidden;touch-action:n
 .meter.ready i{animation:pulse .6s infinite alternate}
 @keyframes pulse{to{box-shadow:0 0 14px #ffd400;filter:brightness(1.4)}}
 #dbg{position:absolute;left:4px;top:118px;margin:0;padding:4px 6px;max-width:70%;font:10px/1.3 ui-monospace,monospace;color:#9f9;background:#000a;border-radius:4px;pointer-events:none;white-space:pre-wrap;z-index:9}
+
+#build{position:absolute;right:6px;bottom:4px;z-index:50;font:10px/1 ui-monospace,monospace;color:rgba(255,255,255,.55);pointer-events:none;letter-spacing:.5px}

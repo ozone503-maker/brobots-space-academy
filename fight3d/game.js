@@ -324,7 +324,7 @@ P.super_s = pose({ spine: [-18, 0, 0], y: 0.08, sR: [-165, 0, 0], eR: [-20, 0, 0
 P.hitHead = pose({ head: [-38, 18, 12], neck: [-18, 0, 0], spine: [-14, 0, 6], sL: [-25, 0, 35], eL: [-60, 0, 0], sR: [-30, 0, -40], eR: [-70, 0, 0] }, P.guard);
 P.hitBody = pose({ spine: [34, 0, 0], head: [22, 0, 0], sL: [-20, 0, 15], eL: [-110, 0, 0], sR: [-25, 0, -15], eR: [-110, 0, 0], y: -0.12 }, P.guard);
 P.stagger = pose({ spine: [-8, 0, 12], head: [-15, 0, 15], sL: [-20, 0, 30], eL: [-50, 0, 0], sR: [-15, 0, -35], eR: [-40, 0, 0], y: -0.1 }, P.guard);
-P.down = pose({ rx: -86, y: -0.82, spine: [0, 0, 0], head: [10, 20, 0], sL: [-170, 0, 50], eL: [-30, 0, 0], sR: [-160, 0, -40], eR: [-40, 0, 0], tL: [-10, 0, -10], kL: [20, 0, 0], tR: [-30, 0, 12], kR: [50, 0, 0] });
+P.down = pose({ rx: -78, y: -0.78, spine: [-12, 0, 8], head: [25, 25, 0], sL: [-120, 0, 75], eL: [-45, 0, 0], sR: [-100, 0, -80], eR: [-60, 0, 0], tL: [-55, 0, -14], kL: [75, 0, 0], tR: [-25, 0, 16], kR: [40, 0, 0] });
 P.buckle = pose({ rx: -12, y: -0.38, spine: [-10, 0, 6], head: [-25, 0, 0], sL: [15, 0, 30], eL: [-20, 0, 0], sR: [10, 0, -35], eR: [-15, 0, 0], tL: [-55, 0, -6], kL: [95, 0, 0], tR: [-40, 0, 8], kR: [85, 0, 0] });
 P.kneel = pose({ rx: 0, y: -0.48, spine: [30, 0, 0], head: [20, 0, 0], sL: [-30, 0, 20], eL: [-60, 0, 0], sR: [-40, 0, -20], eR: [-40, 0, 0], tL: [-90, 0, -4], kL: [90, 0, 0], tR: [10, 0, 6], kR: [100, 0, 0] });
 P.win = pose({ sL: [-175, 0, 25], eL: [-15, 0, 0], sR: [-175, 0, -25], eR: [-15, 0, 0], head: [-15, 0, 0], spine: [-5, 0, 0] }, P.guard);
@@ -395,12 +395,12 @@ const FLOW = {
 function flowT(k, v) { const r = FLOW[k]; return r ? clamp((v - r.v[0]) / (r.v[1] - r.v[0]), 0, 1) : 0.5; }
 // fist keyframes for the right hand [x,y,z,rx,ry,rz]; left hand mirrored
 const FK = {
-  jab:   [[0.13, -0.05, -0.8, 0.4, -0.1, 0.5], [0.03, -0.06, -1.25, 0.05, 0, 1.5]],
-  pHigh: [[0.13, -0.03, -0.8, 0.4, -0.1, 0.5], [0.02, 0.02, -1.28, 0.05, 0, 1.5]],
-  pMid:  [[0.13, -0.1, -0.8, 0.3, -0.1, 0.5], [0.03, -0.17, -1.25, 0.15, 0, 1.5]],
-  pLow:  [[0.13, -0.18, -0.78, 0.2, -0.1, 0.5], [0.04, -0.3, -1.15, -0.25, 0, 1.5]],
-  hook:  [[0.38, -0.04, -0.62, 0.0, -0.6, 0.2], [0.36, -0.02, -1.02, 0, -0.9, 1.4], [-0.02, -0.04, -1.18, 0, 0.6, 1.5]],
-  upper: [[0.14, -0.42, -0.68, 1.2, 0, 0.2], [0.05, -0.18, -0.95, 0.4, 0, 0.25], [0.03, 0.06, -1.1, -0.9, 0, 0.3]],
+  jab:   [[0.13, -0.05, -0.8, 0.4, -0.1, -0.5], [0.03, -0.06, -1.25, 0.05, 0, -1.5]],
+  pHigh: [[0.13, -0.03, -0.8, 0.4, -0.1, -0.5], [0.02, 0.02, -1.28, 0.05, 0, -1.5]],
+  pMid:  [[0.13, -0.1, -0.8, 0.3, -0.1, -0.5], [0.03, -0.17, -1.25, 0.15, 0, -1.5]],
+  pLow:  [[0.13, -0.18, -0.78, 0.2, -0.1, -0.5], [0.04, -0.3, -1.15, -0.25, 0, -1.5]],
+  hook:  [[0.38, -0.04, -0.62, 0.0, -0.6, -0.2], [0.36, -0.02, -1.02, 0, -0.9, -1.4], [-0.02, -0.04, -1.18, 0, 0.6, -1.5]],
+  upper: [[0.14, -0.42, -0.68, 1.2, 0, -0.2], [0.05, -0.18, -0.95, 0.4, 0, -0.25], [0.03, 0.06, -1.1, -0.9, 0, -0.3]],
 };
 function mir(q, side) { return side ? q : [-q[0], q[1], q[2], q[3], -q[4], -q[5]]; }
 function legPose(side, a, b, t, h) { for (let i = 0; i < 3; i++) { const A = LEGP[a][i], B = LEGP[b][i]; _v[i].set(lerp(A[0], B[0], t) * (side ? 1 : -1), lerp(A[1], B[1], t) + (i ? (h - 0.5) * 0.25 * (a !== 'rest' || t > 0.3 ? 1 : 0) : 0), lerp(A[2], B[2], t)); } return _v; }
@@ -434,12 +434,12 @@ function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward)
 const fists = [buildFist(-1), buildFist(1)];
 const handLight = new THREE.PointLight(0xffd0a0, 1.2, 2.5, 2); camera.add(handLight); handLight.position.set(0, 0.2, 0.1);
 const HP = { // hand poses in camera space [x,y,z, rx, ry, rz]
-  guardL: [-0.15, -0.035, -0.85, 0.55, 0.25, -0.35], guardR: [0.15, -0.04, -0.83, 0.55, -0.25, 0.35],
-  blockL: [-0.075, -0.05, -0.42, 1.25, 0.3, -0.2], blockR: [0.075, -0.06, -0.43, 1.25, -0.3, 0.2],
-  jabW: [-0.13, -0.27, -0.55, 0.2, 0.1, -0.4], jabS: [-0.04, -0.12, -1.25, 0.05, 0, -1.5],
-  hookW: [0.34, -0.3, -0.5, 0.0, -0.6, 0.2], hookM: [0.3, -0.13, -1.0, 0, -0.9, 1.4], hookS: [-0.02, -0.1, -1.18, 0, 0.6, 1.5],
-  upW: [0.14, -0.55, -0.58, 1.2, 0, 0.2], upS: [0.03, -0.02, -1.12, -0.9, 0, 0.3],
-  supW: [0.22, -0.65, -0.45, 1.3, 0, 0.3], supS: [0.0, 0.05, -1.25, -1.1, 0, 0.2],
+  guardL: [-0.15, -0.035, -0.85, 0.55, -0.15, 0.35], guardR: [0.15, -0.04, -0.83, 0.55, 0.15, -0.35],
+  blockL: [-0.075, -0.05, -0.42, 1.25, 0.3, 0.2], blockR: [0.075, -0.06, -0.43, 1.25, -0.3, -0.2],
+  jabW: [-0.13, -0.27, -0.55, 0.2, 0.1, 0.4], jabS: [-0.04, -0.12, -1.25, 0.05, 0, 1.5],
+  hookW: [0.34, -0.3, -0.5, 0.0, -0.6, -0.2], hookM: [0.3, -0.13, -1.0, 0, -0.9, -1.4], hookS: [-0.02, -0.1, -1.18, 0, 0.6, -1.5],
+  upW: [0.14, -0.55, -0.58, 1.2, 0, -0.2], upS: [0.03, -0.02, -1.12, -0.9, 0, -0.3],
+  supW: [0.22, -0.65, -0.45, 1.3, 0, -0.3], supS: [0.0, 0.05, -1.25, -1.1, 0, -0.2],
 };
 function setFist(f, a, b, t) { const p = []; for (let i = 0; i < 6; i++) p[i] = lerp(a[i], b[i], t); f.position.set(p[0], p[1], p[2]); f.rotation.set(p[3], p[4], p[5]); }
 
@@ -501,6 +501,7 @@ function resetPositions() {
 }
 function dist() { return Math.hypot(F[1].x - F[0].x, F[1].z - F[0].z); }
 function dirTo(a, b) { const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz) || 1; return [dx / d, dz / d]; }
+const LIGHT = { jab: 1, pHigh: 1, pMid: 1, pLow: 1 };
 function canAct(f) { return f.state === 'idle' || f.state === 'block'; }
 function startMove(f, k) {
   if (!canAct(f)) return false;
@@ -539,7 +540,7 @@ function resolveHit(a, d) {
     d.state = 'hit'; d.st = 0; d.hs = d.isPlayer ? Math.min(m.hs, 12) : m.hs; d.move = null; d.react = (htNow ? htNow < 1.42 : m.body || (a.mk === 'hook' && rnd() < 0.5)) ? 'hitBody' : 'hitHead';
     if (a.isPlayer) a.lastHit = { k: a.mk, ht: htNow, dmg, react: d.react };
     d.vx += fx * 0.04 * scale; d.vz += fz * 0.04 * scale;
-    G.hitstop = Math.round(m.stop * (counter ? 1.4 : 1)); G.shake = m.shake * scale * (counter ? 1.4 : 1);
+    G.hitstop = Math.round(m.stop * (counter ? 1.4 : 1) * (a.isPlayer && LIGHT[a.mk] ? 0.5 : 1)); G.shake = m.shake * scale * (counter ? 1.4 : 1);
     spark(hitPos, 1 + (scale - 1) * 2 + (a.mk === 'super' ? 2 : 0), counter ? 0xffe040 : 0xffffff);
     sfx('hit', 1 / scale);
     if (d.isPlayer) { $('flash').style.opacity = 0.9; setTimeout(() => $('flash').style.opacity = 0, 120); }
@@ -557,6 +558,7 @@ function knockdown(f, ko) {
 }
 function stepFighter(f, o) {
   f.st++;
+  { const act = canAct(f) && !(f.state === 'block' && f.st < 0); if (act && !f.wasAct) f.actF = G.frames; f.wasAct = act; }
   const inp = f.inp;
   if (f.state !== 'down' && f.state !== 'ko') {
     f.balDelay > 0 ? f.balDelay-- : (f.bal = Math.min(T.balMax, f.bal + T.balRegen));
@@ -566,7 +568,7 @@ function stepFighter(f, o) {
       if (f.state === 'block' && f.st < 0) break;
       f.blocking = !!inp.block; f.state = f.blocking ? 'block' : 'idle';
       if (inp.dodge) { startDodge(f, inp.dodge); inp.dodge = 0; break; }
-      if (inp.atk && f.isPlayer && G.frames - (inp.atkF || 0) > 30) { dbg('dropped stale ' + inp.atk); inp.atk = null; }
+      if (inp.atk && f.isPlayer && (inp.atkF || 0) < (f.actF || 0) - 10) { dbg('dropped stale ' + inp.atk); inp.atk = null; }
       if (inp.atk) { const k = inp.atk; inp.atk = null; if (startMove(f, k)) { sfx('whoosh', k === 'jab' ? 0.6 : 1); break; } }
       { // movement relative to foe
         const [fx, fz] = dirTo(f, o); const rx = -fz, rz = fx;
@@ -580,6 +582,7 @@ function stepFighter(f, o) {
       if (f.st === m.s + 1 && !f.hitDone) { f.hitDone = true; resolveHit(f, o); }
       if (f.st >= 3 && f.st <= m.s) { const [fx, fz] = dirTo(f, o); f.x += fx * 0.006; f.z += fz * 0.006; } // step in
       if (f.st >= m.s + m.a + m.r + (f.whiffed ? 6 : 0)) { f.state = 'idle'; f.st = 0; f.move = null; }
+      else if (f.isPlayer && inp.atk && f.hitDone && LIGHT[f.mk] && f.st >= m.s + m.a + 3) { f.state = 'idle'; f.st = 0; f.move = null; } // spam stays responsive
       break; }
     case 'dodge': if (f.st >= 18) { f.state = 'idle'; f.st = 0; } break;
     case 'hit': if (f.st >= f.hs) { f.state = f.bal < 25 ? 'stagger' : 'idle'; f.st = 0; } break;
@@ -825,13 +828,13 @@ function drawPads(w, h) {
     }
     tctx.fillStyle = `rgba(${rgb},${0.25 + pulse * 0.3})`; tctx.beginPath(); tctx.arc(cx, cy, 2.5, 0, 7); tctx.fill();
   }
-  // STUN indicator: if you're in hitstun/stagger/blockstun the pads go red and a ring drains, so it never looks like dead input
+  // STUN indicator: while YOU are in hitstun/stagger/blockstun the pads fill red and the screen edges glow red
   const me0 = F[0], stun = me0.state === 'hit' ? 1 - me0.st / Math.max(1, me0.hs) : me0.state === 'stagger' ? 1 - me0.st / 16 : me0.state === 'block' && me0.st < 0 ? -me0.st / 8 : 0;
   if (stun > 0) {
-    tctx.strokeStyle = `rgba(255,70,70,${0.35 + 0.25 * Math.sin(now / 50)})`; tctx.lineWidth = 3;
-    for (const r of padRects(w, h)) { tctx.beginPath(); tctx.roundRect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0, 14); tctx.stroke(); }
-    tctx.strokeStyle = 'rgba(255,90,90,0.8)'; tctx.lineWidth = 5; tctx.beginPath(); tctx.arc(w / 2, h * 0.3, 26, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(stun, 0, 1)); tctx.stroke();
-    for (let i = 0; i < 3; i++) { const a = now / 200 + i * 2.1; tctx.fillStyle = 'rgba(255,230,120,0.9)'; tctx.beginPath(); tctx.arc(w / 2 + Math.cos(a) * 26, h * 0.3 + Math.sin(a) * 9, 3.5, 0, 7); tctx.fill(); }
+    const a = clamp(stun, 0, 1);
+    for (const r of padRects(w, h)) { tctx.fillStyle = `rgba(255,50,50,${0.16 * a})`; tctx.strokeStyle = `rgba(255,70,70,${0.75 * a})`; tctx.lineWidth = 3; tctx.beginPath(); tctx.roundRect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0, 14); tctx.fill(); tctx.stroke(); }
+    const gr = tctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.45, w / 2, h / 2, Math.max(w, h) * 0.75); gr.addColorStop(0, 'rgba(255,0,0,0)'); gr.addColorStop(1, `rgba(255,30,30,${0.35 * a})`);
+    tctx.fillStyle = gr; tctx.fillRect(0, 0, w, h);
   }
   // BLOCK circle with a small shield glyph
   const B = PAD.block, bx = B.x * w, by = B.y * h, br = Math.max(B.r * w, 44);
@@ -942,7 +945,7 @@ function oppTargetPose(f) {
   if (G.mode === 'roundEnd' && G.winner === 1) return P.win;
   return P.guard;
 }
-let animClock = 0, walkPh = 0, walkAmp = 0; const walkLast = {}, _box = new THREE.Box3();
+let animClock = 0, walkV = 0, walkPh = 0, walkAmp = 0; const walkLast = {}, _box = new THREE.Box3();
 function updateVisuals(dt) {
   animClock += dt;
   const me = F[0], op = F[1];
@@ -955,8 +958,9 @@ function updateVisuals(dt) {
   applyPose(OJ, curPose); OJ.hips.position.y += bob;
   // walk cycle from actual ground speed (no more sliding)
   const wv = Math.hypot(ox - (walkLast.x ?? ox), oz - (walkLast.z ?? oz)) / Math.max(dt, 1e-3); walkLast.x = ox; walkLast.z = oz;
-  const walking = (op.state === 'idle' || op.state === 'block') && wv > 0.25;
-  walkAmp = lerp(walkAmp, walking ? clamp(wv / 1.6, 0.4, 1) : 0, 0.15); walkPh += dt * (6 + wv * 3) * (walkAmp > 0.02 ? 1 : 0);
+  walkV = lerp(walkV, wv, 0.2);
+  const walking = ['idle', 'block', 'stagger', 'getup', 'dodge'].includes(op.state) && walkV > 0.15;
+  walkAmp = lerp(walkAmp, walking ? clamp(walkV / 1.2, 0.5, 1) : 0, 0.15); walkPh += dt * (7 + walkV * 3) * (walkAmp > 0.02 ? 1 : 0);
   if (walkAmp > 0.02) {
     const sw = Math.sin(walkPh), a = walkAmp;
     OJ.tL.rotation.x += -sw * 0.45 * a; OJ.tR.rotation.x += sw * 0.45 * a;
