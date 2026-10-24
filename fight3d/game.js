@@ -325,6 +325,7 @@ P.hitHead = pose({ head: [-38, 18, 12], neck: [-18, 0, 0], spine: [-14, 0, 6], s
 P.hitBody = pose({ spine: [34, 0, 0], head: [22, 0, 0], sL: [-20, 0, 15], eL: [-110, 0, 0], sR: [-25, 0, -15], eR: [-110, 0, 0], y: -0.12 }, P.guard);
 P.stagger = pose({ spine: [-8, 0, 12], head: [-15, 0, 15], sL: [-20, 0, 30], eL: [-50, 0, 0], sR: [-15, 0, -35], eR: [-40, 0, 0], y: -0.1 }, P.guard);
 P.down = pose({ rx: -86, y: -0.82, spine: [0, 0, 0], head: [10, 20, 0], sL: [-170, 0, 50], eL: [-30, 0, 0], sR: [-160, 0, -40], eR: [-40, 0, 0], tL: [-10, 0, -10], kL: [20, 0, 0], tR: [-30, 0, 12], kR: [50, 0, 0] });
+P.buckle = pose({ rx: -12, y: -0.38, spine: [-10, 0, 6], head: [-25, 0, 0], sL: [15, 0, 30], eL: [-20, 0, 0], sR: [10, 0, -35], eR: [-15, 0, 0], tL: [-55, 0, -6], kL: [95, 0, 0], tR: [-40, 0, 8], kR: [85, 0, 0] });
 P.kneel = pose({ rx: 0, y: -0.48, spine: [30, 0, 0], head: [20, 0, 0], sL: [-30, 0, 20], eL: [-60, 0, 0], sR: [-40, 0, -20], eR: [-40, 0, 0], tL: [-90, 0, -4], kL: [90, 0, 0], tR: [10, 0, 6], kR: [100, 0, 0] });
 P.win = pose({ sL: [-175, 0, 25], eL: [-15, 0, 0], sR: [-175, 0, -25], eR: [-15, 0, 0], head: [-15, 0, 0], spine: [-5, 0, 0] }, P.guard);
 P.slipL = pose({ spine: [12, 0, 22], head: [0, 0, 12] }, P.guard);
@@ -361,9 +362,9 @@ const legCore = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true
 const ghostLegs = [0, 1].map(() => { // ghost leg: thigh + shin + foot, camera space (feet stay ghost, just brighter)
   const g = new THREE.Group(); g.visible = false; camera.add(g);
   const seg = (r0, r1) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r0, r1, 1, 14, 1), legMat); const c = new THREE.Mesh(new THREE.CylinderGeometry(r0 * 0.45, r1 * 0.45, 1, 8, 1), legCore); m.add(c); g.add(m); return m; };
-  const thigh = seg(0.075, 0.095), shin = seg(0.05, 0.07);
-  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), legMat); foot.scale.set(1, 0.7, 1.5); g.add(foot);
-  const knee = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 10), legMat); g.add(knee);
+  const thigh = seg(0.11, 0.135), shin = seg(0.075, 0.1);
+  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.095, 16, 12), legMat); foot.scale.set(1, 0.7, 1.6); g.add(foot);
+  const knee = new THREE.Mesh(new THREE.SphereGeometry(0.1, 14, 10), legMat); g.add(knee);
   return { g, thigh, shin, foot, knee };
 });
 function placeSeg(m, a, b) { m.position.copy(a).add(b).multiplyScalar(0.5); m.scale.set(1, a.distanceTo(b), 1); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize()); }
@@ -406,6 +407,8 @@ function legPose(side, a, b, t, h) { for (let i = 0; i < 3; i++) { const A = LEG
 const ghostArms = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 1, 10, 1, true), ghostMat); scene.add(m); return m; });
 const skinMat = new THREE.MeshPhysicalMaterial({ color: 0xd99a6c, roughness: 0.5, sheen: 0.7, sheenRoughness: 0.5, sheenColor: new THREE.Color(0xff7a5a), clearcoat: 0.15, clearcoatRoughness: 0.7 });
 const knuckleMat = new THREE.MeshPhysicalMaterial({ color: 0xe8a77a, roughness: 0.42, sheen: 0.6, sheenColor: new THREE.Color(0xff8060) });
+const creaseMat = new THREE.MeshBasicMaterial({ color: 0x8a4a30 });
+const nailMat = new THREE.MeshPhysicalMaterial({ color: 0xf6d2c0, roughness: 0.25, clearcoat: 0.6 });
 function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward)
   const g = new THREE.Group();
   const back = new THREE.Mesh(new THREE.SphereGeometry(0.05, 20, 14), skinMat); back.scale.set(1.0, 0.72, 1.15); g.add(back);
@@ -416,8 +419,13 @@ function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward)
   }
   // thumb on the INNER side (toward screen centre): s=-1 left hand -> thumb at +x. Was s*… (outer side = mirrored hand).
   const tIn = -s;
-  const thumbBase = new THREE.Mesh(new THREE.SphereGeometry(0.024, 14, 10), skinMat); thumbBase.scale.set(0.8, 0.9, 1.3); thumbBase.position.set(tIn * 0.046, -0.012, 0.0); g.add(thumbBase);
-  const thumb = new THREE.Mesh(new THREE.CapsuleGeometry(0.0145, 0.04, 4, 8), knuckleMat); thumb.rotation.set(0, 0, Math.PI / 2); thumb.position.set(tIn * 0.02, -0.03, -0.052); g.add(thumb);
+  // thenar pad along the inner side, a proximal thumb segment running forward on the inner edge, and the distal
+  // segment wrapping across the front of the curled fingers. Seen from behind it reads as a thumb on the INSIDE.
+  const thumbBase = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), skinMat); thumbBase.scale.set(0.8, 0.9, 1.4); thumbBase.position.set(tIn * 0.05, -0.004, 0.025); g.add(thumbBase);
+  const thumb1 = new THREE.Mesh(new THREE.CapsuleGeometry(0.022, 0.045, 6, 12), skinMat); thumb1.rotation.set(Math.PI / 2 - 0.25, tIn * 0.3, 0); thumb1.position.set(tIn * 0.06, 0.006, -0.025); g.add(thumb1);
+  const crease = new THREE.Mesh(new THREE.CapsuleGeometry(0.004, 0.06, 4, 6), creaseMat); crease.rotation.set(Math.PI / 2, tIn * 0.3, 0); crease.position.set(tIn * 0.04, 0.02, -0.02); g.add(crease);
+  const thumb2 = new THREE.Mesh(new THREE.CapsuleGeometry(0.018, 0.036, 6, 10), knuckleMat); thumb2.rotation.set(0, 0, Math.PI / 2 - tIn * 0.35); thumb2.position.set(tIn * 0.03, -0.012, -0.068); g.add(thumb2);
+  const nail = new THREE.Mesh(new THREE.SphereGeometry(0.009, 10, 8), nailMat); nail.scale.set(1.3, 0.5, 1); nail.position.set(tIn * 0.008, -0.004, -0.08); g.add(nail);
   const wrist = new THREE.Mesh(new THREE.CapsuleGeometry(0.036, 0.11, 4, 12), skinMat); wrist.rotation.x = Math.PI / 2; wrist.position.set(0, -0.005, 0.1); g.add(wrist);
   g.traverse(o => { if (o.isMesh) o.castShadow = true; });
   g.scale.setScalar(0.85);
@@ -519,7 +527,7 @@ function resolveHit(a, d) {
   const underGuard = htNow && htNow < 1.38 && !d.isPlayer; // Gavin's guard is high: body/low shots get under it
   if (underGuard && d.blocking) { scale *= 0.8; dbg('under guard @' + htNow.toFixed(2)); }
   if (d.blocking && canAct(d) && !m.unblock && !underGuard) {
-    d.hp -= m.dmg * T.chip; d.bal -= m.bal * T.blockBal; d.balDelay = T.balRegenDelay; d.state = 'block'; d.st = -m.bs; d.meter = Math.min(100, d.meter + 3);
+    d.hp -= m.dmg * T.chip; d.bal -= m.bal * T.blockBal; d.balDelay = T.balRegenDelay; d.state = 'block'; d.st = -(d.isPlayer ? Math.min(m.bs, 8) : m.bs); d.meter = Math.min(100, d.meter + 3);
     G.hitstop = Math.round(m.stop * 0.6); G.shake = m.shake * 0.4; spark(hitPos, 0.6, 0x88ccff); sfx('block');
     d.vx += fx * 0.03; d.vz += fz * 0.03;
   } else {
@@ -528,7 +536,7 @@ function resolveHit(a, d) {
     d.hp -= dmg; d.bal -= Math.min(m.bal * scale, a.mk === 'super' ? 50 : 22);
     if (a.isPlayer || d.isPlayer) dbg('hit ' + a.mk + ' ' + dmg + ' dmg -> ' + (d.isPlayer ? 'you' : 'cpu') + ' ' + Math.max(0, Math.round(d.hp))); d.balDelay = T.balRegenDelay;
     a.meter = Math.min(100, a.meter + m.meter * scale); d.meter = Math.min(100, d.meter + m.meter * 0.5);
-    d.state = 'hit'; d.st = 0; d.hs = m.hs; d.move = null; d.react = (htNow ? htNow < 1.42 : m.body || (a.mk === 'hook' && rnd() < 0.5)) ? 'hitBody' : 'hitHead';
+    d.state = 'hit'; d.st = 0; d.hs = d.isPlayer ? Math.min(m.hs, 12) : m.hs; d.move = null; d.react = (htNow ? htNow < 1.42 : m.body || (a.mk === 'hook' && rnd() < 0.5)) ? 'hitBody' : 'hitHead';
     if (a.isPlayer) a.lastHit = { k: a.mk, ht: htNow, dmg, react: d.react };
     d.vx += fx * 0.04 * scale; d.vz += fz * 0.04 * scale;
     G.hitstop = Math.round(m.stop * (counter ? 1.4 : 1)); G.shake = m.shake * scale * (counter ? 1.4 : 1);
@@ -558,7 +566,7 @@ function stepFighter(f, o) {
       if (f.state === 'block' && f.st < 0) break;
       f.blocking = !!inp.block; f.state = f.blocking ? 'block' : 'idle';
       if (inp.dodge) { startDodge(f, inp.dodge); inp.dodge = 0; break; }
-      if (inp.atk && f.isPlayer && G.frames - (inp.atkF || 0) > 24) { dbg('dropped stale ' + inp.atk); inp.atk = null; }
+      if (inp.atk && f.isPlayer && G.frames - (inp.atkF || 0) > 30) { dbg('dropped stale ' + inp.atk); inp.atk = null; }
       if (inp.atk) { const k = inp.atk; inp.atk = null; if (startMove(f, k)) { sfx('whoosh', k === 'jab' ? 0.6 : 1); break; } }
       { // movement relative to foe
         const [fx, fz] = dirTo(f, o); const rx = -fz, rz = fx;
@@ -575,7 +583,7 @@ function stepFighter(f, o) {
       break; }
     case 'dodge': if (f.st >= 18) { f.state = 'idle'; f.st = 0; } break;
     case 'hit': if (f.st >= f.hs) { f.state = f.bal < 25 ? 'stagger' : 'idle'; f.st = 0; } break;
-    case 'stagger': if (f.st >= 40) { f.state = 'idle'; f.st = 0; } break;
+    case 'stagger': if (f.st >= (f.isPlayer ? 16 : 40)) { f.state = 'idle'; f.st = 0; } break;
     case 'down':
       if (f.st >= T.downFrames) { f.state = 'getup'; f.st = 0; }
       break;
@@ -642,20 +650,22 @@ const trails = []; // {pts:[{x,y,t}], side, kind, dead}
 const SWIPE_PX = 25, COMMIT_PX = 70, TAP_MS = 350, STILL_PX = 18, GUARD_MS = 250, SUPER_CHARGE = 30;
 // Jessie's staggered layout: punch strips inboard at mid-height, kick strips hugging the edges and lower,
 // BLOCK circle bottom-centre. Fractions of the play area width (x) / height (y).
-const PAD = { punch: { x0: 0.155, x1: 0.32, y0: 0.50, y1: 0.80 }, kick: { x0: 0.0, x1: 0.15, y0: 0.62, y1: 0.97 }, block: { x: 0.5, y: 0.83, r: 0.15 } };
+// Kick strips start ~4.5% in (out of the Android back-gesture edge) and are wider; anything outboard of a kick strip
+// (including the very edge) still counts as kick, so the hit area always covers what is drawn.
+const PAD = { punch: { x0: 0.255, x1: 0.40, y0: 0.42, y1: 0.74 }, kick: { x0: 0.045, x1: 0.235, y0: 0.58, y1: 0.95 }, block: { x: 0.5, y: 0.86, r: 0.12 } };
 // hit-test: block circle first, then outer strip = kick (below the kick top), everything else = punch on that side
 function padAt(x, y, w, h) {
+  const ex = Math.min(x, w - x) / w;
+  if (ex < PAD.kick.x1 && y >= PAD.kick.y0 * h) return 'kick';
   const B = PAD.block, br = Math.max(B.r * w, 44);
   if (Math.hypot(x - B.x * w, y - B.y * h) <= br) return 'block';
-  const ex = Math.min(x, w - x) / w;
-  if (ex < PAD.kick.x1 && y >= PAD.kick.y0 * h - 10) return 'kick';
   return 'punch';
 }
 function padRects(w, h) {
   const out = [];
   for (const pad of ['punch', 'kick']) for (const side of [0, 1]) {
     const P = PAD[pad], a = side ? w * (1 - P.x1) : w * P.x0, b = side ? w * (1 - P.x0) : w * P.x1;
-    out.push({ pad, side, x0: a + 3, x1: b - 3, y0: P.y0 * h, y1: P.y1 * h });
+    out.push({ pad, side, x0: a + 2, x1: b - 2, y0: P.y0 * h, y1: P.y1 * h });
   }
   return out;
 }
@@ -668,7 +678,7 @@ const PUNCH_MAP = { 'up-in': 'pHigh', 'in': 'pMid', 'down-in': 'pLow', 'out': 'h
 const KICK_MAP = { 'up-out': 'kRound', 'up-in': 'kHigh', 'in': 'kMid', 'out': 'kSide', 'down-out': 'kSweep', 'down': 'kSweep', 'up': 'kHigh', 'down-in': 'kMid' };
 window.FIGHT_MAP = { DIRS, PUNCH_MAP, KICK_MAP };
 function pDown(e) {
-  if (G.mode === 'title' || G.mode === 'end') return;
+  if (G.mode === 'title' || G.mode === 'end' || ptrs.has(e.pointerId)) return;
   ac();
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
   const side = x < r.width / 2 ? 0 : 1, pad = padAt(x, y, r.width, r.height);
@@ -718,7 +728,24 @@ function firePlayer(k, side, spd, why, mod) {
 }
 let lastFire = null;
 // Real touch events for fingers (non-passive, preventDefault every phase); pointer events for the mouse only.
-const tw = (fn) => (e) => { if (G.mode === 'title' || G.mode === 'end') return; e.preventDefault(); for (const t of e.changedTouches) fn({ pointerId: 't' + t.identifier, clientX: t.clientX, clientY: t.clientY }); };
+// Touch bookkeeping is never skipped (even between rounds), so a lost or cancelled touch can't latch block/roam/super.
+let lastTouchEvt = 0;
+function dropPtr(id, why) { const st = ptrs.get(id); if (!st) return; ptrs.delete(id); st.trail.dead = performance.now(); dbg('drop ' + id + ' (' + why + ')'); }
+function clearTouches(why) { for (const id of [...ptrs.keys()]) dropPtr(id, why); PI.guard = false; PI.roamX = PI.roamY = 0; PI.superCharge = 0; }
+const tw = (fn) => (e) => {
+  lastTouchEvt = performance.now();
+  const live = G.mode !== 'title' && G.mode !== 'end';
+  if (live && e.cancelable) e.preventDefault(); // menus need their synthesized clicks
+  if (e.type === 'touchcancel') { for (const t of e.changedTouches) dropPtr('t' + t.identifier, 'cancel'); }
+  else if (live || e.type !== 'touchstart') for (const t of e.changedTouches) fn({ pointerId: 't' + t.identifier, clientX: t.clientX, clientY: t.clientY });
+  // reconcile: any tracked finger the browser no longer reports is gone
+  const ids = new Set([...e.touches].map(t => 't' + t.identifier));
+  for (const id of [...ptrs.keys()]) if (String(id)[0] === 't' && !ids.has(id)) dropPtr(id, 'lost');
+  if (e.touches.length === 0) clearTouches('all up');
+};
+addEventListener('visibilitychange', () => { if (document.hidden) { clearTouches('hidden'); for (const k in keys) keys[k] = false; } });
+addEventListener('blur', () => { clearTouches('blur'); for (const k in keys) keys[k] = false; });
+addEventListener('pagehide', () => clearTouches('pagehide'));
 app.addEventListener('touchstart', tw(pDown), { passive: false });
 app.addEventListener('touchmove', tw(pMove), { passive: false });
 app.addEventListener('touchend', tw(pUp), { passive: false });
@@ -731,6 +758,7 @@ addEventListener('pointerup', mouseOnly(pUp));
 app.addEventListener('contextmenu', e => e.preventDefault());
 // per-frame two-thumb interpretation: guard, roam, super
 function readTouch() {
+  if (ptrs.size && performance.now() - lastTouchEvt > 8000 && [...ptrs.keys()].some(id => String(id)[0] === 't')) clearTouches('watchdog'); // no touch event for 8s
   const now = performance.now();
   const all = [...ptrs.values()];
   const live = all.filter(s => !s.fired && s.pad !== 'block');
@@ -742,7 +770,7 @@ function readTouch() {
     const la = a.pts[a.pts.length - 1], lb = b.pts[b.pts.length - 1];
     const da = [la.x - a.x0, la.y - a.y0], db = [lb.x - b.x0, lb.y - b.y0];
     const ma = Math.hypot(...da), mb = Math.hypot(...db), held = now - Math.max(a.t0, b.t0);
-    const bothStill = ma < STILL_PX && mb < STILL_PX, sameDir = ma > STILL_PX && mb > STILL_PX && (da[0] * db[0] + da[1] * db[1]) > 0;
+    const bothStill = ma < STILL_PX && mb < STILL_PX, sameDir = ma > STILL_PX && mb > STILL_PX && (da[0] * db[0] + da[1] * db[1]) > 0 && held > 300;
     let kind = null;
     if (bothStill && held > GUARD_MS && a.pad === 'punch' && b.pad === 'punch' && a.side !== b.side && !F[0].superUsed && F[0].meter >= T.superCost) kind = 'super';
     else if (sameDir) kind = 'roam';
@@ -796,6 +824,14 @@ function drawPads(w, h) {
       tctx.beginPath(); tctx.moveTo(cx + ux * rr * 0.78, cy + uy * rr * 0.78); tctx.lineTo(cx + ux * rr, cy + uy * rr); tctx.stroke();
     }
     tctx.fillStyle = `rgba(${rgb},${0.25 + pulse * 0.3})`; tctx.beginPath(); tctx.arc(cx, cy, 2.5, 0, 7); tctx.fill();
+  }
+  // STUN indicator: if you're in hitstun/stagger/blockstun the pads go red and a ring drains, so it never looks like dead input
+  const me0 = F[0], stun = me0.state === 'hit' ? 1 - me0.st / Math.max(1, me0.hs) : me0.state === 'stagger' ? 1 - me0.st / 16 : me0.state === 'block' && me0.st < 0 ? -me0.st / 8 : 0;
+  if (stun > 0) {
+    tctx.strokeStyle = `rgba(255,70,70,${0.35 + 0.25 * Math.sin(now / 50)})`; tctx.lineWidth = 3;
+    for (const r of padRects(w, h)) { tctx.beginPath(); tctx.roundRect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0, 14); tctx.stroke(); }
+    tctx.strokeStyle = 'rgba(255,90,90,0.8)'; tctx.lineWidth = 5; tctx.beginPath(); tctx.arc(w / 2, h * 0.3, 26, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(stun, 0, 1)); tctx.stroke();
+    for (let i = 0; i < 3; i++) { const a = now / 200 + i * 2.1; tctx.fillStyle = 'rgba(255,230,120,0.9)'; tctx.beginPath(); tctx.arc(w / 2 + Math.cos(a) * 26, h * 0.3 + Math.sin(a) * 9, 3.5, 0, 7); tctx.fill(); }
   }
   // BLOCK circle with a small shield glyph
   const B = PAD.block, bx = B.x * w, by = B.y * h, br = Math.max(B.r * w, 44);
@@ -896,26 +932,44 @@ function oppTargetPose(f) {
     case 'block': return P.block;
     case 'hit': return mixPose(P[f.react || 'hitHead'], P.guard, ease((st - 4) / f.hs), tmpPose);
     case 'stagger': { const p = mixPose(P.stagger, P.guard, 0.3 + 0.3 * Math.sin(st * 0.3), tmpPose); p.spine[2] = 14 * Math.sin(st * 0.18); return p; }
-    case 'down': case 'ko': return st < 100 || f.state === 'ko' ? P.down : mixPose(P.down, P.kneel, ease((st - 100) / 40), tmpPose);
+    case 'down': case 'ko': { // hinged fall: knees buckle, torso tips, arms flop; then (down only) back to a kneel
+      if (st < 12) return mixPose(P.guard, P.buckle, ease(st / 12), tmpPose);
+      if (st < 34) return mixPose(P.buckle, P.down, ease((st - 12) / 22), tmpPose);
+      return st < 100 || f.state === 'ko' ? P.down : mixPose(P.down, P.kneel, ease((st - 100) / 40), tmpPose); }
     case 'getup': return mixPose(P.kneel, P.guard, ease(st / 40), tmpPose);
     case 'dodge': return f.dodgeDir < 0 ? P.slipR : P.slipL;
   }
   if (G.mode === 'roundEnd' && G.winner === 1) return P.win;
   return P.guard;
 }
-let animClock = 0;
+let animClock = 0, walkPh = 0, walkAmp = 0; const walkLast = {}, _box = new THREE.Box3();
 function updateVisuals(dt) {
   animClock += dt;
   const me = F[0], op = F[1];
   const [px, pz] = fighterVisualPos(me, op), [ox, oz] = fighterVisualPos(op, me);
   // opponent
   const tp = oppTargetPose(op);
-  const k = op.state === 'atk' ? 0.55 : op.state === 'hit' ? 0.45 : 0.18;
+  const k = op.state === 'atk' ? 0.55 : op.state === 'hit' ? 0.45 : (op.state === 'down' || op.state === 'ko') && op.st < 40 ? 0.5 : 0.18;
   mixPose(curPose, tp, k, curPose);
   const bob = (op.state === 'idle' || op.state === 'block') ? Math.sin(animClock * 5) * 0.012 : 0;
   applyPose(OJ, curPose); OJ.hips.position.y += bob;
+  // walk cycle from actual ground speed (no more sliding)
+  const wv = Math.hypot(ox - (walkLast.x ?? ox), oz - (walkLast.z ?? oz)) / Math.max(dt, 1e-3); walkLast.x = ox; walkLast.z = oz;
+  const walking = (op.state === 'idle' || op.state === 'block') && wv > 0.25;
+  walkAmp = lerp(walkAmp, walking ? clamp(wv / 1.6, 0.4, 1) : 0, 0.15); walkPh += dt * (6 + wv * 3) * (walkAmp > 0.02 ? 1 : 0);
+  if (walkAmp > 0.02) {
+    const sw = Math.sin(walkPh), a = walkAmp;
+    OJ.tL.rotation.x += -sw * 0.45 * a; OJ.tR.rotation.x += sw * 0.45 * a;
+    OJ.kL.rotation.x += Math.max(0, sw) * 0.7 * a; OJ.kR.rotation.x += Math.max(0, -sw) * 0.7 * a;
+    OJ.sL.rotation.x += sw * 0.12 * a; OJ.sR.rotation.x += -sw * 0.12 * a;
+    OJ.hips.position.y += (Math.abs(Math.cos(walkPh)) - 0.6) * 0.045 * a; OJ.spine.rotation.z += sw * 0.05 * a;
+  }
   OJ.root.position.set(ox, FLOOR, oz);
   OJ.root.rotation.set(curPose.rx * D2R, Math.atan2(px - ox, pz - oz), 0, 'YXZ');
+  if (curPose.rx < -5 || curPose.y < -0.3) { // rest on the canvas: never let any part sink through the floor
+    OJ.root.updateMatrixWorld(true); _box.setFromObject(OJ.root);
+    if (_box.min.y < FLOOR + 0.005) OJ.root.position.y += FLOOR + 0.005 - _box.min.y;
+  }
   // breathing
   OJ.chest.scale.setScalar(1 + Math.sin(animClock * 2.4) * 0.012);
   // player ghost
@@ -973,7 +1027,7 @@ function updateVisuals(dt) {
     leg.g.visible = !!v;
     if (v) { placeSeg(leg.thigh, v[0], v[1]); placeSeg(leg.shin, v[1], v[2]); leg.knee.position.copy(v[1]); leg.foot.position.copy(v[2]); }
   }
-  legMat.opacity = kickSide >= 0 ? 0.8 : 0.55;
+  legMat.opacity = kickSide >= 0 ? 0.9 : 0.55; legMat.color.setHex(kickSide >= 0 ? 0xc8f4ff : 0x8fe6ff);
   setFist(L, lp[0], lp[1], lp[2]); setFist(R, rp[0], rp[1], rp[2]);
   const s0 = sway(0), s1 = sway(2); if (me.state !== 'atk') { L.position.x += s0[0]; L.position.y += s0[1]; R.position.x += s1[0]; R.position.y += s1[1]; }
   if (down) { L.position.y -= camDrop * 0.4; R.position.y -= camDrop * 0.4; }
