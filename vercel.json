@@ -301,28 +301,38 @@
       "permanent": true
     },
     {
-      "source": "/usaenergypartners",
-      "destination": "/usaenergypartners.html",
-      "permanent": true
+      "source": "/usaenergypartners.html",
+      "destination": "/usaenergypartners",
+      "statusCode": 301
     },
     {
       "source": "/usaenergypartners/",
-      "destination": "/usaenergypartners.html",
-      "permanent": true
+      "destination": "/usaenergypartners",
+      "statusCode": 301
+    },
+    {
+      "source": "/usaenergypartners-plain.html",
+      "destination": "/usaenergypartners-plain",
+      "statusCode": 301
+    },
+    {
+      "source": "/usaenergypartners-plain/",
+      "destination": "/usaenergypartners-plain",
+      "statusCode": 301
     },
     {
       "source": "/pitch-explained",
-      "destination": "/usaenergypartners-plain.html",
+      "destination": "/usaenergypartners-plain",
       "statusCode": 301
     },
     {
       "source": "/pitch-explained/",
-      "destination": "/usaenergypartners-plain.html",
+      "destination": "/usaenergypartners-plain",
       "statusCode": 301
     },
     {
       "source": "/pitch-explained.html",
-      "destination": "/usaenergypartners-plain.html",
+      "destination": "/usaenergypartners-plain",
       "statusCode": 301
     },
     {
@@ -344,6 +354,16 @@
       "source": "/biorama/",
       "destination": "/biorama.html",
       "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/usaenergypartners",
+      "destination": "/usaenergypartners.html"
+    },
+    {
+      "source": "/usaenergypartners-plain",
+      "destination": "/usaenergypartners-plain.html"
     }
   ]
 }
