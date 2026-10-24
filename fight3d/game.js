@@ -621,7 +621,25 @@ const trailCv = $('trail'), tctx = trailCv.getContext('2d');
 const ptrs = new Map(); // pointerId -> state
 const trails = []; // {pts:[{x,y,t}], side, kind, dead}
 const SWIPE_PX = 25, COMMIT_PX = 70, TAP_MS = 350, STILL_PX = 18, GUARD_MS = 250, SUPER_CHARGE = 30;
-const PAD = { top: 0.40, split: 0.68, bot: 0.96, inset: 0.03, gap: 0.03 }; // fractions of the play area
+// Jessie's staggered layout: punch strips inboard at mid-height, kick strips hugging the edges and lower,
+// BLOCK circle bottom-centre. Fractions of the play area width (x) / height (y).
+const PAD = { punch: { x0: 0.155, x1: 0.32, y0: 0.50, y1: 0.80 }, kick: { x0: 0.0, x1: 0.15, y0: 0.62, y1: 0.97 }, block: { x: 0.5, y: 0.83, r: 0.15 } };
+// hit-test: block circle first, then outer strip = kick (below the kick top), everything else = punch on that side
+function padAt(x, y, w, h) {
+  const B = PAD.block, br = Math.max(B.r * w, 44);
+  if (Math.hypot(x - B.x * w, y - B.y * h) <= br) return 'block';
+  const ex = Math.min(x, w - x) / w;
+  if (ex < PAD.kick.x1 && y >= PAD.kick.y0 * h - 10) return 'kick';
+  return 'punch';
+}
+function padRects(w, h) {
+  const out = [];
+  for (const pad of ['punch', 'kick']) for (const side of [0, 1]) {
+    const P = PAD[pad], a = side ? w * (1 - P.x1) : w * P.x0, b = side ? w * (1 - P.x0) : w * P.x1;
+    out.push({ pad, side, x0: a + 3, x1: b - 3, y0: P.y0 * h, y1: P.y1 * h });
+  }
+  return out;
+}
 const PI = { guard: false, roamX: 0, roamY: 0, superCharge: 0 };
 function appRect() { return app.getBoundingClientRect(); }
 // 8-way direction in the pad's own frame (in/out mirrored per side)
@@ -634,9 +652,9 @@ function pDown(e) {
   if (G.mode === 'title' || G.mode === 'end') return;
   ac();
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
-  const side = x < r.width / 2 ? 0 : 1, pad = y < r.height * PAD.split ? 'punch' : 'kick';
+  const side = x < r.width / 2 ? 0 : 1, pad = padAt(x, y, r.width, r.height);
   const st = { id: e.pointerId, side, pad, x0: x, y0: y, t0: now, pts: [{ x, y, t: now }] };
-  st.trail = { pts: st.pts, side, kind: pad === 'kick' ? 'rail' : 'arm', dead: 0 }; trails.push(st.trail);
+  st.trail = { pts: st.pts, side, kind: pad === 'kick' ? 'rail' : pad === 'block' ? 'guard' : 'arm', dead: 0 }; trails.push(st.trail);
   ptrs.set(e.pointerId, st); dbg('down ' + pad + (side ? 'R' : 'L') + ' @' + Math.round(x) + ',' + Math.round(y));
 }
 function pMove(e) {
@@ -644,13 +662,14 @@ function pMove(e) {
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
   st.pts.push({ x, y, t: now }); if (st.pts.length > 80) st.pts.shift();
   // commit early once the direction is clear, unless both thumbs are roaming together
+  if (st.pad === 'block') return;
   if (!st.fired && !st.multi && Math.hypot(x - st.x0, y - st.y0) >= COMMIT_PX && !otherMoving(st)) release(st, 'commit');
 }
-function otherMoving(st) { for (const o of ptrs.values()) if (o !== st && !o.fired) { const l = o.pts[o.pts.length - 1]; if (Math.hypot(l.x - o.x0, l.y - o.y0) > STILL_PX) return true; } return false; }
+function otherMoving(st) { for (const o of ptrs.values()) if (o !== st && !o.fired && o.pad !== 'block') { const l = o.pts[o.pts.length - 1]; if (Math.hypot(l.x - o.x0, l.y - o.y0) > STILL_PX) return true; } return false; }
 function pUp(e) {
   const st = ptrs.get(e.pointerId); if (!st) return; ptrs.delete(e.pointerId);
   st.trail.dead = performance.now();
-  if (st.fired) return;
+  if (st.fired || st.pad === 'block') { if (st.pad === 'block') dbg('block up'); return; }
   if (st.multi) { dbg('lift (' + st.multiKind + ', no strike)'); return; }
   release(st, 'lift');
 }
@@ -688,9 +707,11 @@ app.addEventListener('contextmenu', e => e.preventDefault());
 // per-frame two-thumb interpretation: guard, roam, super
 function readTouch() {
   const now = performance.now();
-  const live = [...ptrs.values()].filter(s => !s.fired);
+  const all = [...ptrs.values()];
+  const live = all.filter(s => !s.fired && s.pad !== 'block');
   PI.guard = false; PI.roamX = PI.roamY = 0;
   let charging = false;
+  if (all.some(s => s.pad === 'block')) PI.guard = true; // BLOCK button held
   if (live.length >= 2) {
     const [a, b] = live;
     const la = a.pts[a.pts.length - 1], lb = b.pts[b.pts.length - 1];
@@ -698,12 +719,11 @@ function readTouch() {
     const ma = Math.hypot(...da), mb = Math.hypot(...db), held = now - Math.max(a.t0, b.t0);
     const bothStill = ma < STILL_PX && mb < STILL_PX, sameDir = ma > STILL_PX && mb > STILL_PX && (da[0] * db[0] + da[1] * db[1]) > 0;
     let kind = null;
-    if (bothStill && held > GUARD_MS) kind = (a.pad === 'punch' && b.pad === 'punch' && a.side !== b.side && !F[0].superUsed && F[0].meter >= T.superCost) ? 'super' : 'guard';
+    if (bothStill && held > GUARD_MS && a.pad === 'punch' && b.pad === 'punch' && a.side !== b.side && !F[0].superUsed && F[0].meter >= T.superCost) kind = 'super';
     else if (sameDir) kind = 'roam';
     if (kind) for (const s of [a, b]) { if (s.multiKind !== kind) dbg(kind + ' start'); s.multi = true; s.multiKind = kind; s.trail.kind = kind; }
     if (kind === 'super') { charging = true; PI.guard = true; }
     else if (kind === 'roam') { PI.roamX = clamp((da[0] + db[0]) / 100, -1, 1); PI.roamY = clamp((da[1] + db[1]) / 100, -1, 1); }
-    else if (kind === 'guard') PI.guard = true;
   }
   if (charging) { if (++PI.superCharge === SUPER_CHARGE) firePlayer('super', 1, 1.2, 'both punch pads held'); }
   else PI.superCharge = 0;
@@ -735,15 +755,13 @@ function readPlayer() {
 function drawPads(w, h) {
   if (G.mode === 'title' || G.mode === 'end') return;
   const pulse = G.mode === 'intro' ? 0.5 + 0.5 * Math.sin(G.phaseT * 0.25) : 0, now = performance.now();
-  for (const pad of ['punch', 'kick']) for (const side of [0, 1]) {
-    const x0 = side ? w * (0.5 + PAD.gap / 2) : w * PAD.inset, x1 = side ? w * (1 - PAD.inset) : w * (0.5 - PAD.gap / 2);
-    const y0 = h * (pad === 'punch' ? PAD.top : PAD.split + 0.01), y1 = h * (pad === 'punch' ? PAD.split - 0.01 : PAD.bot);
+  for (const { pad, side, x0, x1, y0, y1 } of padRects(w, h)) {
     let pressed = false; for (const p of ptrs.values()) if (p.pad === pad && p.side === side && !p.fired) pressed = true;
     const flash = lastFire && lastFire.side === side && ((pad === 'kick') === lastFire.k.startsWith('k')) ? Math.max(0, 1 - (now - lastFire.t) / 300) : 0;
     const a = 0.05 + pulse * 0.08 + (pressed ? 0.07 : 0) + flash * 0.12;
     const rgb = pad === 'punch' ? '255,225,190' : '140,215,255';
     tctx.fillStyle = `rgba(${rgb},${a})`; tctx.strokeStyle = `rgba(${rgb},${0.16 + pulse * 0.2 + (pressed ? 0.2 : 0) + flash * 0.3})`; tctx.lineWidth = 1.2;
-    tctx.beginPath(); tctx.roundRect(x0, y0, x1 - x0, y1 - y0, 18); tctx.fill(); tctx.stroke();
+    tctx.beginPath(); tctx.roundRect(x0, y0, x1 - x0, y1 - y0, 14); tctx.fill(); tctx.stroke();
     // small direction ticks (6 used directions), no text
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, rr = Math.min(x1 - x0, y1 - y0) * 0.36;
     const used = pad === 'punch' ? ['up-in', 'in', 'down-in', 'up-out', 'out', 'down-out'] : ['up-in', 'in', 'up-out', 'out', 'down-out'];
@@ -754,6 +772,15 @@ function drawPads(w, h) {
     }
     tctx.fillStyle = `rgba(${rgb},${0.25 + pulse * 0.3})`; tctx.beginPath(); tctx.arc(cx, cy, 2.5, 0, 7); tctx.fill();
   }
+  // BLOCK circle with a small shield glyph
+  const B = PAD.block, bx = B.x * w, by = B.y * h, br = Math.max(B.r * w, 44);
+  const held = [...ptrs.values()].some(p => p.pad === 'block');
+  tctx.fillStyle = `rgba(140,255,170,${0.05 + pulse * 0.08 + (held ? 0.14 : 0)})`; tctx.strokeStyle = `rgba(140,255,170,${0.2 + pulse * 0.2 + (held ? 0.35 : 0)})`; tctx.lineWidth = 1.5;
+  tctx.beginPath(); tctx.arc(bx, by, br, 0, 7); tctx.fill(); tctx.stroke();
+  const s2 = br * 0.32; tctx.strokeStyle = `rgba(140,255,170,${0.32 + pulse * 0.3 + (held ? 0.4 : 0)})`; tctx.lineWidth = 2;
+  tctx.beginPath(); tctx.moveTo(bx, by - s2); tctx.lineTo(bx + s2 * 0.8, by - s2 * 0.6); tctx.lineTo(bx + s2 * 0.7, by + s2 * 0.2);
+  tctx.quadraticCurveTo(bx + s2 * 0.4, by + s2 * 0.8, bx, by + s2); tctx.quadraticCurveTo(bx - s2 * 0.4, by + s2 * 0.8, bx - s2 * 0.7, by + s2 * 0.2);
+  tctx.lineTo(bx - s2 * 0.8, by - s2 * 0.6); tctx.closePath(); tctx.stroke();
 }
 function drawTrails() {
   const w = trailCv.clientWidth, h = trailCv.clientHeight, dpr = Math.min(2, devicePixelRatio || 1);
