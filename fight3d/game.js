@@ -258,13 +258,28 @@ function palm(x, z, h, sc) {
 for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2 + 0.3; palm(Math.cos(a) * (7.6 + rnd()), Math.sin(a) * (7.6 + rnd()), 4 + rnd() * 2, 1); }
 for (let i = 0; i < 10; i++) { const a = rnd() * Math.PI * 2; const d = 30 + rnd() * 40; palm(Math.cos(a) * d, Math.sin(a) * d, 5, 2.5); }
 
-// ---------------- opponent: articulated humanoid ----------------
-const skinOpp = new THREE.MeshPhysicalMaterial({ color: 0x8a5a3c, roughness: 0.48, metalness: 0, sheen: 0.6, sheenColor: new THREE.Color(0xff9070), clearcoat: 0.25, clearcoatRoughness: 0.6 });
-const trunksMat = new THREE.MeshPhysicalMaterial({ color: 0xc8102e, roughness: 0.35, sheen: 1, sheenColor: new THREE.Color(0xff8080) });
+// ---------------- opponent: articulated humanoid (photoreal-comic: toon ramp + inverted-hull ink outlines) ----------------
+const toonRamp = (() => { const d = new Uint8Array([70, 140, 205, 255]); const t = new THREE.DataTexture(d, 4, 1, THREE.RedFormat); t.minFilter = t.magFilter = THREE.NearestFilter; t.needsUpdate = true; return t; })();
+const toon = (color, extra) => new THREE.MeshToonMaterial(Object.assign({ color, gradientMap: toonRamp }, extra || {}));
+const inkMat = new THREE.MeshBasicMaterial({ color: 0x0a0605, side: THREE.BackSide });
+function inkOutline(root, w) { // inverted hull: back-face black shell pushed out along normals
+  const list = []; root.traverse(o => { if (o.isMesh && !o.userData.noInk && !o.userData.ink) list.push(o); });
+  for (const o of list) { const h = new THREE.Mesh(o.geometry, inkMat); h.userData.ink = true; h.castShadow = false;
+    const sc = o.geometry.boundingSphere || (o.geometry.computeBoundingSphere(), o.geometry.boundingSphere); const k = 1 + w / Math.max(0.02, sc.radius); h.scale.setScalar(k); o.add(h); }
+}
+const camoTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); x.fillStyle = '#4f5a32'; x.fillRect(0, 0, 128, 128);
+  for (const col of ['#3a4424', '#6b7046', '#2c3320']) { x.fillStyle = col; for (let i = 0; i < 14; i++) { x.beginPath(); x.ellipse(rnd() * 128, rnd() * 128, 6 + rnd() * 14, 4 + rnd() * 8, rnd() * 3, 0, 7); x.fill(); } }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 2); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+const skinOpp = toon(0x8a5a3c);
+const skinShade = toon(0x6e452c); // muscle grooves / creases
+const lipMat = toon(0x5a2e22);
+const wrapMat = toon(0xb8b2a6);
+const trunksMat = toon(0xffffff, { map: camoTex }); // Gavin's green fatigues, as shorts
 const gloveMat = new THREE.MeshPhysicalMaterial({ color: 0xffc400, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.15 });
-const shoeMat = std({ color: 0x111118, roughness: 0.5 });
-const hairMat = std({ color: 0x120c0a, roughness: 0.9 });
-const eyeMat = std({ color: 0xffffff, roughness: 0.1 });
+const shoeMat = toon(0x1a1a20);
+const hairMat = toon(0x120c0a);
+const eyeMat = toon(0xf4f1ea);
+const irisMat = toon(0x3a2416);
 function cap(r, len, mat) { const m = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 6, 14), mat); m.castShadow = true; m.receiveShadow = true; return m; }
 function joint(parent, x, y, z) { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); return g; }
 function buildOpponent() {
@@ -281,13 +296,25 @@ function buildOpponent() {
   J.head = joint(J.neck, 0, 0.1, 0);
   const skull = new THREE.Mesh(new THREE.SphereGeometry(0.115, 24, 18), skinOpp); skull.scale.set(0.92, 1.12, 1); skull.position.y = 0.1; skull.castShadow = true; J.head.add(skull);
   const jaw = cap(0.07, 0.06, skinOpp); jaw.rotation.z = Math.PI / 2; jaw.position.set(0, 0.02, 0.04); J.head.add(jaw);
-  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.118, 20, 12, 0, Math.PI * 2, 0, 1.3), hairMat); hair.position.y = 0.12; hair.scale.set(0.95, 1.05, 1.02); J.head.add(hair);
-  const brow = cap(0.025, 0.12, skinOpp); brow.rotation.z = Math.PI / 2; brow.position.set(0, 0.14, 0.095); J.head.add(brow);
-  const nose = cap(0.018, 0.035, skinOpp); nose.position.set(0, 0.1, 0.115); nose.rotation.x = 0.3; J.head.add(nose);
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.118, 20, 12, 0, Math.PI * 2, 0, 1.3), hairMat); hair.position.set(0, 0.125, -0.006); hair.scale.set(0.96, 1.0, 1.0); hair.userData.noInk = true; J.head.add(hair);
+  const browRidge = cap(0.022, 0.1, skinOpp); browRidge.rotation.z = Math.PI / 2; browRidge.position.set(0, 0.142, 0.09); J.head.add(browRidge);
+  const nose = cap(0.017, 0.04, skinOpp); nose.position.set(0, 0.098, 0.116); nose.rotation.x = 0.35; J.head.add(nose);
+  const noseTip = new THREE.Mesh(new THREE.SphereGeometry(0.02, 12, 10), skinOpp); noseTip.scale.set(1.35, 0.85, 0.9); noseTip.position.set(0, 0.075, 0.122); J.head.add(noseTip);
+  const lipU = cap(0.011, 0.04, lipMat); lipU.rotation.z = Math.PI / 2; lipU.position.set(0, 0.043, 0.108); J.head.add(lipU);
+  const lipL = cap(0.012, 0.034, lipMat); lipL.rotation.z = Math.PI / 2; lipL.position.set(0, 0.03, 0.105); J.head.add(lipL);
+  const chin = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 10), skinOpp); chin.scale.set(1.2, 0.8, 0.8); chin.position.set(0, 0.0, 0.085); J.head.add(chin);
+  const beard = new THREE.Mesh(new THREE.SphereGeometry(0.105, 18, 10, 0, Math.PI * 2, Math.PI * 0.62, Math.PI * 0.3), hairMat); beard.position.set(0, 0.085, 0.005); beard.scale.set(0.95, 1.1, 1.05); beard.userData.noInk = true; J.head.add(beard);
   for (const s of [-1, 1]) {
-    const e = new THREE.Mesh(new THREE.SphereGeometry(0.016, 10, 8), eyeMat); e.position.set(s * 0.04, 0.12, 0.1); J.head.add(e);
-    const pu = new THREE.Mesh(new THREE.SphereGeometry(0.008, 8, 6), hairMat); pu.position.set(s * 0.04, 0.12, 0.114); J.head.add(pu);
-    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.028, 10, 8), skinOpp); ear.scale.set(0.5, 1, 0.8); ear.position.set(s * 0.108, 0.1, 0); J.head.add(ear);
+    const e = new THREE.Mesh(new THREE.SphereGeometry(0.016, 12, 10), eyeMat); e.scale.set(1.3, 0.7, 0.8); e.position.set(s * 0.04, 0.118, 0.1); e.userData.noInk = true; J.head.add(e);
+    const ir = new THREE.Mesh(new THREE.SphereGeometry(0.0085, 10, 8), irisMat); ir.position.set(s * 0.039, 0.118, 0.112); ir.userData.noInk = true; J.head.add(ir);
+    const pu = new THREE.Mesh(new THREE.SphereGeometry(0.004, 8, 6), hairMat); pu.position.set(s * 0.039, 0.118, 0.12); pu.userData.noInk = true; J.head.add(pu);
+    const lid = cap(0.009, 0.026, skinShade); lid.rotation.z = Math.PI / 2 + s * 0.12; lid.position.set(s * 0.04, 0.128, 0.104); J.head.add(lid);
+    const br = cap(0.008, 0.038, hairMat); br.rotation.z = Math.PI / 2 - s * 0.2; br.position.set(s * 0.042, 0.148, 0.106); J.head.add(br);
+    const nos = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), skinOpp); nos.position.set(s * 0.017, 0.072, 0.112); J.head.add(nos);
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 10), skinOpp); ear.scale.set(0.45, 1, 0.75); ear.position.set(s * 0.106, 0.1, -0.005); J.head.add(ear);
+    const earIn = new THREE.Mesh(new THREE.SphereGeometry(0.016, 10, 8), skinShade); earIn.scale.set(0.4, 1, 0.7); earIn.position.set(s * 0.116, 0.1, 0); earIn.userData.noInk = true; J.head.add(earIn);
+    const pec = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 12), skinOpp); pec.scale.set(1.05, 0.7, 0.45); pec.position.set(s * 0.085, 0.07, 0.1); J.chest.add(pec);
+    for (let r = 0; r < 3; r++) { const ab = new THREE.Mesh(new THREE.SphereGeometry(0.036, 12, 10), skinOpp); ab.scale.set(1, 0.75, 0.3); ab.userData.noInk = true; ab.position.set(s * 0.05, 0.22 - r * 0.075, 0.105); J.spine.add(ab); }
   }
   for (const [side, s] of [['L', 1], ['R', -1]]) {
     const sh = joint(J.chest, s * 0.24, 0.17, 0); J['s' + side] = sh;
@@ -295,8 +322,11 @@ function buildOpponent() {
     const ua = cap(0.065, 0.2, skinOpp); ua.position.y = -0.15; sh.add(ua);
     const el = joint(sh, 0, -0.3, 0); J['e' + side] = el;
     const fa = cap(0.055, 0.18, skinOpp); fa.position.y = -0.13; el.add(fa);
-    const gl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 16), gloveMat); gl.scale.set(0.9, 1.15, 1.05); gl.position.y = -0.3; gl.castShadow = true; el.add(gl);
-    const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.08, 14), std({ color: 0xffffff, roughness: .4 })); cuff.position.y = -0.2; el.add(cuff);
+    const gl = new THREE.Group(); gl.position.y = -0.3; el.add(gl); // bare fist with hand wraps
+    const palm = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.075, 2, 2, 2), wrapMat); gl.add(palm);
+    for (let i = 0; i < 4; i++) { const kn = cap(0.017, 0.035, skinOpp); kn.rotation.x = Math.PI / 2; kn.position.set((i - 1.5) * 0.024, -0.055, 0.012); gl.add(kn); }
+    const thb = cap(0.016, 0.04, skinOpp); thb.rotation.z = Math.PI / 2; thb.position.set(-s * 0.03, -0.03, 0.045); gl.add(thb);
+    for (let i = 0; i < 3; i++) { const band = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.055, 0.03, 14), wrapMat); band.position.y = 0.065 + i * 0.03; gl.add(band); }
     J['g' + side] = gl;
     const th = joint(J.hips, s * 0.11, -0.05, 0); J['t' + side] = th;
     const leg = cap(0.095, 0.3, skinOpp); leg.position.y = -0.22; th.add(leg);
@@ -305,6 +335,7 @@ function buildOpponent() {
     const shin = cap(0.07, 0.3, skinOpp); shin.position.y = -0.22; kn.add(shin);
     const shoe = cap(0.06, 0.14, shoeMat); shoe.rotation.x = Math.PI / 2; shoe.position.set(0, -0.47, 0.05); kn.add(shoe);
   }
+  inkOutline(root, 0.006);
   return J;
 }
 const OJ = buildOpponent();
@@ -416,27 +447,42 @@ const skinMat = new THREE.MeshPhysicalMaterial({ color: 0xd99a6c, roughness: 0.5
 const knuckleMat = new THREE.MeshPhysicalMaterial({ color: 0xe8a77a, roughness: 0.42, sheen: 0.6, sheenColor: new THREE.Color(0xff8060) });
 const creaseMat = new THREE.MeshBasicMaterial({ color: 0x8a4a30 });
 const nailMat = new THREE.MeshPhysicalMaterial({ color: 0xf6d2c0, roughness: 0.25, clearcoat: 0.6 });
-function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward)
-  const g = new THREE.Group();
-  const back = new THREE.Mesh(new THREE.SphereGeometry(0.05, 20, 14), skinMat); back.scale.set(1.0, 0.72, 1.15); g.add(back);
+const handSkin = toon(0xc98a62), handShade = toon(0xa86c4a), handKnuck = toon(0xd99a72), handWrap = toon(0xb8b2a6), handNail = toon(0xe8c8b0);
+function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward), back of hand +y; thumb on the INNER side
+  const g = new THREE.Group(), tIn = -s;
+  // back of hand: slightly flattened rounded block, wider at the knuckles
+  const back = new THREE.Mesh(new THREE.CapsuleGeometry(0.038, 0.05, 6, 16), handSkin); back.rotation.z = Math.PI / 2; back.scale.set(0.62, 1.0, 1.2); back.position.set(0, 0.004, -0.005); g.add(back);
   for (let i = 0; i < 4; i++) {
-    const f = new THREE.Mesh(new THREE.CapsuleGeometry(0.0145, 0.022, 4, 10), knuckleMat);
-    f.rotation.x = Math.PI / 2; f.position.set((i - 1.5) * 0.025 * -s, 0.004 - Math.abs(i - 1.5) * 0.004, -0.048 + Math.abs(i - 1.5) * 0.003); g.add(f);
-    const k = new THREE.Mesh(new THREE.CapsuleGeometry(0.013, 0.012, 4, 8), skinMat); k.position.set((i - 1.5) * 0.025 * -s, -0.022, -0.04); g.add(k);
+    const x = (i - 1.5) * 0.024 * -s, drop = Math.abs(i - 1.5) * 0.004, r = i === 3 ? 0.011 : 0.0125; // index..pinky (pinky smaller)
+    const kn = new THREE.Mesh(new THREE.SphereGeometry(0.014, 14, 10), handKnuck); kn.scale.set(1, 0.85, 1); kn.position.set(x, 0.016 - drop, -0.05 + drop); g.add(kn);
+    const p1 = new THREE.Mesh(new THREE.CapsuleGeometry(r, 0.022, 4, 10), handSkin); p1.position.set(x, -0.006 - drop, -0.064 + drop); g.add(p1); // proximal, pointing down
+    const p2 = new THREE.Mesh(new THREE.CapsuleGeometry(r * 0.92, 0.016, 4, 10), handShade); p2.rotation.x = Math.PI / 2; p2.position.set(x, -0.034 - drop, -0.052 + drop); g.add(p2); // middle, curling back
+    const nl = new THREE.Mesh(new THREE.SphereGeometry(r * 0.7, 8, 6), handNail); nl.scale.set(1, 0.5, 1); nl.position.set(x, -0.042 - drop, -0.036 + drop); nl.userData.noInk = true; g.add(nl);
   }
-  // thumb on the INNER side (toward screen centre): s=-1 left hand -> thumb at +x. Was s*… (outer side = mirrored hand).
-  const tIn = -s;
-  // thenar pad along the inner side, a proximal thumb segment running forward on the inner edge, and the distal
-  // segment wrapping across the front of the curled fingers. Seen from behind it reads as a thumb on the INSIDE.
-  const thumbBase = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), skinMat); thumbBase.scale.set(0.8, 0.9, 1.4); thumbBase.position.set(tIn * 0.05, -0.004, 0.025); g.add(thumbBase);
-  const thumb1 = new THREE.Mesh(new THREE.CapsuleGeometry(0.022, 0.045, 6, 12), skinMat); thumb1.rotation.set(Math.PI / 2 - 0.25, tIn * 0.3, 0); thumb1.position.set(tIn * 0.06, 0.006, -0.025); g.add(thumb1);
-  const crease = new THREE.Mesh(new THREE.CapsuleGeometry(0.004, 0.06, 4, 6), creaseMat); crease.rotation.set(Math.PI / 2, tIn * 0.3, 0); crease.position.set(tIn * 0.04, 0.02, -0.02); g.add(crease);
-  const thumb2 = new THREE.Mesh(new THREE.CapsuleGeometry(0.018, 0.036, 6, 10), knuckleMat); thumb2.rotation.set(0, 0, Math.PI / 2 - tIn * 0.35); thumb2.position.set(tIn * 0.03, -0.012, -0.068); g.add(thumb2);
-  const nail = new THREE.Mesh(new THREE.SphereGeometry(0.009, 10, 8), nailMat); nail.scale.set(1.3, 0.5, 1); nail.position.set(tIn * 0.008, -0.004, -0.08); g.add(nail);
-  const wrist = new THREE.Mesh(new THREE.CapsuleGeometry(0.036, 0.11, 4, 12), skinMat); wrist.rotation.x = Math.PI / 2; wrist.position.set(0, -0.005, 0.1); g.add(wrist);
+  // wrapped thumb: thenar pad on the inner side, proximal segment forward, distal lying across index+middle middle-phalanges
+  const thenar = new THREE.Mesh(new THREE.SphereGeometry(0.026, 14, 10), handSkin); thenar.scale.set(0.9, 1, 1.5); thenar.position.set(tIn * 0.045, -0.014, 0.005); g.add(thenar);
+  const th1 = new THREE.Mesh(new THREE.CapsuleGeometry(0.016, 0.03, 4, 10), handSkin); th1.rotation.set(Math.PI / 2, 0, tIn * 0.5); th1.position.set(tIn * 0.042, -0.028, -0.03); g.add(th1);
+  const th2 = new THREE.Mesh(new THREE.CapsuleGeometry(0.014, 0.026, 4, 10), handKnuck); th2.rotation.z = Math.PI / 2; th2.position.set(tIn * 0.012, -0.043, -0.05); g.add(th2);
+  const tn = new THREE.Mesh(new THREE.SphereGeometry(0.009, 8, 6), handNail); tn.scale.set(1, 0.5, 1.2); tn.position.set(-tIn * 0.004, -0.05, -0.058); tn.userData.noInk = true; g.add(tn);
+  // tapered wrist with hand wraps
+  const wrist = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.036, 0.07, 16), handWrap); wrist.rotation.x = Math.PI / 2; wrist.scale.set(1.15, 1, 0.85); wrist.position.set(0, -0.004, 0.06); g.add(wrist);
+  inkOutline(g, 0.0025);
   g.traverse(o => { if (o.isMesh) o.castShadow = true; });
-  g.scale.setScalar(0.85);
+  g.scale.setScalar(0.95);
   camera.add(g); return g;
+}
+// forearms: camera-space tapered limbs from each wrist down/out to off-screen anchors at the bottom corners
+const foreArms = [-1, 1].map(s => { const g = new THREE.Group();
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.042, 1, 16), handSkin); m.position.y = 0.5; g.add(m);
+  const bulge = new THREE.Mesh(new THREE.SphereGeometry(0.044, 16, 12), handSkin); bulge.scale.set(1.05, 3.2, 0.95); bulge.position.y = 0.72; g.add(bulge);
+  const wr = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.038, 0.09, 16), handWrap); wr.position.y = 0.05; g.add(wr);
+  inkOutline(g, 0.003); camera.add(g); return g; });
+const _wr = new THREE.Vector3(), _an = new THREE.Vector3(), _up = new THREE.Vector3(0, 1, 0);
+function placeForearm(i, h) {
+  const fa = foreArms[i], s = i ? 1 : -1; _wr.set(0, 0, 0.085).applyMatrix4(h.matrix); // h is a direct child of camera
+  _an.set(s * 0.36, -0.7, -0.3); const len = _wr.distanceTo(_an);
+  fa.position.copy(_wr); fa.scale.set(1, len, 1); const ch = fa.children; ch[1].scale.y = 3 / len; ch[2].scale.y = 0.67 / len; ch[2].children.forEach(o => o.scale.y = o.scale.x);
+  fa.quaternion.setFromUnitVectors(_up, _an.clone().sub(_wr).normalize());
 }
 const fists = [buildFist(-1), buildFist(1)];
 const handLight = new THREE.PointLight(0xffd0a0, 1.2, 2.5, 2); camera.add(handLight); handLight.position.set(0, 0.2, 0.1);
@@ -667,6 +713,7 @@ const SWIPE_PX = 25, COMMIT_PX = 70, TAP_MS = 350, STILL_PX = 18, GUARD_MS = 250
 // (including the very edge) still counts as kick, so the hit area always covers what is drawn.
 const PAD = { punch: { x0: 0.255, x1: 0.40, y0: 0.42, y1: 0.74 }, kick: { x0: 0.045, x1: 0.235, y0: 0.58, y1: 0.95 }, block: { x: 0.5, y: 0.86, r: 0.12 } };
 // hit-test: block circle first, then outer strip = kick (below the kick top), everything else = punch on that side
+const cock = [0, 0];
 function padAt(x, y, w, h) {
   const ex = Math.min(x, w - x) / w;
   if (ex < PAD.kick.x1 && y >= PAD.kick.y0 * h) return 'kick';
@@ -697,6 +744,7 @@ function pDown(e) {
   const side = x < r.width / 2 ? 0 : 1, pad = padAt(x, y, r.width, r.height);
   const st = { id: e.pointerId, side, pad, x0: x, y0: y, t0: now, pts: [{ x, y, t: now }] };
   st.trail = { pts: st.pts, side, kind: pad === 'kick' ? 'rail' : pad === 'block' ? 'guard' : 'arm', dead: 0 }; trails.push(st.trail);
+  if (pad === 'punch') cock[side] = 1; // instant visual: fist cocks back on touch-down
   ptrs.set(e.pointerId, st); dbg('down ' + pad + (side ? 'R' : 'L') + ' @' + Math.round(x) + ',' + Math.round(y));
 }
 function pMove(e) {
@@ -1045,6 +1093,7 @@ function updateVisuals(dt) {
   }
   legMat.opacity = 0.12;
   setFist(L, lp[0], lp[1], lp[2]); setFist(R, rp[0], rp[1], rp[2]);
+  [L, R].forEach((h, i) => { if (cock[i] > 0) { h.position.z += 0.07 * cock[i]; h.position.y -= 0.025 * cock[i]; h.rotation.x += 0.25 * cock[i]; cock[i] = Math.max(0, cock[i] - dt * 6); } });
   const s0 = sway(0), s1 = sway(2); if (me.state !== 'atk') { L.position.x += s0[0]; L.position.y += s0[1]; R.position.x += s1[0]; R.position.y += s1[1]; }
   if (down) { L.position.y -= camDrop * 0.4; R.position.y -= camDrop * 0.4; }
   // ghost arms from shoulders to wrists
@@ -1053,7 +1102,7 @@ function updateVisuals(dt) {
     const w = new THREE.Vector3(0, 0, 0.17).applyMatrix4(h.matrixWorld);
     h.updateMatrixWorld(); const wr = new THREE.Vector3(0, 0, 0.14); h.localToWorld(wr);
     const arm = ghostArms[i], mid = sh.clone().add(wr).multiplyScalar(0.5), len = sh.distanceTo(wr);
-    arm.position.copy(mid); arm.scale.set(1, len, 1); arm.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), wr.clone().sub(sh).normalize());
+    arm.visible = false; h.updateMatrix(); placeForearm(i, h);
   });
   // environment
   uTime.value = animClock;
