@@ -312,13 +312,18 @@
     },
     {
       "source": "/pitch-explained",
-      "destination": "/pitch-explained.html",
-      "permanent": true
+      "destination": "/usaenergypartners-plain.html",
+      "statusCode": 301
     },
     {
       "source": "/pitch-explained/",
-      "destination": "/pitch-explained.html",
-      "permanent": true
+      "destination": "/usaenergypartners-plain.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/pitch-explained.html",
+      "destination": "/usaenergypartners-plain.html",
+      "statusCode": 301
     },
     {
       "source": "/spots",
