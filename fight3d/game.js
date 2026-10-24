@@ -381,6 +381,17 @@ const LK = { // [rest, chamber, ...strike keys] as [hip, knee, foot]
   kRound: [LR, [[0.16, -0.62, -0.45], [0.32, -0.15, -0.7], [0.5, -0.12, -0.75]], [[0.16, -0.6, -0.5], [0.25, -0.05, -0.95], [0.35, 0.02, -1.25]], [[0.14, -0.6, -0.5], [0.05, 0.0, -1.0], [-0.12, 0.04, -1.42]]],
   kSweep: [LR, [[0.16, -0.7, -0.45], [0.3, -0.5, -0.75], [0.45, -0.65, -0.9]], [[0.14, -0.72, -0.5], [0.12, -0.55, -0.95], [0.12, -0.7, -1.35]], [[0.12, -0.72, -0.5], [-0.02, -0.55, -1.0], [-0.22, -0.68, -1.4]]],
 };
+// HYBRID flow: the sector picks the move; inside it the swipe's vertical component v (-1 down..1 up)
+// maps across the move's own range to t (0 = low/flat end, 1 = high/steep end), which bends height and path.
+const FLOW = {
+  pHigh: { v: [0.38, 1], ht: [1.48, 1.72], vy: 0.1 },   pMid: { v: [-0.38, 0.38], ht: [1.15, 1.42], vy: 0.14 },
+  pLow:  { v: [-1, -0.38], ht: [0.92, 1.15], vy: 0.12 }, hook: { v: [-0.38, 0.92], ht: [1.15, 1.72], vy: 0.3 },
+  upper: { v: [-1, -0.38], ht: [1.45, 1.72], vy: 0.12 }, jab: { v: [-1, 1], ht: [1.4, 1.62], vy: 0.08 },
+  kHigh: { v: [0.38, 1], ht: [1.45, 1.78], vy: 0.3 },   kMid: { v: [-0.92, 0.38], ht: [0.95, 1.38], vy: 0.32 },
+  kSide: { v: [-0.38, 0.38], ht: [0.95, 1.32], vy: 0.3 }, kRound: { v: [0.38, 0.92], ht: [1.25, 1.72], vy: 0.3 },
+  kSweep: { v: [-1, -0.38], ht: [0.25, 0.4], vy: 0.06 },
+};
+function flowT(k, v) { const r = FLOW[k]; return r ? clamp((v - r.v[0]) / (r.v[1] - r.v[0]), 0, 1) : 0.5; }
 // fist keyframes for the right hand [x,y,z,rx,ry,rz]; left hand mirrored
 const FK = {
   jab:   [[0.13, -0.05, -0.8, 0.4, -0.1, 0.5], [0.03, -0.06, -1.25, 0.05, 0, 1.5]],
@@ -485,7 +496,7 @@ function startMove(f, k) {
   if (k === 'super') { if (f.superUsed || f.meter < T.superCost) return false; f.superUsed = true; f.meter = 0; }
   f.state = 'atk'; f.move = MOVES[k]; f.mk = k; f.st = 0; f.hitDone = false; f.whiffed = false; f.blocking = false;
   f.spd = clamp(f.inp.spd || 1, T.speedMin, T.speedMax);
-  if (f.isPlayer) { f.hand = f.inp.hand ?? (k === 'jab' ? 0 : 1); f.inp.hand = undefined; (window.__acts = window.__acts || []).push({ k, hand: f.hand, spd: +f.spd.toFixed(2), t: Math.round(performance.now()) }); }
+  if (f.isPlayer) { f.hand = f.inp.hand ?? (k === 'jab' ? 0 : 1); f.inp.hand = undefined; f.mod = f.inp.mod || { t: 0.5, c: 0, L: 0.35, cv: 0 }; f.inp.mod = undefined; const FL = FLOW[k]; f.ht = FL ? lerp(FL.ht[0], FL.ht[1], f.mod.t) : 0; (window.__acts = window.__acts || []).push({ k, hand: f.hand, spd: +f.spd.toFixed(2), ht: +f.ht.toFixed(2), t01: +f.mod.t.toFixed(2), t: Math.round(performance.now()) }); }
   return true;
 }
 function startDodge(f, dir) {
@@ -493,14 +504,18 @@ function startDodge(f, dir) {
 }
 function resolveHit(a, d) {
   const m = a.move;
-  if (dist() > m.reach) { a.whiffed = true; return; }
+  const reach = m.reach * (a.isPlayer && a.mod ? 0.93 + 0.12 * a.mod.L : 1);
+  if (dist() > reach) { a.whiffed = true; return; }
   if (d.state === 'dodge' && d.st >= 2 && d.st <= 13) { a.whiffed = true; return; }
   if (d.state === 'down' || d.state === 'ko') { a.whiffed = true; return; }
   const [fx, fz] = dirTo(a, d);
-  const hitPos = new THREE.Vector3(d.x - fx * 0.28, FLOOR + (m.ht ? m.ht : a.mk === 'jab' || a.mk === 'super' || a.mk === 'upper' ? 1.62 : 1.35), d.z - fz * 0.28);
+  const hitPos = new THREE.Vector3(d.x - fx * 0.28, FLOOR + (a.isPlayer && a.ht ? a.ht : m.ht ? m.ht : a.mk === 'jab' || a.mk === 'super' || a.mk === 'upper' ? 1.62 : 1.35), d.z - fz * 0.28);
   const counter = d.state === 'atk' && d.st < d.move.s;
   let scale = Math.min(T.speedMax * T.counterMul, clamp(a.spd, T.speedMin, T.speedMax) * (counter ? T.counterMul : 1));
-  if (d.blocking && canAct(d) && !m.unblock) {
+  const htNow = a.isPlayer && a.ht ? a.ht : 0;
+  const underGuard = htNow && htNow < 1.38 && !d.isPlayer; // Gavin's guard is high: body/low shots get under it
+  if (underGuard && d.blocking) { scale *= 0.8; dbg('under guard @' + htNow.toFixed(2)); }
+  if (d.blocking && canAct(d) && !m.unblock && !underGuard) {
     d.hp -= m.dmg * T.chip; d.bal -= m.bal * T.blockBal; d.balDelay = T.balRegenDelay; d.state = 'block'; d.st = -m.bs; d.meter = Math.min(100, d.meter + 3);
     G.hitstop = Math.round(m.stop * 0.6); G.shake = m.shake * 0.4; spark(hitPos, 0.6, 0x88ccff); sfx('block');
     d.vx += fx * 0.03; d.vz += fz * 0.03;
@@ -510,7 +525,8 @@ function resolveHit(a, d) {
     d.hp -= dmg; d.bal -= Math.min(m.bal * scale, a.mk === 'super' ? 50 : 22);
     if (a.isPlayer || d.isPlayer) dbg('hit ' + a.mk + ' ' + dmg + ' dmg -> ' + (d.isPlayer ? 'you' : 'cpu') + ' ' + Math.max(0, Math.round(d.hp))); d.balDelay = T.balRegenDelay;
     a.meter = Math.min(100, a.meter + m.meter * scale); d.meter = Math.min(100, d.meter + m.meter * 0.5);
-    d.state = 'hit'; d.st = 0; d.hs = m.hs; d.move = null; d.react = (m.body || (a.mk === 'hook' && rnd() < 0.5)) ? 'hitBody' : 'hitHead';
+    d.state = 'hit'; d.st = 0; d.hs = m.hs; d.move = null; d.react = (htNow ? htNow < 1.42 : m.body || (a.mk === 'hook' && rnd() < 0.5)) ? 'hitBody' : 'hitHead';
+    if (a.isPlayer) a.lastHit = { k: a.mk, ht: htNow, dmg, react: d.react };
     d.vx += fx * 0.04 * scale; d.vz += fz * 0.04 * scale;
     G.hitstop = Math.round(m.stop * (counter ? 1.4 : 1)); G.shake = m.shake * scale * (counter ? 1.4 : 1);
     spark(hitPos, 1 + (scale - 1) * 2 + (a.mk === 'super' ? 2 : 0), counter ? 0xffe040 : 0xffffff);
@@ -682,12 +698,18 @@ function release(st, why) {
   else { dbg('hold released, no strike (d=' + Math.round(d) + ')'); return; }
   st.fired = true;
   const v = d / Math.max(30, dur);
-  firePlayer(k, st.side, dir === 'tap' ? 1 : speedScale(v), dir + ' ' + why + ' d=' + Math.round(d));
+  let mod = { t: 0.5, c: 0, L: 0.35, cv: 0 };
+  if (dir !== 'tap') {
+    const vy = -dy / d, inX = (st.side ? -dx : dx) / d;
+    let cv = 0; for (const q of st.pts) { const dev = ((q.x - st.x0) * dy - (q.y - st.y0) * dx) / d; if (Math.abs(dev) > Math.abs(cv)) cv = dev; }
+    mod = { t: flowT(k, vy), c: inX, L: clamp((d - 25) / 110, 0, 1), cv: clamp(cv / d * (st.side ? -1 : 1), -0.5, 0.5) };
+  }
+  firePlayer(k, st.side, dir === 'tap' ? 1 : speedScale(v) * (0.94 + 0.12 * mod.L), dir + ' ' + why + ' d=' + Math.round(d) + ' t=' + mod.t.toFixed(2), mod);
 }
 function speedScale(v) { return clamp(lerp(T.speedMin, T.speedMax, clamp((v - 0.3) / 2.0, 0, 1)), T.speedMin, T.speedMax); }
-function firePlayer(k, side, spd, why) {
+function firePlayer(k, side, spd, why, mod) {
   if (k === 'super' && (F[0].superUsed || F[0].meter < T.superCost)) return;
-  const p = F[0].inp; p.atkF = G.frames; p.atk = k; p.spd = spd; p.hand = k === 'super' ? 1 : side;
+  const p = F[0].inp; p.atkF = G.frames; p.atk = k; p.spd = Math.min(spd, T.speedMax); p.mod = mod || { t: 0.5, c: 0, L: 0.35, cv: 0 }; p.hand = k === 'super' ? 1 : side;
   lastFire = { k, side, t: performance.now() };
   dbg(k + ' ' + (side ? 'R' : 'L') + ' x' + (+spd).toFixed(2) + (why ? ' (' + why + ')' : '') + (canAct(F[0]) ? '' : ' [busy: ' + F[0].state + ']'));
 }
@@ -845,7 +867,7 @@ function tick() { // one 60Hz logic frame
   if (G.mode !== 'fight') return;
   if (G.hitstop > 0) { G.hitstop--; return; }
   if (AUTO) think(F[0], F[1], 10); else readPlayer();
-  if (!qs.has('dummy')) think(F[1], F[0], DIFF[G.diff]); else { F[1].inp.atk = null; F[1].inp.block = false; F[1].inp.mx = F[1].inp.mz = 0; }
+  if (!qs.has('dummy')) think(F[1], F[0], DIFF[G.diff]); else { F[1].inp.atk = null; F[1].inp.block = qs.get('dummy') === 'block'; F[1].inp.mx = F[1].inp.mz = 0; }
   stepFighter(F[0], F[1]); stepFighter(F[1], F[0]); separate();
   if (++G.tf >= 60) { G.tf = 0; G.timer--; if (G.timer <= 0) { G.timer = 0; const a = F[0].hp, b = F[1].hp; endRound(a === b ? -1 : a > b ? 0 : 1, 'TIME'); } }
 }
@@ -916,7 +938,16 @@ function updateVisuals(dt) {
     const m = me.move, s = me.st, W = HP.supW, S = HP.supS;
     if (s <= m.s) rp = [HP.guardR, W, ease(s / m.s)]; else if (s <= m.s + m.a) rp = [W, S, ease((s - m.s) / 2)]; else rp = [S, HP.guardR, ease((s - m.s - m.a) / m.r)];
   } else if (me.state === 'atk' && FK[me.mk]) {
-    const m = me.move, s = me.st, side = me.hand, G0 = side ? HP.guardR : HP.guardL, K = FK[me.mk].map(q => mir(q, side));
+    const m = me.move, s = me.st, side = me.hand, G0 = side ? HP.guardR : HP.guardL, md = me.mod || { t: 0.5, c: 0, L: 0.35, cv: 0 }, FLm = FLOW[me.mk] || { vy: 0.1 };
+    const n = FK[me.mk].length, K = FK[me.mk].map((q, i) => {
+      q = q.slice(); const last = i === n - 1;
+      if (i === 0) { const w = 0.65 + 0.6 * md.L; for (let j = 0; j < 3; j++) q[j] = HP.guardR[j] * (1 - w) + q[j] * w; } // windup grows with swipe length
+      q[1] += (md.t - 0.5) * FLm.vy * (last ? 1 : 0.5);              // steeper -> higher target
+      if (me.mk === 'pHigh' && last) q[0] -= (md.c - 0.7) * 0.25;     // more inward -> crosses to centre
+      if (!last) q[0] += md.cv * 0.35;                                // curved swipe -> arc
+      if (last) q[2] *= 0.95 + 0.1 * md.L;                            // longer swipe -> longer reach
+      return mir(q, side);
+    });
     let pose; // guard -> wind -> (mid) -> strike -> guard
     if (s <= m.s) pose = [G0, K[0], ease(s / m.s)];
     else if (s <= m.s + m.a) { const u = ease((s - m.s) / Math.max(1, m.a - 1)); pose = K.length > 2 ? (u < 0.5 ? [K[0], K[1], u * 2] : [K[1], K[2], (u - 0.5) * 2]) : [K[0], K[1], u]; }
@@ -932,7 +963,8 @@ function updateVisuals(dt) {
       let u; // 0 rest, 1 = chamber, 2.. = path keys
       if (st <= m.s) u = ease(st / m.s) * 1.0; else if (st <= m.s + m.a) u = 1 + ease((st - m.s) / Math.max(1, m.a - 1)) * (path.length - 2); else u = (path.length - 1) * (1 - ease((st - m.s - m.a) / m.r));
       const i0 = Math.min(path.length - 2, Math.floor(u)), fr = u - i0, A = path[i0], B = path[i0 + 1];
-      for (let i = 0; i < 3; i++) _v[i].set(lerp(A[i][0], B[i][0], fr) * (side ? 1 : -1), lerp(A[i][1], B[i][1], fr), lerp(A[i][2], B[i][2], fr));
+      const md = me.mod || { t: 0.5 }, lift = (md.t - 0.5) * (FLOW[me.mk] ? FLOW[me.mk].vy : 0) * Math.min(1, u);
+      for (let i = 0; i < 3; i++) _v[i].set(lerp(A[i][0], B[i][0], fr) * (side ? 1 : -1), lerp(A[i][1], B[i][1], fr) + lift * (i === 2 ? 1 : i === 1 ? 0.6 : 0), lerp(A[i][2], B[i][2], fr));
       v = _v;
     }
     leg.g.visible = !!v;
