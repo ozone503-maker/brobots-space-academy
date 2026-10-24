@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#2a0f3a">
+<title>BROBOTS Fight 3D: Volcano Ring</title>
+<link rel="stylesheet" href="fight3d/style.css?v=079d986">
+<script type="importmap">
+{"imports":{
+ "three":"https://unpkg.com/three@0.160.0/build/three.module.js",
+ "three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+</head><body>
+<div id="app">
+ <canvas id="c"></canvas>
+ <canvas id="trail"></canvas>
+ <div id="build">079d986</div>
+ <div id="hud" class="hide">
+  <div class="bars">
+   <div class="side p"><div class="nm">YOU</div><div class="hp"><i id="hp0"></i></div><div class="bal"><i id="bal0"></i></div><div class="pips" id="pip0"></div></div>
+   <div class="mid"><div id="timer">60</div><div id="rnd">R1</div></div>
+   <div class="side c"><div class="nm" id="cpuName">GAVIN DAWSON</div><div class="hp"><i id="hp1"></i></div><div class="bal"><i id="bal1"></i></div><div class="pips" id="pip1"></div></div>
+  </div>
+  <div class="meter"><span>SUPER</span><div><i id="sup0"></i></div></div>
+  <div id="flash"></div>
+  <div id="banner"></div>
+  </div>
+ <div id="title" class="screen">
+  <h1>VOLCANO RING</h1>
+  <h2>Punch Out meets Ring King on the Big Island</h2>
+  <ul>
+   <li><b>Inner strips punch, outer strips kick.</b> Left side drives your left hand and leg, right side your right</li>
+   <li><b>Punch pad:</b> swipe up-in high, in body, down-in low, out for a wide hook, down-out for an uppercut. Tap to jab</li>
+   <li><b>Kick pad:</b> up-out roundhouse, up-in high kick, in body kick, out side kick, down-out leg sweep (slow, but it drops him). Tap for a body kick</li>
+   <li><b>Hold the circle at the bottom</b> to block. Drag two thumbs the same way to move. Hold both punch pads with a full meter for your one super</li>
+   <li class="kb">Keyboard: WASD move, Space guard, B super. Left punches R high, F mid, V low, T hook, G upper, C jab. Right U, J, M, Y, H, N. Kicks 1-5 left and 6-0 right (high, mid, side, roundhouse, sweep)</li>
+  </ul>
+
+
+  <div class="diff"><button data-d="easy">EASY</button><button data-d="normal" class="on">NORMAL</button><button data-d="hard">HARD</button></div>
+  <button id="go" class="go">FIGHT</button>
+ </div>
+ <div id="end" class="screen hide"><h1 id="endTxt">YOU WIN</h1><h2 id="endSub"></h2><button id="again" class="go">REMATCH</button></div>
+</div>
+<script type="module" src="fight3d/game.js?v=079d986"></script>
+</body></html>
