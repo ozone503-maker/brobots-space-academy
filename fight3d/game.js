@@ -19,7 +19,15 @@ const MOVES = {
   jab:   { s: 5,  a: 3, r: 9,  dmg: 35,  bal: 7,  hs: 14, bs: 9,  stop: 6,  reach: 1.6,  shake: 0.04, meter: 6 },
   hook:  { s: 9,  a: 4, r: 17, dmg: 50,  bal: 12, hs: 20, bs: 14, stop: 10, reach: 1.5,  shake: 0.09, meter: 9 },
   upper: { s: 12, a: 4, r: 22, dmg: 60,  bal: 15, hs: 24, bs: 16, stop: 13, reach: 1.35, shake: 0.13, meter: 11 },
-  kick:  { s: 11, a: 4, r: 20, dmg: 55,  bal: 14, hs: 22, bs: 15, stop: 12, reach: 1.75, shake: 0.11, meter: 10 },
+  // player moves (pads). ht = target height on the opponent in metres above the floor
+  pHigh: { s: 6,  a: 3, r: 11, dmg: 40,  bal: 8,  hs: 15, bs: 10, stop: 7,  reach: 1.6,  shake: 0.05, meter: 7,  ht: 1.62 },
+  pMid:  { s: 6,  a: 3, r: 11, dmg: 38,  bal: 10, hs: 15, bs: 10, stop: 7,  reach: 1.6,  shake: 0.05, meter: 7,  ht: 1.3, body: 1 },
+  pLow:  { s: 7,  a: 3, r: 13, dmg: 35,  bal: 12, hs: 15, bs: 10, stop: 7,  reach: 1.55, shake: 0.05, meter: 7,  ht: 1.05, body: 1 },
+  kHigh: { s: 12, a: 4, r: 20, dmg: 58,  bal: 14, hs: 22, bs: 15, stop: 12, reach: 1.8,  shake: 0.11, meter: 10, ht: 1.6 },
+  kMid:  { s: 10, a: 4, r: 18, dmg: 50,  bal: 14, hs: 20, bs: 14, stop: 11, reach: 1.8,  shake: 0.1,  meter: 9,  ht: 1.15, body: 1 },
+  kSide: { s: 11, a: 4, r: 19, dmg: 52,  bal: 20, hs: 20, bs: 14, stop: 11, reach: 1.9,  shake: 0.12, meter: 9,  ht: 1.1, body: 1, push: 0.1 },
+  kRound:{ s: 15, a: 5, r: 22, dmg: 68,  bal: 18, hs: 24, bs: 16, stop: 14, reach: 1.85, shake: 0.15, meter: 11, ht: 1.5 },
+  kSweep:{ s: 17, a: 4, r: 34, dmg: 40,  bal: 10, hs: 20, bs: 12, stop: 12, reach: 1.75, shake: 0.14, meter: 8,  ht: 0.3, sweep: 1 },
   super: { s: 16, a: 6, r: 30, dmg: 150, bal: 40, hs: 40, bs: 24, stop: 22, reach: 1.7,  shake: 0.25, meter: 0, unblock: 0.45 },
 };
 // ==========================================
@@ -365,6 +373,24 @@ const LEGP = { // camera-space [hip, knee, foot]; chamber = knee pulled up, exte
   extend: [[0.14, -0.6, -0.5], [0.08, -0.2, -0.95], [0.03, -0.04, -1.45]],
 };
 const _v = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+const LR = LEGP.rest, LC = LEGP.chamber;
+const LK = { // [rest, chamber, ...strike keys] as [hip, knee, foot]
+  kHigh:  [LR, LC, [[0.14, -0.6, -0.5], [0.07, -0.08, -0.95], [0.02, 0.12, -1.5]]],
+  kMid:   [LR, LC, [[0.14, -0.6, -0.5], [0.08, -0.22, -0.95], [0.03, -0.14, -1.5]]],
+  kSide:  [LR, [[0.16, -0.62, -0.45], [0.2, -0.2, -0.7], [0.12, -0.25, -0.62]], [[0.1, -0.58, -0.5], [0.06, -0.24, -0.95], [0.0, -0.2, -1.62]]],
+  kRound: [LR, [[0.16, -0.62, -0.45], [0.32, -0.15, -0.7], [0.5, -0.12, -0.75]], [[0.16, -0.6, -0.5], [0.25, -0.05, -0.95], [0.35, 0.02, -1.25]], [[0.14, -0.6, -0.5], [0.05, 0.0, -1.0], [-0.12, 0.04, -1.42]]],
+  kSweep: [LR, [[0.16, -0.7, -0.45], [0.3, -0.5, -0.75], [0.45, -0.65, -0.9]], [[0.14, -0.72, -0.5], [0.12, -0.55, -0.95], [0.12, -0.7, -1.35]], [[0.12, -0.72, -0.5], [-0.02, -0.55, -1.0], [-0.22, -0.68, -1.4]]],
+};
+// fist keyframes for the right hand [x,y,z,rx,ry,rz]; left hand mirrored
+const FK = {
+  jab:   [[0.13, -0.05, -0.8, 0.4, -0.1, 0.5], [0.03, -0.06, -1.25, 0.05, 0, 1.5]],
+  pHigh: [[0.13, -0.03, -0.8, 0.4, -0.1, 0.5], [0.02, 0.02, -1.28, 0.05, 0, 1.5]],
+  pMid:  [[0.13, -0.1, -0.8, 0.3, -0.1, 0.5], [0.03, -0.17, -1.25, 0.15, 0, 1.5]],
+  pLow:  [[0.13, -0.18, -0.78, 0.2, -0.1, 0.5], [0.04, -0.3, -1.15, -0.25, 0, 1.5]],
+  hook:  [[0.38, -0.04, -0.62, 0.0, -0.6, 0.2], [0.36, -0.02, -1.02, 0, -0.9, 1.4], [-0.02, -0.04, -1.18, 0, 0.6, 1.5]],
+  upper: [[0.14, -0.42, -0.68, 1.2, 0, 0.2], [0.05, -0.18, -0.95, 0.4, 0, 0.25], [0.03, 0.06, -1.1, -0.9, 0, 0.3]],
+};
+function mir(q, side) { return side ? q : [-q[0], q[1], q[2], q[3], -q[4], -q[5]]; }
 function legPose(side, a, b, t, h) { for (let i = 0; i < 3; i++) { const A = LEGP[a][i], B = LEGP[b][i]; _v[i].set(lerp(A[0], B[0], t) * (side ? 1 : -1), lerp(A[1], B[1], t) + (i ? (h - 0.5) * 0.25 * (a !== 'rest' || t > 0.3 ? 1 : 0) : 0), lerp(A[2], B[2], t)); } return _v; }
 const ghostArms = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 1, 10, 1, true), ghostMat); scene.add(m); return m; });
 const skinMat = new THREE.MeshPhysicalMaterial({ color: 0xd99a6c, roughness: 0.5, sheen: 0.7, sheenRoughness: 0.5, sheenColor: new THREE.Color(0xff7a5a), clearcoat: 0.15, clearcoatRoughness: 0.7 });
@@ -459,9 +485,7 @@ function startMove(f, k) {
   if (k === 'super') { if (f.superUsed || f.meter < T.superCost) return false; f.superUsed = true; f.meter = 0; }
   f.state = 'atk'; f.move = MOVES[k]; f.mk = k; f.st = 0; f.hitDone = false; f.whiffed = false; f.blocking = false;
   f.spd = clamp(f.inp.spd || 1, T.speedMin, T.speedMax);
-  if (f.isPlayer) (window.__acts = window.__acts || []).push({ k, hand: f.inp.hand ?? null, spd: +f.spd.toFixed(2), chambered: k === 'kick' && !!(f.inp.kick && f.inp.kick.chambered), t: Math.round(performance.now()) });
-  if (f.isPlayer) { f.hand = f.inp.hand ?? (k === 'jab' ? 0 : 1); f.path = f.inp.path || ({ jab: KEY_PATHS.KeyR[1], hook: KEY_PATHS.KeyJ[1], upper: KEY_PATHS.KeyM[1] })[k] || null; f.inp.path = null; f.inp.hand = undefined; f.kick = k === 'kick' ? f.inp.kick : null;
-    if (k === 'kick' && f.kick && f.kick.chambered) f.move = Object.assign({}, MOVES.kick, { s: 5 }); }
+  if (f.isPlayer) { f.hand = f.inp.hand ?? (k === 'jab' ? 0 : 1); f.inp.hand = undefined; (window.__acts = window.__acts || []).push({ k, hand: f.hand, spd: +f.spd.toFixed(2), t: Math.round(performance.now()) }); }
   return true;
 }
 function startDodge(f, dir) {
@@ -473,7 +497,7 @@ function resolveHit(a, d) {
   if (d.state === 'dodge' && d.st >= 2 && d.st <= 13) { a.whiffed = true; return; }
   if (d.state === 'down' || d.state === 'ko') { a.whiffed = true; return; }
   const [fx, fz] = dirTo(a, d);
-  const hitPos = new THREE.Vector3(d.x - fx * 0.28, FLOOR + (a.mk === 'kick' ? 0.7 + 0.9 * (a.kick ? a.kick.h : 0.5) : a.mk === 'jab' || a.mk === 'super' || a.mk === 'upper' ? 1.62 : 1.35), d.z - fz * 0.28);
+  const hitPos = new THREE.Vector3(d.x - fx * 0.28, FLOOR + (m.ht ? m.ht : a.mk === 'jab' || a.mk === 'super' || a.mk === 'upper' ? 1.62 : 1.35), d.z - fz * 0.28);
   const counter = d.state === 'atk' && d.st < d.move.s;
   let scale = Math.min(T.speedMax * T.counterMul, clamp(a.spd, T.speedMin, T.speedMax) * (counter ? T.counterMul : 1));
   if (d.blocking && canAct(d) && !m.unblock) {
@@ -486,15 +510,16 @@ function resolveHit(a, d) {
     d.hp -= dmg; d.bal -= Math.min(m.bal * scale, a.mk === 'super' ? 50 : 22);
     if (a.isPlayer || d.isPlayer) dbg('hit ' + a.mk + ' ' + dmg + ' dmg -> ' + (d.isPlayer ? 'you' : 'cpu') + ' ' + Math.max(0, Math.round(d.hp))); d.balDelay = T.balRegenDelay;
     a.meter = Math.min(100, a.meter + m.meter * scale); d.meter = Math.min(100, d.meter + m.meter * 0.5);
-    d.state = 'hit'; d.st = 0; d.hs = m.hs; d.move = null; d.react = (a.mk === 'hook' && rnd() < 0.5) ? 'hitBody' : 'hitHead';
+    d.state = 'hit'; d.st = 0; d.hs = m.hs; d.move = null; d.react = (m.body || (a.mk === 'hook' && rnd() < 0.5)) ? 'hitBody' : 'hitHead';
     d.vx += fx * 0.04 * scale; d.vz += fz * 0.04 * scale;
     G.hitstop = Math.round(m.stop * (counter ? 1.4 : 1)); G.shake = m.shake * scale * (counter ? 1.4 : 1);
     spark(hitPos, 1 + (scale - 1) * 2 + (a.mk === 'super' ? 2 : 0), counter ? 0xffe040 : 0xffffff);
     sfx('hit', 1 / scale);
     if (d.isPlayer) { $('flash').style.opacity = 0.9; setTimeout(() => $('flash').style.opacity = 0, 120); }
     if (counter && a.isPlayer) showBanner('COUNTER', 30);
+    if (m.push) { d.vx += fx * m.push; d.vz += fz * m.push; }
     if (d.hp <= 0) { d.hp = 0; knockdown(d, true); }
-    else if (d.bal <= 0) knockdown(d, false);
+    else if (d.bal <= 0 || m.sweep) knockdown(d, false); // a landed sweep takes his legs
   }
 }
 function knockdown(f, ko) {
@@ -581,11 +606,11 @@ function think(me, foe, delay) {
 }
 
 // ---------------- input ----------------
-// Settled scheme (mechanism brief): left thumb = left arm, right thumb = right arm.
-// The swipe path IS the strike path; swipe speed scales damage. No buttons, no move labels.
-// Compact kick rails inboard of each edge: long-press slide = chamber the leg, flick slide = fire.
-// Both thumbs held apart = guard (both forearms up). Both thumbs held together = charge the one super.
-// Both thumbs dragged = roam (combined-thumb average).
+// Four swipe pads (Jessie's layout): two upper PUNCH pads, two lower KICK pads.
+// Left pads = left hand/leg, right pads = right. A swipe is read by its 8-way direction from the
+// touch-down point; "in" = toward screen centre, "out" = toward the edge. No labels on screen.
+// Guard = both thumbs held still anywhere 0.25s. Super = both PUNCH pads held with a full meter.
+// Roam = both thumbs dragged the same way.
 const keys = {};
 const DEBUG = qs.has('debug'); let dbgEl = null; const dbgLines = [];
 function dbg(t) { if (!DEBUG) return; if (!dbgEl) { dbgEl = document.createElement('pre'); dbgEl.id = 'dbg'; document.getElementById('app').appendChild(dbgEl); }
@@ -595,106 +620,60 @@ const app = $('app');
 const trailCv = $('trail'), tctx = trailCv.getContext('2d');
 const ptrs = new Map(); // pointerId -> state
 const trails = []; // {pts:[{x,y,t}], side, kind, dead}
-const FLICK_MS = 320, FLICK_MIN = 28, PUNCH_PX = 30, COMMIT_PX = 160, TAP_MS = 350, HOLD_MS = 200, STILL_PX = 22, TOGETHER_PX = 120, SUPER_CHARGE = 36;
-const PI = { guard: false, roamX: 0, roamY: 0, superCharge: 0, chamber: [null, null] }; // chamber[side] = height 0..1
+const SWIPE_PX = 25, COMMIT_PX = 70, TAP_MS = 350, STILL_PX = 18, GUARD_MS = 250, SUPER_CHARGE = 30;
+const PAD = { top: 0.40, split: 0.68, bot: 0.96, inset: 0.03, gap: 0.03 }; // fractions of the play area
+const PI = { guard: false, roamX: 0, roamY: 0, superCharge: 0 };
 function appRect() { return app.getBoundingClientRect(); }
-function railHit(x, y, r) {
-  const c = r.width * 0.06 + 15, zw = 28, top = r.height * 0.6 - 14, bot = r.height * 0.92 + 14; // 56px touch zone around a slim strip
-  if (y < top || y > bot) return -1;
-  if (Math.abs(x - c) <= zw) return 0;
-  if (Math.abs(x - (r.width - c)) <= zw) return 1;
-  return -1;
-}
-function railHeight(y, r) { const top = r.height * 0.6, bot = r.height * 0.92; return clamp(1 - (y - top) / (bot - top), 0, 1); }
+// 8-way direction in the pad's own frame (in/out mirrored per side)
+const DIRS = ['in', 'up-in', 'up', 'up-out', 'out', 'down-out', 'down', 'down-in'];
+function dir8(dx, dy, side) { const inX = side ? -dx : dx, up = -dy; let a = Math.atan2(up, inX) * 180 / Math.PI; if (a < 0) a += 360; return DIRS[Math.round(a / 45) % 8]; }
+const PUNCH_MAP = { 'up-in': 'pHigh', 'in': 'pMid', 'down-in': 'pLow', 'out': 'hook', 'up-out': 'hook', 'down-out': 'upper', 'up': 'pHigh', 'down': 'upper' };
+const KICK_MAP = { 'up-out': 'kRound', 'up-in': 'kHigh', 'in': 'kMid', 'out': 'kSide', 'down-out': 'kSweep', 'down': 'kSweep', 'up': 'kHigh', 'down-in': 'kMid' };
+window.FIGHT_MAP = { DIRS, PUNCH_MAP, KICK_MAP };
 function pDown(e) {
   if (G.mode === 'title' || G.mode === 'end') return;
   ac();
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
-  const rail = railHit(x, y, r);
-  const st = { id: e.pointerId, side: rail >= 0 ? rail : (x < r.width / 2 ? 0 : 1), rail: rail >= 0, x0: x, y0: y, t0: now, pts: [{ x, y, t: now }], roam: false };
-  st.trail = { pts: st.pts, side: st.side, kind: st.rail ? 'rail' : 'arm', dead: 0 }; trails.push(st.trail);
-  ptrs.set(e.pointerId, st); dbg('down ' + (st.rail ? 'rail' : 'arm') + (st.side ? 'R' : 'L') + ' @' + Math.round(x) + ',' + Math.round(y));
+  const side = x < r.width / 2 ? 0 : 1, pad = y < r.height * PAD.split ? 'punch' : 'kick';
+  const st = { id: e.pointerId, side, pad, x0: x, y0: y, t0: now, pts: [{ x, y, t: now }] };
+  st.trail = { pts: st.pts, side, kind: pad === 'kick' ? 'rail' : 'arm', dead: 0 }; trails.push(st.trail);
+  ptrs.set(e.pointerId, st); dbg('down ' + pad + (side ? 'R' : 'L') + ' @' + Math.round(x) + ',' + Math.round(y));
 }
 function pMove(e) {
   const st = ptrs.get(e.pointerId); if (!st) return;
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
   st.pts.push({ x, y, t: now }); if (st.pts.length > 80) st.pts.shift();
-  if (st.rail) {
-    const dx = (x - st.x0) * (st.side ? -1 : 1), dy = y - st.y0; // dx > 0 = inward
-    const ch = PI.chamber[st.side] !== null, ddx = ch ? (x - st.chX) * (st.side ? -1 : 1) : dx, ddy = ch ? y - st.chY : dy;
-    if (!st.fired && ddx > 20 && ddx > Math.abs(ddy) * 1.2) { if (ch) PI.chamber[st.side] = null; st.rail = false; st.trail.kind = 'arm'; dbg('rail touch moved inward -> punch'); }
-    else if (PI.chamber[st.side] !== null) PI.chamber[st.side] = railHeight(y, r);
-    else if (!st.fired && Math.abs(dy) >= 45 && Math.abs(dy) > Math.abs(dx)) { st.fired = true; fireKick(st, r, 'flick'); }
-  }
-  // commit early: a clear single-thumb stroke throws as soon as it is long enough (no waiting for lift-off)
-  if (!st.rail && !st.fired && !st.multi && Math.hypot(x - st.x0, y - st.y0) >= COMMIT_PX) armRelease(st, r, 'commit');
+  // commit early once the direction is clear, unless both thumbs are roaming together
+  if (!st.fired && !st.multi && Math.hypot(x - st.x0, y - st.y0) >= COMMIT_PX && !otherMoving(st)) release(st, 'commit');
 }
-function recentVel(st, ms) { // peak px/ms between samples in the last `ms`
-  const p = st.pts, b = p[p.length - 1]; let best = 0;
-  for (let i = p.length - 1; i > 0 && b.t - p[i].t <= ms; i--) {
-    const dt = Math.max(8, p[i].t - p[i - 1].t), v = Math.hypot(p[i].x - p[i - 1].x, p[i].y - p[i - 1].y) / dt; if (v > best) best = v; }
-  return [0, 0, best];
-}
+function otherMoving(st) { for (const o of ptrs.values()) if (o !== st && !o.fired) { const l = o.pts[o.pts.length - 1]; if (Math.hypot(l.x - o.x0, l.y - o.y0) > STILL_PX) return true; } return false; }
 function pUp(e) {
   const st = ptrs.get(e.pointerId); if (!st) return; ptrs.delete(e.pointerId);
   st.trail.dead = performance.now();
-  const r = appRect(), now = performance.now();
-  const last = st.pts[st.pts.length - 1], dx = last.x - st.x0, dy = last.y - st.y0, dur = now - st.t0, d = Math.hypot(dx, dy);
-  const twoHeld = st.wasTwo;
-  if (st.rail) {
-    if (st.fired) return;
-    const side = st.side, chambered = PI.chamber[side] !== null;
-    const ref = chambered ? st.chY : st.y0, along = Math.abs(last.y - (ref ?? st.y0));
-    window.__lastRail = { d, dur, along, chambered };
-    if (along >= 18 || (!chambered && d >= 18)) fireKick(st, r, chambered ? 'chambered' : 'slide');
-    else { PI.chamber[side] = null; dbg(chambered ? 'chamber released (no slide) - leg down' : 'rail tap - no kick'); }
-    return;
-  }
-  window.__lastUp = { dur, d, multi: st.multi, rail: st.rail };
   if (st.fired) return;
-  if (st.multi) { dbg('lift (two-thumb ' + (st.multiKind || '') + ', no punch)'); return; }
-  armRelease(st, r, 'lift');
+  if (st.multi) { dbg('lift (' + st.multiKind + ', no strike)'); return; }
+  release(st, 'lift');
 }
-// ANY single-thumb stroke >= PUNCH_PX throws on that side; a short tap throws a straight.
-function armRelease(st, r, why) {
-  const last = st.pts[st.pts.length - 1], d = Math.hypot(last.x - st.x0, last.y - st.y0), dur = performance.now() - st.t0;
-  let pts = st.pts.map(p => [(p.x - st.x0) / r.width, (p.y - st.y0) / r.height]);
-  if (d >= PUNCH_PX) {
-    st.fired = true; const v = d / Math.max(30, dur);
-    firePlayer(null, st.side, speedScale(v), { pts }, why + ' d=' + Math.round(d) + ' v=' + v.toFixed(2));
-  } else if (why === 'lift' && dur < TAP_MS) {
-    st.fired = true; pts = [[0, 0], [0, -0.04], [0, -0.08]].map(p => [p[0] * (st.side ? -1 : 1), p[1]]);
-    firePlayer(null, st.side, 1, { pts }, 'tap');
-  } else dbg('ignored: d=' + Math.round(d) + ' dur=' + Math.round(dur));
-}
-function fireKick(st, r, why) {
-  const side = st.side, chambered = PI.chamber[side] !== null, last = st.pts[st.pts.length - 1];
-  const h = chambered ? PI.chamber[side] : railHeight(last.y, r); PI.chamber[side] = null;
-  const [, , v] = recentVel(st, 150);
-  firePlayer('kick', side, speedScale(Math.max(v, 0.6)), { h, chambered }, 'kick ' + why + ' v=' + v.toFixed(2));
+// Every swipe >= 25px fires; a short tap fires the pad's tap move. Never dropped.
+function release(st, why) {
+  const last = st.pts[st.pts.length - 1], dx = last.x - st.x0, dy = last.y - st.y0, d = Math.hypot(dx, dy), dur = performance.now() - st.t0;
+  let k, dir = 'tap';
+  if (d >= SWIPE_PX) { dir = dir8(dx, dy, st.side); k = (st.pad === 'punch' ? PUNCH_MAP : KICK_MAP)[dir]; }
+  else if (why === 'lift' && dur < TAP_MS) k = st.pad === 'punch' ? 'jab' : 'kMid';
+  else { dbg('hold released, no strike (d=' + Math.round(d) + ')'); return; }
+  st.fired = true;
+  const v = d / Math.max(30, dur);
+  firePlayer(k, st.side, dir === 'tap' ? 1 : speedScale(v), dir + ' ' + why + ' d=' + Math.round(d));
 }
 function speedScale(v) { return clamp(lerp(T.speedMin, T.speedMax, clamp((v - 0.3) / 2.0, 0, 1)), T.speedMin, T.speedMax); }
-// Frame-data tier comes from the path's geometry (needed so existing startup/active/recovery data stays);
-// what you SEE is the fist travelling the swipe path itself.
-function pathTier(pts) {
-  const e = pts[pts.length - 1]; let maxLat = 0;
-  if (!e || !isFinite(e[0]) || !isFinite(e[1]) || Math.hypot(e[0], e[1]) < 1e-4) return 'jab'; // fallback straight
-  for (const p of pts) { // lateral deviation from straight line start->end
-    const L = Math.hypot(e[0], e[1]) || 1e-6; const dev = Math.abs(p[0] * e[1] - p[1] * e[0]) / L; if (dev > maxLat) maxLat = dev; }
-  const ax = Math.abs(e[0]) * 0.5625 / 1, ay = Math.abs(e[1]); // width units -> comparable to height
-  if (maxLat > 0.045 || ax > ay * 1.2) return 'hook';
-  if (e[1] < 0 && ay > ax * 1.8 && ay > 0.17) return 'upper'; // long rising stroke = uppercut; short forward flick = straight
-  return 'jab';
+function firePlayer(k, side, spd, why) {
+  if (k === 'super' && (F[0].superUsed || F[0].meter < T.superCost)) return;
+  const p = F[0].inp; p.atkF = G.frames; p.atk = k; p.spd = spd; p.hand = k === 'super' ? 1 : side;
+  lastFire = { k, side, t: performance.now() };
+  dbg(k + ' ' + (side ? 'R' : 'L') + ' x' + (+spd).toFixed(2) + (why ? ' (' + why + ')' : '') + (canAct(F[0]) ? '' : ' [busy: ' + F[0].state + ']'));
 }
-function firePlayer(k, side, spd, extra, why) {
-  const p = F[0].inp; p.atkF = G.frames;
-  dbg((k || pathTier(extra.pts)) + ' ' + (side ? 'R' : 'L') + ' x' + (+spd).toFixed(2) + (why ? ' (' + why + ')' : '') + (canAct(F[0]) ? '' : ' [busy: ' + F[0].state + ']'));
-  if (k === 'super') { if (F[0].superUsed || F[0].meter < T.superCost) return; p.atk = 'super'; p.spd = spd; p.hand = 1; p.path = null; return; }
-  if (k === 'kick') { p.atk = 'kick'; p.spd = spd; p.hand = side; p.kick = extra; p.path = null; return; }
-  p.atk = pathTier(extra.pts); p.spd = spd; p.hand = side; p.path = extra.pts;
-}
-// Real touch events for fingers (preventDefault on every phase, non-passive) so the browser can't
-// steal the gesture; pointer events only for the mouse.
+let lastFire = null;
+// Real touch events for fingers (non-passive, preventDefault every phase); pointer events for the mouse only.
 const tw = (fn) => (e) => { if (G.mode === 'title' || G.mode === 'end') return; e.preventDefault(); for (const t of e.changedTouches) fn({ pointerId: 't' + t.identifier, clientX: t.clientX, clientY: t.clientY }); };
 app.addEventListener('touchstart', tw(pDown), { passive: false });
 app.addEventListener('touchmove', tw(pMove), { passive: false });
@@ -706,95 +685,81 @@ app.addEventListener('pointerdown', mouseOnly(pDown));
 addEventListener('pointermove', mouseOnly(pMove));
 addEventListener('pointerup', mouseOnly(pUp));
 app.addEventListener('contextmenu', e => e.preventDefault());
-// per-frame touch interpretation (holds, guard, super charge, roam, chamber)
+// per-frame two-thumb interpretation: guard, roam, super
 function readTouch() {
-  const now = performance.now(), r = appRect();
-  const arms = [...ptrs.values()].filter(s => !s.rail);
-  for (const s of ptrs.values()) if (s.rail && PI.chamber[s.side] === null && now - s.t0 > HOLD_MS) {
-    const l = s.pts[s.pts.length - 1]; if (!s.fired && Math.hypot(l.x - s.x0, l.y - s.y0) < STILL_PX * 2) { PI.chamber[s.side] = railHeight(l.y, r); s.chY = l.y; s.chX = l.x; s.trail.kind = 'chamber'; dbg('chamber ' + (s.side ? 'R' : 'L')); }
-  }
+  const now = performance.now();
+  const live = [...ptrs.values()].filter(s => !s.fired);
   PI.guard = false; PI.roamX = PI.roamY = 0;
   let charging = false;
-  if (arms.length >= 2) {
-    const [a, b] = arms;
+  if (live.length >= 2) {
+    const [a, b] = live;
     const la = a.pts[a.pts.length - 1], lb = b.pts[b.pts.length - 1];
     const da = [la.x - a.x0, la.y - a.y0], db = [lb.x - b.x0, lb.y - b.y0];
-    const avg = [(da[0] + db[0]) / 2, (da[1] + db[1]) / 2], m = Math.hypot(avg[0], avg[1]);
-    const sep = Math.hypot(la.x - lb.x, la.y - lb.y);
-    // a thumb that already threw a punch, or one that is still swiping on its own, never becomes a two-thumb gesture
-    const sameDir = (da[0] * db[0] + da[1] * db[1]) > 0 && Math.hypot(...da) > STILL_PX && Math.hypot(...db) > STILL_PX;
-    const bothStill = Math.hypot(...da) < STILL_PX && Math.hypot(...db) < STILL_PX;
-    const held = now - Math.max(a.t0, b.t0);
+    const ma = Math.hypot(...da), mb = Math.hypot(...db), held = now - Math.max(a.t0, b.t0);
+    const bothStill = ma < STILL_PX && mb < STILL_PX, sameDir = ma > STILL_PX && mb > STILL_PX && (da[0] * db[0] + da[1] * db[1]) > 0;
     let kind = null;
-    if (!a.fired && !b.fired) {
-      if (sep < TOGETHER_PX && bothStill && held > 150) kind = 'super';
-      else if (sameDir && held > 120) kind = 'roam';
-      else if (bothStill && held > 150) kind = 'guard';
-    }
-    if (kind) { for (const s of [a, b]) { if (!s.multi) dbg(kind + ' start'); s.multi = true; s.multiKind = kind; s.trail.kind = kind; } }
-    if (kind === 'super') charging = true;
-    else if (kind === 'roam') { PI.roamX = clamp(avg[0] / 50, -1, 1); PI.roamY = clamp(avg[1] / 50, -1, 1); }
+    if (bothStill && held > GUARD_MS) kind = (a.pad === 'punch' && b.pad === 'punch' && a.side !== b.side && !F[0].superUsed && F[0].meter >= T.superCost) ? 'super' : 'guard';
+    else if (sameDir) kind = 'roam';
+    if (kind) for (const s of [a, b]) { if (s.multiKind !== kind) dbg(kind + ' start'); s.multi = true; s.multiKind = kind; s.trail.kind = kind; }
+    if (kind === 'super') { charging = true; PI.guard = true; }
+    else if (kind === 'roam') { PI.roamX = clamp((da[0] + db[0]) / 100, -1, 1); PI.roamY = clamp((da[1] + db[1]) / 100, -1, 1); }
     else if (kind === 'guard') PI.guard = true;
   }
-  if (charging && !F[0].superUsed && F[0].meter >= T.superCost) {
-    if (++PI.superCharge === SUPER_CHARGE) firePlayer('super', 1, 1.2, null, 'thumbs together');
-  } else if (!charging) PI.superCharge = 0;
+  if (charging) { if (++PI.superCharge === SUPER_CHARGE) firePlayer('super', 1, 1.2, 'both punch pads held'); }
+  else PI.superCharge = 0;
 }
-// keyboard / mouse fallbacks (desktop testing)
-const KEY_PATHS = { // [side, path in screen fractions]
-  KeyR: [0, [[0, 0], [0.01, -0.06], [0.02, -0.14]]], KeyF: [0, [[0, 0], [0.08, -0.03], [0.16, -0.02], [0.22, 0.01]]], KeyV: [0, [[0, 0], [0, -0.12], [0.005, -0.26]]],
-  KeyU: [1, [[0, 0], [-0.01, -0.06], [-0.02, -0.14]]], KeyJ: [1, [[0, 0], [-0.08, -0.03], [-0.16, -0.02], [-0.22, 0.01]]], KeyM: [1, [[0, 0], [0, -0.12], [-0.005, -0.26]]],
+// keyboard / mouse fallbacks (desktop testing). Mouse drag works like a thumb on the pads.
+const KEYMAP = {
+  KeyR: ['pHigh', 0], KeyF: ['pMid', 0], KeyV: ['pLow', 0], KeyT: ['hook', 0], KeyG: ['upper', 0], KeyC: ['jab', 0],
+  KeyU: ['pHigh', 1], KeyJ: ['pMid', 1], KeyM: ['pLow', 1], KeyY: ['hook', 1], KeyH: ['upper', 1], KeyN: ['jab', 1],
+  Digit1: ['kHigh', 0], Digit2: ['kMid', 0], Digit3: ['kSide', 0], Digit4: ['kRound', 0], Digit5: ['kSweep', 0],
+  Digit6: ['kHigh', 1], Digit7: ['kMid', 1], Digit8: ['kSide', 1], Digit9: ['kRound', 1], Digit0: ['kSweep', 1],
 };
-const keyHold = {};
 addEventListener('keydown', e => {
   if (e.repeat) return;
   keys[e.code] = true; ac();
   if (G.mode !== 'fight') return;
-  if (KEY_PATHS[e.code]) { const [side, pts] = KEY_PATHS[e.code]; firePlayer(null, side, e.shiftKey ? T.speedMax : 1.05, { pts }); }
-  if (e.code === 'KeyZ' || e.code === 'KeyX') keyHold[e.code] = performance.now();
+  if (KEYMAP[e.code]) { const [k, side] = KEYMAP[e.code]; firePlayer(k, side, e.shiftKey ? T.speedMax : 1.05, 'key ' + e.code); }
   if (e.code === 'Space') e.preventDefault();
 });
-addEventListener('keyup', e => {
-  keys[e.code] = false;
-  if ((e.code === 'KeyZ' || e.code === 'KeyX') && keyHold[e.code]) {
-    const side = e.code === 'KeyZ' ? 0 : 1, chambered = PI.chamber[side] !== null, h = chambered ? PI.chamber[side] : 0.5;
-    PI.chamber[side] = null; keyHold[e.code] = 0; if (G.mode === 'fight') firePlayer('kick', side, 1.1, { h, chambered });
-  }
-  if (e.code === 'KeyB') { if (PI.keySuper >= SUPER_CHARGE) firePlayer('super', 1, 1.2); PI.keySuper = 0; }
-});
+addEventListener('keyup', e => { keys[e.code] = false; });
 function readPlayer() {
   readTouch();
-  const p = F[0].inp, now = performance.now();
-  for (const [c, side] of [['KeyZ', 0], ['KeyX', 1]]) if (keyHold[c] && now - keyHold[c] > HOLD_MS && PI.chamber[side] === null) PI.chamber[side] = 0.55;
-  PI.keySuper = keys.KeyB ? (PI.keySuper || 0) + 1 : 0;
+  const p = F[0].inp;
+  PI.keySuper = keys.KeyB ? (PI.keySuper || 0) + 1 : 0; if (PI.keySuper === SUPER_CHARGE) firePlayer('super', 1, 1.2, 'key B');
   let mx = PI.roamX, mz = -PI.roamY;
   if (keys.KeyA || keys.ArrowLeft) mx -= 1; if (keys.KeyD || keys.ArrowRight) mx += 1; if (keys.KeyW || keys.ArrowUp) mz += 1; if (keys.KeyS || keys.ArrowDown) mz -= 1;
-  p.mx = clamp(mx, -1, 1); p.mz = clamp(mz, -1, 1); p.block = !!keys.Space || PI.guard;
+  p.mx = clamp(mx, -1, 1); p.mz = clamp(mz, -1, 1); p.block = !!keys.Space || PI.guard || (PI.keySuper > 0);
 }
-// subtle thumb trails
+// pads + thumb trails
+function drawPads(w, h) {
+  if (G.mode === 'title' || G.mode === 'end') return;
+  const pulse = G.mode === 'intro' ? 0.5 + 0.5 * Math.sin(G.phaseT * 0.25) : 0, now = performance.now();
+  for (const pad of ['punch', 'kick']) for (const side of [0, 1]) {
+    const x0 = side ? w * (0.5 + PAD.gap / 2) : w * PAD.inset, x1 = side ? w * (1 - PAD.inset) : w * (0.5 - PAD.gap / 2);
+    const y0 = h * (pad === 'punch' ? PAD.top : PAD.split + 0.01), y1 = h * (pad === 'punch' ? PAD.split - 0.01 : PAD.bot);
+    let pressed = false; for (const p of ptrs.values()) if (p.pad === pad && p.side === side && !p.fired) pressed = true;
+    const flash = lastFire && lastFire.side === side && ((pad === 'kick') === lastFire.k.startsWith('k')) ? Math.max(0, 1 - (now - lastFire.t) / 300) : 0;
+    const a = 0.05 + pulse * 0.08 + (pressed ? 0.07 : 0) + flash * 0.12;
+    const rgb = pad === 'punch' ? '255,225,190' : '140,215,255';
+    tctx.fillStyle = `rgba(${rgb},${a})`; tctx.strokeStyle = `rgba(${rgb},${0.16 + pulse * 0.2 + (pressed ? 0.2 : 0) + flash * 0.3})`; tctx.lineWidth = 1.2;
+    tctx.beginPath(); tctx.roundRect(x0, y0, x1 - x0, y1 - y0, 18); tctx.fill(); tctx.stroke();
+    // small direction ticks (6 used directions), no text
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, rr = Math.min(x1 - x0, y1 - y0) * 0.36;
+    const used = pad === 'punch' ? ['up-in', 'in', 'down-in', 'up-out', 'out', 'down-out'] : ['up-in', 'in', 'up-out', 'out', 'down-out'];
+    tctx.strokeStyle = `rgba(${rgb},${0.28 + pulse * 0.3})`; tctx.lineWidth = 2;
+    for (const dname of used) {
+      const ang = DIRS.indexOf(dname) * 45 * Math.PI / 180, ux = Math.cos(ang) * (side ? -1 : 1), uy = -Math.sin(ang);
+      tctx.beginPath(); tctx.moveTo(cx + ux * rr * 0.78, cy + uy * rr * 0.78); tctx.lineTo(cx + ux * rr, cy + uy * rr); tctx.stroke();
+    }
+    tctx.fillStyle = `rgba(${rgb},${0.25 + pulse * 0.3})`; tctx.beginPath(); tctx.arc(cx, cy, 2.5, 0, 7); tctx.fill();
+  }
+}
 function drawTrails() {
   const w = trailCv.clientWidth, h = trailCv.clientHeight, dpr = Math.min(2, devicePixelRatio || 1);
   if (trailCv.width !== Math.round(w * dpr)) { trailCv.width = Math.round(w * dpr); trailCv.height = Math.round(h * dpr); }
   tctx.setTransform(dpr, 0, 0, dpr, 0, 0); tctx.clearRect(0, 0, w, h);
-  // rails (compact, inboard, unlabeled)
-  if (G.mode !== 'title' && G.mode !== 'end') {
-    const top = h * 0.6, bot = h * 0.92, pulse = G.mode === 'intro' ? 0.5 + 0.5 * Math.sin(G.phaseT * 0.25) : 0;
-    for (const side of [0, 1]) {
-      const cx = side ? w - (w * 0.06 + 15) : w * 0.06 + 15;
-      let pressed = false; for (const p of ptrs.values()) if (p.rail && p.side === side) pressed = true;
-      const ch = PI.chamber[side], kicking = F[0].state === 'atk' && F[0].mk === 'kick' && F[0].hand === side;
-      const glow = kicking ? 1 : pressed || ch !== null ? 0.8 : 0.32 + pulse * 0.55;
-      tctx.save(); tctx.shadowColor = 'rgba(90,210,255,' + glow + ')'; tctx.shadowBlur = 8 + 16 * glow;
-      const g = tctx.createLinearGradient(0, top, 0, bot); g.addColorStop(0, 'rgba(120,225,255,' + (0.15 + glow * 0.5) + ')'); g.addColorStop(1, 'rgba(60,160,255,' + (0.3 + glow * 0.6) + ')');
-      tctx.fillStyle = g; tctx.beginPath(); tctx.roundRect(cx - 4, top, 8, bot - top, 4); tctx.fill(); tctx.restore();
-      // tiny foot glyph at the bottom of the strip
-      tctx.save(); tctx.translate(cx, bot + 13); if (side) tctx.scale(-1, 1); tctx.fillStyle = 'rgba(170,235,255,' + (0.45 + glow * 0.5) + ')';
-      tctx.beginPath(); tctx.ellipse(0, 0, 4, 7, -0.25, 0, 7); tctx.fill();
-      for (let k = 0; k < 4; k++) { tctx.beginPath(); tctx.arc(-3 + k * 2.4, -9 + Math.abs(k - 1.2) * 0.8, 1.3, 0, 7); tctx.fill(); }
-      tctx.restore();
-      if (ch !== null) { tctx.fillStyle = 'rgba(200,245,255,0.95)'; tctx.shadowColor = '#5cf'; tctx.shadowBlur = 14; tctx.beginPath(); tctx.arc(cx, bot - ch * (bot - top), 10, 0, 7); tctx.fill(); tctx.shadowBlur = 0; }
-    }
-  }
+  drawPads(w, h);
   const now = performance.now(), COL = { arm: '255,240,210', rail: '160,220,255', chamber: '120,220,255', guard: '140,255,170', super: '255,90,190', roam: '255,255,255' };
   for (let i = trails.length - 1; i >= 0; i--) {
     const tr = trails[i], age = tr.dead ? (now - tr.dead) / 260 : 0;
@@ -920,38 +885,33 @@ function updateVisuals(dt) {
   const sway = (i) => [Math.sin(t + i) * 0.008, Math.cos(t * 1.3 + i) * 0.01];
   let lp = [HP.guardL, HP.guardL, 0], rp = [HP.guardR, HP.guardR, 0];
   if (me.blocking || me.state === 'block') { lp = [HP.blockL, HP.blockL, 0]; rp = [HP.blockR, HP.blockR, 0]; }
-  let lpath = null, rpath = null;
   if (me.state === 'atk' && me.mk === 'super') {
     const m = me.move, s = me.st, W = HP.supW, S = HP.supS;
     if (s <= m.s) rp = [HP.guardR, W, ease(s / m.s)]; else if (s <= m.s + m.a) rp = [W, S, ease((s - m.s) / 2)]; else rp = [S, HP.guardR, ease((s - m.s - m.a) / m.r)];
-  } else if (me.state === 'atk' && me.path) {
-    // the fist travels the swipe path: screen x/y of the swipe -> camera x/y, extension -> depth
-    const m = me.move, s = me.st, pts = me.path, side = me.hand, G0 = side ? HP.guardR : HP.guardL;
-    let u, back = 0;
-    if (s <= m.s) u = 0.3 * ease(s / m.s); else if (s <= m.s + m.a) u = 0.3 + 0.7 * ease((s - m.s) / Math.max(1, m.a - 1)); else { u = 1; back = ease((s - m.s - m.a) / m.r); }
-    const fi = u * (pts.length - 1), i0 = Math.floor(fi), i1 = Math.min(pts.length - 1, i0 + 1), fr = fi - i0;
-    const e = pts[pts.length - 1], L = Math.max(0.05, Math.hypot(e[0] * 0.56, e[1]));
-    const sc = 0.55 / L * Math.min(1, L / 0.12 + 0.4); // normalise reach so short flicks still extend
-    const px2 = lerp(pts[i0][0], pts[i1][0], fr) * 0.56 * sc, py2 = lerp(pts[i0][1], pts[i1][1], fr) * sc;
-    const S = [G0[0] + px2 * 0.55, G0[1] - py2 * 0.45, G0[2] - 0.55 * u, G0[3] - 0.15 * u, G0[4] - px2 * 1.2, G0[5] + (side ? 1 : -1) * 1.2 * u];
-    const pose = [S, G0, back];
+  } else if (me.state === 'atk' && FK[me.mk]) {
+    const m = me.move, s = me.st, side = me.hand, G0 = side ? HP.guardR : HP.guardL, K = FK[me.mk].map(q => mir(q, side));
+    let pose; // guard -> wind -> (mid) -> strike -> guard
+    if (s <= m.s) pose = [G0, K[0], ease(s / m.s)];
+    else if (s <= m.s + m.a) { const u = ease((s - m.s) / Math.max(1, m.a - 1)); pose = K.length > 2 ? (u < 0.5 ? [K[0], K[1], u * 2] : [K[1], K[2], (u - 0.5) * 2]) : [K[0], K[1], u]; }
+    else pose = [K[K.length - 1], G0, ease((s - m.s - m.a) / m.r)];
     if (side) rp = pose; else lp = pose;
   }
-  // ghost leg: chamber / kick
-  const kickSide = me.state === 'atk' && me.mk === 'kick' ? me.hand : -1;
+  // ghost leg: each kick has its own path (camera space, right side; mirrored for left)
+  const kickSide = me.state === 'atk' && LK[me.mk] ? me.hand : -1;
   for (const side of [0, 1]) {
     const leg = ghostLegs[side]; let v = null;
     if (side === kickSide) {
-      const m = me.move, st = me.st, h = me.kick ? me.kick.h : 0.5, ch = me.kick && me.kick.chambered;
-      if (st <= m.s) v = ch ? legPose(side, 'chamber', 'extend', ease(st / m.s) * 0.3, h) : legPose(side, 'rest', 'chamber', ease(st / m.s), h);
-      else if (st <= m.s + m.a) v = legPose(side, 'chamber', 'extend', ease((st - m.s) / Math.max(1, m.a - 1)), h);
-      else v = legPose(side, 'extend', 'rest', ease((st - m.s - m.a) / m.r), h);
-      legMat.opacity = 0.7;
-    } else if (PI.chamber[side] !== null && !AUTO) { v = legPose(side, 'rest', 'chamber', 1, PI.chamber[side]); }
+      const m = me.move, st = me.st, path = LK[me.mk];
+      let u; // 0 rest, 1 = chamber, 2.. = path keys
+      if (st <= m.s) u = ease(st / m.s) * 1.0; else if (st <= m.s + m.a) u = 1 + ease((st - m.s) / Math.max(1, m.a - 1)) * (path.length - 2); else u = (path.length - 1) * (1 - ease((st - m.s - m.a) / m.r));
+      const i0 = Math.min(path.length - 2, Math.floor(u)), fr = u - i0, A = path[i0], B = path[i0 + 1];
+      for (let i = 0; i < 3; i++) _v[i].set(lerp(A[i][0], B[i][0], fr) * (side ? 1 : -1), lerp(A[i][1], B[i][1], fr), lerp(A[i][2], B[i][2], fr));
+      v = _v;
+    }
     leg.g.visible = !!v;
     if (v) { placeSeg(leg.thigh, v[0], v[1]); placeSeg(leg.shin, v[1], v[2]); leg.knee.position.copy(v[1]); leg.foot.position.copy(v[2]); }
   }
-  if (kickSide < 0) legMat.opacity = 0.55;
+  legMat.opacity = kickSide >= 0 ? 0.8 : 0.55;
   setFist(L, lp[0], lp[1], lp[2]); setFist(R, rp[0], rp[1], rp[2]);
   const s0 = sway(0), s1 = sway(2); if (me.state !== 'atk') { L.position.x += s0[0]; L.position.y += s0[1]; R.position.x += s1[0]; R.position.y += s1[1]; }
   if (down) { L.position.y -= camDrop * 0.4; R.position.y -= camDrop * 0.4; }
