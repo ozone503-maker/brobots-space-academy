@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>CORE — mechanism prototype (gates 1+2)</title>
+<title>CORE: mechanism prototype step 1</title>
 <style>
   html,body{margin:0;padding:0;height:100%;background:#101014;overflow:hidden;touch-action:none;
     font-family:ui-monospace,Menlo,Consolas,monospace;color:#cfd2d8;-webkit-user-select:none;user-select:none}
@@ -23,8 +23,9 @@
 </head>
 <body>
 <canvas id="cv"></canvas>
-<div id="hud"><b>CORE</b> — gates 1+2: he stands, walks in, steps, stumbles, falls by balance.<br>
-your fists: touch your half of the screen, drag to move, <b>flick hard to punch</b>. slow touch = gentle push.</div>
+<div id="hud"><b>CORE step 1</b>: he walks in, guards with his forearms, stumbles, falls, gets back up<br>
+Touch your half of the screen to hold that fist and drag to move it<br>
+<b>Swipe up fast to punch</b>: the fist follows your swipe. Straight swipe = jab, curved swipe = hook. A slow touch only pushes</div>
 <div id="log"></div>
 <div id="hint">left thumb = left fist · right thumb = right fist</div>
 <div id="bar">
@@ -33,12 +34,20 @@ your fists: touch your half of the screen, drag to move, <b>flick hard to punch<
 </div>
 <script>
 'use strict';
-/* ================= CORE — articulated momentum prototype =================
+/* ================= CORE step 1: articulated momentum prototype =================
    Body: Verlet points in 3D, distance constraints, stance springs, CoM vs
-   support polygon balance. Player: two kinematic ghost fists (solid) driven
-   by thumbs; flick = trajectory; swept sphere-vs-capsule contact; impulse =
-   effective mass x relative velocity along the contact normal.
-   No damage table. No hit states. The physics produces the result.        */
+   support polygon balance. Get-up is the same springs ramping back on with the
+   feet pulled under his CoM first. Guard: he perceives your fist late
+   (REACT) and imprecisely (NOISE), predicts future = pos + vel*t, and drives
+   his hand/forearm into that path with two-bone IK. Whatever it touches takes
+   the impulse. Player: two ghost arms; the fist chases your recorded swipe
+   path via two-bone IK. Swept sphere-vs-capsule contact; impulse = effective
+   mass x relative velocity along the contact normal. No damage table.        */
+
+/* difficulty dials: the ONLY two */
+let REACT = 0.05;   // s: how late he sees your fist
+let NOISE = 0.15;   // fraction of fist speed he misjudges by
+const GUARD_K = 0.35; // arm muscle when he commits to a block (not a difficulty dial: his strength)
 
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 let W = 0, H = 0;
@@ -54,6 +63,22 @@ const V3 = {
   dot:(a,b)=>a.x*b.x+a.y*b.y+a.z*b.z
 };
 function proj(p){ const s = (H*0.62)/Math.max(0.35,p.z); return { x: W/2 + p.x*s, y: H*0.86 - p.y*s, s }; }
+
+V3.cross=(a,b)=>({x:a.y*b.z-a.z*b.y,y:a.z*b.x-a.x*b.z,z:a.x*b.y-a.y*b.x});
+V3.lerp=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,z:a.z+(b.z-a.z)*t});
+function proj(p){ const s = (H*0.62)/Math.max(0.35,p.z); return { x: W/2 + p.x*s, y: H*0.86 - p.y*s, s }; }
+function unproject(sx, sy, z){ const s=(H*0.62)/z; return { x:(sx-W/2)/s, y:(H*0.86-sy)/s, z }; }
+
+/* two-bone IK: shoulder S, target T, bone lengths l1 l2, elbow bends toward pole */
+function ik2(S, T, l1, l2, pole){
+  const d = V3.sub(T,S), L = V3.len(d)||1e-6, dir = V3.mul(d,1/L);
+  const Lc = Math.max(Math.abs(l1-l2)+1e-3, Math.min(l1+l2-1e-3, L));
+  const a = (l1*l1 + Lc*Lc - l2*l2)/(2*Lc), h = Math.sqrt(Math.max(0, l1*l1-a*a));
+  let pv = V3.sub(pole,S); pv = V3.sub(pv, V3.mul(dir, V3.dot(pv,dir)));
+  const pn = V3.norm(pv);
+  return { E: V3.add(V3.add(S, V3.mul(dir,a)), V3.mul(pn,h)), H: V3.add(S, V3.mul(dir,Lc)), reach: L<=l1+l2 };
+}
+function gauss(){ return Math.sqrt(-2*Math.log(Math.random()||1e-9))*Math.cos(6.2832*Math.random()); }
 
 /* ---------------- the body ---------------- */
 const NAMES = ['head','neck','chest','pelvis','shL','elL','haL','shR','elR','haR','knL','anL','ftL','knR','anR','ftR'];
@@ -89,10 +114,11 @@ function buildBody(){
     return { a:ia, b:ib, rest: V3.len(V3.sub(P[ia].p, P[ib].p)), k }; });
   feet.L = { planted:{...P[idx('ftL')].p}, stepping:false, t:0, from:null, to:null };
   feet.R = { planted:{...P[idx('ftR')].p}, stepping:false, t:0, from:null, to:null };
-  fallen = 0; fallT = 0;
+  fallen = 0; fallT = 0; settleT = 0; rise = null; daze = 0;
+  guard.L = mkGuard(); guard.R = mkGuard();
 }
 const feet = { L:null, R:null };
-let fallen = 0, fallT = 0;
+let fallen = 0, fallT = 0, settleT = 0, rise = null;  // rise: {g, t} while getting up
 
 function com(){ let m=0, c={x:0,y:0,z:0};
   for (const q of P){ c.x+=q.p.x*q.m; c.y+=q.p.y*q.m; c.z+=q.p.z*q.m; m+=q.m; }
@@ -116,6 +142,7 @@ function stanceTargets(){
   T.anR = { x: feet.R.planted.x, y: 0.05, z: feet.R.planted.z + 0.20 };
   return T;
 }
+
 const SPRING = { pelvis:.16, chest:.14, neck:.12, head:.10, shL:.10, shR:.10,
                  elL:.10, elR:.10, haL:.12, haR:.12, knL:.07, knR:.07, anL:.15, anR:.15, ftL:.3, ftR:.3 };
 
@@ -127,27 +154,118 @@ function stepFoot(side){
   f.stepping = true; f.t = 0;
 }
 
+/* ---------------- his guard reflex ---------------- */
+function mkGuard(){ return { w:0, hold:0, tgt:null, E:null, src:null }; }
+const guard = { L:null, R:null };
+const SEEN = [];               // ring buffer of what the fists looked like, per frame
+let simFrame = 0;
+function perceive(){
+  SEEN.push(fists.map(f => ({ p:{...f.p}, v:{...f.vel}, striking: f.state==='strike', id: f.strikeId, nz: f.noise })));
+  if (SEEN.length > 40) SEEN.shift();
+}
+function guardThink(dt){
+  for (const s of ['L','R']){ const g = guard[s];
+    g.hold -= dt;
+    g.w = g.hold > 0 ? Math.min(1, g.w + dt/0.03) : Math.max(0, g.w - dt/0.30);
+  }
+  if (fallen || rise) return;
+  const lag = Math.round(REACT*60);
+  const seen = SEEN[SEEN.length-1-lag]; if (!seen) return;
+  const head = P[idx('head')].p, chest = P[idx('chest')].p, pel = P[idx('pelvis')].p;
+  const belly = V3.lerp(chest, pel, 0.5);
+  for (let fi=0; fi<2; fi++){
+    const o = seen[fi]; if (!o.striking || o.v.z < 1) continue;
+    // what he thinks he saw: true state + this punch's fixed misjudgement
+    const sp = V3.len(o.v);
+    const v = V3.add(o.v, V3.mul(o.nz.v, sp*NOISE));
+    const p = V3.add(o.p, V3.mul(o.nz.p, NOISE*0.15));
+    // future = pos + vel*t: does that line come at his head or chest?
+    let threat = null;
+    for (const T of [head, chest, belly]){
+      const zi = T.z - 0.24, t = Math.max(1/60, (zi - p.z)/v.z);
+      if (t > 0.45 || p.z > T.z) continue;
+      const fut = V3.add(p, V3.mul(v, t));
+      const miss = Math.hypot(fut.x - T.x, fut.y - T.y);
+      if (miss < 0.26 && (!threat || miss < threat.miss)) threat = { fut, miss };
+    }
+    if (!threat) continue;
+    // the arm on that side intercepts; if it is busy with the other fist, the other arm
+    let side = threat.fut.x < 0 ? 'L' : 'R';
+    if (guard[side].src !== null && guard[side].src !== fi && guard[side].hold > 0) side = side==='L'?'R':'L';
+    const g = guard[side];
+    g.tgt = threat.fut; g.hold = 0.28; g.src = fi;
+  }
+  for (const s of ['L','R']){ const g = guard[s];
+    if (g.hold <= 0){ g.src = null; }
+    if (!g.tgt) continue;
+    const S = P[idx('sh'+s)].p, sx = s==='L'?-1:1;
+    const l1 = CONS.find(c=>c.a===idx('sh'+s)&&c.b===idx('el'+s)).rest;
+    const l2 = CONS.find(c=>c.a===idx('el'+s)&&c.b===idx('ha'+s)).rest;
+    // elbow drops down and out so the forearm lies across the path
+    const r = ik2(S, g.tgt, l1, l2, { x:S.x+sx*0.35, y:S.y-0.45, z:S.z-0.05 });
+    g.E = r.E; g.H = r.H;
+  }
+}
+
+/* ---------------- physics ---------------- */
 function physics(dt){
+  simFrame++;
   const g = -9.8, damp = 0.995;
   for (const q of P){
     const vx=(q.p.x-q.pp.x)*damp, vy=(q.p.y-q.pp.y)*damp, vz=(q.p.z-q.pp.z)*damp;
-    q.pp = {...q.p};
+    q.pp.x=q.p.x; q.pp.y=q.p.y; q.pp.z=q.p.z;
     q.p.x+=vx; q.p.y+=vy+g*dt*dt; q.p.z+=vz;
   }
-  // his walk: close distance until HOME_Z
-  if (!fallen && root.z > HOME_Z) root.z = Math.max(HOME_Z, root.z - 0.22*dt);
-  // balance judgement
+  if (!fallen && !rise && root.z > HOME_Z) root.z = Math.max(HOME_Z, root.z - 0.22*dt);
+  if (!fallen && !rise) root.x *= 1 - 0.3*dt;   // drift back to the centre line
   const si = supportInfo();
   const offBalance = si.dist > 0.30;
-  if (!fallen && offBalance){ fallT += dt; if (fallT > 0.30) fallen = 1; } else fallT = Math.max(0, fallT - dt*2);
-  const muscle = fallen ? 0.06 : 1;
-  // foot stepping: step when a foot is far from its stance target or balance demands it
-  for (const side of ['L','R']){
-    const f = feet[side], fi = idx(side==='L'?'ftL':'ftR'), r = REST[side==='L'?'ftL':'ftR'];
+  // off his feet too long and he goes down; the further out his CoM, the faster it adds up
+  if (!fallen && !rise && offBalance){ fallT += dt * si.dist/0.30; if (fallT > FALL_HOLD){ fallen = 1; settleT = 0; } }
+  else fallT = Math.max(0, fallT - dt*2);
+  // stumble: when his CoM is pushed past his feet he gives ground under it (his feet then step to the new spot)
+  if (!fallen && !rise && offBalance){
+    const c = si.c, k = STUMBLE*dt*60;
+    root.x += (c.x - root.x)*k; root.z = Math.min(3.6, root.z + (c.z - root.z)*k);
+  }
+
+  /* get-up: once he has settled on the floor, put feet under his CoM, then
+     ramp the stance springs back on from a crouch. Physics does the lifting.   */
+  const pel = P[idx('pelvis')];
+  if (fallen){
+    const pv = V3.len(V3.sub(pel.p, pel.pp))/dt;
+    if (pv < 0.6) settleT += dt; else settleT = Math.max(0, settleT - dt);   // he has stopped moving
+    if (settleT > 0.8){
+      const c = com();
+      root.x = Math.max(-0.8, Math.min(0.8, c.x)); root.z = Math.max(HOME_Z, Math.min(3.6, c.z));
+      feet.L = { planted:{ x:root.x+REST.ftL.x, y:0.03, z:root.z+REST.ftL.z }, stepping:false };
+      feet.R = { planted:{ x:root.x+REST.ftR.x, y:0.03, z:root.z+REST.ftR.z }, stepping:false };
+      fallen = 0; rise = { g:0, t:0 };
+    }
+  }
+  if (rise){
+    rise.t += dt; rise.g = Math.min(1, rise.g + dt/RISE_TIME);
+    if (rise.g >= 1 && pel.p.y > 0.86 && si.dist < 0.22){ rise = null; fallT = 0; }
+    else if (rise.t > RISE_TIME + 2.5){ rise = null; fallen = 1; settleT = 0; }   // failed: lie back, try again
+  }
+  const ease = rise ? rise.g*rise.g*(3-2*rise.g) : 1;
+  // a hit rattles him: muscles go slack for a moment (machin's x0.45 rule, scaled by the impulse)
+  daze = Math.max(0, daze - dt/0.6);
+  // leverage: the further his CoM is out past his feet, the less his muscles can do about it.
+  // past a point gravity wins, and that is the knockdown
+  const lever = rise ? 1 : Math.max(0.12, Math.min(1, 1 - (si.dist - LEVER_FROM)/LEVER_SPAN));
+  const muscle = (fallen ? 0.06 : (rise ? 0.12 + 0.88*ease : 1)) * (1 - DAZE_MAX*daze) * lever;
+
+  // foot stepping
+  if (!fallen && !rise) for (const side of ['L','R']){
+    const f = feet[side], r = REST[side==='L'?'ftL':'ftR'];
     const target = { x: r.x + root.x, z: r.z + root.z };
     const dNow = Math.hypot(f.planted.x-target.x, f.planted.z-target.z);
     const other = feet[side==='L'?'R':'L'];
-    if (!fallen && !f.stepping && !other.stepping && (dNow > 0.30 || (offBalance && dNow > 0.12))) stepFoot(side);
+    if (!f.stepping && !other.stepping && (dNow > 0.30 || (offBalance && dNow > 0.12))) stepFoot(side);
+  }
+  for (const side of ['L','R']){
+    const f = feet[side], fi = idx(side==='L'?'ftL':'ftR');
     if (f.stepping){
       f.t += dt/0.22;
       const t = Math.min(1, f.t), arc = Math.sin(t*Math.PI)*0.13;
@@ -157,50 +275,72 @@ function physics(dt){
       if (t>=1){ f.stepping=false; f.planted={...f.to}; }
     }
   }
+  guardThink(dt);
   const T = stanceTargets();
+  if (rise) for (const n of NAMES){                    // from a crouch up to stance height
+    if (n[0]==='f' || n[0]==='a') continue;
+    T[n].y = REST[n].y * (0.35 + 0.65*ease);
+  }
   for (let it=0; it<10; it++){
-    // stance springs (soft: a preferred posture the body can be knocked out of)
-    if (it===0) for (const n of NAMES){
-      const i=idx(n), k=(SPRING[n]||0.08)*muscle;
-      if ((n==='ftL'&&feet.L.stepping)||(n==='ftR'&&feet.R.stepping)) continue;
-      P[i].p.x += (T[n].x-P[i].p.x)*k; P[i].p.y += (T[n].y-P[i].p.y)*k; P[i].p.z += (T[n].z-P[i].p.z)*k;
+    if (it===0){
+      for (let i=0;i<NAMES.length;i++){ const n = NAMES[i];
+        if ((n==='ftL'&&feet.L.stepping)||(n==='ftR'&&feet.R.stepping)) continue;
+        // getting up: feet and ankles pull home first and hard
+        const k = (SPRING[n]||0.08) * ((rise && (n[0]==='f'||n[0]==='a')) ? 1 : muscle);
+        P[i].p.x += (T[n].x-P[i].p.x)*k; P[i].p.y += (T[n].y-P[i].p.y)*k; P[i].p.z += (T[n].z-P[i].p.z)*k;
+      }
+    }
+    // guard: drive elbow and hand toward the IK solution, weighted by how committed he is
+    if (it < 3 && !fallen) for (const s of ['L','R']){ const gd = guard[s]; if (gd.w <= 0 || !gd.E) continue;
+      const w = gd.w * muscle;
+      for (const [nm, tg, k] of [['el'+s, gd.E, GUARD_K*0.7], ['ha'+s, gd.H, GUARD_K]]){
+        const q = P[idx(nm)].p; q.x += (tg.x-q.x)*k*w; q.y += (tg.y-q.y)*k*w; q.z += (tg.z-q.z)*k*w; }
     }
     for (const c of CONS){
       const A=P[c.a], B=P[c.b];
-      const d = V3.sub(B.p, A.p), L = V3.len(d)||1e-6, diff=(L-c.rest)/L*c.k;
-      const wA=A.m/(A.m+B.m), wB=B.m/(A.m+B.m);
-      A.p = V3.add(A.p, V3.mul(d, diff*wB)); B.p = V3.sub(B.p, V3.mul(d, diff*wA));
+      const dx=B.p.x-A.p.x, dy=B.p.y-A.p.y, dz=B.p.z-A.p.z, L=Math.hypot(dx,dy,dz)||1e-6, diff=(L-c.rest)/L*c.k;
+      const wA=A.m/(A.m+B.m), wB=1-wA;
+      A.p.x+=dx*diff*wB; A.p.y+=dy*diff*wB; A.p.z+=dz*diff*wB;
+      B.p.x-=dx*diff*wA; B.p.y-=dy*diff*wA; B.p.z-=dz*diff*wA;
     }
-    // ground: nothing below the floor
-    for (const q of P) if (q.p.y < 0.035) q.p.y = 0.035;
+    for (const q of P) if (q.p.y < 0.035){ q.p.y = 0.035;
+      q.pp.x += (q.p.x-q.pp.x)*0.15; q.pp.z += (q.p.z-q.pp.z)*0.15; }   // floor friction
   }
-  // fallen bookkeeping: lie there a moment, then reset (get-up is gate 4)
-  if (fallen){ fallT += 0;
-    if (P[idx('pelvis')].p.y < 0.40){ fallHold += dt; if (fallHold > 1.8){ root.z = 3.1; buildBody(); } }
-  } else fallHold = 0;
 }
-let fallHold = 0;
+const RISE_TIME = 1.6;
+const LEVER_FROM = 0.15, LEVER_SPAN = 0.30;
+const FALL_HOLD = 0.18, STUMBLE = 0.06;   // s of being off balance before he is down; how readily he gives ground
+let daze = 0;
+const DAZE_MAX = 0.6, DAZE_J = 18;   // how slack a hit makes him, and the impulse that fully dazes him
 
-/* ---------------- player fists ---------------- */
+/* ---------------- player: ghost arms, fists chase the swipe ---------------- */
+let KNOCK = 8;    // how hard momentum shoves him (his springs are stiff, so this is a feel knob)
+let M_EFF = 3.0;               // kg: fist + arm + whatever body weight you put behind it
 const HIT_V = 2.2;              // m/s: below this, a touch is a touch, not a hit
+const ARM1 = 0.36, ARM2 = 0.34; // ghost upper arm, forearm
 function makeFist(side){
-  const hx = side==='L' ? -0.34 : 0.34;
+  // resting fists sit inside the screen edges on a narrow phone
+  const ax = Math.min(0.34, 0.72*(W/2)/((H*0.62)/0.55));
+  const hx = side==='L' ? -ax : ax;
   return { side, home:{x:hx, y:0.42, z:0.55}, p:{x:hx,y:0.42,z:0.55}, prev:{x:hx,y:0.42,z:0.55},
-           vel:{x:0,y:0,z:0}, state:'home', ptr:null, trail:[], latched:false, cool:0 };
+           vel:{x:0,y:0,z:0}, state:'home', ptr:null, latched:false, strikeId:0,
+           noise:{ v:{x:0,y:0,z:0}, p:{x:0,y:0,z:0} },
+           sh:{x:hx*0.75,y:0.18,z:0.10}, el:null, path:null };
 }
 const fists = [ makeFist('L'), makeFist('R') ];
-let contacts = [];   // {x,y(world), t, text}
+let contacts = [];
 let hitLog = [];
 function logHit(s){ hitLog.unshift(s); hitLog = hitLog.slice(0,5);
   document.getElementById('log').innerHTML =
     hitLog.map((h,i)=> i? '<span class="dim">'+h+'</span>' : h).join('<br>'); }
+const stats = { hits:0, armHits:0, bodyHits:0, falls:0, getups:0 };
 
-/* swept sphere (fist path prev->p) vs his capsules: earliest contact */
 const CAPS = [ ['head','neck',0.115,'head'],['neck','chest',0.13,'neck'],['chest','pelvis',0.165,'torso'],
   ['chest','shL',0.07,'shoulder'],['shL','elL',0.055,'arm'],['elL','haL',0.05,'forearm'],
   ['chest','shR',0.07,'shoulder'],['shR','elR',0.055,'arm'],['elR','haR',0.05,'forearm'],
   ['pelvis','knL',0.085,'thigh'],['knL','anL',0.06,'shin'],['anL','ftL',0.05,'foot'],
   ['pelvis','knR',0.085,'thigh'],['knR','anR',0.06,'shin'],['anR','ftR',0.05,'foot'] ];
+const CAPI = CAPS.map(([a,b,r,part]) => [idx(a), idx(b), r, part]);
 function segSeg(p1,q1,p2,q2){
   const d1=V3.sub(q1,p1), d2=V3.sub(q2,p2), r=V3.sub(p1,p2);
   const a=V3.dot(d1,d1), e=V3.dot(d2,d2), f=V3.dot(d2,r);
@@ -216,115 +356,163 @@ function fistContact(f){
   if (f.latched) return;
   const speed = V3.len(f.vel);
   let best = null;
-  for (const [an,bn,rad,part] of CAPS){
-    const A=P[idx(an)].p, B=P[idx(bn)].p;
-    const r = segSeg(f.prev, f.p, A, B);
-    if (r.d < rad + 0.085 && (!best || r.s < best.r.s)) best = { r, A, B, an, bn, part };
+  for (const [ia,ib,rad,part] of CAPI){
+    const r = segSeg(f.prev, f.p, P[ia].p, P[ib].p);
+    if (r.d < rad + 0.085 && (!best || r.s < best.r.s)) best = { r, ia, ib, part };
   }
   if (!best) return;
   f.latched = true;
-  const n = V3.norm(V3.sub(best.r.c2, best.r.c1));         // fist -> body
+  const n = V3.norm(V3.sub(best.r.c2, best.r.c1));
   const vn = V3.dot(f.vel, n);
-  const mEff = 1.2;
-  const J = mEff * Math.max(0, vn);
-  // impulse into the struck segment's two points, weighted by closeness
+  const J = M_EFF * Math.max(0, vn);               // kg m/s
   const wB = best.r.t, wA = 1-wB;
-  for (const [pt,w] of [[best.A,wA],[best.B,wB]]){
-    const q = P.find(qq => qq.p===pt); if (!q) continue;
-    const dv = J * w / q.m;
-    q.p.x += n.x*dv*0.016; q.p.y += n.y*dv*0.016; q.p.z += n.z*dv*0.016;
-    q.pp.x -= n.x*dv*0.9;  q.pp.y -= n.y*dv*0.9;  q.pp.z -= n.z*dv*0.9;
+  for (const [i,w] of [[best.ia,wA],[best.ib,wB]]){
+    const q = P[i], dv = J * w / q.m, dx = dv/60 * KNOCK;  // velocity change -> Verlet: shift the previous position
+    q.p.x += n.x*dx*0.5; q.p.y += n.y*dx*0.5; q.p.z += n.z*dx*0.5;
+    q.pp.x -= n.x*dx*0.5; q.pp.y -= n.y*dx*0.5; q.pp.z -= n.z*dx*0.5;
   }
-  f.vel = V3.mul(f.vel, 0.15);   // momentum spent
-  const dmg = Math.max(0, Math.round((speed - HIT_V) * mEff * 2.2));
+  f.vel = V3.mul(f.vel, 0.15);
+  if (speed >= HIT_V) daze = Math.min(1, daze + J/DAZE_J * ((best.part==='forearm'||best.part==='arm') ? 0.4 : 1));
+  if (f.state==='strike') f.state = 'retract';     // momentum spent: the arm comes back
+  const dmg = Math.max(0, Math.round((speed - HIT_V) * 2.64));
   const sp = proj(best.r.c2);
   contacts.push({ x: sp.x, y: sp.y, t: 0, big: speed > 6 });
-  if (speed >= HIT_V) logHit('HIT '+best.part+' — v '+speed.toFixed(1)+' m/s → J '+J.toFixed(1)+' → '+dmg);
-  else logHit('<span class="dim">touch '+best.part+' — too slow to count ('+speed.toFixed(1)+' m/s)</span>');
+  const arm = best.part==='forearm' || best.part==='arm';
+  if (speed >= HIT_V){ stats.hits++; if (arm) stats.armHits++; else stats.bodyHits++;
+    logHit((arm?'ON HIS ARM ':'HIT ')+best.part+': v '+speed.toFixed(1)+' m/s, J '+J.toFixed(1)+', '+dmg); }
+  else logHit('<span class="dim">touch '+best.part+': too slow to count ('+speed.toFixed(1)+' m/s)</span>');
   return best;
 }
 
+/* the swipe path, screen px, recorded from touch-down. The fist plays it
+   back: u runs 0..1 from your hand to his plane at the flick's speed. The fist
+   travels the line from where it was to where your thumb ended (read in his
+   plane), bent sideways by how far the swipe bowed off its own straight line
+   at the same fraction u. Straight swipe = straight jab, bowed swipe = hook.
+   While your thumb is still down the path keeps growing                  */
+function pathAt(path, u){
+  const pts = path.pts, A = pts[0], B = pts[pts.length-1], s = u * B.s;
+  let x = B.x, y = B.y;
+  for (let i=1;i<pts.length;i++) if (pts[i].s >= s){
+    const a=pts[i-1], b=pts[i], t=(s-a.s)/Math.max(1e-6,b.s-a.s);
+    x = a.x+(b.x-a.x)*t; y = a.y+(b.y-a.y)*t; break;
+  }
+  const z = path.start.z + (path.aimZ - path.start.z)*u;
+  const sc = (H*0.62)/z * 0.55;           // bow in px -> metres, a bit damped
+  const aim = unproject(B.x, B.y, path.aimZ);
+  const line = V3.lerp(path.start, aim, u);
+  return { x: line.x + (x - (A.x + (B.x-A.x)*u))/sc, y: line.y - (y - (A.y + (B.y-A.y)*u))/sc, z };
+}
 function fistStep(f, dt){
   f.prev = {...f.p};
+  let target = null;
   if (f.state==='strike'){
-    f.p = V3.add(f.p, V3.mul(f.vel, dt));
     f.t += dt;
-    fistContact(f);
-    if (f.t > 0.30 || f.p.z > root.z + 0.45) f.state = 'retract';
+    const P0 = f.path;
+    // advance along the path so the fist's own speed is the flick speed, whatever shape the path has
+    const u0 = Math.min(1, P0.u), a = pathAt(P0, u0), b = pathAt(P0, Math.min(1, u0 + 0.02));
+    const dlen = u0 < 1 ? Math.max(0.02*(P0.aimZ - P0.start.z), V3.len(V3.sub(b, a))) / 0.02 : (P0.aimZ - P0.start.z);
+    P0.u += P0.spd*dt / dlen;
+    const u = Math.min(1.12, P0.u);
+    target = pathAt(P0, Math.min(1, u));
+    if (u > 1) target.z = P0.start.z + (P0.aimZ - P0.start.z)*u;   // follow through
+    if (u >= 1.12 || f.t > 0.6) f.state = 'retract';
   } else if (f.state==='retract'){
     const k = 1 - Math.pow(0.0001, dt);
-    f.p.x += (f.home.x-f.p.x)*k; f.p.y += (f.home.y-f.p.y)*k; f.p.z += (f.home.z-f.p.z)*k;
-    f.vel = {x:0,y:0,z:0};
+    target = V3.lerp(f.p, f.home, k);
     if (V3.len(V3.sub(f.p,f.home)) < 0.03){ f.state='home'; f.latched=false; }
   } else if (f.ptr !== null && f.target){
-    // held: follow the thumb in the home plane
     const k = 1 - Math.pow(0.000001, dt);
-    f.p.x += (f.target.x-f.p.x)*k; f.p.y += (f.target.y-f.p.y)*k; f.p.z += (f.home.z-f.p.z)*k;
-    f.vel = V3.mul(V3.sub(f.p, f.prev), 1/Math.max(dt,1e-4));
-    fistContact(f);   // a held fist can still shove him — momentum decides
+    target = { x:f.p.x+(f.target.x-f.p.x)*k, y:f.p.y+(f.target.y-f.p.y)*k, z:f.p.z+(f.home.z-f.p.z)*k };
   } else {
     const k = 1 - Math.pow(0.001, dt);
-    f.p.x += (f.home.x-f.p.x)*k; f.p.y += (f.home.y-f.p.y)*k; f.p.z += (f.home.z-f.p.z)*k;
-    f.vel = {x:0,y:0,z:0}; f.latched = false;
+    target = V3.lerp(f.p, f.home, k); f.latched = false;
   }
+  // ghost arm: the shoulder lunges forward only as far as the reach demands, IK places the fist
+  const sx = f.side==='L' ? -1 : 1;
+  const base = { x: f.home.x*0.75, y: 0.18, z: 0.10 };
+  const d = V3.sub(target, base), dl = V3.len(d), keep = (ARM1+ARM2)*0.92;
+  f.sh = dl > keep ? V3.add(base, V3.mul(d, 1 - keep/dl)) : base;   // lean/step in behind the fist
+  const r = ik2(f.sh, target, ARM1, ARM2, { x: f.sh.x + sx*0.5, y: f.sh.y - 0.35, z: f.sh.z + 0.1 });
+  f.el = r.E; f.p = r.H;
+  f.vel = V3.mul(V3.sub(f.p, f.prev), 1/dt);
+  if (f.state==='strike' || (f.state==='home' && f.ptr!==null)) fistContact(f);
 }
 
 /* ---------------- input: thumbs ---------------- */
 const ptrs = new Map();
-function unproject(sx, sy, z){ const s=(H*0.62)/z; return { x:(sx-W/2)/s, y:(H*0.86-sy)/s, z }; }
+function addPt(r, x, y){
+  const L = r.pts[r.pts.length-1];
+  const s = L ? L.s + Math.hypot(x-L.x, y-L.y) : 0;
+  r.pts.push({ x, y, s });
+}
 cv.addEventListener('pointerdown', e => {
-  cv.setPointerCapture(e.pointerId);
+  try { cv.setPointerCapture(e.pointerId); } catch (_) {}
   const side = e.clientX < W/2 ? 'L' : 'R';
   const f = fists[side==='L'?0:1]; if (f.ptr !== null) return;
-  f.ptr = e.pointerId; f.side = side;
-  ptrs.set(e.pointerId, { f, x:e.clientX, y:e.clientY, t:performance.now(), vx:0, vy:0, hist:[] });
+  f.ptr = e.pointerId;
+  const r = { f, x:e.clientX, y:e.clientY, t:performance.now(), vx:0, vy:0, pts:[], live:null };
+  addPt(r, e.clientX, e.clientY);
+  ptrs.set(e.pointerId, r);
   f.target = unproject(e.clientX, e.clientY, f.home.z);
 });
 cv.addEventListener('pointermove', e => {
   const r = ptrs.get(e.pointerId); if (!r) return;
   const now = performance.now(), dtm = Math.max(1, now-r.t);
-  r.vx = (e.clientX-r.x)/dtm*1000; r.vy = (e.clientY-r.y)/dtm*1000;
+  const a = Math.min(1, dtm/30);               // smoothed thumb speed
+  r.vx += ((e.clientX-r.x)/dtm*1000 - r.vx)*a; r.vy += ((e.clientY-r.y)/dtm*1000 - r.vy)*a;
   r.x = e.clientX; r.y = e.clientY; r.t = now;
-  r.hist.push({x:e.clientX,y:e.clientY,t:now}); if (r.hist.length>8) r.hist.shift();
+  addPt(r, e.clientX, e.clientY);
+  if (r.pts.length > 60){ r.pts.shift(); }
   r.f.target = unproject(e.clientX, e.clientY, r.f.home.z);
   const sp = Math.hypot(r.vx, r.vy);
-  if (r.f.state==='home' && sp > 1500) fireFist(r.f, r);   // fast swipe fires mid-touch
+  if (r.live && r.f.path === r.live && r.f.state==='strike'){   // the fist keeps chasing the thumb
+    addPt(r.live, e.clientX, e.clientY);
+    r.live.spd = Math.max(r.live.spd, flickSpeed(sp, r.f));
+  }
+  if (r.f.state==='home' && sp > 1500) fireFist(r.f, r, true);   // fast swipe fires mid-touch and keeps following
 });
 function endPtr(e){
   const r = ptrs.get(e.pointerId); if (!r) return;
   const sp = Math.hypot(r.vx, r.vy);
-  if (r.f.state==='home' && sp > 800) fireFist(r.f, r);     // release flick fires
+  if (r.f.state==='home' && sp > 800) fireFist(r.f, r, false);
+  if (r.live) r.live.live = false;
   r.f.ptr = null; r.f.target = null; ptrs.delete(e.pointerId);
 }
 cv.addEventListener('pointerup', endPtr);
 cv.addEventListener('pointercancel', endPtr);
-function fireFist(f, r){
-  // aim: where the thumb is, read in HIS plane; speed: the flick itself
-  const aim = unproject(r.x, r.y, Math.max(0.9, root.z - 0.05));
-  const from = {...f.p};
-  const dir = V3.norm(V3.sub(aim, from));
-  const spdPx = Math.hypot(r.vx, r.vy);
-  const sHome = (H*0.62)/f.home.z;
-  let spd = Math.max(4.5, Math.min(11, spdPx / sHome * 2.6));
-  f.vel = V3.mul(dir, spd); f.state='strike'; f.t=0; f.latched=false;
+function flickSpeed(spdPx, f){         // thumb px/s -> fist m/s (same scale as gate 2)
+  return Math.max(4.5, Math.min(11, spdPx / ((H*0.62)/f.home.z) * 2.6));
+}
+function fireFist(f, r, live){
+  // the path starts where the swipe began (last ~180 ms of travel before firing)
+  // the swipe so far: back to the touch-down point, or the last 60 samples
+  const pts = r.pts.map(p => ({ x:p.x, y:p.y, s:p.s - r.pts[0].s }));
+  if (pts.length < 2) pts.push({ x:pts[0].x, y:pts[0].y - 1, s:1 });
+  const spd = flickSpeed(Math.hypot(r.vx, r.vy), f);
+  const aimZ = Math.max(0.9, root.z + 0.05);
+  const path = { pts, u:0, aimZ, live, spd, start:{...f.p} };
+  r.live = path.live ? path : null;
+  f.path = path; f.state='strike'; f.t=0; f.latched=false; f.strikeId++;
+  f.noise = { v:{x:gauss(),y:gauss(),z:gauss()*0.3}, p:{x:gauss(),y:gauss(),z:0} };
+  f.noise.v = V3.mul(f.noise.v, 0.5);
 }
 
 /* ---------------- drawing ---------------- */
 let DEBUG = false;
 document.getElementById('btnDbg').onclick = e => { DEBUG=!DEBUG; e.target.textContent = 'DEBUG: '+(DEBUG?'ON':'OFF'); e.target.classList.toggle('on', DEBUG); };
-document.getElementById('btnReset').onclick = () => { root.z = 3.1; buildBody(); };
+document.getElementById('btnReset').onclick = () => { root.x = 0; root.z = 3.1; buildBody(); };
 const DRAW_BONES = BONES.map(([a,b])=>[idx(a),idx(b)]);
+const I_CHEST = idx('chest'), I_PEL = idx('pelvis'), I_NECK = idx('neck');
 function draw(){
   ctx.clearRect(0,0,W,H);
-  // floor line at his feet depth + horizon feel
   const fl = proj({x:0,y:0,z:root.z});
   ctx.strokeStyle='#26262e'; ctx.lineWidth=2;
   ctx.beginPath(); ctx.moveTo(0,fl.y); ctx.lineTo(W,fl.y); ctx.stroke();
-  // body
   const pts = P.map(q => proj(q.p));
   ctx.lineCap='round';
   for (const [a,b] of DRAW_BONES){
-    const big = (a===idx('chest')&&b===idx('pelvis')) || (a===idx('chest')&&b===idx('neck'));
+    const big = (a===I_CHEST&&b===I_PEL) || (a===I_CHEST&&b===I_NECK);
     ctx.strokeStyle = big ? '#8f96a3' : '#767d89';
     ctx.lineWidth = big ? 15 : 9;
     ctx.beginPath(); ctx.moveTo(pts[a].x,pts[a].y); ctx.lineTo(pts[b].x,pts[b].y); ctx.stroke();
@@ -333,12 +521,16 @@ function draw(){
     ctx.fillStyle = NAMES[i]==='head' ? '#aab2bf' : '#79818e';
     ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, NAMES[i]==='head'?13:5.5, 0, 7); ctx.fill();
   }
-  // contact flashes
   for (const c of contacts){ c.t += 1/60;
     ctx.strokeStyle = 'rgba(255,'+(c.big?'90':'210')+',90,'+Math.max(0,1-c.t*2.4)+')';
     ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(c.x, c.y, 8+c.t*46, 0, 7); ctx.stroke(); }
   contacts = contacts.filter(c=>c.t<0.5);
-  // fists: solid, bare, drawn — knuckle bumps, no gloves
+  // ghost forearms (faint), then solid bare fists
+  for (const f of fists){ if (!f.el) continue;
+    const e = proj(f.el), s = proj(f.p);
+    ctx.strokeStyle = 'rgba(232,226,214,0.16)'; ctx.lineWidth = Math.min(40, 0.09*e.s);
+    ctx.beginPath(); ctx.moveTo(e.x, e.y); ctx.lineTo(s.x, s.y); ctx.stroke();
+  }
   for (const f of fists){
     const s = proj(f.p), R = 0.105*s.s;
     ctx.fillStyle = '#e8e2d6';
@@ -359,24 +551,46 @@ function draw(){
     ctx.fillStyle = '#ff9f0a'; ctx.beginPath(); ctx.arc(cg.x,cg.y,5,0,7); ctx.fill();
     ctx.strokeStyle='rgba(255,214,10,.5)'; ctx.beginPath(); ctx.moveTo(cc.x,cc.y); ctx.lineTo(cg.x,cg.y); ctx.stroke();
     ctx.fillStyle='#ffd60a'; ctx.font='12px monospace';
-    ctx.fillText('CoM→ground '+si.dist.toFixed(2)+'m '+(fallen?'FALLEN':(si.dist>0.30?'LOSING IT':'balanced')), 12, H-120);
-    for (const [an,bn,rad] of CAPS){ const A=proj(P[idx(an)].p), B=proj(P[idx(bn)].p);
+    const st = fallen ? 'DOWN' : rise ? 'GETTING UP '+Math.round(rise.g*100)+'%' : (si.dist>0.30?'LOSING IT':'balanced');
+    ctx.fillText('CoM to feet '+si.dist.toFixed(2)+'m '+st+'   react '+Math.round(REACT*1000)+'ms noise '+NOISE, 12, H-120);
+    for (const [ia,ib,rad] of CAPI){ const A=proj(P[ia].p), B=proj(P[ib].p);
       ctx.strokeStyle='rgba(110,168,255,.35)'; ctx.lineWidth=rad*2*((A.s+B.s)/2);
       ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke(); }
+    // his guard intent: where he thinks your fist will be
+    for (const s of ['L','R']){ const g = guard[s]; if (!g.tgt || g.w<=0) continue;
+      const t = proj(g.tgt); ctx.strokeStyle='rgba(255,95,86,'+g.w+')'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(t.x,t.y,10,0,7); ctx.stroke(); }
+    // swipe paths
+    for (const f of fists){ if (f.state!=='strike' || !f.path) continue;
+      ctx.strokeStyle='rgba(159,232,169,.6)'; ctx.lineWidth=2; ctx.beginPath();
+      f.path.pts.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.stroke(); }
   }
 }
 
-/* ---------------- main loop ---------------- */
+/* ---------------- main loop: fixed 60 Hz ---------------- */
+function stepSim(dt){
+  const wasDown = fallen || rise;
+  const wasFallen = fallen;
+  physics(dt);
+  for (const f of fists) fistStep(f, dt);
+  perceive();
+  if (!wasFallen && fallen) stats.falls++;
+  if (wasDown && !fallen && !rise) stats.getups++;
+}
 buildBody();
 let last = performance.now(), acc = 0;
 function loop(now){
   requestAnimationFrame(loop);
   acc += Math.min(0.1, (now-last)/1000); last = now;
   const dt = 1/60; let n = 0;
-  while (acc >= dt && n < 3){ physics(dt); for (const f of fists) fistStep(f, dt); acc -= dt; n++; }
+  while (acc >= dt && n < 3){ stepSim(dt); acc -= dt; n++; }
+  if (n === 3) acc = 0;
   draw();
 }
 requestAnimationFrame(loop);
+window.CORE = { stepSim, fists, P, NAMES, idx, guard, stats, com, supportInfo,
+  get fallen(){ return fallen; }, get rise(){ return rise; }, get root(){ return root; },
+  setDials(r, n){ REACT = r; NOISE = n; }, reset(){ root.x=0; root.z=3.1; buildBody(); } };
 </script>
 </body>
 </html>
