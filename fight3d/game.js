@@ -11,16 +11,16 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 const T = {
   hp: 1000, balMax: 100, balRegen: 0.35, balRegenDelay: 50,
   roundTime: 60, walk: 0.042, strafe: 0.036, minSep: 1.15, ringR: 3.55,
-  speedMin: 0.8, speedMax: 1.4, chip: 0.12, blockBal: 0.4, counterMul: 1.25,
+  speedMin: 0.85, speedMax: 1.6, chip: 0.12, blockBal: 0.4, counterMul: 1.25,
   downFrames: 150, superCost: 100,
 };
 const DIFF = { easy: 28, normal: 16, hard: 8 }; // reaction delay in frames, nothing else changes
 const MOVES = {
-  jab:   { s: 5,  a: 3, r: 9,  dmg: 45,  bal: 8,  hs: 14, bs: 9,  stop: 6,  reach: 1.6,  shake: 0.04, meter: 6 },
-  hook:  { s: 9,  a: 4, r: 17, dmg: 100, bal: 22, hs: 20, bs: 14, stop: 10, reach: 1.5,  shake: 0.09, meter: 9 },
-  upper: { s: 12, a: 4, r: 22, dmg: 130, bal: 32, hs: 24, bs: 16, stop: 13, reach: 1.35, shake: 0.13, meter: 11 },
-  kick:  { s: 11, a: 4, r: 20, dmg: 115, bal: 30, hs: 22, bs: 15, stop: 12, reach: 1.75, shake: 0.11, meter: 10 },
-  super: { s: 16, a: 6, r: 30, dmg: 260, bal: 80, hs: 40, bs: 24, stop: 22, reach: 1.7,  shake: 0.25, meter: 0, unblock: 0.45 },
+  jab:   { s: 5,  a: 3, r: 9,  dmg: 35,  bal: 7,  hs: 14, bs: 9,  stop: 6,  reach: 1.6,  shake: 0.04, meter: 6 },
+  hook:  { s: 9,  a: 4, r: 17, dmg: 50,  bal: 12, hs: 20, bs: 14, stop: 10, reach: 1.5,  shake: 0.09, meter: 9 },
+  upper: { s: 12, a: 4, r: 22, dmg: 60,  bal: 15, hs: 24, bs: 16, stop: 13, reach: 1.35, shake: 0.13, meter: 11 },
+  kick:  { s: 11, a: 4, r: 20, dmg: 55,  bal: 14, hs: 22, bs: 15, stop: 12, reach: 1.75, shake: 0.11, meter: 10 },
+  super: { s: 16, a: 6, r: 30, dmg: 150, bal: 40, hs: 40, bs: 24, stop: 22, reach: 1.7,  shake: 0.25, meter: 0, unblock: 0.45 },
 };
 // ==========================================
 const qs = new URLSearchParams(location.search);
@@ -458,15 +458,16 @@ function resolveHit(a, d) {
   const [fx, fz] = dirTo(a, d);
   const hitPos = new THREE.Vector3(d.x - fx * 0.28, FLOOR + (a.mk === 'kick' ? 0.7 + 0.9 * (a.kick ? a.kick.h : 0.5) : a.mk === 'jab' || a.mk === 'super' || a.mk === 'upper' ? 1.62 : 1.35), d.z - fz * 0.28);
   const counter = d.state === 'atk' && d.st < d.move.s;
-  let scale = a.spd * (counter ? T.counterMul : 1);
+  let scale = Math.min(T.speedMax * T.counterMul, clamp(a.spd, T.speedMin, T.speedMax) * (counter ? T.counterMul : 1));
   if (d.blocking && canAct(d) && !m.unblock) {
     d.hp -= m.dmg * T.chip; d.bal -= m.bal * T.blockBal; d.balDelay = T.balRegenDelay; d.state = 'block'; d.st = -m.bs; d.meter = Math.min(100, d.meter + 3);
     G.hitstop = Math.round(m.stop * 0.6); G.shake = m.shake * 0.4; spark(hitPos, 0.6, 0x88ccff); sfx('block');
     d.vx += fx * 0.03; d.vz += fz * 0.03;
   } else {
     if (d.blocking && m.unblock) scale *= m.unblock;
-    const dmg = Math.round(m.dmg * scale);
-    d.hp -= dmg; d.bal -= m.bal * scale; d.balDelay = T.balRegenDelay;
+    const dmg = Math.min(Math.round(m.dmg * scale), a.mk === 'super' ? T.hp * 0.2 : T.hp * 0.09); // hard cap per hit
+    d.hp -= dmg; d.bal -= Math.min(m.bal * scale, a.mk === 'super' ? 50 : 22);
+    if (a.isPlayer || d.isPlayer) dbg('hit ' + a.mk + ' ' + dmg + ' dmg -> ' + (d.isPlayer ? 'you' : 'cpu') + ' ' + Math.max(0, Math.round(d.hp))); d.balDelay = T.balRegenDelay;
     a.meter = Math.min(100, a.meter + m.meter * scale); d.meter = Math.min(100, d.meter + m.meter * 0.5);
     d.state = 'hit'; d.st = 0; d.hs = m.hs; d.move = null; d.react = (a.mk === 'hook' && rnd() < 0.5) ? 'hitBody' : 'hitHead';
     d.vx += fx * 0.04 * scale; d.vz += fz * 0.04 * scale;
@@ -496,6 +497,7 @@ function stepFighter(f, o) {
       if (f.state === 'block' && f.st < 0) break;
       f.blocking = !!inp.block; f.state = f.blocking ? 'block' : 'idle';
       if (inp.dodge) { startDodge(f, inp.dodge); inp.dodge = 0; break; }
+      if (inp.atk && f.isPlayer && G.frames - (inp.atkF || 0) > 24) { dbg('dropped stale ' + inp.atk); inp.atk = null; }
       if (inp.atk) { const k = inp.atk; inp.atk = null; if (startMove(f, k)) { sfx('whoosh', k === 'jab' ? 0.6 : 1); break; } }
       { // movement relative to foe
         const [fx, fz] = dirTo(f, o); const rx = -fz, rz = fx;
@@ -568,37 +570,41 @@ function think(me, foe, delay) {
 // Both thumbs held apart = guard (both forearms up). Both thumbs held together = charge the one super.
 // Both thumbs dragged = roam (combined-thumb average).
 const keys = {};
+const DEBUG = qs.has('debug'); let dbgEl = null; const dbgLines = [];
+function dbg(t) { if (!DEBUG) return; if (!dbgEl) { dbgEl = document.createElement('pre'); dbgEl.id = 'dbg'; document.getElementById('app').appendChild(dbgEl); }
+  dbgLines.push((performance.now() / 1000).toFixed(1) + ' ' + t); if (dbgLines.length > 14) dbgLines.shift(); dbgEl.textContent = dbgLines.join('\n'); }
+window.__dbgLines = dbgLines;
 const app = $('app');
 const trailCv = $('trail'), tctx = trailCv.getContext('2d');
 const ptrs = new Map(); // pointerId -> state
 const trails = []; // {pts:[{x,y,t}], side, kind, dead}
-const FLICK_MS = 320, FLICK_MIN = 28, HOLD_MS = 200, STILL_PX = 22, TOGETHER_PX = 120, SUPER_CHARGE = 36;
+const FLICK_MS = 320, FLICK_MIN = 28, PUNCH_PX = 30, COMMIT_PX = 160, TAP_MS = 350, HOLD_MS = 200, STILL_PX = 22, TOGETHER_PX = 120, SUPER_CHARGE = 36;
 const PI = { guard: false, roamX: 0, roamY: 0, superCharge: 0, chamber: [null, null] }; // chamber[side] = height 0..1
 function appRect() { return app.getBoundingClientRect(); }
 function railHit(x, y, r) {
-  const rw = 46, inset = r.width * 0.07, top = r.height * 0.5, bot = r.height * 0.9;
+  const rw = 30, inset = r.width * 0.06, top = r.height * 0.6, bot = r.height * 0.92;
   if (y < top || y > bot) return -1;
   if (x > inset && x < inset + rw) return 0;
   if (x > r.width - inset - rw && x < r.width - inset) return 1;
   return -1;
 }
-function railHeight(y, r) { const top = r.height * 0.5, bot = r.height * 0.9; return clamp(1 - (y - top) / (bot - top), 0, 1); }
+function railHeight(y, r) { const top = r.height * 0.6, bot = r.height * 0.92; return clamp(1 - (y - top) / (bot - top), 0, 1); }
 function pDown(e) {
   if (G.mode === 'title' || G.mode === 'end') return;
-  if (e.pointerType === 'mouse' && e.button !== 0) return;
-  ac(); e.preventDefault();
+  ac();
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
   const rail = railHit(x, y, r);
   const st = { id: e.pointerId, side: rail >= 0 ? rail : (x < r.width / 2 ? 0 : 1), rail: rail >= 0, x0: x, y0: y, t0: now, pts: [{ x, y, t: now }], roam: false };
   st.trail = { pts: st.pts, side: st.side, kind: st.rail ? 'rail' : 'arm', dead: 0 }; trails.push(st.trail);
-  ptrs.set(e.pointerId, st);
-  try { app.setPointerCapture(e.pointerId); } catch (_) { }
+  ptrs.set(e.pointerId, st); dbg('down ' + (st.rail ? 'rail' : 'arm') + (st.side ? 'R' : 'L') + ' @' + Math.round(x) + ',' + Math.round(y));
 }
 function pMove(e) {
-  const st = ptrs.get(e.pointerId); if (!st) return; e.preventDefault();
+  const st = ptrs.get(e.pointerId); if (!st) return;
   const r = appRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
   st.pts.push({ x, y, t: now }); if (st.pts.length > 80) st.pts.shift();
   if (st.rail && PI.chamber[st.side] !== null) PI.chamber[st.side] = railHeight(y, r);
+  // commit early: a clear single-thumb stroke throws as soon as it is long enough (no waiting for lift-off)
+  if (!st.rail && !st.fired && !st.multi && Math.hypot(x - st.x0, y - st.y0) >= COMMIT_PX) armRelease(st, r, 'commit');
 }
 function recentVel(st, ms) { // peak px/ms between samples in the last `ms`
   const p = st.pts, b = p[p.length - 1]; let best = 0;
@@ -607,7 +613,7 @@ function recentVel(st, ms) { // peak px/ms between samples in the last `ms`
   return [0, 0, best];
 }
 function pUp(e) {
-  const st = ptrs.get(e.pointerId); if (!st) return; ptrs.delete(e.pointerId); e.preventDefault();
+  const st = ptrs.get(e.pointerId); if (!st) return; ptrs.delete(e.pointerId);
   st.trail.dead = performance.now();
   const r = appRect(), now = performance.now();
   const last = st.pts[st.pts.length - 1], dx = last.x - st.x0, dy = last.y - st.y0, dur = now - st.t0, d = Math.hypot(dx, dy);
@@ -618,38 +624,59 @@ function pUp(e) {
     const [, , v] = recentVel(st, 150);
     const h = chambered ? PI.chamber[side] : railHeight(last.y, r);
     PI.chamber[side] = null; window.__lastRail = { v, d, dur, chambered };
-    if (v > 0.45 || (!chambered && d > FLICK_MIN && dur < FLICK_MS)) firePlayer('kick', side, speedScale(v), { h, chambered });
+    if (v > 0.45 || (!chambered && d > FLICK_MIN && dur < FLICK_MS)) firePlayer('kick', side, speedScale(v), { h, chambered }, 'rail v=' + v.toFixed(2));
+    else dbg('rail lift, no kick v=' + v.toFixed(2));
     return;
   }
-  window.__lastUp = { dur, d, roam: st.roam, two: twoHeld, rail: st.rail };
-  if (st.roam || twoHeld) return;
-  if (dur < FLICK_MS * 1.6 && d > FLICK_MIN) {
-    const v = d / Math.max(16, dur);
-    firePlayer(null, st.side, speedScale(v), { pts: st.pts.map(p => [(p.x - st.x0) / r.width, (p.y - st.y0) / r.height]) });
-  }
+  window.__lastUp = { dur, d, multi: st.multi, rail: st.rail };
+  if (st.fired) return;
+  if (st.multi) { dbg('lift (two-thumb ' + (st.multiKind || '') + ', no punch)'); return; }
+  armRelease(st, r, 'lift');
 }
-function speedScale(v) { return lerp(T.speedMin, T.speedMax, clamp((v - 0.35) / 2.2, 0, 1)); }
+// ANY single-thumb stroke >= PUNCH_PX throws on that side; a short tap throws a straight.
+function armRelease(st, r, why) {
+  const last = st.pts[st.pts.length - 1], d = Math.hypot(last.x - st.x0, last.y - st.y0), dur = performance.now() - st.t0;
+  let pts = st.pts.map(p => [(p.x - st.x0) / r.width, (p.y - st.y0) / r.height]);
+  if (d >= PUNCH_PX) {
+    st.fired = true; const v = d / Math.max(30, dur);
+    firePlayer(null, st.side, speedScale(v), { pts }, why + ' d=' + Math.round(d) + ' v=' + v.toFixed(2));
+  } else if (why === 'lift' && dur < TAP_MS) {
+    st.fired = true; pts = [[0, 0], [0, -0.04], [0, -0.08]].map(p => [p[0] * (st.side ? -1 : 1), p[1]]);
+    firePlayer(null, st.side, 1, { pts }, 'tap');
+  } else dbg('ignored: d=' + Math.round(d) + ' dur=' + Math.round(dur));
+}
+function speedScale(v) { return clamp(lerp(T.speedMin, T.speedMax, clamp((v - 0.3) / 2.0, 0, 1)), T.speedMin, T.speedMax); }
 // Frame-data tier comes from the path's geometry (needed so existing startup/active/recovery data stays);
 // what you SEE is the fist travelling the swipe path itself.
 function pathTier(pts) {
   const e = pts[pts.length - 1]; let maxLat = 0;
+  if (!e || !isFinite(e[0]) || !isFinite(e[1]) || Math.hypot(e[0], e[1]) < 1e-4) return 'jab'; // fallback straight
   for (const p of pts) { // lateral deviation from straight line start->end
     const L = Math.hypot(e[0], e[1]) || 1e-6; const dev = Math.abs(p[0] * e[1] - p[1] * e[0]) / L; if (dev > maxLat) maxLat = dev; }
   const ax = Math.abs(e[0]) * 0.5625 / 1, ay = Math.abs(e[1]); // width units -> comparable to height
-  if (maxLat > 0.035 || ax > ay * 1.3) return 'hook';
-  if (e[1] < 0 && ay > ax * 2.2 && ay > 0.17) return 'upper'; // long rising stroke = uppercut; short forward flick = straight
+  if (maxLat > 0.045 || ax > ay * 1.2) return 'hook';
+  if (e[1] < 0 && ay > ax * 1.8 && ay > 0.17) return 'upper'; // long rising stroke = uppercut; short forward flick = straight
   return 'jab';
 }
-function firePlayer(k, side, spd, extra) {
-  const p = F[0].inp;
+function firePlayer(k, side, spd, extra, why) {
+  const p = F[0].inp; p.atkF = G.frames;
+  dbg((k || pathTier(extra.pts)) + ' ' + (side ? 'R' : 'L') + ' x' + (+spd).toFixed(2) + (why ? ' (' + why + ')' : '') + (canAct(F[0]) ? '' : ' [busy: ' + F[0].state + ']'));
   if (k === 'super') { if (F[0].superUsed || F[0].meter < T.superCost) return; p.atk = 'super'; p.spd = spd; p.hand = 1; p.path = null; return; }
   if (k === 'kick') { p.atk = 'kick'; p.spd = spd; p.hand = side; p.kick = extra; p.path = null; return; }
   p.atk = pathTier(extra.pts); p.spd = spd; p.hand = side; p.path = extra.pts;
 }
-app.addEventListener('pointerdown', pDown, { passive: false });
-app.addEventListener('pointermove', pMove, { passive: false });
-app.addEventListener('pointerup', pUp, { passive: false });
-app.addEventListener('pointercancel', pUp, { passive: false });
+// Real touch events for fingers (preventDefault on every phase, non-passive) so the browser can't
+// steal the gesture; pointer events only for the mouse.
+const tw = (fn) => (e) => { if (G.mode === 'title' || G.mode === 'end') return; e.preventDefault(); for (const t of e.changedTouches) fn({ pointerId: 't' + t.identifier, clientX: t.clientX, clientY: t.clientY }); };
+app.addEventListener('touchstart', tw(pDown), { passive: false });
+app.addEventListener('touchmove', tw(pMove), { passive: false });
+app.addEventListener('touchend', tw(pUp), { passive: false });
+app.addEventListener('touchcancel', tw(pUp), { passive: false });
+document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+const mouseOnly = (fn) => (e) => { if (e.pointerType !== 'mouse') return; if (e.type === 'pointerdown' && e.button !== 0) return; fn(e); };
+app.addEventListener('pointerdown', mouseOnly(pDown));
+addEventListener('pointermove', mouseOnly(pMove));
+addEventListener('pointerup', mouseOnly(pUp));
 app.addEventListener('contextmenu', e => e.preventDefault());
 // per-frame touch interpretation (holds, guard, super charge, roam, chamber)
 function readTouch() {
@@ -661,17 +688,28 @@ function readTouch() {
   PI.guard = false; PI.roamX = PI.roamY = 0;
   let charging = false;
   if (arms.length >= 2) {
-    const [a, b] = arms; a.wasTwo = b.wasTwo = true;
+    const [a, b] = arms;
     const la = a.pts[a.pts.length - 1], lb = b.pts[b.pts.length - 1];
     const da = [la.x - a.x0, la.y - a.y0], db = [lb.x - b.x0, lb.y - b.y0];
     const avg = [(da[0] + db[0]) / 2, (da[1] + db[1]) / 2], m = Math.hypot(avg[0], avg[1]);
     const sep = Math.hypot(la.x - lb.x, la.y - lb.y);
-    if (sep < TOGETHER_PX) { charging = true; a.trail.kind = b.trail.kind = 'super'; }
-    else if (m > STILL_PX) { PI.roamX = clamp(avg[0] / 50, -1, 1); PI.roamY = clamp(avg[1] / 50, -1, 1); a.roam = b.roam = true; a.trail.kind = b.trail.kind = 'roam'; }
-    else if (now - Math.max(a.t0, b.t0) > 90) { PI.guard = true; a.trail.kind = b.trail.kind = 'guard'; }
+    // a thumb that already threw a punch, or one that is still swiping on its own, never becomes a two-thumb gesture
+    const sameDir = (da[0] * db[0] + da[1] * db[1]) > 0 && Math.hypot(...da) > STILL_PX && Math.hypot(...db) > STILL_PX;
+    const bothStill = Math.hypot(...da) < STILL_PX && Math.hypot(...db) < STILL_PX;
+    const held = now - Math.max(a.t0, b.t0);
+    let kind = null;
+    if (!a.fired && !b.fired) {
+      if (sep < TOGETHER_PX && bothStill && held > 150) kind = 'super';
+      else if (sameDir && held > 120) kind = 'roam';
+      else if (bothStill && held > 150) kind = 'guard';
+    }
+    if (kind) { for (const s of [a, b]) { if (!s.multi) dbg(kind + ' start'); s.multi = true; s.multiKind = kind; s.trail.kind = kind; } }
+    if (kind === 'super') charging = true;
+    else if (kind === 'roam') { PI.roamX = clamp(avg[0] / 50, -1, 1); PI.roamY = clamp(avg[1] / 50, -1, 1); }
+    else if (kind === 'guard') PI.guard = true;
   }
   if (charging && !F[0].superUsed && F[0].meter >= T.superCost) {
-    if (++PI.superCharge === SUPER_CHARGE) firePlayer('super', 1, 1.2);
+    if (++PI.superCharge === SUPER_CHARGE) firePlayer('super', 1, 1.2, null, 'thumbs together');
   } else if (!charging) PI.superCharge = 0;
 }
 // keyboard / mouse fallbacks (desktop testing)
@@ -712,7 +750,7 @@ function drawTrails() {
   tctx.setTransform(dpr, 0, 0, dpr, 0, 0); tctx.clearRect(0, 0, w, h);
   // rails (compact, inboard, unlabeled)
   if (G.mode !== 'title' && G.mode !== 'end') {
-    const inset = w * 0.07, rw = 46, top = h * 0.5, bot = h * 0.9;
+    const inset = w * 0.06, rw = 30, top = h * 0.6, bot = h * 0.92;
     for (const side of [0, 1]) {
       const x = side ? w - inset - rw : inset;
       tctx.fillStyle = 'rgba(255,255,255,0.05)'; tctx.strokeStyle = 'rgba(255,255,255,0.18)'; tctx.lineWidth = 1.5;
