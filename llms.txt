@@ -1,0 +1,16 @@
+# Brobots Space Factory
+
+> Brobots Space Factory (brobots.space) is a web studio in Mountain View, Hawaiʻi, founded by Jessie Sponberg. We build websites, SEO, and AI visibility (Search Answer Optimization) for small businesses, plus custom AI chatbots called BroBots. Custom websites start at $495; website tiers run $495 to $4,995. Not affiliated with the Brobots children's graphic novels, the BroBots podcast, or any student robotics team.
+
+## Main pages
+
+- [Home](https://brobots.space/): what we do, prices, and contact
+- [Search and AI visibility](https://brobots.space/search-visibility.html): our full SEO and AI visibility method, the Muse score, and packages
+- [Services](https://brobots.space/services.html): website tiers and add-ons
+- [Work](https://brobots.space/work.html): client work
+- [SAO audit](https://brobots.space/sao-audit.html): free Search Answer Optimization audit by Muse, our audit engine
+- [FAQ](https://brobots.space/faq.html): common questions
+
+## Contact
+
+- Email: brobots.space@gmail.com
