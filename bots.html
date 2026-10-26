@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bots by Jessie | Brobots Space Factory</title>
-<meta name="description" content="Five Grok Bot templates built by Jessie at Brobots. Product finder, clip cutter, store auditor, site checker and ecosystem connector. Pick one and make it yours.">
+<meta name="description" content="Five Grok Bot templates built by Jessie at Brobots. Product finder, clip cutter, store auditor, site checker and ecosystem connector. Pick one and make it yours, plus a plain guide to running a Grok Bot.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://brobots.space/bots">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -35,6 +35,15 @@
 .bot-card .row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .slot-note{background:#FFD400;color:#14140F;font-weight:700;font-size:.95rem;padding:4px 10px}
 @media (min-width:1800px){.wrap{max-width:1600px}.bot-card p{font-size:1.3rem}}
+.guide{border-top:4px solid var(--paper);padding:40px 0 64px;max-width:760px}
+.guide h2{font-size:clamp(2.2rem,8vw,4.4rem);margin:0 0 14px;line-height:.92}
+.guide h3{font-size:clamp(1.4rem,3.4vw,2rem);margin:36px 0 10px}
+.guide p,.guide li{font-size:1.08rem;line-height:1.55}
+.guide-lede{font-size:clamp(1.05rem,2.2vw,1.3rem)!important}
+.guide ul,.guide ol{padding-left:1.3em}
+.guide li{margin:6px 0}
+.guide a{color:inherit}
+@media (min-width:1800px){.guide{max-width:1000px}.guide p,.guide li{font-size:1.3rem}}
 </style>
 </head>
 <body class="factory">
@@ -55,7 +64,7 @@
 <main class="wrap">
  <section class="bots-hero">
   <h1 class="blk">Bots<br>by Jessie</h1>
-  <p>Five Grok Bot templates built at Brobots. Each one does a single job well. Pick one, get your own copy, and put it to work.</p>
+  <p>Five Grok Bot templates built at Brobots. Each one does a single job well. Pick one, get your own copy, and put it to work. New to Grok Bots? <a href="#guide" style="color:inherit">Read the guide</a></p>
  </section>
  <section class="bot-grid" aria-label="Bot templates">
   <article class="bot-card">
@@ -83,6 +92,60 @@
    <p>Maps how your sites, domains, repos and bots link together, and keeps that map up to date.</p>
    <div class="row"><a class="btn" href="#" data-slot="connector">Get this bot</a><span class="slot-note">link coming</span></div>
   </article>
+ </section>
+ <section class="guide" id="guide" aria-labelledby="guide-title">
+  <h2 class="blk" id="guide-title">How to run<br>a Grok Bot</h2>
+  <p class="guide-lede">A plain guide from the Factory floor. What these bots are, how to get a good one going, and how to keep it useful without letting it run loose.</p>
+
+  <h3 class="blk">What a Grok Bot is</h3>
+  <p>Think of it as a helper with its own computer in the cloud. It can open a browser, run code, make files, and keep working while your laptop is closed.</p>
+  <ul>
+   <li><strong>Logins and connectors.</strong> You connect the apps it needs, like email, a calendar, a drive, or a code repo, so it can read and act there instead of guessing.</li>
+   <li><strong>Memory.</strong> It keeps notes about you and your work between chats, so you stop repeating yourself.</li>
+   <li><strong>Routines.</strong> It can do a job on a schedule or when something happens, like a morning summary or a heads up when a page breaks.</li>
+   <li><strong>A team on one computer.</strong> Your bots share the same machine, so a file one bot makes is right there for the next one. Each bot still has its own screen and its own job.</li>
+  </ul>
+
+  <h3 class="blk">Getting started</h3>
+  <p><strong>Give it one job.</strong> A bot that does one thing well beats a bot that sort of does everything. Start narrow and widen later.</p>
+  <p><strong>Write its description like a job posting.</strong> Say what the role is, who it works for, what good work looks like, and what it should never do. If a new hire could read it and start on Monday, it is good enough.</p>
+  <p><strong>Ask with five parts.</strong> A strong request covers:</p>
+  <ol>
+   <li><strong>Outcome.</strong> What should be true when it is done</li>
+   <li><strong>Sources.</strong> Where to look, and which sources to trust</li>
+   <li><strong>Constraints.</strong> Budget, tone, deadlines, things to avoid</li>
+   <li><strong>Deliverable.</strong> A doc, a list, a draft email, a pull request</li>
+   <li><strong>Review point.</strong> Where it stops and checks with you before going further</li>
+  </ol>
+
+  <h3 class="blk">Building a small team</h3>
+  <p>Once one bot is earning its keep, add specialists. Keep one front-door bot that you talk to. It figures out what you need and hands the work to the right specialist, like a researcher, a writer, or a site checker, then brings the result back to you. You keep one conversation, and each specialist stays sharp at its own job.</p>
+
+  <h3 class="blk">Keeping routines cheap</h3>
+  <ul>
+   <li><strong>Use the slowest schedule that works.</strong> If daily is enough, do not run it hourly.</li>
+   <li><strong>Prefer triggers over polling.</strong> Let a new email or a changed page wake the bot, instead of having it check over and over.</li>
+   <li><strong>Stay quiet when nothing changed.</strong> A routine that reports "all good" every hour trains you to ignore it. Have it speak up only when there is news.</li>
+  </ul>
+
+  <h3 class="blk">Staying safe</h3>
+  <ul>
+   <li><strong>Drafts first for anything that leaves the building.</strong> Sending, paying, posting, and deleting should go through a draft or an approval from you.</li>
+   <li><strong>Reopen the source before quoting a number.</strong> Prices, dates, and stats change. Ask the bot to check the live page, not its memory.</li>
+   <li><strong>Grant only what the job needs.</strong> Connect the apps a bot actually uses, and nothing extra.</li>
+  </ul>
+
+  <h3 class="blk">A 7-day starter plan</h3>
+  <ol class="guide-days">
+   <li><strong>Day 1.</strong> Pick one annoying, repeated task and set up a bot for it alone</li>
+   <li><strong>Day 2.</strong> Write its description like a job posting and connect only the apps it needs</li>
+   <li><strong>Day 3.</strong> Run the task once by hand with a five-part request and review the output closely</li>
+   <li><strong>Day 4.</strong> Fix the description based on what it got wrong, then run it again</li>
+   <li><strong>Day 5.</strong> Turn it into a routine on the slowest schedule that works, quiet unless something changed</li>
+   <li><strong>Day 6.</strong> Add approval steps for anything that sends, pays, posts, or deletes</li>
+   <li><strong>Day 7.</strong> Review the week, then decide if a second specialist bot is worth adding</li>
+  </ol>
+  <p>Want a head start? Grab one of the templates above, or <a href="/#talk">tell us what you want built</a>.</p>
  </section>
 </main>
 <footer class="factory-foot">
