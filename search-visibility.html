@@ -197,12 +197,12 @@ footer a:hover{border-bottom-color:var(--paper)}
 .weeks b{font-family:'Courier Prime',monospace;color:var(--red)}
 .svis .hero h1{font-size:clamp(2rem,6vw,3.6rem)}
 .chat-log{max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin:14px 0}
-.chat-m{max-width:85%;padding:.7em .9em;border:2px solid var(--ink);font-size:.95rem}
-.chat-m.bot{align-self:flex-start;background:var(--paper)}
-.chat-m.user{align-self:flex-end;background:var(--ink);color:var(--paper)}
+.chat-m{max-width:85%;padding:.7em .9em;border:2px solid currentColor;font-size:.95rem;color:inherit;background:transparent}
+.chat-m.bot{align-self:flex-start}
+.chat-m.user{align-self:flex-end;border-color:var(--hurricane-cyan)}
 .chat-log .btn{align-self:flex-start}
 .chat-form{display:flex;gap:10px}
-.chat-form input{flex:1;font:inherit;padding:.75em .9em;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
+.chat-form input{flex:1;font:inherit;padding:.75em .9em;border:2px solid currentColor;background:transparent;color:inherit}
 </style>
 <link rel="stylesheet" href="campus.css?v=20260926a">
 </head>
