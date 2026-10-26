@@ -143,13 +143,13 @@ TEMPLATE = """<!DOCTYPE html>
 
   <div class="cta-band">
     <h2>Want every fix handled?</h2>
-    <p>BROBOTS builds the pages, the answers, and the AI-proof structure your audit says you're missing — starting at $495.</p>
-    <a class="btn" href="/services.html">See what BROBOTS can do</a>
+    <p>Brobots Space Factory builds the pages, the answers, and the AI-proof structure your audit says you're missing, starting at $495.</p>
+    <a class="btn" href="/services.html">See what Brobots can do</a>
   </div>
 
   <footer class="site">
     <div class="tag">people helping robots helping people</div>
-    <div style="margin-top:6px">BROBOTS · free SAO audit</div>
+    <div style="margin-top:6px">Brobots Space Factory · free SAO audit</div>
   </footer>
 </div>
 <script>

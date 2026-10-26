@@ -38,7 +38,7 @@ window.ANNOUNCER_PROFILE = {
     { name: 'Kudoken', line: 'the unofficial token of GALACTIVISM', weight: 3, enabled: true, read: "Tonight's pot is brought to you by Kudoken — da unofficial token of Galactivism. Energy is currency, folks." },
     { name: 'Fruity Puppy Outlet Mall', line: 'the Fruity Puppy outlet mall', weight: 3, enabled: true, read: "Fruity Puppy Outlet Mall — where da creative work finds its customers, friends. Window-shop all you like, da robots no mind." },
     { name: 'Monkey Jockey rescue dog racing', line: 'rescue dog racing, Monkey Jockey style', weight: 3, enabled: true, read: "Monkey Jockey rescue dog racing — da fastest rescue dogs in da islands, an' every one of 'em a champion. Dat monkey can ride!" },
-    { name: 'BROBOTS Space Factory', line: "Jessie's web-design + AI-agent studio", weight: 3, enabled: true, read: "BROBOTS Space Factory — let da robots do da work, keep da energy human. Somebody write dat down, dat's poetry." },
+    { name: 'Brobots Space Factory', line: "Jessie's web-design + AI-agent studio", weight: 3, enabled: true, read: "Brobots Space Factory — let da robots do da work, keep da energy human. Somebody write dat down, dat's poetry." },
     { name: 'FlashTown', line: 'the farm and sanctuary where all of this lives', weight: 3, enabled: true, read: "From beautiful FlashTown, where da taro grow an' da robots train — you listening to a classic tonight, neighbors." },
     { name: 'Biorama', line: 'Digital Homesteading — sovereign personal micro-sites; the bowl is the product', weight: 3, enabled: true, read: "Biorama — Digital Homesteading. Your own little bowl on da internet, an' nobody can evict you from your own pond. I like dat." },
     /* FARM & NEIGHBORS — medium weight */

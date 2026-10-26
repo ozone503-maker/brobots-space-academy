@@ -7,7 +7,7 @@
 <meta name="description" content="Brobots Fighter is a free browser fighting game from Brobots Space Factory, a Hawaiʻi web, SEO, and AI visibility studio. Play on desktop or phone.">
 <link rel="canonical" href="https://brobots.space/fighter.html">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="BROBOTS SPACE FACTORY">
+<meta property="og:site_name" content="Brobots Space Factory">
 <meta property="og:title" content="BROBOTS FIGHTER | Space Factory Showdown">
 <meta property="og:description" content="A free browser fighting game from Brobots Space Factory in Hawaiʻi.">
 <meta property="og:url" content="https://brobots.space/fighter.html">
@@ -256,7 +256,7 @@ bindBtn('tb-mute',  function(){ pressed.KeyM = 1; }, function(){});
 <script>
 'use strict';
 /* ============================================================
-   BROBOTS FIGHTER v1 — a Street Fighter 2-style canvas fighter.
+   BROBOTS FIGHTER v1, a Street Fighter 2-style canvas fighter.
    Pure HTML/CSS/JS. No assets, no frameworks.
    ============================================================ */
 const W = 960, H = 540, FLOOR = 468;
@@ -367,7 +367,7 @@ const FIGHTERS = [
   { id:'shockbot', name:'SHOCKBOT',      stage:'ROBOT LOUNGE',      hp:100, spd:3.0, pow:1.00, reach:50, h:124, w:34, special:'proj',   spName:'SONIC MIC BLAST',q:'Machine-born emcee. Hears empty space differently from humans.' },
   { id:'nonna',    name:'NONNA',         stage:"NONNA'S KITCHEN",   hp:100, spd:2.6, pow:1.05, reach:48, h:110, w:38, special:'proj',   spName:'MEATBALL TOSS',  q:'Sabotaged by her spaghetti addiction. Still undefeated at dinner.' },
   { id:'buff',     name:'BUFF BRO BOT',  stage:'ROBOT GYM',         hp:120, spd:2.4, pow:1.20, reach:54, h:130, w:50, special:'grab',   spName:'BRO SLAM',       q:'All mirror, all menace. Never skips arm day. There is only arm day.' },
-  { id:'tank',     name:'TANK',          stage:'BROBOTS SPACE FACTORY', hp:140, spd:1.9, pow:1.30, reach:58, h:150, w:54, special:'wave', spName:'FACTORY SLAM', q:'The huge tank-like guy. Final boss of the Space Factory.' }
+  { id:'tank',     name:'TANK',          stage:'Brobots Space Factory', hp:140, spd:1.9, pow:1.30, reach:58, h:150, w:54, special:'wave', spName:'FACTORY SLAM', q:'The huge tank-like guy. Final boss of the Space Factory.' }
 ];
 /* ---- v3: fighters ~1.4x bigger. Body + reach scale with the art; walk gets +15%
    so the big bodies don't feel sluggish. spdBase keeps v2's attack-timing ratios. ---- */
@@ -745,16 +745,16 @@ function advanceMatch(){
       G.ladIdx++;
       if (G.ladIdx >= G.ladder.length){
         G.screen = 'end';
-        G.end = { title: 'BROBOTS CHAMPION!', sub: G.playerDef.name + ' cleared the whole ladder.', lines: ['The Space Factory has a new top bot.', 'Kudoken bonus hook: stubbed in v1 — bragging rights are live.'], def: G.playerDef, next: 'title' };
+        G.end = { title: 'Brobots CHAMPION!', sub: G.playerDef.name + ' cleared the whole ladder.', lines: ['The Space Factory has a new top bot.', 'Kudoken bonus hook: stubbed in v1, bragging rights are live.'], def: G.playerDef, next: 'title' };
       } else startMatch(G.playerDef, G.ladder[G.ladIdx], G.ladIdx);
     } else {
       G.screen = 'end';
-      G.end = { title: 'GAME OVER', sub: G.p2.def.name + ' takes it. The ladder resets.', lines: ['The factory floor is unforgiving.', 'Run it back — the bots believe in you.'], def: G.p2.def, next: 'title' };
+      G.end = { title: 'GAME OVER', sub: G.p2.def.name + ' takes it. The ladder resets.', lines: ['The factory floor is unforgiving.', 'Run it back, the bots believe in you.'], def: G.p2.def, next: 'title' };
     }
   } else {
     const w = playerWon ? G.p1 : G.p2;
     G.screen = 'end';
-    G.end = { title: w.def.name + ' WINS!', sub: 'Versus CPU — final score ' + G.p1.wins + '-' + G.p2.wins + '.', lines: ['ENTER — back to fighter select', 'ESC — title screen'], def: w.def, next: 'select' };
+    G.end = { title: w.def.name + ' WINS!', sub: 'Versus CPU, final score ' + G.p1.wins + '-' + G.p2.wins + '.', lines: ['ENTER, back to fighter select', 'ESC, title screen'], def: w.def, next: 'select' };
   }
 }
 
@@ -1234,7 +1234,7 @@ function drawTitle(){
   G._cast[0].animT = G.frame; G._cast[1].animT = G.frame;
   drawFighter(c, G._cast[0]);
   drawFighter(c, G._cast[1]);
-  txt(c, 'BROBOTS SPACE FACTORY PRESENTS', W / 2, 82, 15, '#9aa5b0');
+  txt(c, 'Brobots Space Factory PRESENTS', W / 2, 82, 15, '#9aa5b0');
   const gr = c.createLinearGradient(240, 0, 720, 0);
   gr.addColorStop(0, '#4fe3ae'); gr.addColorStop(0.55, '#22b894'); gr.addColorStop(1, '#3ca9e5');
   c.font = 'bold 92px "Courier New",monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
