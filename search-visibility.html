@@ -196,6 +196,13 @@ footer a:hover{border-bottom-color:var(--paper)}
 .weeks li{display:grid;grid-template-columns:5.5em 1fr;gap:12px;padding:.6em 0;border-bottom:1px solid rgba(20,20,15,.15)}
 .weeks b{font-family:'Courier Prime',monospace;color:var(--red)}
 .svis .hero h1{font-size:clamp(2rem,6vw,3.6rem)}
+.chat-log{max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.chat-m{max-width:85%;padding:.7em .9em;border:2px solid var(--ink);font-size:.95rem}
+.chat-m.bot{align-self:flex-start;background:var(--paper)}
+.chat-m.user{align-self:flex-end;background:var(--ink);color:var(--paper)}
+.chat-log .btn{align-self:flex-start}
+.chat-form{display:flex;gap:10px}
+.chat-form input{flex:1;font:inherit;padding:.75em .9em;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
 </style>
 </head>
 <body class="bb-campus svc">
@@ -330,6 +337,17 @@ footer a:hover{border-bottom-color:var(--paper)}
     </div>
   </section>
 
+  <section class="sec" id="ask">
+    <div class="sec__head">
+      <h2 class="blk">Questions<br><span class="grad">ask away</span></h2>
+      <p class="lede">Our helper answers from what is on this page. For anything specific to your business, ask us for a quote.</p>
+    </div>
+    <article class="bay" id="svis-chat">
+      <div class="chat-log" aria-live="polite"><p class="chat-m bot">Hi! Ask me anything about how Search + AI Visibility works, what each package covers, or how the Muse score is calculated.</p></div>
+      <form class="chat-form"><input type="text" maxlength="500" placeholder="Type your question" aria-label="Your question"><button class="btn" type="submit">Send</button></form>
+    </article>
+  </section>
+
   <section class="cta-band">
     <h2 class="blk">Now you have seen the homework<br>Let us do it for you</h2>
     <p>Tell us about your business and we will send a quote that fits where you are today.</p>
@@ -356,5 +374,6 @@ footer a:hover{border-bottom-color:var(--paper)}
   </div>
 </footer>
 <script src="campus-nav.js?v=20260926a"></script>
+<script src="svis-chat.js" defer></script>
 </body>
 </html>
