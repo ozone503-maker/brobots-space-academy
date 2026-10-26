@@ -6,7 +6,7 @@
   var Q = "mailto:brobots.space@gmail.com?subject=Search%20%2B%20AI%20Visibility%20quote";
   var msgs = [];
   function add(role, text) {
-    var p = document.createElement("p");
+    var p = document.createElement("div");
     p.className = "chat-m " + role;
     p.textContent = text;
     log.appendChild(p);
