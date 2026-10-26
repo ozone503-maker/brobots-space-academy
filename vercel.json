@@ -369,6 +369,11 @@
       "source": "/bots/",
       "destination": "/bots",
       "permanent": true
+    },
+    {
+      "source": "/search-visibility/",
+      "destination": "/search-visibility",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -387,6 +392,10 @@
     {
       "source": "/bots",
       "destination": "/bots.html"
+    },
+    {
+      "source": "/search-visibility",
+      "destination": "/search-visibility.html"
     }
   ]
 }

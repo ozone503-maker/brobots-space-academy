@@ -64,6 +64,15 @@
       else nav.appendChild(fighter);
     }
 
+    if (!nav.querySelector('a[href="search-visibility"]')) {
+      var sv = document.createElement('a');
+      sv.href = 'search-visibility';
+      sv.textContent = 'Search + AI';
+      var svc = nav.querySelector('a[href="services.html"]');
+      if (svc && svc.nextSibling) svc.parentNode.insertBefore(sv, svc.nextSibling);
+      else nav.insertBefore(sv, nav.querySelector('a.contact'));
+    }
+
     if (!btn) return;
 
     function setOpen(open) {
