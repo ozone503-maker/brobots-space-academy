@@ -132,10 +132,10 @@ br.d{display:inline}h1 .l{white-space:nowrap}
 section{padding:88px 24px}
 .back{background:#eaf6fc;padding-bottom:24px}
 @media(max-width:767px){
- h1{font-size:44px;line-height:1.06}
+ h1{font-size:44px;line-height:1.0}
  br.d{display:none}h1 .l{display:block}.hl{display:block}
  .squig{bottom:-4px}
- .pull{font-size:25px}
+ .pull{font-size:23px;margin:0 0 22px}.hero p.sub{font-size:17px;line-height:1.55}
  .gain li{font-size:15.5px}
  .pc h3{font-size:21px}
  .navr{font-size:11.5px;max-width:none;white-space:nowrap}
@@ -144,24 +144,58 @@ section{padding:88px 24px}
 .uc>*,.g2>*{min-width:0}
 @media(max-width:767px){.gain li{font-size:15px;padding-left:22px}.gain li::before{left:2px}.panel{padding:22px 16px}}
 @media (prefers-reduced-motion:reduce){.count{transition:none}}
+
+:root{--ease:cubic-bezier(.16,1,.3,1)}
+@keyframes blurRise{from{opacity:0;transform:translateY(26px);filter:blur(10px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes fadeRise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
+@keyframes settle{from{transform:scale(1.08);opacity:.2}to{transform:scale(1);opacity:1}}
+@keyframes draw{from{stroke-dashoffset:340}to{stroke-dashoffset:0}}
+.in-blur{display:inline-block;animation:blurRise 1.05s var(--ease) var(--d,0ms) both}
+.in-fade{animation:fadeRise .95s var(--ease) var(--d,0ms) both}
+.in-down{animation:fadeDown .8s var(--ease) both}
+.in-zoom{animation:settle 1.8s var(--ease) .2s both}
+.squig path{stroke-dasharray:340;animation:draw 1s var(--ease) 1.15s both}
+.side{display:grid;gap:16px;align-content:start}
+.sky-media{border-radius:18px;overflow:hidden;aspect-ratio:16/10;background:#dfeef6;box-shadow:0 1px 0 #e6e9eb,0 18px 40px -24px rgba(18,168,232,.45)}
+.sky-media video{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block}
+.card{background:linear-gradient(180deg,#fffdf8 0%,#fff8ea 100%)}
+.pill{box-shadow:0 10px 24px -14px rgba(32,45,53,.6)}
+.pill:hover i{transform:translateX(3px)}.pill i{transition:transform .2s}
+[data-r]{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+[data-r].on{opacity:1;transform:none}
+#bars .f{width:0!important;transition:width 1.4s var(--ease)}
+#bars.on .f{width:var(--w)!important}
+#bars li:nth-child(2) .f{transition-delay:.1s}#bars li:nth-child(3) .f{transition-delay:.2s}#bars li:nth-child(4) .f{transition-delay:.3s}#bars li:nth-child(5) .f{transition-delay:.4s}
+@media(max-width:767px){.side{display:contents}.sky-media{order:-1;aspect-ratio:16/6;margin:-12px -8px 0;border-radius:14px}.card{gap:28px;padding-top:20px}}
+@media (prefers-reduced-motion:reduce){.in-blur,.in-fade,.in-down,.in-zoom,.squig path{animation:none}[data-r]{opacity:1;transform:none;transition:none}#bars .f{width:var(--w)!important;transition:none}}
+.hl{width:fit-content}
+.big{color:#2b3a43}
+.ais span{font-family:'Fraunces',Georgia,serif;font-size:22px;color:#202d35;font-weight:500}
+#google h2{position:relative}#google h2::after{content:"";display:block;width:56px;height:4px;background:#e8b04b;border-radius:2px;margin-top:18px}
+.pc .pr{color:#0f8fc6}
+.uc .l p{color:#2b3a43;font-size:17px}
+.box{box-shadow:0 24px 50px -36px rgba(32,45,53,.35)}
 </style>
 </head>
 <body>
 <div class="first">
-<nav><div class="row in">
+<nav class="in-down"><div class="row in">
   <a class="brand" href="#top"><img src="/media/usaep/usaep-logo.jpg" alt="USA Energy Partners logo"><span>USA Energy Partners</span></a>
   <div class="links"><a href="#found">The audit</a><a href="#pieces">The pieces</a><a href="#scores">The opportunity</a></div>
   <a class="navr" href="/usaenergypartners-plain">in plain English for humans to read</a>
 </div></nav>
 <div class="hero" id="top"><div class="card in">
   <div>
-    <h1><span class="l">You can pay us</span><br class="d"> <span class="l">to care about</span> <span class="l">your brand</span><br class="d"> <span class="hl"><span class="l">as much as</span> <span class="l">we do our own</span><svg class="squig" viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 60 3, 120 13, 180 7 S 270 4, 297 8" fill="none" stroke="#e8b04b" stroke-width="4" stroke-linecap="round"/></svg></span></h1>
-    <p class="sub mute">This isn't about a fancy AI package, even though that matters. It's about a highly competent company that treats our partners' brands like we treat our own. Specialized robots put together the best parts, but it's truly</p>
-    <p class="pull">the human hand<br>and human heart<br>that set us apart</p>
-    <a class="pill" href="#pieces">See the pieces<i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></i></a>
+    <h1><span class="l"><span class="in-blur" style="--d:150ms">You can pay us</span></span><br class="d"> <span class="l"><span class="in-blur" style="--d:270ms">to care about</span></span> <span class="l"><span class="in-blur" style="--d:390ms">your brand</span></span><br class="d"> <span class="hl"><span class="l"><span class="in-blur" style="--d:540ms">as much as</span></span> <span class="l"><span class="in-blur" style="--d:660ms">we do our own</span></span><svg class="squig" viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 60 3, 120 13, 180 7 S 270 4, 297 8" fill="none" stroke="#e8b04b" stroke-width="4" stroke-linecap="round"/></svg></span></h1>
+    <p class="sub mute in-fade" style="--d:820ms">This isn't about a fancy AI package, even though that matters. It's about a highly competent company that treats our partners' brands like we treat our own. Specialized robots put together the best parts, but it's truly</p>
+    <p class="pull in-fade" style="--d:950ms">the human hand<br>and human heart<br>that set us apart</p>
+    <a class="pill in-fade" style="--d:1080ms" href="#pieces">See the pieces<i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></i></a>
     <p class="meta mute6">Prepared for the USA Energy Partners team<br>by Brobots Space Factory</p>
   </div>
-  <div class="panel" aria-label="What you gain">
+  <div class="side">
+  <div class="sky-media in-zoomwrap"><video class="in-zoom" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_131941_d136af49-e243-493a-be14-6ff3f24e09e6.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video></div>
+  <div class="panel in-fade" style="--d:600ms" aria-label="What you gain">
     <p class="medl mute" style="margin:0 0 6px">Your team's win, already on video</p>
     <div class="med"><b class="count" data-to="10000">$10,000</b></div>
     <p class="medl mute">a year back for one Texas client<br>who was overpaying</p>
@@ -172,6 +206,7 @@ section{padding:88px 24px}
       <li>Partners who care about your brand<br>like we do our own</li>
     </ul>
   </div>
+  </div>
 </div></div>
 </div>
 
@@ -179,24 +214,24 @@ section{padding:88px 24px}
 
 
 
-<section id="google" class="sky"><div class="in g2" style="margin-bottom:0">
+<section id="google" class="sky"><div class="in g2" data-r style="margin-bottom:0">
   <h2>Google becomes<br>your salesman</h2>
   <p class="big mute">Besides AI recognition, a good website built with the latest tools turns Google into a salesman for you. Don't believe me? Go google Fruity Puppy or Brobots Space Factory. Everything we package at the Space Factory is something we learned building brands we really love.</p>
 </div></section>
-<section id="pieces"><div class="in uc">
+<section id="pieces"><div class="in uc" data-r>
   <div class="l">
     <p class="ey">How we would build it</p>
     <h2>The pieces</h2>
     <p class="mute">Take the whole thing or just the piece you want. Whatever you want, we have the most futuristic tools.</p>
   </div>
   <div class="box">
-    <div class="pc"><h3>The tune-up</h3><span class="pr q">Quoted to fit</span><p>A tune-up and modernization. Keep what you love, modernize the rest</p></div>
-    <div class="pc"><h3>The battlestation</h3><span class="pr">$4,995</span><p>A site you're proud of and launch all your marketing from. Financing available. <b>Extra pages $150</b></p></div>
-    <div class="pc"><h3>The expert chatbot</h3><span class="pr">$650</span><p>An industry-expert chatbot that turns interest into appointments for Chris</p></div>
-    <div class="pc"><h3>A year of running it with you</h3><span class="pr q">Quoted to fit</span><p>With the battlestation, unlimited adjustments and updates are included. Or à la carte, added to any piece on its own</p></div>
+    <div class="pc" data-r><h3>The tune-up</h3><span class="pr q">Quoted to fit</span><p>A tune-up and modernization. Keep what you love, modernize the rest</p></div>
+    <div class="pc" data-r><h3>The battlestation</h3><span class="pr">$4,995</span><p>A site you're proud of and launch all your marketing from. Financing available. <b>Extra pages $150</b></p></div>
+    <div class="pc" data-r><h3>The expert chatbot</h3><span class="pr">$650</span><p>An industry-expert chatbot that turns interest into appointments for Chris</p></div>
+    <div class="pc" data-r><h3>A year of running it with you</h3><span class="pr q">Quoted to fit</span><p>With the battlestation, unlimited adjustments and updates are included. Or à la carte, added to any piece on its own</p></div>
   </div>
 </div></section>
-<section class="band"><div class="in g2" style="margin-bottom:0">
+<section class="band"><div class="in g2" data-r style="margin-bottom:0">
   <h2>Friends of Gavin's</h2>
   <p class="big mute">If you'd rather take all this and do it yourselves, that's fine. You're friends of Gavin's. We'd normally never give away this much of the secret sauce.</p>
 </div></section>
@@ -205,7 +240,7 @@ section{padding:88px 24px}
     <h2>How we checked</h2>
     <p class="big mute">A detailed audit package that combines the criteria industry leaders use, checked against Grok, ChatGPT, Gemini, Claude and Muse. <a href="/sao-audit" style="color:#12a8e8">Read the criteria</a><br><br>Your spot already sells the business: a spokesman, a $10,000 proof story and a clear offer. Put that on the website and Texas buyers, Google and AI can all find it.</p>
   </div>
-  <div class="g4">
+  <div class="g4" data-r>
     <div class="c span2">
       <h3>The category<br>is wide open</h3>
       <ul class="cmp">
@@ -223,23 +258,23 @@ section{padding:88px 24px}
   <p class="mute">Audited the same way<br>by five AIs</p>
   <div class="ais"><span>Grok</span><span>ChatGPT</span><span>Gemini</span><span>Claude</span><span>Muse</span></div>
 </div></div>
-<section id="scores"><div class="in g2" style="margin-bottom:0">
+<section id="scores"><div class="in g2" data-r style="margin-bottom:0">
   <div><h2>Here's the opportunity</h2><p class="big mute" style="margin-top:24px">Five AIs read the site today. Nobody in Texas energy brokerage is built for AI yet, so the first to publish the facts takes the spot.</p></div>
-  <div class="panel" aria-label="AI scores today">
+  <div class="panel" aria-label="AI scores today" id="bars">
     <div class="med"><b>18</b><span>/100</span></div>
     <p class="medl mute">Median AI score today</p>
     <ul class="bars">
-      <li><span>Grok</span><span class="t"><span class="f" style="display:block;width:22%"></span></span><span class="n">22</span></li>
-      <li><span>ChatGPT</span><span class="t"><span class="f" style="display:block;width:54%"></span></span><span class="n">54</span></li>
-      <li><span>Gemini</span><span class="t"><span class="f" style="display:block;width:18%"></span></span><span class="n">18</span></li>
-      <li><span>Claude</span><span class="t"><span class="f" style="display:block;width:18%"></span></span><span class="n">18</span></li>
-      <li><span>Muse</span><span class="t"><span class="f" style="display:block;width:17%"></span></span><span class="n">17</span></li>
+      <li><span>Grok</span><span class="t"><span class="f" style="display:block;--w:22%;width:22%"></span></span><span class="n">22</span></li>
+      <li><span>ChatGPT</span><span class="t"><span class="f" style="display:block;--w:54%;width:54%"></span></span><span class="n">54</span></li>
+      <li><span>Gemini</span><span class="t"><span class="f" style="display:block;--w:18%;width:18%"></span></span><span class="n">18</span></li>
+      <li><span>Claude</span><span class="t"><span class="f" style="display:block;--w:18%;width:18%"></span></span><span class="n">18</span></li>
+      <li><span>Muse</span><span class="t"><span class="f" style="display:block;--w:17%;width:17%"></span></span><span class="n">17</span></li>
     </ul>
     <div class="scale"><div>Invisible</div><div>Overlooked</div><div>Running</div><div>AI's Pick</div></div>
     <p class="pnote mute">Each score comes from a detailed audit package that combines the criteria industry leaders use. <a href="/sao-audit">Read the criteria</a></p>
   </div>
 </div></section>
-<section class="close sand"><div class="in">
+<section class="close sand"><div class="in" data-r>
   <div class="g2">
     <h2>Let's build<br>something you love</h2>
     <div>
@@ -256,6 +291,11 @@ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches||!('Intersectio
 el.textContent='$0';var done=false;
 new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting&&!done){done=true;o.disconnect();var t0=performance.now(),d=1600;
 (function f(t){var k=Math.min(1,(t-t0)/d),v=Math.round(to*(1-Math.pow(1-k,3)));el.textContent='$'+v.toLocaleString('en-US');if(k<1)requestAnimationFrame(f)})(t0)}})},{threshold:.5}).observe(el)})();
+</script>
+<script>
+(function(){var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;if(rm||!('IntersectionObserver' in window)){document.querySelectorAll('[data-r],#bars').forEach(function(e){e.classList.add('on')});return}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('[data-r],#bars').forEach(function(e){io.observe(e)})})();
 </script>
 </body>
 </html>
