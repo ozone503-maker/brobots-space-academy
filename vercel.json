@@ -406,6 +406,10 @@
     {
       "source": "/search-visibility",
       "destination": "/search-visibility.html"
+    },
+    {
+      "source": "/sao-audit",
+      "destination": "/sao-audit.html"
     }
   ]
 }
