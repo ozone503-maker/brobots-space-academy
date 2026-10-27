@@ -119,3 +119,4 @@ h2{font-size:clamp(46px,6.4vw,92px);line-height:.98;margin:0 0 30px}
 @media (max-width:860px){.final-plain .btn{width:100%}}
 .hero-plain{min-height:auto;padding-top:150px;padding-bottom:110px}
 @media (max-width:860px){.hero-plain{grid-template-columns:1fr;padding-top:100px;padding-bottom:60px}.pstats{grid-template-columns:1fr 1fr}.pstats div:last-child{grid-column:1/-1}.pstats b{font-size:44px}.pstats div{padding:18px}}
+@media (max-width:860px){.nav .ghost{font-size:14px;padding:8px 12px;max-width:190px;text-align:center;line-height:1.3}}
