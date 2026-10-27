@@ -120,3 +120,15 @@ h2{font-size:clamp(46px,6.4vw,92px);line-height:.98;margin:0 0 30px}
 .hero-plain{min-height:auto;padding-top:150px;padding-bottom:110px}
 @media (max-width:860px){.hero-plain{grid-template-columns:1fr;padding-top:100px;padding-bottom:60px}.pstats{grid-template-columns:1fr 1fr}.pstats div:last-child{grid-column:1/-1}.pstats b{font-size:44px}.pstats div{padding:18px}}
 @media (max-width:860px){.nav .ghost{font-size:14px;padding:8px 12px;max-width:190px;text-align:center;line-height:1.3}}
+.hpanel{background:#fff;border:1px solid var(--line);border-radius:28px;padding:30px;box-shadow:0 40px 80px -40px rgba(11,18,32,.35)}
+.hp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.hp-top b{display:block;font:400 92px/.85 "Instrument Serif",serif;background:linear-gradient(180deg,#0b1220,#1d7cf2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hp-top small{font-size:28px;-webkit-text-fill-color:var(--mut)}.hp-top span{color:var(--mut);font-size:16px}
+.tag{background:#fdecee;color:#b3192f!important;border-radius:99px;padding:6px 12px;font-weight:600;font-size:14px!important;white-space:nowrap}
+.hpanel .meters{margin:20px 0 0}.hpanel .m .mt i{animation:grow 1.4s var(--e) .6s both;transform:none}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hp-foot{margin:18px 0 0;color:var(--mut);font-size:16px}
+.verdict{scroll-margin-top:0}
+@media (max-width:860px){.hpanel{padding:22px}.hp-top b{font-size:72px}.end{padding-bottom:40px}}
+@media (prefers-reduced-motion:reduce){.hpanel .m .mt i{animation:none}}
+.hp-top div span{white-space:nowrap}
