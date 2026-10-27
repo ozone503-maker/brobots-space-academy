@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://brobots.space/media/usaep/usaep-og.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:inherit}
 html,body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;background:#F5F5F5;color:#202d35;-webkit-font-smoothing:antialiased}
@@ -98,7 +98,7 @@ h2{font-size:38px;line-height:1.12;letter-spacing:-.03em}
 .pc h3{font-size:24px;letter-spacing:-.02em;line-height:1.25}
 .pc .pr{font-size:24px;font-weight:500;letter-spacing:-.02em;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .pc .pr.q{font-size:16px;color:rgba(32,45,53,.6);padding-top:5px}
-.pc p{grid-column:1/-1;font-size:16px;line-height:1.55;color:rgba(32,45,53,.7)}
+.pc p{grid-column:1/-1;font-size:16px;line-height:1.55;color:#33434d}
 .pc p b{color:#202d35;font-weight:500}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#d9534f;margin-right:8px;vertical-align:middle}
 .close .g2{margin-bottom:0}
@@ -112,6 +112,38 @@ footer .in{border-top:1px solid #e3e7e9;padding-top:24px}
 h1{max-width:none}
 @media(max-width:767px){.close h2{font-size:26px}h2{font-size:32px}.navr{max-width:150px}.c{min-height:0;gap:28px}.pc{grid-template-columns:1fr}.pc .pr{text-align:left}.pc .pr.q{padding-top:0}.big{font-size:20px}}
 .gain{list-style:none;display:grid;gap:0;margin-top:8px}.gain li{padding:14px 0 14px 26px;border-top:1px solid #e6e9eb;font-size:17px;font-weight:500;position:relative}.gain li::before{content:"";position:absolute;left:4px;top:21px;width:10px;height:10px;border-radius:50%;background:#12a8e8}
+
+h1,h2,.uc h2,.c h3,.pc h3,.pull,.med b{font-family:'Fraunces',Georgia,serif;font-weight:600;font-optical-sizing:auto}
+h1{font-size:58px;line-height:1.08;letter-spacing:-.025em}
+br.d{display:inline}h1 .l{white-space:nowrap}
+.hl{position:relative;color:#12a8e8;display:inline-block}
+.squig{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:12px}
+.mute{color:#33434d}.mute6{color:#4b5a63}
+.hero p.sub{font-size:18px;color:#2b3a43;margin-bottom:12px}
+.pull{font-size:30px;line-height:1.2;color:#202d35;margin:4px 0 32px;padding-left:16px;border-left:4px solid #e8b04b;font-style:italic;font-weight:500}
+.card{background:#fffdf8}
+.panel{background:#fff;border-color:#efe3c8}
+.med b{color:#202d35}
+.gain li::before{background:#e8b04b}
+.pill i{background:#e8b04b}
+.sky{background:#eaf6fc}
+.sand{background:#f7efe0}
+.band{background:#202d35;color:#fff}.band h2{color:#fff}.band .big{color:#d9e2e7}.band h2::after{content:"";display:block;width:56px;height:4px;background:#e8b04b;border-radius:2px;margin-top:18px}
+section{padding:88px 24px}
+.back{background:#eaf6fc;padding-bottom:24px}
+@media(max-width:767px){
+ h1{font-size:44px;line-height:1.06}
+ br.d{display:none}h1 .l{display:block}.hl{display:block}
+ .squig{bottom:-4px}
+ .pull{font-size:25px}
+ .gain li{font-size:15.5px}
+ .pc h3{font-size:21px}
+ .navr{font-size:11.5px;max-width:none;white-space:nowrap}
+ .brand img{height:24px}
+}
+.uc>*,.g2>*{min-width:0}
+@media(max-width:767px){.gain li{font-size:15px;padding-left:22px}.gain li::before{left:2px}.panel{padding:22px 16px}}
+@media (prefers-reduced-motion:reduce){.count{transition:none}}
 </style>
 </head>
 <body>
@@ -123,20 +155,21 @@ h1{max-width:none}
 </div></nav>
 <div class="hero" id="top"><div class="card in">
   <div>
-    <h1>You can pay us<br>to care about your brand<br>as much as we do our own</h1>
-    <p class="sub mute">This isn't about a fancy AI package, even though that matters. It's about a highly competent company that treats our partners' brands like we treat our own. Specialized robots put together the best parts, but it's truly the human hand and human heart that set us apart.</p>
+    <h1><span class="l">You can pay us</span><br class="d"> <span class="l">to care about</span> <span class="l">your brand</span><br class="d"> <span class="hl"><span class="l">as much as</span> <span class="l">we do our own</span><svg class="squig" viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 60 3, 120 13, 180 7 S 270 4, 297 8" fill="none" stroke="#e8b04b" stroke-width="4" stroke-linecap="round"/></svg></span></h1>
+    <p class="sub mute">This isn't about a fancy AI package, even though that matters. It's about a highly competent company that treats our partners' brands like we treat our own. Specialized robots put together the best parts, but it's truly</p>
+    <p class="pull">the human hand<br>and human heart<br>that set us apart</p>
     <a class="pill" href="#pieces">See the pieces<i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></i></a>
     <p class="meta mute6">Prepared for the USA Energy Partners team<br>by Brobots Space Factory</p>
   </div>
   <div class="panel" aria-label="What you gain">
     <p class="medl mute" style="margin:0 0 6px">Your team's win, already on video</p>
-    <div class="med"><b>$10,000</b></div>
+    <div class="med"><b class="count" data-to="10000">$10,000</b></div>
     <p class="medl mute">a year back for one Texas client<br>who was overpaying</p>
     <ul class="gain">
       <li>More Texas businesses finding you</li>
       <li>A site your team is proud to send</li>
-      <li>Google and AI working as your salesman</li>
-      <li>Partners who care about your brand like we do our own</li>
+      <li>Google and AI<br>working as your salesman</li>
+      <li>Partners who care about your brand<br>like we do our own</li>
     </ul>
   </div>
 </div></div>
@@ -146,7 +179,7 @@ h1{max-width:none}
 
 
 
-<section id="google" style="padding-bottom:0"><div class="in g2" style="margin-bottom:0">
+<section id="google" class="sky"><div class="in g2" style="margin-bottom:0">
   <h2>Google becomes<br>your salesman</h2>
   <p class="big mute">Besides AI recognition, a good website built with the latest tools turns Google into a salesman for you. Don't believe me? Go google Fruity Puppy or Brobots Space Factory. Everything we package at the Space Factory is something we learned building brands we really love.</p>
 </div></section>
@@ -163,11 +196,11 @@ h1{max-width:none}
     <div class="pc"><h3>A year of running it with you</h3><span class="pr q">Quoted to fit</span><p>With the battlestation, unlimited adjustments and updates are included. Or à la carte, added to any piece on its own</p></div>
   </div>
 </div></section>
-<section style="padding-top:0"><div class="in g2" style="margin-bottom:0">
+<section class="band"><div class="in g2" style="margin-bottom:0">
   <h2>Friends of Gavin's</h2>
   <p class="big mute">If you'd rather take all this and do it yourselves, that's fine. You're friends of Gavin's. We'd normally never give away this much of the secret sauce.</p>
 </div></section>
-<section id="found"><div class="in">
+<section id="found" class="sky"><div class="in">
   <div class="g2">
     <h2>How we checked</h2>
     <p class="big mute">A detailed audit package that combines the criteria industry leaders use, checked against Grok, ChatGPT, Gemini, Claude and Muse. <a href="/sao-audit" style="color:#12a8e8">Read the criteria</a><br><br>Your spot already sells the business: a spokesman, a $10,000 proof story and a clear offer. Put that on the website and Texas buyers, Google and AI can all find it.</p>
@@ -190,7 +223,7 @@ h1{max-width:none}
   <p class="mute">Audited the same way<br>by five AIs</p>
   <div class="ais"><span>Grok</span><span>ChatGPT</span><span>Gemini</span><span>Claude</span><span>Muse</span></div>
 </div></div>
-<section id="scores" style="padding-top:64px"><div class="in g2" style="margin-bottom:0">
+<section id="scores"><div class="in g2" style="margin-bottom:0">
   <div><h2>Here's the opportunity</h2><p class="big mute" style="margin-top:24px">Five AIs read the site today. Nobody in Texas energy brokerage is built for AI yet, so the first to publish the facts takes the spot.</p></div>
   <div class="panel" aria-label="AI scores today">
     <div class="med"><b>18</b><span>/100</span></div>
@@ -206,7 +239,7 @@ h1{max-width:none}
     <p class="pnote mute">Each score comes from a detailed audit package that combines the criteria industry leaders use. <a href="/sao-audit">Read the criteria</a></p>
   </div>
 </div></section>
-<section class="close"><div class="in">
+<section class="close sand"><div class="in">
   <div class="g2">
     <h2>Let's build<br>something you love</h2>
     <div>
@@ -217,5 +250,12 @@ h1{max-width:none}
   </div>
 </div></section>
 <footer><div class="in">Prepared by Brobots Space Factory · brobots.space<br>Audits run October 23, 2026 · Grok · ChatGPT · Gemini · Claude · Muse<br>A private presentation page, not indexed. USA Energy Partners name and marks belong to their owners.</div></footer>
+<script>
+(function(){var el=document.querySelector('.count');if(!el)return;var to=+el.dataset.to;
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
+el.textContent='$0';var done=false;
+new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting&&!done){done=true;o.disconnect();var t0=performance.now(),d=1600;
+(function f(t){var k=Math.min(1,(t-t0)/d),v=Math.round(to*(1-Math.pow(1-k,3)));el.textContent='$'+v.toLocaleString('en-US');if(k<1)requestAnimationFrame(f)})(t0)}})},{threshold:.5}).observe(el)})();
+</script>
 </body>
 </html>
