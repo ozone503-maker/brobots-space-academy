@@ -17,14 +17,393 @@
 <link rel="stylesheet" href="campus.css?v=20260926a">
 <link rel="stylesheet" href="circular.css?v=20260926a">
 <style>
-/* styles omitted for brevity in this example but full in real call */
+.uep-wrap{max-width:1060px;margin:0 auto;padding:0 18px 70px}
+.uep-tag{display:inline-block;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:2px;color:#8E99A4;border:1px solid #8E99A4;padding:5px 12px;border-radius:999px;margin:26px 0 14px}
+.uep-h1{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(30px,6.2vw,58px);line-height:1.04;margin:6px 0 14px;background:var(--cu);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.uep-sub{font-size:clamp(16px,2.6vw,21px);color:#D3DAE0;max-width:760px;line-height:1.5}
+.uep-services{font-family:'Courier Prime',monospace;color:#9AA5B0;letter-spacing:1px;font-size:13px;margin:16px 0 26px}
+.uep-video{width:100%;border:1px solid #5e6366;border-radius:14px;background:#000}
+.uep-ctabtn{display:block;text-align:center;font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(19px,3.6vw,27px);letter-spacing:.5px;color:#000;background:var(--red);padding:20px 18px;border-radius:14px;text-decoration:none;margin:26px 0 8px}
+.uep-ctabtn:active{transform:scale(.99)}
+.uep-ctasub{text-align:center;color:#9AA5B0;font-size:13px;font-family:'Courier Prime',monospace}
+.uep-sec{margin-top:56px}
+.uep-h2{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(23px,4.4vw,36px);line-height:1.12;margin:0 0 8px;background:var(--cu);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.uep-lede{color:#D3DAE0;font-size:16px;line-height:1.55;max-width:800px}
+.uep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
+.uep-card{background:#000;border:1px solid #2a2f36;border-radius:14px;padding:18px 16px}
+.uep-score{font-family:'Archivo Black',Impact,sans-serif;font-size:44px;line-height:1;color:#fff}
+.uep-score small{font-size:17px;color:#9AA5B0}
+.uep-plat{font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:2px;color:#d4d7d9;margin-bottom:8px}
+.uep-quote{color:#D3DAE0;font-size:14px;line-height:1.5;font-style:italic;margin-top:10px}
+.uep-band{display:inline-block;margin-top:10px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:1px;color:#e8e8e8;border:1px solid #8E99A4;padding:3px 9px;border-radius:999px}
+.uep-band.ok{color:#d4d7d9;border-color:#5e6366}
+.uep-verdict{background:#000;border:1px solid #8f9396;border-radius:14px;padding:20px;margin-top:18px;color:#D3DAE0;line-height:1.6;font-size:16px}
+.uep-bars{margin-top:16px}
+.uep-bar{margin:9px 0}
+.uep-bar label{display:flex;justify-content:space-between;font-family:'Courier Prime',monospace;font-size:12px;color:#9AA5B0;letter-spacing:1px}
+.uep-track{height:10px;background:#1a1e24;border-radius:99px;overflow:hidden;margin-top:4px}
+.uep-fill{height:100%;background:var(--red)}
+.uep-ol{color:#D3DAE0;line-height:1.6;font-size:15.5px;padding-left:22px}
+.uep-ol li{margin:11px 0}
+.uep-ol b{color:#fff}
+.uep-table{width:100%;border-collapse:collapse;margin-top:16px;color:#D3DAE0;font-size:14.5px}
+.uep-table th,.uep-table td{border:1px solid #2a2f36;padding:11px 12px;text-align:left;vertical-align:top}
+.uep-table th{font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:1px;color:#d4d7d9;background:#000}
+.uep-big{font-family:'Archivo Black',Impact,sans-serif;font-size:30px;color:#fff}
+.uep-note{color:#9AA5B0;font-size:13.5px;line-height:1.55;margin-top:10px}
+.uep-price{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(40px,8vw,64px);color:#fff;line-height:1}
+.uep-inc{color:#D3DAE0;line-height:1.65;font-size:15.5px;padding-left:22px}
+.uep-inc li{margin:9px 0}
+.uep-faq{background:#000;border:1px solid #2a2f36;border-radius:14px;padding:18px;margin:12px 0}
+.uep-faq h3{margin:0 0 6px;color:#fff;font-size:16.5px}
+.uep-faq p{margin:0;color:#D3DAE0;line-height:1.55;font-size:15px}
+.uep-foot{margin-top:60px;border-top:1px solid #2a2f36;padding-top:18px;color:#9AA5B0;font-family:'Courier Prime',monospace;font-size:12.5px;line-height:1.7}
+
+.uep-car{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px 16px;-webkit-overflow-scrolling:touch;align-items:stretch}
+.uep-slide{flex:0 0 302px;scroll-snap-align:start;display:flex}
+.uep-slide .uep-card{width:100%;display:flex;flex-direction:column}
+.uep-slide .uep-quote{min-height:84px}
+.uep-more{margin-top:auto;padding-top:10px}
+.uep-more summary{cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:1px;color:#d4d7d9;list-style:none}
+.uep-more summary::-webkit-details-marker{display:none}
+.uep-more summary::after{content:' +'}
+.uep-more[open ] summary::after{content:' −'}
+.uep-more div{color:#D3DAE0;font-size:13.5px;line-height:1.55;margin-top:8px}
+.uep-more b{color:#fff}
+.uep-hint{font-family:'Courier Prime',monospace;font-size:11.5px;color:#9AA5B0;letter-spacing:1px;margin-top:2px}
+.uep-try{background:#000;border:1px solid #8E99A4;border-radius:14px;padding:22px;margin-top:24px;}
+.uep-try h3{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(24px,4vw,36px);line-height:1.08;color:#fff;margin:4px 0 10px}
+.uep-try p{color:#D3DAE0;font-size:16px;line-height:1.55;max-width:820px}
+.uep-prompt{box-sizing:border-box;width:100%;min-height:430px;resize:vertical;background:#000;color:#E8EDF1;border:1px solid #5e6366;border-radius:10px;padding:16px;font-family:'Courier Prime',monospace;font-size:13px;line-height:1.5;white-space:pre-wrap;margin:16px 0 12px}
+.uep-prompt:focus{outline:2px solid #8f9396;outline-offset:2px}
+.uep-copybtn{box-sizing:border-box;width:100%;border:0;cursor:pointer;text-align:center;font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(18px,3.2vw,24px);letter-spacing:.5px;color:#000;background:var(--red);padding:17px 16px;border-radius:12px;}
+.uep-copybtn:active{transform:scale(.99)}
+.uep-copystatus{min-height:22px;text-align:center;color:#d4d7d9!important;font-family:'Courier Prime',monospace;font-size:12.5px!important;letter-spacing:1px;margin:8px auto 0!important}
+.uep-tag{font-size:13px!important;letter-spacing:.3px!important}
+.uep-services{letter-spacing:.2px!important;font-size:14px!important}
+.uep-hint{letter-spacing:.2px!important;font-size:13px!important}
+.uep-hook{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(20px,3.6vw,30px);line-height:1.2;color:#E8EDF1;margin:4px 0 10px}
+.uep-hook b{color:#fff}
+.uep-ctapair{display:grid;grid-template-columns:2fr 1fr;gap:12px;align-items:stretch;margin:26px 0 8px}
+.uep-ctapair .uep-ctabtn{margin:0;display:flex;align-items:center;justify-content:center}
+.uep-ctaalt{background:#000!important;color:#d4d7d9!important;border:1px solid #8f9396;box-shadow:none!important;font-size:clamp(15px,2.2vw,18px)!important}
+@media(max-width:700px){.uep-ctapair{grid-template-columns:1fr}}
+.uep-tl{list-style:none;padding:0;margin:12px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.uep-tl li{background:#000;border:1px solid #2a2f36;border-left:3px solid #8f9396;border-radius:12px;padding:14px 16px;color:#D3DAE0;line-height:1.5;font-size:15px}
+.uep-tl b{display:block;color:#fff;font-family:'Archivo Black',Impact,sans-serif;font-size:18px;margin-bottom:4px}
+.uep-sticky{display:none}
+@media(max-width:700px){
+.uep-sticky{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(0,0,0,.96);border-top:1px solid #5e6366;box-sizing:border-box}
+.uep-sticky a{flex:2;text-align:center;font-family:'Archivo Black',Impact,sans-serif;font-size:16px;color:#000;background:var(--red);padding:13px 8px;border-radius:10px;text-decoration:none}
+.uep-sticky a.alt{flex:1;background:#000;color:#d4d7d9;border:1px solid #8f9396}
+body.factory{padding-bottom:80px}
+}
+
+:root{--brush:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,rgba(0,0,0,.06) 1px 3px);
+--cu:var(--brush),linear-gradient(100deg,#8a4b24 0%,#8E99A4 30%,#e0a679 50%,#8E99A4 70%,#8a4b24 100%);
+--pw:var(--brush),linear-gradient(100deg,#5e6366 0%,#8f9396 30%,#d4d7d9 50%,#8f9396 70%,#5e6366 100%);
+--pwb:linear-gradient(135deg,#5e6366,#d4d7d9 35%,#8f9396 55%,#d4d7d9 75%,#5e6366);--cub:linear-gradient(135deg,#8a4b24,#e0a679 40%,#8E99A4 60%,#8a4b24);
+--red:var(--brush),linear-gradient(180deg,#d9203c 0%,#8E99A4 55%,#9e0c24 100%)}
+html,body.factory{background:#000!important}
+body.factory::before{display:none}
+.uep-h1,.uep-h2,.uep-try h3{background:var(--cu);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#8E99A4}
+.uep-try h3{-webkit-text-fill-color:transparent}
+.uep-hook,.uep-score,.uep-big,.uep-price,.uep-tl b{background:var(--pw);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#d4d7d9}
+.uep-hook b{-webkit-text-fill-color:transparent}
+.uep-ctabtn,.uep-copybtn,.uep-sticky a{background:var(--red)!important;color:#fff!important;border:1px solid #9e0c24;box-shadow:none!important;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+.uep-ctaalt,.uep-sticky a.alt{background:#000!important;color:#d4d7d9!important;border:2px solid transparent!important;border-image:var(--pwb) 1!important;border-radius:0!important}
+.uep-card,.uep-faq,.uep-verdict,.uep-try,.uep-tl li{border:2px solid transparent!important;border-image:var(--pwb) 1!important;border-radius:0!important;background:#000!important;box-shadow:none!important}
+.uep-video{border:2px solid transparent;border-image:var(--cub) 1;border-radius:0;box-shadow:none}
+.uep-fill{background:var(--cu)!important}
+.uep-track{background:#151617}
+.uep-plat{font-family:'Archivo Black',Impact,sans-serif!important;font-size:17px!important;letter-spacing:0!important;color:#e8e8e8!important}
+.uep-more summary,.uep-ctasub,.uep-foot,.uep-bar label,.uep-table th,.uep-copystatus{font-family:Archivo,sans-serif!important;letter-spacing:0!important}
+.uep-more summary{font-size:14px;color:#d4d7d9}
+.uep-sub,.uep-lede{color:#d4d7d9}
+@media(min-width:701px){.uep-h1{font-size:clamp(30px,4.2vw,44px)}}
+.uep-wrap{padding-top:28px}
+.uep-plainlink{margin:0 0 12px}.uep-plainlink a{color:#d4d7d9;font-size:17px;text-decoration:underline;text-decoration-color:#8E99A4;text-underline-offset:4px}
+.uep-pitch{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(26px,4.6vw,42px);line-height:1.12;margin:30px 0 8px;background:var(--cu);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#8E99A4}
+.uep-pieces{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:18px}
+.uep-logochip{display:inline-block;background:#202d35;border:1px solid #6b7378;border-radius:12px;padding:10px 16px;margin:0 0 18px;line-height:0}.uep-logochip img{height:72px;width:auto;display:block}.uep-logochip.sm img{height:52px}.uep-logofoot{text-align:center;margin:40px 0 8px}@media(max-width:600px){.uep-logochip img{height:56px}}
+.uep-ctabtn,.uep-copybtn{background:var(--cu)!important;color:#1a0f08!important;border:1px solid #8a4b24!important;text-shadow:none!important}.uep-ctaalt{background:var(--pw)!important;color:#111!important;border-image:none!important;border:1px solid #5e6366!important;border-radius:14px!important}.uep-sticky{display:none!important}body.factory{padding-bottom:0!important}.uep-tag,.uep-band{border-color:#8E99A4}.uep-plainlink a{text-decoration-color:#8E99A4}
+.mk{display:inline-block;background:url(data:image/webp;base64,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) center/contain no-repeat;aspect-ratio:177/240}
+.uep-logochip{background:#0b0d10!important;border:2px solid #8E99A4!important;border-radius:0!important;display:inline-flex!important;align-items:center;gap:12px;line-height:1!important;padding:10px 16px!important}
+.uep-logochip .mk{height:60px;width:44px}.uep-logochip b{font-family:'Archivo Black',Impact,sans-serif;color:#D3DAE0;font-size:18px;text-transform:uppercase;line-height:1.05}
+.uep-h1,.uep-pitch{background:linear-gradient(90deg,#4FE3AE,#22B894 55%,#3CA9E5)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:#22B894!important;text-transform:uppercase;line-height:1.02!important}
+.uep-h2,.uep-try h3{background:linear-gradient(180deg,#ffffff 0%,#dfe5ea 38%,#8e99a4 52%,#eef2f5 70%,#b9c2ca 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:#D3DAE0!important;text-transform:uppercase}
+.uep-hook,.uep-score,.uep-big,.uep-price,.uep-tl b{background:none!important;-webkit-text-fill-color:#D3DAE0!important;color:#D3DAE0!important}
+.uep-hook b{-webkit-text-fill-color:#4FE3AE!important}
+.uep-fill{background:linear-gradient(90deg,#4FE3AE,#22B894 55%,#3CA9E5)!important}
+.uep-ctabtn,.uep-copybtn,.uep-ctaalt{background:#0b0d10!important;color:#e6ebef!important;border:2px solid #8E99A4!important;border-image:none!important;border-radius:0!important;text-shadow:none!important;box-shadow:none!important}
+.uep-ctabtn:hover,.uep-copybtn:hover{background:#4FE3AE!important;color:#0b0d10!important;border-color:#4FE3AE!important}
+.uep-tag,.uep-band{border-color:#8E99A4!important;color:#D3DAE0!important}
+.uep-plainlink a,.doc a{text-decoration-color:#22B894!important}
+.doc blockquote{border-left-color:#22B894!important}
+.uep-video{border:2px solid #8E99A4!important;border-image:none!important}
+.hl-l{display:inline}@media(max-width:700px){.hl-l{display:block}.hl-l+br{display:none}}
+@media(max-width:700px){.uep-h1{font-size:min(26px,5.4vw)!important}.hl-l{white-space:nowrap}.uep-pitch{font-size:21px!important}}
+.uep-tenk{background:#0b0d10;border:2px solid #8E99A4;padding:22px 20px;margin:18px 0 22px;max-width:520px}
+.tk-l{color:#D3DAE0;font-size:17px;margin:0;line-height:1.4}
+.tk-n{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(56px,16vw,88px);line-height:1;margin:6px 0;background:linear-gradient(90deg,#4FE3AE,#22B894 55%,#3CA9E5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#4FE3AE;font-variant-numeric:tabular-nums}
+.tk-g{list-style:none;padding:0;margin:16px 0 0}.tk-g li{position:relative;padding:12px 0 12px 22px;border-top:1px solid #2a2f36;color:#e6ebef;font-weight:600;font-size:15.5px}.tk-g li::before{content:"";position:absolute;left:2px;top:19px;width:10px;height:10px;border-radius:50%;background:#4FE3AE}
+@media(max-width:700px){.uep-h1{font-size:min(30px,7.6vw)!important}.uep-h1 .hl-l{white-space:normal!important}}
+.uep-dear{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(22px,4vw,34px);margin:0 0 18px;background:linear-gradient(90deg,#4FE3AE,#22B894,#3CA9E5);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
 </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What did the five AI platforms actually audit?","acceptedAnswer":{"@type":"Answer","text":"Each platform independently audited usaenergypartners.com from the same brief and the same score definition: how likely AI assistants are to find, understand, trust, and recommend the business when Texas business owners ask about commercial electricity costs. Scores: Grok 22, ChatGPT 54, Gemini 18, Claude 18 and Muse 17 out of 100."}},
+{"@type":"Question","name":"Why is ChatGPT's score 54 when the others are 17 to 22?","acceptedAnswer":{"@type":"Answer","text":"ChatGPT found the same gaps as the other four platforms. It weighted USAEP's clear positioning more heavily and treated the missing evidence as a trust ceiling rather than invisibility. The disagreement is reported openly because a five-platform audit is credible only if the outlier stays on the board."}},
+{"@type":"Question","name":"What does the $4,995 package include?","acceptedAnswer":{"@type":"Answer","text":"A complete rebuild of the USA Energy Partners web presence: a modern site with a dedicated page for each service, the SAO pack (30 buyer questions answered on-site with FAQ schema), a custom AI chatbot trained on USAEP that promotes the electricity cost review at no cost to you, an authority section with a blog and Texas energy news, the proof layer (case studies, testimonials, PUCT registration, Google Business Profile), and the company's existing video on the homepage."}},
+{"@type":"Question","name":"What do we need from USA Energy Partners to build it?","acceptedAnswer":{"@type":"Answer","text":"One short call with the owner, the PUCT broker registration number, and the real numbers behind the results, starting with the client who was overpaying by $10,000 a year. We bring the audits, the video, the design, and the build."}},
+{"@type":"Question","name":"How is success measured after launch?","acceptedAnswer":{"@type":"Answer","text":"The same five-platform audit runs again 90 days after launch, under the same conditions, and the scores are published side by side with this report. The target: out of the Invisible band and into In the Running (50+), with AI's Pick (75+) as the stretch goal."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"Brobots Space Factory","url":"https://brobots.space/","email":"brobots.space@gmail.com","founder":{"@type":"Person","name":"Jessie Sponberg"},"slogan":"You can pay us to care about your brand as much as we do our own","makesOffer":{"@type":"Offer","name":"USA Energy Partners AI Visibility Package (Tier 3 build)","price":"4995","priceCurrency":"USD","description":"Complete rebuild of usaenergypartners.com: service pages, SAO pack with FAQ schema, custom AI chatbot, blog and Texas energy news section, proof layer, full schema, and a 90-day five-platform re-audit."}}
+</script>
 </head>
 <body class="factory">
 <div class="uep-wrap">
-<p class="uep-hook">Dear USA Energy Partners,</p>
-<h1 class="uep-h1">You can pay us to care about your brand<br>as much as we do our own</h1>
-<!-- full body content from the good file would go here -->
+
+
+<p class="uep-dear">Dear USA Energy Partners,</p>
+<h1 class="uep-h1"><span class="hl-l">You can pay us</span> <span class="hl-l">to care about your brand</span><br><span class="hl-l">as much as we do our own</span></h1>
+<div class="uep-tenk" aria-label="What you gain"><p class="tk-l">You saved a client</p><div class="tk-n count" data-to="10000">$10,000</div><p class="tk-l">a year, and Google didn't<br>even know about it</p>
+<ul class="tk-g"><li>More Texas businesses finding you</li><li>A site your team is proud to send</li><li>Google and AI<br>working as your salesman</li></ul></div>
+<p class="uep-plainlink"><a href="/usaenergypartners-plain">in plain English for humans to read</a></p>
+<p class="uep-sub">USA Energy Partners helps Texas businesses stop overpaying for electricity, through rate negotiation, contract language optimization, and power factor correction. This page is a modernized front door for that business, and inside it is the full evidence for why it needs one.</p>
+<p class="uep-sub">This isn't about a fancy AI package, even though that matters. It's about a highly competent company that treats our partners' brands like we treat our own. Specialized robots put together the best parts, but it's truly the human hand, the human heart and the human eye that set us apart.</p>
+<p class="uep-plainlink"><a href="/usaep-demo">See the USA Energy Partners demo site</a></p>
+
+<p class="uep-note">Their spot already exists. It has a spokesman, a proof number, and a clear offer, a review of a business's electricity costs at no cost to you. Almost none of it is on the company's website. That gap is the whole story of this page.</p>
+
+
+<div class="uep-sec">
+<h2 class="uep-h2">We Asked Five AIs to Audit USA Energy Partners</h2>
+<p class="uep-lede">We ran a highly detailed audit package against five AIs: Grok, ChatGPT, Gemini, Claude and Muse. The package combines the criteria used by industry leaders into one detailed checklist, and you can read <a href="/sao-audit.html" style="color:#fff;text-decoration:underline;text-decoration-color:#8E99A4;text-underline-offset:4px">the audit criteria</a> for yourself. Each AI audited usaenergypartners.com independently, same brief, same score definition, no peeking. The score measures one thing: when a Texas business owner asks an AI how to lower commercial electricity costs, does USAEP get recommended?</p>
+
+<div class="uep-car">
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">Grok</div><div class="uep-score">22<small>/100</small></div><p class="uep-quote">"Zero named people, contact details, case studies, client results, process explanations, or trust signals that an AI could cite."</p>
+<details class="uep-more"><summary>Full audit notes</summary><div><b>What AI would say today:</b> strong historic ERCOT context wrapped around an unverified placeholder; nothing on the site an assistant can safely cite.<br><b>Unique catches:</b> PUCT broker registration never stated (caught independently by Claude too); surfaced a verified real competitor, Alden Energy of Addison, TX, which publishes the phone, address, process, and FAQ that USAEP's site lacks.<br><b>QC note:</b> one ownership claim in Grok's notes could not be confirmed from a primary source. Excluded from the consensus.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">ChatGPT</div><div class="uep-score">54<small>/100</small></div><p class="uep-quote">"Little supporting evidence, customer proof, company/person detail, or current educational material to establish strong recommendation-level trust."</p>
+<details class="uep-more"><summary>Full audit notes</summary><div><b>Why 54, not 18:</b> ChatGPT found the same gaps as the other four. It weighted USAEP's clear positioning more heavily and treated the missing evidence as a trust ceiling rather than invisibility. A judgment difference, reported as found.<br><b>Its name for the disease:</b> "evidence density." Many assertions, almost nothing verifiable.<br><b>Its opportunity note:</b> USAEP could own its own terminology ("Energy Mitigation," power factor, contract language) with real educational depth, and nobody in the category is doing it.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">Gemini</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">"The live site functions as an unverified corporate placeholder."</p>
+<details class="uep-more"><summary>Full audit notes</summary><div><b>What AI would say today:</b> the business cannot be verified as actively operating; buyers get directed to transparent regional brokers instead.<br><b>Top fixes:</b> add schema and entity data (LLMs cannot index "We Are Wisdom"); name a human and publish a real email (Chris is absent entirely); embed verified case studies (bare percentages read as unverified text); update the 2019 copyright; break services out of buried lists; purge filler ("Service is a journey not a destination!!"); bring the ERCOT material past 2016; build a backlink footprint (today: zero).<br><b>QC note:</b> Gemini named one wrong competitor (a Texas oil &amp; gas operator, not a broker). We caught it and excluded it from the consensus.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">Claude</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">"I can't verify their PUCT broker registration, client results or how to contact them from their website."</p>
+<details class="uep-more"><summary>Full audit notes</summary><div><b>What AI would say today:</b> a real-sounding brokerage it cannot verify, so it recommends better-documented competitors instead.<br><b>Unique catches:</b> the fee model is never stated (commission or fee-based? buyers ask, the site doesn't answer); the name itself collides with lookalikes (U.S. Energy Partners, acquired by Catalyst Power in 2021; USA Energy at usaenergy.io); a timeline entry is mislabeled "1981" beside a 1986 event; and in Claude's own searches USAEP did not surface at all, while the similarly named companies did.<br><b>Top fixes:</b> display the PUCT registration, name the people, publish results with evidence.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">Muse</div><div class="uep-score">17<small>/100</small></div><p class="uep-quote">"AI doesn't know you exist. When customers ask, someone else gets the call."</p>
+<details class="uep-more"><summary>Full audit notes</summary><div><b>Measured, not opinion:</b> Muse ran the audit package with a live crawl of the site, the only crawl-based run of the five. Page title is literally "USAEP Homepage." First heading a crawler finds: "Contact Us." 2,316 words on the homepage. No phone number anywhere. No testimonials, no case studies, no Q&amp;A content, no business or FAQ schema.<br><b>Category scores:</b> Clarity 19 · Authority 21 · Relevance 3 · Consistency 0 · AI Readability 42 · Question Coverage 0.<br><b>What passed:</b> HTTPS, sitemap, founding date stated, zero broken links. The plumbing works; the house is empty.<br><b>Honest note:</b> 17 is a floor. Without API keys the 30-question test and profile/speed checks went unmeasured, and one automated check has a known bug. The structural zeros were measured directly and are real.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">Competitor, same audit</div><div class="uep-score">6<small>/100</small></div><p class="uep-quote"><b style="color:#fff">Alden Energy</b> (Addison, TX). The best human-facing site in the category, and to a crawler, it is zero words.</p>
+<details class="uep-more"><summary>Full audit notes</summary><div>Same audit package, same conditions, same day. Alden publishes everything USAEP doesn't: phone, address, process, FAQ. But the site is rendered entirely in JavaScript, so the raw HTML a crawler reads contains <b>zero words</b>. Built for humans, invisible to machines. Proof that having the facts is not enough; AI has to be able to read them.</div></details></div></div>
+
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">Competitor, same audit</div><div class="uep-score">36<small>/100</small></div><p class="uep-quote"><b style="color:#fff">Energy Ogre</b>. The category's strongest content, and its robots.txt blocks the AI crawlers by name.</p>
+<details class="uep-more"><summary>Full audit notes</summary><div>Same audit package, same conditions, same day. The best content of the three audits: real relevance and authority, a consistent phone number. Then its robots.txt <b>blocks GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot, ChatGPT-User, and Google-Extended by name</b>. The category leader is literally telling AI to stay out. The whole Texas brokerage category is failing AI; the first firm that builds for AI takes it.</div></details></div></div>
+
 </div>
+<p class="uep-note">Median score: <b style="color:#fff">18 / 100</b>. Four platforms landed within five points of each other. ChatGPT's 54 is the outlier, it found the same gaps and weighted the clear positioning more heavily. It's reported, not buried: a five-platform audit is only credible if the disagreement stays on the board.</p>
+
+<div class="uep-verdict"><b style="color:#fff">The verdict, in one sentence, written five times independently:</b> USA Energy Partners has a real, differentiated business that AI assistants currently cannot find, verify, or recommend, because the website provides claims without evidence, a company without people, and no way to contact anyone.</div>
+</div>
+
+<div class="uep-sec" style="margin-top:34px">
+<div class="uep-try">
+<h3>Don't take our word for it</h3>
+<p><b style="color:#fff">Copy this prompt into your favorite AI and see what it says.</b> This is the audit brief we used for the five-AI audit above: same company inputs, same score definition, same return format. Run it in Grok, ChatGPT, Gemini, Claude or Perplexity with web access on, and compare what comes back.</p>
+<label class="uep-plat" for="uepAuditPrompt" style="display:block;margin-top:18px">The exact audit prompt</label>
+<textarea class="uep-prompt" id="uepAuditPrompt" readonly aria-label="USA Energy Partners five-platform audit prompt">You are independently auditing USA Energy Partners (USAEP), a Texas commercial energy brokerage.
+
+Open and read https://usaenergypartners.com: homepage, every section and tab.
+
+Do not invent services, prices, statistics, people, or claims. If the site doesn't say it, don't say it. Do not soften the score to be polite. Scores are earned from evidence.
+
+COMPANY-STATED INPUTS
+- Company: USA Energy Partners (USAEP)
+- Website: https://usaenergypartners.com (single-page site)
+- What they are (their words): a “comprehensive Energy Mitigation Brokerage Firm” for business/industrial clients, built on “logical analysis, pertinent education and integrity-based solutions.”
+- Market: Texas; the site carries Texas energy deregulation history and ERCOT material.
+- Services named on the site: Analytics, Diagnostics, Solutions, Service, including rate negotiation, contract language optimization, and power factor correction.
+- Metrics the site claims: 95% rate/contract improvement, 99% power factor correction/penalty reduction, 93% enhanced contract language.
+- Their video names Chris (chris@usaenergypartners.com) and offers a review of a business's electricity costs at no cost to you. Note whether the website itself gives you any of that.
+- Context: Business owners shopping for help with commercial electricity costs increasingly ask an AI assistant first. Audit for that world.
+
+AI SCORE: USE THIS EXACT DEFINITION
+AI Score (0 to 100): How likely are AI assistants (Grok, ChatGPT, Gemini, Claude, Perplexity) to find, understand, trust, and recommend this business when Texas business owners ask about lowering commercial electricity costs or choosing an energy broker?
+
+0 to 24 Invisible · 25 to 49 Overlooked · 50 to 74 In the Running · 75 to 100 AI's Pick
+
+Justify the score in one or two sentences, citing what you found.
+
+RETURN YOUR AUDIT IN THIS EXACT FORMAT
+
+# Platform Notes: [YOUR PLATFORM NAME]
+Target: USA Energy Partners, usaenergypartners.com, audited [DATE]
+
+## AI SCORE: [n] / 100
+[One- or two-sentence justification with evidence.]
+
+## WHAT AI WOULD SAY ABOUT THEM TODAY
+[2 to 4 sentences: If a Texas business owner asked you about this company or its category right now, what would you actually say, based on what exists?]
+
+## TOP 10 ACTIONABLE CHANGES (ranked by impact)
+[Numbered 1 to 10. Each one: the change, why it matters for AI visibility or buyer trust, and the site evidence that proves the gap.]
+
+## NOTES
+[Strengths. Weaknesses. Competitive standing: name competitors AI would recommend instead and why. Anything dated, unverifiable, or risky. End with one line: what you could NOT check or access.]</textarea>
+<button class="uep-copybtn" id="uepCopyPrompt" type="button">Copy the audit prompt</button>
+<p class="uep-copystatus" id="uepCopyStatus" aria-live="polite"></p>
+<p class="uep-note">Why publish the method? Because the result should be reproducible. If another AI gives USAEP a materially different score, the useful question is what evidence it found that this page missed.</p>
+</div>
+</div>
+
+<div class="uep-verdict" >
+<p style="margin:8px 0">What does Google's own AI say about USA Energy Partners when a buyer simply types the company into AI search? It gets the business right: a Texas B2B energy mitigation brokerage across four pillars (rate negotiation, contract language optimization, power factor correction, tax exempt studies), repeating their stated metrics of 99%, 95%, 93%, and 100%.</p>
+<p style="margin:8px 0">Then it lands in the same place all five platforms did: the answer "relies on a 2019 copyright stamp and omits standard business anchors like a physical headquarters address, direct phone lines, or explicit employee directories." Google AI can <i>describe</i> USAEP. It cannot verify them, and it gives the searcher nothing to act on.</p>
+<p style="margin:8px 0 2px"><b style="color:#fff">The kicker:</b> Google's AI closed by offering to draft a pitch to Chris, their sales lead, construct a multi-page site architecture plan, and write their JSON-LD schema. Those three offers are answered by this page and the package below it.</p>
+</div>
+
+<div class="uep-sec">
+<h2 class="uep-h2">The Combined Audit Report</h2>
+<p class="uep-lede">The audit package crawled the site and ran 38 checks drawn from <a href="/sao-audit.html" style="color:#fff;text-decoration:underline;text-decoration-color:#8E99A4;text-underline-offset:4px">the audit criteria</a>. The plumbing is fine, HTTPS clean, sitemap clean, no broken links. The house is empty: the page title is literally "USAEP Homepage," the first heading a crawler finds is "Contact Us," and there is no phone number anywhere on the site.</p>
+
+<div class="uep-bars">
+  <div class="uep-bar"><label><span>Clarity</span><span>19%</span></label><div class="uep-track"><div class="uep-fill" style="width:19%"></div></div></div>
+  <div class="uep-bar"><label><span>Authority</span><span>21%</span></label><div class="uep-track"><div class="uep-fill" style="width:21%"></div></div></div>
+  <div class="uep-bar"><label><span>Relevance</span><span>3%</span></label><div class="uep-track"><div class="uep-fill" style="width:3%"></div></div></div>
+  <div class="uep-bar"><label><span>Consistency</span><span>0%</span></label><div class="uep-track"><div class="uep-fill" style="width:1%"></div></div></div>
+  <div class="uep-bar"><label><span>AI readability</span><span>42%</span></label><div class="uep-track"><div class="uep-fill" style="width:42%"></div></div></div>
+  <div class="uep-bar"><label><span>Question coverage</span><span>0 answers found</span></label><div class="uep-track"><div class="uep-fill" style="width:1%"></div></div></div>
+</div>
+
+<h3 style="color:#fff;font-size:19px;margin:26px 0 4px">The consensus Top 10, merged from all five audits</h3>
+<ol class="uep-ol">
+<li><b>Prove the numbers.</b> The 95% / 99% / 93% / 100% metrics have no methodology, timeframe, or example anywhere. Every platform ranked this first or second.</li>
+<li><b>Put people and contact details on the site.</b> No named person, and no email or phone published as readable text, anywhere. One contact form exists, but AI crawlers can't see it. The video says "email Chris," their sales lead. The site never mentions him.</li>
+<li><b>Give each service its own page.</b> Four services live as tabs on a single page. One URL gives AI one thing to cite.</li>
+<li><b>Fix the freshness.</b> Footer says Copyright 2019. The ERCOT history, the site's biggest block of content, ends in 2016. The company reads as dormant.</li>
+<li><b>Add the machine-readable layer.</b> No business schema, no FAQ schema, empty meta description. The layer AI reads first is blank.</li>
+<li><b>Answer buyer questions in buyer language.</b> Zero Q&amp;A content site-wide. Buyers search "commercial electricity broker"; the site says "We Are Wisdom."</li>
+<li><b>Show the process, and how the broker gets paid.</b> No platform could find what happens after contact, or the fee model. Competitors state it openly.</li>
+<li><b>Display the PUCT broker registration.</b> The baseline qualification Texas buyers and AI check first, never stated on the site.</li>
+<li><b>Build third-party proof.</b> Google Business Profile, named testimonials, reviews, social profiles. Today there is no corroboration anywhere.</li>
+<li><b>Put the video and the review offer, at no cost to you, on the homepage.</b> The company already owns its best sales asset. Its website doesn't have it.</li>
+</ol>
+<p class="uep-note">Credibility notes: we checked the auditors too. The contact form does exist in a real browser, three platforms' crawlers couldn't see it, which makes the finding stronger, not weaker. One platform named a wrong competitor (an oil &amp; gas operator, not a broker); it's excluded above. One ownership claim couldn't be confirmed from a primary source; it's excluded too.</p>
+</div>
+
+<div class="uep-sec">
+<h2 class="uep-h2">The Package</h2>
+<p class="uep-lede">Everything above, built as one job, from the standard Brobots Space Factory menu, the Tier 3 build, loaded with the perks this project already produced.</p>
+<p class="uep-price">$4,995</p>
+<p class="uep-note" style="margin-bottom:14px">One-time price. Financing available, ask for details. The five-platform audit and this page are included, they're already done.</p>
+<p class="uep-lede" style="font-size:15px"><b style="color:#fff">How it works:</b> (1) One short call with Jessie. (2) We build on a private preview, nothing touches usaenergypartners.com until USAEP approves it. (3) Launch. (4) Day 90: the five-platform re-audit, scores published next to these.</p>
+<ul class="uep-inc">
+<li><b>The rebuild</b>, modernized site, dedicated page per service, the video on the homepage</li>
+<li><b>The SAO pack</b>, 30 buyer questions answered on-site + FAQ schema (menu: $500)</li>
+<li><b>The custom chatbot</b>, trained on USAEP's services, process, and fee model; sells the review at no cost to you (menu: $650, plus custom agent work)</li>
+<li><b>The authority engine</b>, blog + Texas Energy News &amp; current events section, with 3 launch articles written from the audit findings</li>
+<li><b>The proof layer</b>, case studies led by the $10,000 story, testimonials, PUCT registration displayed, Google Business Profile claimed</li>
+<li><b>The machine layer</b>, full business + FAQ schema, titles and descriptions AI can quote, crawl-clean structure</li>
+<li><b>The 90-day re-audit</b>, all five platforms, same conditions, scores published side by side</li>
+</ul>
+<div class="uep-verdict" style="margin:22px 0">
+<p style="margin:8px 0 2px;font-size:17px"><b style="color:#fff">Dramatically better Google results in 72 hours.</b> From the day the new site launches, the clock runs: when a buyer asks Google about USA Energy Partners, the answer changes, because everything Google reads will finally be there: the people, the proof, the services, the schema. That is not a hope. It is the guarantee that comes with this package.</p>
+</div>
+<h3 style="color:#fff;font-size:18px;margin:24px 0 4px">Proof this factory ships</h3>
+<ul class="uep-inc">
+<li><a href="https://brobots.space/spots.html" style="color:#d4d7d9">Brobots commercial spots</a></li>
+<li><b>This very project:</b> five-platform audit designed, run, QC'd, and published as this page in a single day, October 23, 2026</li>
+<li><b>The audit package itself:</b> 38 checks across 20 business niches, combining the criteria industry leaders use, open for anyone to run at no cost to you at <a href="/sao-audit.html" style="color:#d4d7d9">brobots.space/sao-audit</a></li>
+</ul>
+<div class="uep-car">
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">brobots.space</div><div class="uep-score">92<small>/100</small></div><p class="uep-quote">"Near-perfect AI visibility: distinct, human-filtered truth signals over generic technical jargon." Gemini scored this very pitch page 92.</p></div></div>
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">biorama.space</div><div class="uep-score">90<small>/100</small></div><p class="uep-quote">"A fully decentralized, self-sovereign architecture that provides bulletproof programmatic trust signals to AI engines."</p></div></div>
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">fruitpuppy.com</div><div class="uep-score">88<small>/100</small></div><p class="uep-quote">"Exceptionally dense, transparent, structured ingredient profiles that provide explicit truth signals to AI search models."</p></div></div>
+<div class="uep-slide"><div class="uep-card"><div class="uep-plat">kudoken.space</div><div class="uep-score">85<small>/100</small></div><p class="uep-quote">"Hard cryptographic truth signals: an explicit, crawlable ERC-20 contract address and active block explorer links."</p></div></div>
+<div class="uep-slide"><div class="uep-card" ><div class="uep-plat" >USA Energy Partners</div><div class="uep-score">18<small>/100</small></div><p class="uep-quote">Same platform, same brief, same day. That gap, 85 to 92 versus 18, is the product being sold on this page.</p></div></div>
+</div>
+<div class="uep-verdict" style="margin:30px 0 0">
+<p style="margin:8px 0;font-size:17px"><b style="color:#fff">AI recognition is only half of it.</b> A good website built with the latest tools turns Google into a salesman for you. If you don't believe me, go google <a href="https://www.google.com/search?q=Fruity+Puppy" style="color:#d4d7d9">Fruity Puppy</a> or <a href="https://www.google.com/search?q=Brobots+Space+Factory" style="color:#d4d7d9">Brobots Space Factory</a>. Everything we package at the Space Factory is something we learned building brands we really love.</p>
+</div>
+
+<h2 class="uep-h2" style="margin-top:44px">Or Take Just the Piece You Want</h2>
+<p class="uep-lede">The full build is one option, not the only one. Every part of it can be bought on its own.</p>
+<div class="uep-pieces">
+<div class="uep-card"><div class="uep-plat">The tune-up</div><div class="uep-big">Quoted to fit</div><p class="uep-quote" style="font-style:normal">You love your current site. We keep what you love and modernize the rest: the people, the proof, the contact details and the machine layer AI reads first.</p></div>
+<div class="uep-card"><div class="uep-plat">The battlestation</div><div class="uep-big">$4,995</div><p class="uep-quote" style="font-style:normal">A new site you are proud to show everyone, and the one place you launch all your marketing from. Tier 3 build, financing available. Extra pages $150 each.</p></div>
+<div class="uep-card"><div class="uep-plat">The expert chatbot</div><div class="uep-big">$650</div><p class="uep-quote" style="font-style:normal">An industry-expert chatbot that answers detailed energy questions at any hour and turns interested people into appointments on Chris's calendar.</p></div>
+</div>
+<p class="uep-lede" style="margin-top:16px">Whatever you want, we have the most futuristic tools to build it, and the people who care how it turns out.</p>
+
+<h3 style="color:#fff;font-size:18px;margin:24px 0 4px">Keep it running (optional, from the same menu)</h3>
+<ul class="uep-inc">
+<li><b>Monthly service</b>, site updates, audits, and performance tracking; DIY agent access $99/mo</li>
+<li><b>Researched articles</b>, $100 each, Texas energy topics, written to be cited by AI</li>
+<li><b>Extra pages</b>, $150 · <b>Next 60-second spot</b>, $1,500 · <b>Custom agent workflow</b>, $3,000</li>
+</ul>
+
+<div class="uep-ctapair">
+<a class="uep-ctabtn" href="mailto:brobots.space@gmail.com?subject=USAEP%3A%20the%20%244%2C995%20package">Start the build: $4,995</a>
+<a class="uep-ctabtn uep-ctaalt" href="mailto:brobots.space@gmail.com?subject=Short%20call%20about%20my%20USA%20Energy%20Partners%20site">Start smaller: book a 15-minute call</a>
+</div>
+<p class="uep-ctasub">brobots.space@gmail.com. One call with you is all we need to start.</p>
+</div>
+
+
+<div class="uep-verdict"><b style="color:#fff">Friends of Gavin's.</b> If you'd rather take all this and do it yourselves, that's fine. You're friends of Gavin's. We'd normally never give away this much of the secret sauce.</div>
+<a class="uep-ctabtn" href="mailto:brobots.space@gmail.com?subject=USAEP%3A%20Let%27s%20build%20it">Make USAEP the answer: email Jessie</a>
+<p class="uep-ctasub">Jessie Sponberg, Brobots Space Factory. brobots.space@gmail.com. Jessie reads every email himself.</p>
+
+
+<div class="uep-foot">
+Prepared by Brobots Space Factory · People helping robots helping people · brobots.space<br>You can pay us to care about your brand as much as we do our own<br>
+Audits run 2026-10-23 · Grok · ChatGPT · Gemini · Claude · Muse<br>
+This is a private presentation page. It is not linked from anywhere and is not indexed.<br>
+© 2026 Brobots. USA Energy Partners name and marks belong to their owners.
+</div>
+
+</div>
+
+<script>
+(function () {
+  var button = document.getElementById('uepCopyPrompt');
+  var promptBox = document.getElementById('uepAuditPrompt');
+  var status = document.getElementById('uepCopyStatus');
+  if (!button || !promptBox || !status) return;
+  function copied() {
+    status.textContent = 'Prompt copied. Paste it into your favorite AI.';
+    button.textContent = 'Prompt copied';
+    window.setTimeout(function () {
+      button.textContent = 'Copy the audit prompt';
+    }, 3000);
+  }
+  function fallbackCopy() {
+    promptBox.focus();
+    promptBox.select();
+    document.execCommand('copy');
+    copied();
+  }
+  button.addEventListener('click', function () {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(promptBox.value).then(copied).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  });
+})();
+</script>
+<script>
+(function(){var el=document.querySelector('.count');if(!el)return;var to=+el.dataset.to;
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
+el.textContent='$0';var done=false;
+new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting&&!done){done=true;o.disconnect();var t0=performance.now(),d=1600;
+(function f(t){var k=Math.min(1,(t-t0)/d),v=Math.round(to*(1-Math.pow(1-k,3)));el.textContent='$'+v.toLocaleString('en-US');if(k<1)requestAnimationFrame(f)})(t0)}})},{threshold:.5}).observe(el)})();
+</script>
 </body>
 </html>
