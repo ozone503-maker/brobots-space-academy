@@ -57,6 +57,24 @@
       else nav.insertBefore(sv, nav.querySelector('a.contact'));
     }
 
+    if (!nav.querySelector('a[href="/factory-floor"]')) {
+      var ff = document.createElement('a');
+      ff.href = '/factory-floor';
+      ff.textContent = 'Factory floor';
+      if ((location.pathname || '').indexOf('factory-floor') !== -1) {
+        ff.className = 'current';
+        ff.setAttribute('aria-current', 'page');
+        nav.querySelectorAll('a.current').forEach(function (x) {
+          if (x !== ff) { x.classList.remove('current'); x.removeAttribute('aria-current'); }
+        });
+      }
+      var bots = nav.querySelector('a[href="/bots"]') || nav.querySelector('a[href="bots.html"]');
+      var faqA = nav.querySelector('a[href="faq.html"]');
+      if (bots && bots.nextSibling) bots.parentNode.insertBefore(ff, bots.nextSibling);
+      else if (faqA) nav.insertBefore(ff, faqA);
+      else nav.insertBefore(ff, nav.querySelector('a.contact'));
+    }
+
     if (!btn) return;
 
     function setOpen(open) {

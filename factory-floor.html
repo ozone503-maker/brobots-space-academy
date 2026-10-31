@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FACTORY FLOOR</title>
+<meta name="description" content="The Brobots Space Factory on Kīlauea, live. Every bot on the crew, the websites they build, and what they did last, from real usage data">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://brobots.space/factory-floor">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Brobots Space Factory">
+<meta property="og:title" content="FACTORY FLOOR">
+<meta property="og:description" content="Watch the Brobots bot crew build Jessie's websites in a live factory on Kīlauea. Real data only, nothing guessed">
+<meta property="og:url" content="https://brobots.space/factory-floor">
+<meta property="og:image" content="https://brobots.space/media/og-factory-floor.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Brobots Space Factory floor at night, robots at website build bays with Kīlauea erupting through the big window">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FACTORY FLOOR">
+<meta name="twitter:description" content="Watch the Brobots bot crew build Jessie's websites in a live factory on Kīlauea. Real data only, nothing guessed">
+<meta name="twitter:image" content="https://brobots.space/media/og-factory-floor.jpg">
+<meta name="twitter:image:alt" content="The Brobots Space Factory floor at night, robots at website build bays with Kīlauea erupting through the big window">
+<meta name="theme-color" content="#0f0e12">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="campus.css?v=20260926a">
+<link rel="stylesheet" href="circular.css?v=20260926a">
+<link rel="stylesheet" href="/ff/office.css?v=20261030a">
+<link rel="stylesheet" href="/ff/page.css?v=20261030a">
+<script type="importmap">{"imports":{"three":"/ff/vendor/three.module.min.js"}}</script>
+</head>
+<body class="factory" data-ff="page" data-phase="day">
+<header class="campus-mast" id="campus-mast">
+ <div class="campus-mast-in">
+  <a class="campus-brand" href="/"><span class="blk">BROBOTS</span></a>
+  <button class="campus-nav-toggle" type="button" aria-expanded="false" aria-controls="campus-nav" aria-label="Open menu">Menu</button>
+  <nav class="campus-nav" id="campus-nav" aria-label="Campus">
+   <a href="/">Home</a>
+   <a href="services.html">Services</a>
+   <a href="work.html">Work</a>
+   <a href="dossiers.html">Graduates</a>
+   <a href="/bots">Bots</a>
+   <a href="faq.html">FAQ</a>
+  </nav>
+ </div>
+</header>
+
+<section class="ff-hero" id="hero" aria-label="Live factory floor">
+ <div class="ff-top">
+  <div class="ff-copy">
+   <p class="ff-kicker">Brobots Space Factory on Kīlauea</p>
+   <h1 class="blk ff-title">Factory floor</h1>
+   <p class="ff-lede">The whole bot crew at work in Mountain View, Hawai‘i. Each website has a build bay, and the bots on that site gather there. Every state comes from real usage data</p>
+   <div class="ff-actions">
+    <a class="ff-btn copper" id="share-x" href="https://x.com/intent/post?text=FACTORY%20FLOOR%20at%20the%20Brobots%20Space%20Factory%20on%20K%C4%ABlauea.%20Watch%20the%20bot%20crew%20build%20the%20sites%20live&amp;url=https%3A%2F%2Fbrobots.space%2Ffactory-floor" target="_blank" rel="noopener">Share on X</a>
+    <a class="ff-btn" href="#build-bays">See the build bays</a>
+   </div>
+  </div>
+  <div class="ff-board">
+   <div class="ff-clock"><span id="clock">--:--</span><span class="tz">HST</span><span class="shift" id="shift">Day shift</span></div>
+   <div class="counts">
+    <div class="count c-work"><b id="n-work">0</b><span>Working</span></div>
+    <div class="count c-recent"><b id="n-recent">0</b><span>Recently active</span></div>
+    <div class="count c-need"><b id="n-need">0</b><span>Need you</span></div>
+    <div class="count c-idle"><b id="n-idle">0</b><span>Idle</span></div>
+   </div>
+  </div>
+ </div>
+ <div class="ff-stage">
+  <div class="floorview" id="floorview">
+   <canvas id="gl" aria-label="3D factory floor with the bot crew"></canvas>
+   <div class="tags" id="tags"></div>
+   <div id="demo-banner" hidden>Demo mode: this activity is made up for preview only. <a href="/factory-floor">Show the real snapshot</a></div>
+   <div id="gl-fallback" hidden>This screen can't draw the 3D factory. The crew and sites below are still live</div>
+  </div>
+  <div class="detail" id="detail"></div>
+  <p class="floornote">Idle bots wander the floor between jobs. That motion is just life, not work</p>
+ </div>
+</section>
+
+<main class="wrap ff-main">
+ <section class="ff-sec" id="build-bays" aria-labelledby="sites-h">
+  <div class="ff-sec-head">
+   <h2 class="blk" id="sites-h">Website build bays</h2>
+   <p>Nine sites, nine bays. A bot is tied to a site only when its own recent work touched that site, its code or its deploys. Bots with no single site work the general stations</p>
+  </div>
+  <div class="sites-grid" id="sites-grid"></div>
+  <p class="ff-fine" id="site-evidence"></p>
+ </section>
+
+ <section class="ff-sec" id="crew" aria-labelledby="crew-h">
+  <div class="ff-sec-head">
+   <h2 class="blk" id="crew-h">The team</h2>
+   <p><span id="team-sub"></span> on the roster. Tap a bot to find it on the floor</p>
+  </div>
+  <ul class="team" id="team"></ul>
+ </section>
+
+ <section class="ff-sec" id="activity" aria-labelledby="act-h">
+  <div class="ff-sec-head">
+   <h2 class="blk" id="act-h">Activity</h2>
+   <p>The latest thing each bot did, newest first</p>
+  </div>
+  <ul class="feed" id="feed"></ul>
+  <div class="ff-foot">
+   <ul class="legend">
+    <li><i class="dot working"></i>Working</li><li><i class="dot recent"></i>Recently active</li><li><i class="dot needs"></i>Needs you</li><li><i class="dot idle"></i>Idle, on the floor</li>
+   </ul>
+   <p class="snap" id="snap">Loading the latest snapshot</p>
+   <p class="usage" id="usage"></p>
+   <p class="ff-fine">Real data only, nothing guessed. The snapshot refreshes every two hours from 8 am to 8 pm HST. <a id="demo-link" href="?demo=1">Preview demo mode</a>. Wall display version at <a href="https://brobots-office.vercel.app">brobots-office.vercel.app</a></p>
+   <div class="ff-actions"><a class="ff-btn copper" href="https://x.com/intent/post?text=FACTORY%20FLOOR%20at%20the%20Brobots%20Space%20Factory%20on%20K%C4%ABlauea.%20Watch%20the%20bot%20crew%20build%20the%20sites%20live&amp;url=https%3A%2F%2Fbrobots.space%2Ffactory-floor" target="_blank" rel="noopener">Share on X</a><a class="ff-btn" href="#hero">Back to the floor</a></div>
+  </div>
+ </section>
+</main>
+
+<footer class="factory-foot">
+ <div class="blk" style="font-size:2rem">BROBOTS</div>
+ <div>people helping robots helping people</div>
+</footer>
+<script src="campus-nav.js?v=20260926a"></script>
+<script type="module" src="/ff/office.js?v=20261030a"></script>
+</body>
+</html>

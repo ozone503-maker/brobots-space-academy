@@ -406,6 +406,10 @@
     {
       "source": "/search-visibility",
       "destination": "/search-visibility.html"
+    },
+    {
+      "source": "/factory-floor",
+      "destination": "/factory-floor.html"
     }
   ]
 }

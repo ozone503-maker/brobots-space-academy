@@ -1,0 +1,374 @@
+{
+ "generatedAt": "2026-10-30T17:52:10-10:00",
+ "timezone": "Pacific/Honolulu",
+ "demo": false,
+ "sources": [
+  "Grok Bot usage report (weekly limit and per-bot daily shares)",
+  "Each bot's most recent chat turns, summarized to a vague one-liner"
+ ],
+ "notes": "States are read from each bot's latest turn when this snapshot was taken. Between snapshots nothing updates.",
+ "weekly": {
+  "usedPct": 6.4,
+  "resetsAt": "2026-11-06T11:18:00-10:00",
+  "topBotsThisWeek": [
+   [
+    "chill skrill bill",
+    49
+   ],
+   [
+    "Grok Bot",
+    17
+   ],
+   [
+    "bookworm",
+    12
+   ],
+   [
+    "X Promoter",
+    10
+   ],
+   [
+    "BROBOSS",
+    6
+   ],
+   [
+    "office max",
+    6
+   ]
+  ],
+  "last7Days": [
+   [
+    "Sat Oct 24",
+    37
+   ],
+   [
+    "Sun Oct 25",
+    23
+   ],
+   [
+    "Mon Oct 26",
+    18
+   ],
+   [
+    "Tue Oct 27",
+    15
+   ],
+   [
+    "Fri Oct 30",
+    4
+   ],
+   [
+    "Sat Oct 31",
+    3
+   ]
+  ]
+ },
+ "sites": [
+  {
+   "domain": "brobots.space",
+   "accent": "#5fd3bf",
+   "bots": [
+    "office max",
+    "Grok Bot",
+    "BROBOSS",
+    "fighting game bot"
+   ]
+  },
+  {
+   "domain": "fruitypuppy.com",
+   "accent": "#f2a7c3",
+   "bots": [
+    "pink commander"
+   ]
+  },
+  {
+   "domain": "outletmall.space",
+   "accent": "#c9a7ff",
+   "bots": [
+    "projectionist"
+   ]
+  },
+  {
+   "domain": "biorama.space",
+   "accent": "#8fd18f",
+   "bots": [
+    "BIORAMA GROK"
+   ]
+  },
+  {
+   "domain": "monkeyjockey.space",
+   "accent": "#f0a35a",
+   "bots": [
+    "rekker"
+   ]
+  },
+  {
+   "domain": "flashtown.space",
+   "accent": "#ffd166",
+   "bots": []
+  },
+  {
+   "domain": "kudoken.space",
+   "accent": "#6fb6ff",
+   "bots": [
+    "kudoken bot"
+   ]
+  },
+  {
+   "domain": "ishipmyplants.space",
+   "accent": "#9fe0b0",
+   "bots": []
+  },
+  {
+   "domain": "flyhawaii.space",
+   "accent": "#7fd6ff",
+   "bots": []
+  }
+ ],
+ "siteEvidence": "A bot is linked to a site only when its own recent tool calls touched that site, its repo or its Vercel project. Mentions in chat do not count. Bots with no clear site work at the general stations",
+ "bots": [
+  {
+   "name": "office max",
+   "state": "working",
+   "task": "Adding website build bays and the factory floor page",
+   "lastActive": "2026-10-30T17:52:10-10:00",
+   "lastActivePrecision": "time",
+   "shape": "wedge",
+   "color": "cyan",
+   "site": "brobots.space"
+  },
+  {
+   "name": "chill skrill bill",
+   "state": "needs-you",
+   "task": "Local business lead list ready, waiting on you to connect outreach email",
+   "lastActive": "2026-10-30",
+   "lastActivePrecision": "day-utc",
+   "shape": "flower",
+   "color": "violet"
+  },
+  {
+   "name": "X Promoter",
+   "state": "working",
+   "task": "Running a follow cleanup round on X",
+   "lastActive": "2026-10-31",
+   "lastActivePrecision": "day-utc",
+   "shape": "blob",
+   "color": "gray"
+  },
+  {
+   "name": "bookworm",
+   "state": "needs-you",
+   "task": "Chapter 4 drafted, needs three of your stories and a quick call",
+   "lastActive": "2026-10-30",
+   "lastActivePrecision": "day-utc",
+   "shape": "tablet",
+   "color": "green"
+  },
+  {
+   "name": "Grok Bot",
+   "state": "needs-you",
+   "task": "Proposed a project tracker page, waiting on your yes",
+   "lastActive": "2026-10-30",
+   "lastActivePrecision": "day-utc",
+   "shape": "blob",
+   "color": "black",
+   "site": "brobots.space"
+  },
+  {
+   "name": "Master Max",
+   "state": "needs-you",
+   "task": "Shareable copy staged, waiting on your review",
+   "lastActive": "2026-10-26T23:17:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "heart",
+   "color": "orange"
+  },
+  {
+   "name": "SlapChopBot",
+   "state": "needs-you",
+   "task": "Shareable copy and pitch staged, waiting on your confirm",
+   "lastActive": "2026-10-24",
+   "lastActivePrecision": "day-utc",
+   "shape": "blob",
+   "color": "red"
+  },
+  {
+   "name": "BROBOSS",
+   "state": "idle",
+   "task": "Saved a shared design skill for the team",
+   "lastActive": "2026-10-30",
+   "lastActivePrecision": "day-utc",
+   "shape": "pebble",
+   "color": "green",
+   "site": "brobots.space"
+  },
+  {
+   "name": "AI Bundy",
+   "state": "idle",
+   "task": "Handed review notes to Master Max",
+   "lastActive": "2026-10-26T23:17:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "squircle",
+   "color": "orange"
+  },
+  {
+   "name": "rekker",
+   "state": "idle",
+   "task": "Shipped a layout fix on a live race site",
+   "lastActive": "2026-10-26",
+   "lastActivePrecision": "day-utc",
+   "shape": "hex",
+   "color": "orange",
+   "site": "monkeyjockey.space"
+  },
+  {
+   "name": "fighting game bot",
+   "state": "idle",
+   "task": "Pushed fighter art to a test branch",
+   "lastActive": "2026-10-26",
+   "lastActivePrecision": "day-utc",
+   "shape": "blob",
+   "color": "black",
+   "site": "brobots.space"
+  },
+  {
+   "name": "kudoken bot",
+   "state": "idle",
+   "task": "Stopped on request, resting",
+   "lastActive": "2026-10-26",
+   "lastActivePrecision": "day-utc",
+   "shape": "blob",
+   "color": "blue",
+   "site": "kudoken.space"
+  },
+  {
+   "name": "BIORAMA GROK",
+   "state": "idle",
+   "task": "On hold until you call it back",
+   "lastActive": "2026-10-26",
+   "lastActivePrecision": "day-utc",
+   "shape": "blob",
+   "color": "orange",
+   "site": "biorama.space"
+  },
+  {
+   "name": "X Post Planner",
+   "state": "idle",
+   "task": "Daily post plan runs each morning",
+   "lastActive": "2026-10-26",
+   "lastActivePrecision": "day-utc",
+   "shape": "teardrop",
+   "color": "cyan"
+  },
+  {
+   "name": "pitcrew chief",
+   "state": "idle",
+   "task": "New race kart approved",
+   "lastActive": "2026-10-24T23:20:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "square",
+   "color": "green"
+  },
+  {
+   "name": "Sponsorship Hunter",
+   "state": "idle",
+   "task": "Sized up startup ideas against current projects",
+   "lastActive": "2026-10-24T16:28:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "blob",
+   "color": "black"
+  },
+  {
+   "name": "protocol bot",
+   "state": "idle",
+   "task": "Wrote its own promo post",
+   "lastActive": "2026-10-24",
+   "lastActivePrecision": "day-utc",
+   "shape": "blob",
+   "color": "red"
+  },
+  {
+   "name": "The Connector Of All Things",
+   "state": "idle",
+   "task": "Wrote its own pitch",
+   "lastActive": "2026-10-24",
+   "lastActivePrecision": "day-utc",
+   "shape": "sparkle",
+   "color": "green"
+  },
+  {
+   "name": "ClodCop",
+   "state": "idle",
+   "task": "Wrote its own promo post",
+   "lastActive": "2026-10-24",
+   "lastActivePrecision": "day-utc",
+   "shape": "wedge",
+   "color": "red"
+  },
+  {
+   "name": "pink commander",
+   "state": "idle",
+   "task": "Saved a new site style rule",
+   "lastActive": "2026-10-19",
+   "lastActivePrecision": "day-utc",
+   "shape": "tablet",
+   "color": "magenta",
+   "site": "fruitypuppy.com"
+  },
+  {
+   "name": "projectionist",
+   "state": "idle",
+   "task": "Shipped a crawler friendly mall homepage",
+   "lastActive": "2026-10-19",
+   "lastActivePrecision": "day-utc",
+   "shape": "squircle",
+   "color": "gray",
+   "site": "outletmall.space"
+  },
+  {
+   "name": "push broom",
+   "state": "idle",
+   "task": "Updated team handoff notes",
+   "lastActive": "2026-10-17T08:43:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "cloud",
+   "color": "brown"
+  },
+  {
+   "name": "Ruch",
+   "state": "idle",
+   "task": "Paused, resting until you message",
+   "lastActive": "2026-09-25T22:58:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "squircle",
+   "color": "brown"
+  },
+  {
+   "name": "merch",
+   "state": "idle",
+   "task": "Paused, resting until you message",
+   "lastActive": "2026-09-25T22:58:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "pebble",
+   "color": "yellow"
+  },
+  {
+   "name": "tokeydokey",
+   "state": "idle",
+   "task": "Usage watch paused",
+   "lastActive": "2026-09-25T22:58:00-10:00",
+   "lastActivePrecision": "time",
+   "shape": "blob",
+   "color": "blue"
+  },
+  {
+   "name": "Get Hired 2027",
+   "state": "unknown",
+   "task": "No sessions yet",
+   "lastActive": null,
+   "lastActivePrecision": "none",
+   "shape": "tablet",
+   "color": "violet"
+  }
+ ]
+}
