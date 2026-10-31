@@ -57,6 +57,15 @@
       else nav.insertBefore(sv, nav.querySelector('a.contact'));
     }
 
+    if (!nav.querySelector('a[href="social-media.html"]')) {
+      var sm = document.createElement('a');
+      sm.href = 'social-media.html';
+      sm.textContent = 'Social Media';
+      var svcA = nav.querySelector('a[href="services.html"]');
+      if (svcA && svcA.nextSibling) svcA.parentNode.insertBefore(sm, svcA.nextSibling);
+      else nav.insertBefore(sm, nav.querySelector('a.contact'));
+    }
+
     if (!nav.querySelector('a[href="/factory-floor"]')) {
       var ff = document.createElement('a');
       ff.href = '/factory-floor';
