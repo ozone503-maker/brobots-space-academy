@@ -109,3 +109,8 @@ h2 .sub{font-family:var(--body);font-weight:400;font-size:14px;color:var(--muted
 .detail .meta.site{margin-top:2px}
 .tag.atbay .nm::after{content:" · " attr(data-site);color:var(--muted);font-weight:600}
 .p-feed{flex:1 1 0;overflow:hidden;min-height:0}
+/* robots first: tags only on hover, tap, or the one featured working bot */
+.tag{opacity:0;pointer-events:none;transition:opacity .25s}
+.tag.show{opacity:1;pointer-events:auto}
+.tag.small:not(.sel):not(:hover) .nm{display:block}
+.floornote{display:none!important}

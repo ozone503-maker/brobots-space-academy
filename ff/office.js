@@ -537,15 +537,14 @@ const BAY_POS = [[-9.05,5.6],[-4.5,5.6],[-.5,5.6],[4.05,5.6],[-11.4,10.4],[-7.5,
 const BAYS = [];
 const bayGeo = new THREE.CylinderGeometry(1.25,1.32,.22,6), bayRingGeo = new THREE.RingGeometry(1.02,1.14,6), modelGeo = new THREE.OctahedronGeometry(.32,0);
 function signTex(domain, accent, line2){
-  return canvasTex(768,224,(g,w,h)=>{
+  return canvasTex(768,150,(g,w,h)=>{
     g.fillStyle = '#121418'; g.fillRect(0,0,w,h);
     const lg = g.createLinearGradient(0,0,w,0); lg.addColorStop(0,'#c27a44'); lg.addColorStop(.5,'#e0a273'); lg.addColorStop(1,'#a9afb7');
     g.strokeStyle = lg; g.lineWidth = 10; g.strokeRect(5,5,w-10,h-10);
     g.fillStyle = accent; g.shadowColor = accent; g.shadowBlur = 22;
     let fs = 92; g.font = `700 ${fs}px "Chakra Petch", "Archivo", sans-serif`;
     while (g.measureText(domain).width > w - 70 && fs > 40){ fs -= 4; g.font = `700 ${fs}px "Chakra Petch", "Archivo", sans-serif`; }
-    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(domain, w/2, h*.43);
-    g.shadowBlur = 0; g.fillStyle = '#c9ced6'; g.font = '500 40px "Chakra Petch", "Archivo", sans-serif'; g.fillText(line2, w/2, h*.79);
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(domain, w/2, h*.53);
   });
 }
 function bayLine(n){ return n ? (n === 1 ? '1 bot on this site' : n + ' bots on this site') : 'No bot on it yet'; }
@@ -564,16 +563,17 @@ function buildBays(sites){
     const halo = glowSprite(acc.getHex(), 1.5, .45); halo.position.set(0,1.55,-.15); g.add(halo);
     // sign on two copper posts at the back of the bay
     // turned a little toward the viewer so the domain reads from the camera
-    const sg = new THREE.Group(); sg.position.set(0,0,-.95); sg.rotation.y = .5; if (PAGE) sg.scale.setScalar(1.18); g.add(sg);
-    for (const sx of [-1.25,1.25]) cyl(.05,.05,2.9,M.copper,sx,1.45,-.02,8,sg);
+    // small sign low on the far left corner so it never covers the bots at the bay
+    const sg = new THREE.Group(); sg.position.set(-1.35,0,z < 8 ? -.55 : .55); sg.rotation.y = .55; sg.scale.setScalar(.72); g.add(sg);
+    for (const sx of [-1.25,1.25]) cyl(.07,.07,2.9,M.copper,sx,1.45,-.02,8,sg);
     const n = (s.bots || []).length;
-    const sign = new THREE.Mesh(new THREE.PlaneGeometry(3.0,.88), new THREE.MeshBasicMaterial({map:signTex(s.domain, s.accent || '#a9afb7', bayLine(n)), toneMapped:false}));
+    const sign = new THREE.Mesh(new THREE.PlaneGeometry(3.0,.59), new THREE.MeshBasicMaterial({map:signTex(s.domain, s.accent || '#a9afb7', bayLine(n)), toneMapped:false}));
     sign.position.set(0,2.9,.03); sg.add(sign);
-    const back = new THREE.Mesh(new THREE.BoxGeometry(3.12,1.0,.06), M.steel); back.position.set(0,2.9,-.02); sg.add(back);
-    const sglow = glowSprite(acc.getHex(), 3.4, .18); sglow.position.set(0,2.9,.2); sg.add(sglow);
+    const back = new THREE.Mesh(new THREE.BoxGeometry(3.12,.7,.06), M.steel); back.position.set(0,2.9,-.02); sg.add(back);
+    const sglow = glowSprite(acc.getHex(), 3.0, .14); sglow.position.set(0,2.9,.2); sg.add(sglow);
     // work spots on the aisle side, reached from the aisle lane
     const sideZ = z < 8 ? 1.65 : -1.65, face = z < 8 ? Math.PI : 0;
-    const slots = [-1.05, 0, 1.05].map(o => ({bay:s.domain, who:null, spot:{x:x+o, z:z+sideZ, face, pre:{x:x+o, z:8.0}}}));
+    const slots = [-1.2, 0, 1.2].map(o => ({bay:s.domain, who:null, spot:{x:x+o, z:z+sideZ, face, pre:{x:x+o, z:8.0}}}));
     BAYS.push({domain:s.domain, x, z, g, ring, model, sign, slots, n});
   });
 }
@@ -583,6 +583,7 @@ function syncBays(){
 }
 
 /* ---------------- robots ---------------- */
+const BOT_S = 1.9;
 const headGeos = {
   ball: new THREE.SphereGeometry(.5,22,16),
   box: new RoundedBoxGeometry(.95,.8,.85,3,.24),
@@ -599,7 +600,7 @@ const shadowMat = new THREE.MeshBasicMaterial({map:glowTex, color:0x000000, tran
 const bots = new Map();
 function makeBot(b){
   const c = AV[b.color] ?? AV.gray;
-  const g = new THREE.Group(); g.scale.setScalar(1.3); const rig = new THREE.Group(); g.add(rig);
+  const g = new THREE.Group(); g.scale.setScalar(BOT_S); const rig = new THREE.Group(); g.add(rig);
   const sh = new THREE.Mesh(new THREE.PlaneGeometry(1.3,1.3), shadowMat); sh.rotation.x = -Math.PI/2; sh.position.y = .02; g.add(sh);
   const body = new THREE.Mesh(bodyGeo, M.botBody); body.position.y = .8; rig.add(body);
   const belt = new THREE.Mesh(new THREE.TorusGeometry(.41,.05,6,24), trim(c)); belt.rotation.x = Math.PI/2; belt.position.y = .72; rig.add(belt);
@@ -754,6 +755,19 @@ canvas.addEventListener('pointerdown', e => {
   const hit = ray.intersectObjects([...bots.values()].map(b => b.g), true).find(h => h.object.userData.botName);
   if (hit) select(hit.object.userData.botName, true);
 });
+/* hover shows a bot's name and task; touch uses tap (select) instead */
+let hovered = null, hovQ = null;
+canvas.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
+  if (!hovQ) requestAnimationFrame(() => {
+    const ev = hovQ; hovQ = null; const r = canvas.getBoundingClientRect();
+    ndc.set(((ev.clientX - r.left)/r.width)*2-1, -((ev.clientY - r.top)/r.height)*2+1); ray.setFromCamera(ndc, camera);
+    const h = ray.intersectObjects([...bots.values()].map(b => b.g), true).find(h => h.object.userData.botName);
+    hovered = h ? h.object.userData.botName : null; canvas.style.cursor = hovered ? 'pointer' : '';
+  });
+  hovQ = e;
+});
+canvas.addEventListener('pointerleave', () => { hovered = null; });
 
 /* labels for areas */
 const LABELS = [['Assembly line',-4.5,2.2,-8.5],['Launch pad',11.6,.3,-4.2],["Jessie's office",-15.6,5.6,.6],['Workstations',-2.5,.1,3.1],['Charging bay',11.1,.1,-4.3],['Break room',11.2,.1,12.2],['Website build bays',-3.6,.1,12.3]]
@@ -810,8 +824,9 @@ function frame(now){
   beacon.material.opacity = (Math.sin(t*2.2) > 0) ? .95 : .25;
   for (const B of BAYS){ const on = B.slots.some(s => s.who); B.model.rotation.y += step * (on ? .9 : .15); B.model.position.y = 1.55 + Math.sin(t*1.4 + B.x)*.08; B.ring.material.opacity = on ? .75 + Math.sin(t*3 + B.x)*.2 : .22; }
   // bots
-  let needsList = [...bots.values()].filter(b => b.ds === 'needs');
-  if (now - featuredAt > 5000){ featured++; featuredAt = now; }
+  const userSel = !!selected && Date.now() - userPickedAt < 60000;
+  const workList = [...bots.values()].filter(b => b.ds === 'working' && !b.walking);
+  if (now - featuredAt > 7000){ featured++; featuredAt = now; }
   const selNeeds = selected && bots.get(selected) && bots.get(selected).ds === 'needs';
   for (const bot of bots.values()){
     const g = bot.g, A = bot.arms, H = bot.head;
@@ -852,13 +867,16 @@ function frame(now){
     let dr = bot.faceTarget - g.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); g.rotation.y += dr * Math.min(1, step*8);
     bot.eyes.forEach(e => e.scale.y = bot.asleep ? .25 : (Math.sin(t*1.3 + bot.phase*3) > .985 ? .2 : 1.25));
     // tag + bubble
-    const [px, py] = project(g.position.x, (bot.sit ? 3.9 : 3.55) + bot.rig.position.y, g.position.z);
+    const [px, py] = project(g.position.x, ((bot.sit ? 3.0 : 2.73) + bot.rig.position.y) * BOT_S, g.position.z);
     const fw = fvW, cl = fw < 240 ? fw/2 : Math.max(120, Math.min(fw-120, px)); bot.tagEl.style.transform = `translate(${cl}px,${py}px) translate(-50%,-100%)`;
-    const bub = bot.tagEl.firstChild, isSel = selected === bot.name;
+    const bub = bot.tagEl.firstChild, isSel = selected === bot.name && userSel;
     const atDesk = bot.ds === 'working' || bot.ds === 'recent';
     const chatNow = !bot.walking && bot.pose === 'chat';
-    const showBub = !bot.walking && (atDesk || chatNow || isSel || (bot.ds === 'needs' && !selNeeds && needsList[featured % Math.max(1,needsList.length)] === bot));
-    const txt = chatNow && !isSel ? '• • •' : bot.ds === 'idle' && isSel ? 'On the floor, not on a task' : (bot.task || '');
+    const isHov = hovered === bot.name, isFeat = !userSel && !hovered && workList[featured % Math.max(1,workList.length)] === bot;
+    const showTag = isSel || isHov || (isFeat && !bot.walking);
+    const showBub = showTag && !bot.walking;
+    const txt = bot.ds === 'idle' && !bot.task ? 'On the floor, not on a task' : (bot.task || (bot.ds === 'idle' ? 'On the floor' : ''));
+    bot.tagEl.classList.toggle('show', showTag);
     if (showBub){ if (bub.hidden || bub.dataset.t !== txt){ bub.hidden = false; bub.textContent = txt; bub.dataset.t = txt; bub.classList.toggle('chat', txt === '• • •'); } } else if (!bub.hidden) bub.hidden = true;
     bot.tagEl.classList.toggle('sel', isSel); bot.tagEl.style.zIndex = isSel ? 5 : showBub ? 3 : 1;
     if (bot.asleep && !bot.walking){ bot.zz.hidden = false; const zt = `translate(${px+18}px,${py-6}px)`; bot.zz.style.setProperty("--t", zt); bot.zz.style.transform = zt; } else bot.zz.hidden = true;

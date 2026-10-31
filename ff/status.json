@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-30T17:52:10-10:00",
+ "generatedAt": "2026-10-30T18:04:19-10:00",
  "timezone": "Pacific/Honolulu",
  "demo": false,
  "sources": [
@@ -8,58 +8,62 @@
  ],
  "notes": "States are read from each bot's latest turn when this snapshot was taken. Between snapshots nothing updates.",
  "weekly": {
-  "usedPct": 6.4,
+  "usedPct": 16.9,
   "resetsAt": "2026-11-06T11:18:00-10:00",
   "topBotsThisWeek": [
    [
+    "office max",
+    40
+   ],
+   [
+    "Get Hired 2027",
+    38
+   ],
+   [
     "chill skrill bill",
-    49
+    11
    ],
    [
     "Grok Bot",
-    17
-   ],
-   [
-    "bookworm",
-    12
+    4
    ],
    [
     "X Promoter",
-    10
+    3
+   ],
+   [
+    "bookworm",
+    3
    ],
    [
     "BROBOSS",
-    6
-   ],
-   [
-    "office max",
-    6
+    1
    ]
   ],
   "last7Days": [
    [
     "Sat Oct 24",
-    37
+    33
    ],
    [
     "Sun Oct 25",
-    23
+    21
    ],
    [
     "Mon Oct 26",
-    18
+    17
    ],
    [
     "Tue Oct 27",
-    15
+    14
    ],
    [
     "Fri Oct 30",
-    4
+    3
    ],
    [
     "Sat Oct 31",
-    3
+    12
    ]
   ]
  },
@@ -130,8 +134,8 @@
   {
    "name": "office max",
    "state": "working",
-   "task": "Adding website build bays and the factory floor page",
-   "lastActive": "2026-10-30T17:52:10-10:00",
+   "task": "Refreshing the office board",
+   "lastActive": "2026-10-30T18:04:19-10:00",
    "lastActivePrecision": "time",
    "shape": "wedge",
    "color": "cyan",
@@ -364,9 +368,9 @@
   {
    "name": "Get Hired 2027",
    "state": "unknown",
-   "task": "No sessions yet",
-   "lastActive": null,
-   "lastActivePrecision": "none",
+   "task": "Active today, latest turn not read",
+   "lastActive": "2026-10-31",
+   "lastActivePrecision": "day-utc",
    "shape": "tablet",
    "color": "violet"
   }
