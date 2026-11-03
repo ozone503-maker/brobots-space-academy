@@ -8,7 +8,7 @@ KEYS = [('idle', 'Idle', [0, 0.4, 0.8, 1.2]), ('jab_L', 'Jab left', [0, 0.07, 0.
         ('jab_R', 'Jab right', [0, 0.07, 0.15, 0.4]), ('block', 'Block', [0, 0.08, 0.4, 0.95]),
         ('dodge_L', 'Dodge left', [0, 0.09, 0.4, 0.75]), ('dodge_R', 'Dodge right', [0, 0.09, 0.4, 0.75]),
         ('hit', 'Hit reaction', [0, 0.06, 0.2, 0.5]),
-        ('kick_front_L', 'Front kick\nleft leg', [0, 0.14, 0.26, 0.55]), ('kick_front_R', 'Front kick\nright leg', [0, 0.14, 0.26, 0.55]),
+        ('kick_front_L', 'Front kick\nleft leg', [0.08, 0.16, 0.3, 0.6]), ('kick_front_R', 'Front kick\nright leg', [0.08, 0.16, 0.3, 0.6]),
         ('kick_round_L', 'Roundhouse\nleft leg', [0, 0.15, 0.3, 0.6]), ('kick_round_R', 'Roundhouse\nright leg', [0, 0.15, 0.3, 0.6])]
 specs = [f'{a}:{t}' for a, _, ts in KEYS for t in ts]
 subprocess.run([sys.executable, os.path.join(HERE, 'render_frames.py'), FR] + specs, check=True)
