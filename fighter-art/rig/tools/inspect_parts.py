@@ -16,7 +16,7 @@ x = 0
 for c in cells[6:]: sheet.paste(c, (x, 560)); x += c.width
 sheet.convert('RGB').save('/tmp/parts_sheet.png')
 # rest composite in draw order
-order = ['shin_L','shin_R','thigh_L','thigh_R','pelvis','torso','upperarm_L','upperarm_R','head','forearm_L','forearm_R','fist_L','fist_R']
+import json; order = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'skeleton.json')))['drawOrder']
 W, H = meta['size']; comp = Image.new('RGBA', (W, H), (0, 0, 0, 0))
 for n in order:
     m = meta['parts'][n]; comp.alpha_composite(Image.open(os.path.join(D, 'parts', n + '.png')), (m['x'], m['y']))

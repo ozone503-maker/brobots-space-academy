@@ -44,8 +44,10 @@ R['torso'] = [(205,222),(178,238),(125,252),(105,268),(110,330),(112,500),(84,56
 R['pelvis'] = [(88,555),(452,555),(452,700),(440,722),(268,770),(96,722),(84,700)]
 R['thigh_L'] = [(60,660),(270,660),(270,770),(232,880),(222,950),(150,968),(68,958),(70,800)]
 R['thigh_R'] = [(266,660),(470,660),(470,800),(470,958),(395,970),(318,958),(312,880),(266,770)]
-R['shin_L'] = [(40,890),(230,890),(228,960),(200,1080),(200,1265),(0,1265),(0,1080),(60,960)]
-R['shin_R'] = [(310,890),(480,890),(490,960),(520,1100),(534,1265),(360,1265),(360,1080),(318,960)]
+R['shin_L'] = [(40,890),(230,890),(228,960),(205,1040),(186,1046),(160,1052),(130,1055),(100,1052),(70,1042),(50,1030),(60,960)]
+R['boot_L'] = [(0,1000),(240,1000),(240,1265),(0,1265)]
+R['shin_R'] = [(310,890),(480,890),(490,960),(490,1060),(470,1074),(440,1082),(410,1083),(385,1078),(360,1070),(340,1040),(318,960)]
+R['boot_R'] = [(320,1020),(534,1020),(534,1265),(320,1265)]
 # hidden fills: silhouettes to invent under front parts
 FILL = {
   'forearm_L': [(100,296),(148,300),(150,365),(132,392),(108,432),(82,466),(48,470),(36,440),(52,400),(86,350),(96,320)],
@@ -55,13 +57,15 @@ FILL = {
   'upperarm_L': [(150,256),(108,250),(80,276),(30,340),(10,380),(20,470),(60,476),(118,470),(124,360),(146,300)],
   'upperarm_R': [(385,254),(426,248),(452,266),(500,320),(527,370),(530,440),(500,470),(416,470),(410,360),(390,300)],
   'pelvis': [(96,560),(440,560),(444,700),(268,760),(96,700)],
-  'thigh_L': [(96,690),(268,690),(268,760),(232,880),(100,880)],
-  'thigh_R': [(268,690),(440,690),(440,880),(312,880),(268,760)],
-  'shin_L': [(70,900),(222,900),(205,1000),(80,1000)],
-  'shin_R': [(325,900),(462,900),(462,1000),(335,1000)],
+  'thigh_L': [[(96,690),(268,690),(268,760),(232,880),(100,880)], [(267, 712), (264, 733), (256, 753), (243, 770), (226, 783), (206, 791), (185, 794), (164, 791), (144, 783), (127, 770), (114, 753), (106, 733), (103, 712), (106, 691), (114, 671), (127, 654), (144, 641), (164, 633), (185, 630), (206, 633), (226, 641), (243, 654), (256, 671), (264, 691)]],
+  'thigh_R': [[(268,690),(440,690),(440,880),(312,880),(268,760)], [(434, 712), (431, 733), (423, 753), (410, 770), (393, 783), (373, 791), (352, 794), (331, 791), (311, 783), (294, 770), (281, 753), (273, 733), (270, 712), (273, 691), (281, 671), (294, 654), (311, 641), (331, 633), (352, 630), (373, 633), (393, 641), (410, 654), (423, 671), (431, 691)]],
+  'shin_L': [[(70,925),(212,925),(205,1000),(70,1000)], [(206, 925), (204, 942), (197, 958), (187, 972), (173, 982), (157, 989), (140, 991), (123, 989), (107, 982), (93, 972), (83, 958), (76, 942), (74, 925), (76, 908), (83, 892), (93, 878), (107, 868), (123, 861), (140, 859), (157, 861), (173, 868), (187, 878), (197, 892), (204, 908)]],
+  'shin_R': [[(327,925),(467,925),(477,1000),(325,1000)], [(467, 925), (465, 943), (458, 960), (446, 974), (432, 986), (415, 993), (397, 995), (379, 993), (362, 986), (348, 974), (336, 960), (329, 943), (327, 925), (329, 907), (336, 890), (348, 876), (362, 864), (379, 857), (397, 855), (415, 857), (432, 864), (446, 876), (458, 890), (465, 907)]],
+  'boot_L': [(98,1026),(172,1026),(186,1060),(84,1060)],
+  'boot_R': [(390,1050),(458,1050),(472,1090),(376,1090)],
 }
 # priority (first = front-most owner); also draw order is reverse-ish, see skeleton.json
-PRIO = ['fist_L','fist_R','forearm_L','forearm_R','head','upperarm_L','upperarm_R','torso','pelvis','thigh_L','thigh_R','shin_L','shin_R']
+PRIO = ['fist_L','fist_R','forearm_L','forearm_R','head','upperarm_L','upperarm_R','torso','pelvis','thigh_L','thigh_R','shin_L','shin_R','boot_L','boot_R']
 # which parts each part is drawn behind (front occluders)
 FRONT = {
   'fist_L': [], 'fist_R': [],
@@ -72,13 +76,14 @@ FRONT = {
   'pelvis': ['torso','forearm_L','forearm_R','upperarm_L','upperarm_R'],
   'thigh_L': ['pelvis','torso'], 'thigh_R': ['pelvis','torso'],
   'shin_L': ['thigh_L'], 'shin_R': ['thigh_R'],
+  'boot_L': ['shin_L'], 'boot_R': ['shin_R'],
 }
-FEATHER = {'fist_L':1.0,'fist_R':1.0,'forearm_L':3,'forearm_R':3,'head':5,'upperarm_L':3,'upperarm_R':3,'torso':3,'pelvis':4,'thigh_L':5,'thigh_R':5,'shin_L':6,'shin_R':6}
+FEATHER = {'fist_L':1.0,'fist_R':1.0,'forearm_L':3,'forearm_R':3,'head':5,'upperarm_L':3,'upperarm_R':3,'torso':3,'pelvis':4,'thigh_L':5,'thigh_R':5,'shin_L':4,'shin_R':4,'boot_L':3,'boot_R':3}
 # texture clone offsets per part (dx,dy) tried in order
 TEXSRC = {'pelvis':['pelvis','thigh_L','thigh_R'],'torso':['torso'],'head':['head']}
 TEXOFF = {'torso':[(0,140),(0,200),(60,120),(-60,120),(30,170),(-30,170)], 'pelvis':[(0,170),(0,230),(40,200),(-40,200),(20,260),(-20,260),(60,150),(-60,150)],
           'head':[(0,-40),(0,-70)], 'upperarm_L':[(-30,60),(-20,100)], 'upperarm_R':[(30,60),(20,100)], 'forearm_L':[(-40,80),(-30,110)], 'forearm_R':[(40,80),(30,110)],
-          'thigh_L':[(0,120),(0,160)], 'thigh_R':[(0,120),(0,160)], 'shin_L':[(0,60)], 'shin_R':[(0,60)]}
+          'thigh_L':[(0,120),(0,160),(20,200),(-20,200)], 'thigh_R':[(0,120),(0,160),(20,200),(-20,200)], 'shin_L':[(0,90),(0,120),(0,60)], 'shin_R':[(0,90),(0,120),(0,60)], 'boot_L':[(0,60),(0,90)], 'boot_R':[(0,60),(0,90)]}
 
 own = {}
 taken = np.zeros((H, W), bool)
@@ -126,6 +131,16 @@ if left.any():
     for i, n in enumerate(PRIO):
         own[n] |= left & (lab == i)
 
+# round knee joints: thigh keeps only a disc around the knee pivot below the knee line,
+# the rest of the knee area goes to the shin, so bent knees show round caps, not cut corners
+KNEE = {'L': (140, 925), 'R': (395, 925)}; KR = 84
+_yy, _xx = np.mgrid[0:H, 0:W]
+for sd_ in 'LR':
+    kx, ky = KNEE[sd_]
+    outside = (_yy > ky) & (np.hypot(_xx - kx, _yy - ky) > KR)
+    mv = own['thigh_' + sd_] & outside
+    own['thigh_' + sd_] &= ~mv; own['shin_' + sd_] |= mv
+
 def sdist(mask):
     """signed distance: + inside, - outside"""
     m = mask.astype(np.uint8)
@@ -162,7 +177,8 @@ for n in PRIO:
     region_ext = (sd > -f - 1) & solid                    # own + overlap band, original pixels
     fill = np.zeros((H, W), np.float32)
     if n in FILL:
-        fill = soft_poly(FILL[n]) * solid.astype(np.float32)
+        polys = FILL[n] if isinstance(FILL[n][0], list) else [FILL[n]]
+        fill = np.max([soft_poly(p) for p in polys], axis=0) * solid.astype(np.float32)
     # pixels we may NOT trust as this part's colors: deep inside front occluders
     hidden = np.zeros((H, W), bool)
     for o in FRONT[n]:
@@ -174,7 +190,7 @@ for n in PRIO:
         if o != n:
             known_ext &= ~(own[o] & (sd < -f - 1))
     SRCRGB = RGB.copy()
-    if n in ('pelvis', 'torso', 'upperarm_L', 'upperarm_R'):
+    if n in ('pelvis', 'torso', 'upperarm_L', 'upperarm_R', 'thigh_L', 'thigh_R', 'shin_L', 'shin_R'):
         known = known & (RGB.mean(axis=2) > 0.16)
     if n == 'pelvis':
         for x in range(96, 202):

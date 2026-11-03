@@ -7,7 +7,9 @@ FR = '/tmp/rig_preview_frames'
 KEYS = [('idle', 'Idle', [0, 0.4, 0.8, 1.2]), ('jab_L', 'Jab left', [0, 0.07, 0.15, 0.4]),
         ('jab_R', 'Jab right', [0, 0.07, 0.15, 0.4]), ('block', 'Block', [0, 0.08, 0.4, 0.95]),
         ('dodge_L', 'Dodge left', [0, 0.09, 0.4, 0.75]), ('dodge_R', 'Dodge right', [0, 0.09, 0.4, 0.75]),
-        ('hit', 'Hit reaction', [0, 0.06, 0.2, 0.5])]
+        ('hit', 'Hit reaction', [0, 0.06, 0.2, 0.5]),
+        ('kick_front_L', 'Front kick\nleft leg', [0, 0.14, 0.26, 0.55]), ('kick_front_R', 'Front kick\nright leg', [0, 0.14, 0.26, 0.55]),
+        ('kick_round_L', 'Roundhouse\nleft leg', [0, 0.15, 0.3, 0.6]), ('kick_round_R', 'Roundhouse\nright leg', [0, 0.15, 0.3, 0.6])]
 specs = [f'{a}:{t}' for a, _, ts in KEYS for t in ts]
 subprocess.run([sys.executable, os.path.join(HERE, 'render_frames.py'), FR] + specs, check=True)
 CW, CH = 240, 430; LW = 150
@@ -21,7 +23,7 @@ d = ImageDraw.Draw(sheet)
 d.text((14, 16), 'GAVIN rig preview (skeleton bvh-punchout-front-v1), key frames rendered by viewer.html', font=F1, fill=(240, 240, 245))
 for r, (a, label, ts) in enumerate(KEYS):
     y = 60 + r * CH
-    d.text((14, y + CH // 2 - 12), label, font=F1, fill=(255, 210, 120))
+    d.multiline_text((14, y + CH // 2 - 24), label, font=F1, fill=(255, 210, 120), spacing=6)
     for c, t in enumerate(ts):
         im = Image.open(os.path.join(FR, f'{a}_{t:.3f}.png')).convert('RGB').crop((30, 40, 510, 900))
         im = im.resize((CW - 8, int((CW - 8) * im.height / im.width)), Image.LANCZOS)
