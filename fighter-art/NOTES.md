@@ -2,7 +2,8 @@
 
 - Style guide for drawing new fighters in ChatGPT: fighter_style_guide.md
 - Heights: measure to top of skull, not hair or hats. All humans 6 ft. Tank 7 ft max (about 1.17x a human).
-- TODO: rescale Ozone so his skull matches Gavin and Jay (top knot sticks up above). Rescale Tank down to 7 ft. Rebuild lineup.png.
+- DONE (Nov 2 2026): heights fixed, measured skull top to feet (under Gavin's cap, Ozone's top knot, Tank's fedora). Punch-out scale: every human 662 px skull to feet (Gavin's approved scale), Tank 775 px (1.17x). Feet stay on y 1231. Sprite boxes now Gavin 674, Jay 666, Ozone 697, Tank 811 px tall. Old files kept as *_v_prefix_heights.png in the work folders.
+- DONE (Nov 2 2026): lineup.png rebuilt, all four on one baseline with 6 ft and 7 ft guide lines at the skull tops.
 - TODO: HUD name is baked into the mockup background (shows GAVIN DAWSON on every fighter).
 - TODO: 19 unique backgrounds. 12 of 19 home bases received, see Backgrounds below.
 
