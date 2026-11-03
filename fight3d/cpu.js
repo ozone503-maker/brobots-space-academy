@@ -31,6 +31,7 @@ function think(me, foe, delay) {
   inp.block = ai.guard && d < 1.7;
   if (d < 1.55 && rnd() < 0.045) {
     const combos = [['jab'], ['jab', 'jab'], ['jab', 'hook'], ['jab', 'jab', 'hook'], ['hook'], ['upper'], ['jab', 'upper']];
+    if (!me.isPlayer) combos.push(['kHigh'], ['kRound'], ['jab', 'kRound'], ['jab', 'jab', 'kHigh'], ['kRound']); // Gavin kicks too
     ai.plan = combos[(rnd() * combos.length) | 0].slice();
     if (me.meter >= 100 && !me.superUsed && rnd() < 0.3) ai.plan = ['super'];
     inp.block = false; inp.atk = ai.plan.shift();

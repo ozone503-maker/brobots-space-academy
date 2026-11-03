@@ -17,29 +17,29 @@
 
 | File | Section | Fighter / name | Place | Size |
 |---|---|---|---|---|
-| bg01.webp | Home base | Gavin “The General” | Arlington Stadium Lot — Arlington, Texas | 1920x1280 |
-| bg02.webp | Home base | Rich | The Alamo — San Antonio, Texas | 2240x1120 |
-| bg03.webp | Home base | 4Waze | Ancestral Land — Creek & Oak, Chico | 1920x1280 |
+| bg01.webp | Home base | Gavin “The General” | Arlington Stadium Lot, Arlington, Texas | 1920x1280 |
+| bg02.webp | Home base | Rich | The Alamo, San Antonio, Texas | 2240x1120 |
+| bg03.webp | Home base | 4Waze | Ancestral Land, Creek & Oak, Chico | 1920x1280 |
 | bg04.webp | Home base | Jay | Mt. Shasta | 1920x1280 |
-| bg05.webp | Home base | Dia | Multnomah Falls — Oregon | 1920x1280 |
-| bg06.webp | Home base | Jeff “Straight Lace” | His Garden — Beaverton | 2240x1120 |
+| bg05.webp | Home base | Dia | Multnomah Falls, Oregon | 1920x1280 |
+| bg06.webp | Home base | Jeff “Straight Lace” | His Garden, Beaverton | 2240x1120 |
 | bg07.webp | Home base | Gabe “Dirty Blakk” | Portland Airport | 1920x1280 |
 | bg08.webp | Home base | Ozone | Kona Airport Tarmac | 2352x1008 |
-| bg09.webp | Home base | Ryan | Rooster Island — Dusk | 2736x912 |
-| bg10.webp | Home base | Vidu | Eden Nova — Four Fruit Trees | 2736x912 |
-| bg11.webp | Home base | ShockBot | Hip-Hop Club — Pāhoa | 2352x1008 |
-| bg12.webp | Home base | Monkey Jockey | Big Banyan Tree — Hilo | 1920x1280 |
+| bg09.webp | Home base | Ryan | Rooster Island, Dusk | 2736x912 |
+| bg10.webp | Home base | Vidu | Eden Nova, Four Fruit Trees | 2736x912 |
+| bg11.webp | Home base | ShockBot | Hip-Hop Club, Pāhoa | 2352x1008 |
+| bg12.webp | Home base | Monkey Jockey | Big Banyan Tree, Hilo | 1920x1280 |
 | bg13.jpg | Hawaii stage | Mauna Kea | Hawaiʻi Stage | 1280x720 |
-| bg14.jpg | Hawaii stage | Mauna Kea II | Hawaiʻi Stage — Variant | 1280x720 |
+| bg14.jpg | Hawaii stage | Mauna Kea II | Hawaiʻi Stage, Variant | 1280x720 |
 | bg15.jpg | Hawaii stage | Kīlauea | Hawaiʻi Stage | 1280x720 |
 | bg16.jpg | Hawaii stage | FlashTown | Hawaiʻi Stage | 1280x720 |
-| bg17.jpg | Hawaii stage | FlashTown II | Hawaiʻi Stage — Variant | 1280x720 |
-| bg18.jpg | Hawaii stage | FlashTown III | Hawaiʻi Stage — Variant | 1280x720 |
+| bg17.jpg | Hawaii stage | FlashTown II | Hawaiʻi Stage, Variant | 1280x720 |
+| bg18.jpg | Hawaii stage | FlashTown III | Hawaiʻi Stage, Variant | 1280x720 |
 | bg19.jpg | Hawaii stage | Eden Nova | Hawaiʻi Stage | 1280x720 |
-| bg20.jpg | Hawaii stage | Eden Nova II | Hawaiʻi Stage — Variant | 1280x720 |
-| bg21.jpg | Hawaii stage | Rooster Island — Dusk | Hawaiʻi Stage | 1280x720 |
-| bg22.jpg | Hawaii stage | Rooster Island — Dusk II | Hawaiʻi Stage — Variant | 1280x720 |
-| bg23.jpg | Hawaii stage | Rooster Island — Dusk III | Hawaiʻi Stage — Variant | 1280x720 |
+| bg20.jpg | Hawaii stage | Eden Nova II | Hawaiʻi Stage, Variant | 1280x720 |
+| bg21.jpg | Hawaii stage | Rooster Island, Dusk | Hawaiʻi Stage | 1280x720 |
+| bg22.jpg | Hawaii stage | Rooster Island, Dusk II | Hawaiʻi Stage, Variant | 1280x720 |
+| bg23.jpg | Hawaii stage | Rooster Island, Dusk III | Hawaiʻi Stage, Variant | 1280x720 |
 | bg24.jpg | Hawaii stage | Rainbow Falls | Hawaiʻi Stage | 1280x720 |
 | bg25.jpg | Hawaii stage | Kona Pier | Hawaiʻi Stage | 1280x720 |
 | bg26.jpg | Hawaii stage | Hilo Bay | Hawaiʻi Stage | 1280x720 |
@@ -52,7 +52,7 @@
 | bg33.jpg | Robot stage | Bull | Robot Stage | 1280x720 |
 | bg34.jpg | Robot stage | Monkey | Robot Stage | 1280x720 |
 | bg35.jpg | Robot stage | Nonna | Robot Stage | 1280x720 |
-| bg36.jpg | Robot stage | ShockBot | Robot Stage — Early Pass | 1280x720 |
+| bg36.jpg | Robot stage | ShockBot | Robot Stage, Early Pass | 1280x720 |
 
 ## Shared 2D cut-out rig (Nov 2 2026)
 
@@ -72,3 +72,14 @@
 - New viewer features: overlay parts (gavin/overlays.json) with alpha, z, x/y and sx/sy tracks, and an optional drop shadow.
 - Cut fixes: filled areas get edge shading and diagonal ink hatching; stray alpha islands (the fist and collar specks) are dropped; the pelvis bottom is rounded and the thigh crotch spike is trimmed, so the roundhouse no longer shows the olive tab or notch. Hit: the flash is down to 0.1, and the head and upper-arm motion is smaller, so the collar edge and the inner upper-arm line no longer show.
 - Remaining known flaws (minor): at the front-kick peak the raised knee is a squashed, rounded pant mass with fairly plain shading, and the sole is a drawn graphic, so it is slightly cleaner than the hand-inked art. For about one frame (t 0.2) the fading boot and the small sole overlap. The rest-pose rebuild differs from the source by about 10k anti-aliased edge pixels (invisible at game size). The right roundhouse boot still touches the right edge of the 540 px canvas at full extension (framing only).
+
+## Gavin rig: in the fight3d scene
+
+- fight3d/rig2d.js draws the cut-out rig (fighter-art/rig/rig.js runtime, same skeleton.json, animations.json, gavin/skin.json) onto a camera-facing card in the 3D ring. The card is a real 1.83 m tall (1209 art px skull to soles), and the 3D Gavin mesh is hidden but still drives the camera. ?rig=0 brings the mesh back.
+- With the rig on, the camera holds about 4.0 m from the opponent, so Gavin measures 660 device px skull to feet in a 780x1688 phone frame (target 662, punch-out scale). ?camdist= overrides.
+- Game states map to rig anims: idle, block, dodge_L/R, hit, jab_L/R (jab, hook and uppercut all use the jabs), kick_front_L/R (kHigh, kMid), kick_round_L/R (kSide, kRound, kSweep, super). Changing anims crossfades for 0.09 s; knockdowns tilt the card back.
+- The CPU Gavin now throws kicks as well (cpu.js adds kick combos for the non-player side).
+- fight3d/backdrop.js paints fighter-art/backgrounds/bg01.webp (Arlington Stadium Lot) behind the ring and hides the island scenery. ?bg=bg12 picks another painting, ?bg=0 keeps the volcano island.
+- The player hit flash is softer (DOM flash 0.4, was 0.9). The rig flash is scaled by 0.6.
+- The front kick boot to sole swap is now a clean cut at t 0.185 to 0.19 and 0.535 to 0.54, so there is no frame with both visible. The viewer draws at 0.8 of canvas height, so the right roundhouse no longer touches the edge.
+- Capture: python3 fight3d/tools/capture.py OUTDIR SECONDS FPS uses fight3d.html?auto&cap&speed=1, which steps the game by hand (window.capStep) in headless Chrome at 390x844 @2x.

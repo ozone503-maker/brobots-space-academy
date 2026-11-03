@@ -66,7 +66,7 @@ function resolveHit(a, d) {
     G.hitstop = Math.round(m.stop * (counter ? 1.4 : 1) * (a.isPlayer && LIGHT[a.mk] ? 0.5 : 1)); G.shake = m.shake * scale * (counter ? 1.4 : 1);
     spark(hitPos, 1 + (scale - 1) * 2 + (a.mk === 'super' ? 2 : 0), counter ? 0xffe040 : 0xffffff);
     sfx('hit', 1 / scale);
-    if (d.isPlayer) { $('flash').style.opacity = 0.9; setTimeout(() => $('flash').style.opacity = 0, 120); }
+    if (d.isPlayer) { $('flash').style.opacity = 0.4; setTimeout(() => $('flash').style.opacity = 0, 120); }
     if (counter && a.isPlayer) showBanner('COUNTER', 30);
     if (m.push) { d.vx += fx * m.push; d.vz += fz * m.push; }
     if (d.hp <= 0) { d.hp = 0; knockdown(d, true); }

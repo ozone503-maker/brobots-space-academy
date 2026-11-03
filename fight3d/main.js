@@ -10,6 +10,7 @@ import { F, G, resetPositions, separate, stepFighter } from './combat.js?v=894c6
 import { think } from './cpu.js?v=894c647';
 import { applyPose, curPose, updateVisuals } from './anim.js?v=894c647';
 import { PI, drawTrails, readPlayer } from './input.js?v=894c647';
+const CAP = qs.has('cap'); // capture mode: no rAF loop, the page calls window.capStep(ms) per video frame
 
 window.FIGHT = { G, F, THREE, camera, get fists() { return fists; }, get PI() { return PI; }, get fps() { return G.fps; } };
 function startMatch() {
@@ -66,12 +67,12 @@ function setQuality(q) {
   resize();
 }
 function frame(now) {
-  requestAnimationFrame(frame);
+  if (!CAP) requestAnimationFrame(frame);
   let dt = Math.min(0.1, (now - last) / 1000); last = now;
   fpsAcc += dt; fpsN++;
   if (fpsAcc >= 1) { G.fps = Math.round(fpsN / fpsAcc); fpsAcc = 0; fpsN = 0;
-    if (G.mode !== 'title') { if (G.fps < 42) slowStreak++; else slowStreak = 0; if (slowStreak >= 2 && qLevel > 0) { setQuality(qLevel - 1); slowStreak = 0; } } }
-  const speed = AUTO ? 3 : 1;
+    if (G.mode !== 'title' && !CAP) { if (G.fps < 42) slowStreak++; else slowStreak = 0; if (slowStreak >= 2 && qLevel > 0) { setQuality(qLevel - 1); slowStreak = 0; } } }
+  const speed = qs.has('speed') ? +qs.get('speed') : AUTO ? 3 : 1;
   acc += dt * speed; let n = 0;
   while (acc >= 1 / 60 && n < 12) { tick(); acc -= 1 / 60; n++; }
   if (G.mode === 'title') { const a = 0.37 + Math.sin(now / 5000) * 0.6; F[0].x = Math.sin(a) * 2.6; F[0].z = Math.cos(a) * 2.6; F[1].x = 0; F[1].z = 0; } else if (0) { F[0].x = Math.sin(now / 4000) * 2.4; F[0].z = Math.cos(now / 4000) * 2.4; F[1].x = 0; F[1].z = 0; }
@@ -82,7 +83,7 @@ function frame(now) {
 resize();
 applyPose(OJ, curPose);
 if (AUTO) { startMatch(); }
-requestAnimationFrame(frame);
+if (!CAP) requestAnimationFrame(frame); else { let capNow = 0; last = 0; window.capStep = ms => { capNow += ms; frame(capNow); }; }
 
 
 export { endRound, last };

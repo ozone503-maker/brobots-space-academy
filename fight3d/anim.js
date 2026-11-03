@@ -1,12 +1,14 @@
 // fight3d/anim.js: poses + pose mixing, fist keyframes (HP/FK), leg poses, hit sparks, camera,
 // walk cycle, hinged fall, and the per-frame visual update (updateVisuals). Touch-down fist cock state.
 import * as THREE from 'three';
-import { D2R, clamp, ease, lerp, rnd } from './util.js?v=894c647';
+import { D2R, clamp, ease, lerp, qs, rnd } from './util.js?v=894c647';
 import { FLOW, T } from './moves.js?v=894c647';
 import { FLOOR, camera, flames, ocean, palms, particles, ringSpot, scene, softTex, sun, torchLight, uTime, updateVolcano } from './stage.js?v=894c647';
 import { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg } from './fighters.js?v=894c647';
 import { F, G, dirTo } from './combat.js?v=894c647';
 import { last } from './main.js?v=894c647';
+import { RIG_ON, rigCard, updateRig } from './rig2d.js?v=894c647';
+import { BG_ON, updateBackdrop } from './backdrop.js?v=894c647';
 
 function pose(o, base) { const p = { y: 0, rx: 0 }; if (base) Object.assign(p, JSON.parse(JSON.stringify(base))); for (const j of JOINTS) if (!p[j]) p[j] = [0, 0, 0]; for (const k in o) p[k] = Array.isArray(o[k]) ? o[k].slice() : o[k]; return p; }
 const P = {};
@@ -76,11 +78,12 @@ function spark(pos, big, col) {
 const cock = [0, 0];
 
 // ---------------- render update ----------------
+const CAM_DIST_RIG = +(qs.get('camdist') ?? 4.0); // camera to opponent distance when the 2D rig is on
 const tmpV = new THREE.Vector3(), lookAt = new THREE.Vector3(), camPos = new THREE.Vector3();
 let camRoll = 0, camDrop = 0;
 function fighterVisualPos(f, o) {
   const [fx, fz] = dirTo(f, o); const rx = -fz, rz = fx;
-  let off = 0; if (f.state === 'dodge') off = Math.sin(clamp(f.st / 18, 0, 1) * Math.PI) * 0.42 * f.dodgeDir;
+  let off = 0; if (f.state === 'dodge') off = Math.sin(clamp(f.st / 18, 0, 1) * Math.PI) * (RIG_ON ? 0.22 : 0.42) * f.dodgeDir;
   return [f.x + rx * off, f.z + rz * off];
 }
 function oppTargetPose(f) {
@@ -89,6 +92,7 @@ function oppTargetPose(f) {
     case 'atk': {
       const m = f.move, k = f.mk;
       const W = P[k + '_w'], S = P[k + '_s'];
+      if (!W || !S) return P.guard; // kicks only exist on the 2D rig
       if (st <= m.s) return mixPose(P.guard, W, ease(st / m.s), tmpPose);
       if (st <= m.s + m.a) return mixPose(W, S, ease((st - m.s) / 2), tmpPose);
       return mixPose(S, P.guard, ease((st - m.s - m.a) / m.r), tmpPose);
@@ -145,11 +149,13 @@ function updateVisuals(dt) {
   const down = me.state === 'down' || me.state === 'ko';
   camDrop = lerp(camDrop, down ? 1 : 0, 0.06); camRoll = lerp(camRoll, down ? 0.5 : (me.state === 'dodge' ? -me.dodgeDir * 0.12 * Math.sin(me.st / 18 * Math.PI) : 0), 0.15);
   const hitRecoil = me.state === 'hit' ? 0.12 * (1 - me.st / me.hs) : 0;
-  camPos.set(px - fx * (0.85 + hitRecoil), FLOOR + 2.0 - camDrop * 1.4, pz - fz * (0.85 + hitRecoil));
+  const camBack = RIG_ON ? Math.max(0.85, CAM_DIST_RIG - Math.hypot(ox - px, oz - pz)) : 0.85; // rig: camera held about 4.0 m from the opponent so a 1.83 m human spans about 662 px of the 1688 px tall phone frame (punch-out scale)
+  camPos.set(px - fx * (camBack + hitRecoil), FLOOR + 2.0 - camDrop * 1.4, pz - fz * (camBack + hitRecoil));
   const headY = OJ.head.getWorldPosition(tmpV).y;
   lookAt.set(ox, lerp(FLOOR + 1.42, headY - 0.15, 0.4) - camDrop * 0.8, oz);
   if (G.shake > 0.001) { camPos.x += (rnd() - .5) * G.shake * 0.5; camPos.y += (rnd() - .5) * G.shake * 0.5; lookAt.x += (rnd() - .5) * G.shake; lookAt.y += (rnd() - .5) * G.shake; G.shake *= 0.86; }
   camera.position.copy(camPos); camera.up.set(Math.sin(camRoll) * fz, Math.cos(camRoll), -Math.sin(camRoll) * fx); camera.lookAt(lookAt);
+  if (RIG_ON) { window.__cam = camera; OJ.root.visible = !rigCard.visible; camera.updateMatrixWorld(); updateRig(op, camera, ox, oz, animClock, dt); } // 2D cut-out Gavin replaces the mesh once loaded
   // fists
   const L = fists[0], R = fists[1];
   const t = animClock * 4;
@@ -211,6 +217,7 @@ function updateVisuals(dt) {
   flames.forEach((f, i) => { const s = 1 + Math.sin(animClock * 17 + i * 3) * 0.15 + Math.sin(animClock * 31 + i) * 0.08; f.scale.set(1, s, 1); });
   torchLight.intensity = 5 + Math.sin(animClock * 13) * 1.2;
   updateVolcano(dt);
+  if (BG_ON) { torchLight.intensity = 0; camera.updateMatrixWorld(); updateBackdrop(camera.aspect, 1); }
   ringSpot.target.position.set((px + ox) / 2, 0, (pz + oz) / 2);
   sun.target.position.set((px + ox) / 2, 0, (pz + oz) / 2); sun.position.copy(sun.target.position).add(new THREE.Vector3(-18, 22, -24));
   ocean.material.uniforms.camPos.value.copy(camera.position);

@@ -257,4 +257,5 @@ function sfx(type, k = 1) {
   }
 }
 
+export { sky, volc, island, sand };
 export { FLOOR, ac, camera, composer, flames, ocean, palm, palms, particles, renderer, resize, ringSpot, scene, setPR, setUseBloom, sfx, softTex, sun, torchLight, uTime, updateVolcano, useBloom };
