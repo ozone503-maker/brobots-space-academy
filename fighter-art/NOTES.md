@@ -53,3 +53,13 @@
 | bg34.jpg | Robot stage | Monkey | Robot Stage | 1280x720 |
 | bg35.jpg | Robot stage | Nonna | Robot Stage | 1280x720 |
 | bg36.jpg | Robot stage | ShockBot | Robot Stage — Early Pass | 1280x720 |
+
+## Shared 2D cut-out rig (Nov 2 2026)
+
+- Folder: fighter-art/rig/. Open rig/viewer.html (works from file:// or any static server, no CDN). Buttons: Idle, Jab left, Jab right, Block, Dodge left, Dodge right, Hit. Checkboxes for bone overlay and slow motion.
+- rig/skeleton.json: generic skeleton "bvh-punchout-front-v1" (13 bones: root, pelvis, torso, head, upperarm/forearm/fist L+R, thigh/shin L+R), parent hierarchy, reference pivots, draw order, 2-bone leg IK that keeps boots planted. L/R = SCREEN side (L is the fighter's own right hand).
+- rig/animations.json: shared keyframes (rot, x, y, sx, sy per bone, plus flash on root, plus foot_L/foot_R slides). jab_R and dodge_R are mirrors of jab_L and dodge_L.
+- rig/gavin/skin.json: Gavin's part images, offsets from each bone pivot, pivots, IK foot targets, scale. New fighter = cut parts with the same names, write its own skin.json (pivots for its art, scale 1.17 for Tank), add it to tools/build_skin.py so it gets embedded.
+- rig/gavin/parts/: 13 transparent PNGs cut from gavin3d/fighter25d/gavin_upright_full.png (original untouched). The forearm+fist limb is two layers (forearm sleeve + fist) so the fist can grow toward the camera on a jab; a single piece could not do that without stretching the sleeve. Hidden areas are filled (shoulders under the fists, pants and belt under the jacket hem, neck under the beard, sleeves under the fists). Rest pose recomposes to the original (about 0.3 percent of pixels differ, all on anti-aliased edges).
+- Tools: rig/tools/cut_gavin.py (cut + fill), build_skin.py (skin.json + embed JSON into viewer), render_frames.py (headless Chrome via Playwright), make_preview.py (rig/gavin/preview_sheet.png).
+- Known flaws: boots tilt a few degrees on dodges (shin and boot are one part); filled areas (shoulder tops behind the fists, pants under the jacket) are smoother and less detailed than the inked art and show briefly on jabs, hits and dodges; tiny olive specks remain on the edge of the fists.

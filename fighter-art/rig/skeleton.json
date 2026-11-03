@@ -1,0 +1,180 @@
+{
+ "name": "bvh-punchout-front-v1",
+ "about": "Generic 2D cut-out skeleton for front-facing (Punch-Out style) fighters. L/R mean SCREEN left/right (L is the fighter's own right hand). Pivots here are reference values in a 534x1265 reference frame (Gavin); each skin.json may override pivots for its own art. Rotations in degrees, positive is clockwise on screen. Bone transform = parent * translate(pivot - parentPivot + anim.xy) * rotate(anim.rot) * scale(anim.sx, anim.sy).",
+ "refSize": [
+  534,
+  1265
+ ],
+ "groundY": 1231,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    268,
+    640
+   ]
+  },
+  {
+   "name": "pelvis",
+   "parent": "root",
+   "pivot": [
+    268,
+    640
+   ]
+  },
+  {
+   "name": "torso",
+   "parent": "pelvis",
+   "pivot": [
+    268,
+    610
+   ]
+  },
+  {
+   "name": "head",
+   "parent": "torso",
+   "pivot": [
+    256,
+    252
+   ]
+  },
+  {
+   "name": "upperarm_L",
+   "parent": "torso",
+   "pivot": [
+    118,
+    272
+   ]
+  },
+  {
+   "name": "forearm_L",
+   "parent": "upperarm_L",
+   "pivot": [
+    62,
+    440
+   ]
+  },
+  {
+   "name": "fist_L",
+   "parent": "forearm_L",
+   "pivot": [
+    125,
+    326
+   ]
+  },
+  {
+   "name": "upperarm_R",
+   "parent": "torso",
+   "pivot": [
+    416,
+    272
+   ]
+  },
+  {
+   "name": "forearm_R",
+   "parent": "upperarm_R",
+   "pivot": [
+    486,
+    440
+   ]
+  },
+  {
+   "name": "fist_R",
+   "parent": "forearm_R",
+   "pivot": [
+    408,
+    326
+   ]
+  },
+  {
+   "name": "thigh_L",
+   "parent": "pelvis",
+   "pivot": [
+    185,
+    715
+   ]
+  },
+  {
+   "name": "shin_L",
+   "parent": "thigh_L",
+   "pivot": [
+    140,
+    925
+   ]
+  },
+  {
+   "name": "thigh_R",
+   "parent": "pelvis",
+   "pivot": [
+    352,
+    715
+   ]
+  },
+  {
+   "name": "shin_R",
+   "parent": "thigh_R",
+   "pivot": [
+    395,
+    925
+   ]
+  }
+ ],
+ "ikTargets": {
+  "foot_L": [
+   130,
+   1095
+  ],
+  "foot_R": [
+   428,
+   1112
+  ]
+ },
+ "ik": [
+  {
+   "chain": [
+    "thigh_L",
+    "shin_L"
+   ],
+   "target": "foot_L",
+   "note": "2-bone IK keeps the boot planted; knee bends to the side it bends in the rest art"
+  },
+  {
+   "chain": [
+    "thigh_R",
+    "shin_R"
+   ],
+   "target": "foot_R"
+  }
+ ],
+ "drawOrder": [
+  "shin_L",
+  "shin_R",
+  "thigh_L",
+  "thigh_R",
+  "pelvis",
+  "torso",
+  "upperarm_L",
+  "upperarm_R",
+  "head",
+  "forearm_L",
+  "forearm_R",
+  "fist_L",
+  "fist_R"
+ ],
+ "slots": {
+  "head": "head incl. hat and beard, cut just under the beard",
+  "torso": "jacket and shirt, waist to collar, shoulders filled under the arms",
+  "pelvis": "belt to crotch, filled up under the jacket hem",
+  "upperarm_L": "shoulder to elbow sleeve",
+  "upperarm_R": "shoulder to elbow sleeve",
+  "forearm_L": "elbow to wrist sleeve (the forearm+fist limb is two layers so the fist can scale toward the camera on punches)",
+  "forearm_R": "elbow to wrist sleeve (the forearm+fist limb is two layers so the fist can scale toward the camera on punches)",
+  "thigh_L": "hip to knee",
+  "thigh_R": "hip to knee",
+  "shin_L": "knee to sole incl. boot",
+  "shin_R": "knee to sole incl. boot",
+  "fist_L": "fist incl. wraps/gloves and wrist, pivot at the wrist",
+  "fist_R": "fist incl. wraps/gloves and wrist, pivot at the wrist"
+ }
+}

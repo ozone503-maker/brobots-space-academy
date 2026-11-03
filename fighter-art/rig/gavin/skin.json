@@ -1,0 +1,172 @@
+{
+ "fighter": "gavin",
+ "skeleton": "bvh-punchout-front-v1",
+ "about": "Per-fighter skin. parts: image per bone, x/y = image top-left relative to the bone pivot (art px). pivots/ikTargets override the skeleton reference values for this art. scale = on-screen size multiplier vs the 662 px human reference (Tank would be about 1.17).",
+ "artSize": [
+  534,
+  1265
+ ],
+ "scale": 1.0,
+ "groundY": 1231,
+ "pivots": {
+  "root": [
+   268,
+   640
+  ],
+  "pelvis": [
+   268,
+   640
+  ],
+  "torso": [
+   268,
+   610
+  ],
+  "head": [
+   256,
+   252
+  ],
+  "upperarm_L": [
+   118,
+   272
+  ],
+  "forearm_L": [
+   62,
+   440
+  ],
+  "fist_L": [
+   125,
+   326
+  ],
+  "upperarm_R": [
+   416,
+   272
+  ],
+  "forearm_R": [
+   486,
+   440
+  ],
+  "fist_R": [
+   408,
+   326
+  ],
+  "thigh_L": [
+   185,
+   715
+  ],
+  "shin_L": [
+   140,
+   925
+  ],
+  "thigh_R": [
+   352,
+   715
+  ],
+  "shin_R": [
+   395,
+   925
+  ]
+ },
+ "ikTargets": {
+  "foot_L": [
+   130,
+   1095
+  ],
+  "foot_R": [
+   428,
+   1112
+  ]
+ },
+ "parts": {
+  "fist_L": {
+   "image": "parts/fist_L.png",
+   "x": -34,
+   "y": -122,
+   "w": 111,
+   "h": 137
+  },
+  "fist_R": {
+   "image": "parts/fist_R.png",
+   "x": -87,
+   "y": -122,
+   "w": 112,
+   "h": 137
+  },
+  "forearm_L": {
+   "image": "parts/forearm_L.png",
+   "x": -28,
+   "y": -146,
+   "w": 119,
+   "h": 179
+  },
+  "forearm_R": {
+   "image": "parts/forearm_R.png",
+   "x": -112,
+   "y": -146,
+   "w": 134,
+   "h": 179
+  },
+  "head": {
+   "image": "parts/head.png",
+   "x": -124,
+   "y": -252,
+   "w": 218,
+   "h": 259
+  },
+  "upperarm_L": {
+   "image": "parts/upperarm_L.png",
+   "x": -105,
+   "y": -66,
+   "w": 140,
+   "h": 273
+  },
+  "upperarm_R": {
+   "image": "parts/upperarm_R.png",
+   "x": -33,
+   "y": -65,
+   "w": 151,
+   "h": 296
+  },
+  "torso": {
+   "image": "parts/torso.png",
+   "x": -169,
+   "y": -404,
+   "w": 345,
+   "h": 483
+  },
+  "pelvis": {
+   "image": "parts/pelvis.png",
+   "x": -173,
+   "y": -81,
+   "w": 348,
+   "h": 214
+  },
+  "thigh_L": {
+   "image": "parts/thigh_L.png",
+   "x": -103,
+   "y": -26,
+   "w": 189,
+   "h": 284
+  },
+  "thigh_R": {
+   "image": "parts/thigh_R.png",
+   "x": -85,
+   "y": -26,
+   "w": 201,
+   "h": 286
+  },
+  "shin_L": {
+   "image": "parts/shin_L.png",
+   "x": -140,
+   "y": -26,
+   "w": 213,
+   "h": 316
+  },
+  "shin_R": {
+   "image": "parts/shin_R.png",
+   "x": -72,
+   "y": -26,
+   "w": 181,
+   "h": 366
+  }
+ }
+}
