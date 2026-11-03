@@ -143,23 +143,23 @@
   },
   "pelvis": {
    "image": "parts/pelvis.png",
-   "x": -173,
+   "x": -169,
    "y": -81,
-   "w": 348,
-   "h": 214
+   "w": 344,
+   "h": 201
   },
   "thigh_L": {
    "image": "parts/thigh_L.png",
    "x": -103,
    "y": -87,
-   "w": 189,
+   "w": 171,
    "h": 345
   },
   "thigh_R": {
    "image": "parts/thigh_R.png",
-   "x": -85,
+   "x": -72,
    "y": -87,
-   "w": 201,
+   "w": 188,
    "h": 347
   },
   "shin_L": {
@@ -189,6 +189,26 @@
    "y": -63,
    "w": 142,
    "h": 216
+  },
+  "sole_L": {
+   "image": "parts/sole_L.png",
+   "bone": "boot_L",
+   "scale": 0.4166666666666667,
+   "x": -56.25,
+   "y": -179.0,
+   "shadow": true,
+   "w": 270,
+   "h": 420
+  },
+  "sole_R": {
+   "image": "parts/sole_R.png",
+   "bone": "boot_R",
+   "scale": 0.4166666666666667,
+   "x": -56.25,
+   "y": -179.0,
+   "shadow": true,
+   "w": 270,
+   "h": 420
   }
  }
 }

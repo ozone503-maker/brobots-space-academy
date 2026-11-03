@@ -228,6 +228,36 @@ for n in PRIO:
     ink_zone = edge & (fill > 0.5) & need
     # only where neighbour outside is NOT original solid of this part's band (i.e. true new edge)
     color[ink_zone] = color[ink_zone] * 0.15 + np.array([0.05, 0.05, 0.05]) * 0.85
+    # invented (filled) areas: comic-style shading + diagonal ink hatching toward the edges so caps are not flat
+    inv = need & (fill > 0.3)
+    if inv.any():
+        din = cv2.distanceTransform((alpha > 0.5).astype(np.uint8), cv2.DIST_L2, 5)
+        rim = np.clip(din / 16.0, 0, 1)
+        hatch = (((_xx + _yy) % 6) < 1.6) & (din < 16) & (din > 3)
+        hat = hatch & (np.random.default_rng(7).random((H, W)) > (din / 16.0) ** 0.7)
+        shade = (0.72 + 0.28 * rim)[..., None]
+        c2 = color * shade
+        c2[hat] = c2[hat] * 0.35 + 0.04 * 0.65
+        w8 = np.clip(fill, 0, 1)[..., None] * inv[..., None]
+        color = color * (1 - w8) + c2 * w8
+    if n == 'pelvis':  # round off the hidden lower flaps + crotch point so raised thighs never reveal sharp shards
+        clip = soft_poly([(80,550),(456,550),(456,650),(446,690),(410,728),(330,752),(268,758),(206,752),(126,728),(90,690),(80,650)], 1.5)
+        alpha = alpha * clip
+        cb = clip > 0.5
+        ce = cb & ~cv2.erode(cb.astype(np.uint8), np.ones((7, 7), np.uint8)).astype(bool) & (alpha > 0.3) & (_yy > 640)
+        color[ce] = color[ce] * 0.2 + 0.04 * 0.8
+    if n in ('thigh_L', 'thigh_R'):  # trim the inner crotch spike (hidden by the pelvis at rest)
+        sp = ((_yy > 688) & (_yy < 790) & ((_xx > 252) if n == 'thigh_L' else (_xx < 284))) | ((_yy < 750) & ((_xx > 232) if n == 'thigh_L' else (_xx < 304)))
+        alpha = np.where(sp, 0, alpha)
+        cb = (alpha > 0.5)
+        ce = cb & ~cv2.erode(cb.astype(np.uint8), np.ones((7, 7), np.uint8)).astype(bool) & cv2.dilate(sp.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(bool)
+        color[ce] = color[ce] * 0.2 + 0.04 * 0.8
+    # drop stray alpha islands (specks)
+    nl, lab_, st, _ = cv2.connectedComponentsWithStats((alpha > 0.08).astype(np.uint8), connectivity=8)
+    if nl > 2:
+        bigc = st[1:, 4].max()
+        for i in range(1, nl):
+            if st[i, 4] < 0.02 * bigc: alpha[lab_ == i] = 0
     out = np.dstack([color, alpha])
     ys2, xs2 = np.nonzero(alpha > 0.004)
     x0, x1, y0, y1 = xs2.min(), xs2.max() + 1, ys2.min(), ys2.max() + 1

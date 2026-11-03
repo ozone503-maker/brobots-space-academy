@@ -14,6 +14,9 @@ skin = {
 for n, m in meta['parts'].items():
     px, py = piv[n]
     skin['parts'][n] = {"image": "parts/%s.png" % n, "x": m['x'] - px, "y": m['y'] - py, "w": m['w'], "h": m['h']}
+ov = os.path.join(RIG, 'gavin', 'overlays.json')  # extra art drawn on a bone (e.g. boot soles), hidden unless an anim track sets alpha
+if os.path.exists(ov):
+    skin['parts'].update(json.load(open(ov)))
 json.dump(skin, open(os.path.join(RIG, 'gavin', 'skin.json'), 'w'), indent=1)
 vp = os.path.join(RIG, 'viewer.html')
 if os.path.exists(vp):
