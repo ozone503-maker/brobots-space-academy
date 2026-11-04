@@ -389,11 +389,11 @@
   "rewrites": [
     {
       "source": "/store",
-      "destination": "https://fruity-puppy-store.vercel.app/"
+      "destination": "https://fruity-puppy-store.vercel.app/?brand=brobots"
     },
     {
       "source": "/store/:path*",
-      "destination": "https://fruity-puppy-store.vercel.app/:path*"
+      "destination": "https://fruity-puppy-store.vercel.app/:path*?brand=brobots"
     },
     {
       "source": "/usaenergypartners",
