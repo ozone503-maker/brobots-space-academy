@@ -2,8 +2,8 @@
 // Seats the ring into the painting: horizon lock, soft fog wash, contact shadow under the canvas.
 // ?bg=bg12 picks another stage, ?bg=0 keeps the volcano island.
 import * as THREE from 'three';
-import { qs } from './util.js?v=v2pol';
-import { camera, flames, ocean, palms, scene, sky, volc, island, sand, torchLight, FLOOR } from './stage.js?v=v2pol';
+import { qs } from './util.js?v=ipo1';
+import { camera, flames, ocean, palms, scene, sky, volc, island, sand, torchLight, FLOOR } from './stage.js?v=ipo1';
 
 const BG = qs.get('bg') ?? 'bg01';
 const ON = BG !== '0';

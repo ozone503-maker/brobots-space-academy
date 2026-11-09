@@ -2,12 +2,14 @@
 // Real size (6 ft human). Smooth crossfades, secondary follow-through, walk cycle, hooks/uppercuts, crumple fall.
 // ?rig=0 keeps the old 3D mesh.
 import * as THREE from 'three';
-import { clamp, ease, qs } from './util.js?v=v2pol';
-import { FLOOR, scene } from './stage.js?v=v2pol';
-import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=v2pol';
+import { clamp, ease, qs } from './util.js?v=ipo1';
+import { FLOOR, scene } from './stage.js?v=ipo1';
+import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=ipo1';
 
 const ON = qs.get('rig') !== '0';
-const HUMAN_M = 1.83;
+const CPU = (qs.get('cpu') || 'gavin').toLowerCase(); // gavin (default) | ipo
+const FIGHTER = CPU === 'ipo' ? 'ipo' : 'gavin';
+const HUMAN_M = 1.83; // skeleton bone height; skin.scale may shrink a fighter
 const SKULL_TO_FEET_PX = 1209;
 const AX0 = -330, AX1 = 864, AY0 = -150, AY1 = 1265, K = 0.62;
 const M_PER_PX = HUMAN_M / SKULL_TO_FEET_PX;
@@ -38,11 +40,13 @@ let lag = null; // secondary motion: lagged copy of channels
 let lastX = 0, lastZ = 0, walkPh = 0, moveSpd = 0;
 window.__walkBias = 0; // capture/script can force walk blend 0..1
 
-if (ON) loadRig('fighter-art/rig/', 'gavin').then(r => {
+if (ON) loadRig('fighter-art/rig/', FIGHTER).then(r => {
   rig = r; groundY = r.SKIN.groundY; artCX = r.SKIN.artSize[0] / 2;
-  plane.position.set(((AX0 + AX1) / 2 - artCX) * M_PER_PX, (groundY - (AY0 + AY1) / 2) * M_PER_PX, 0);
-  card.visible = true; shadow.visible = true; window.__rigReady = true;
-  window.__rigHeightPx = () => { const c = window.__cam; if (!c) return 0; const a = new THREE.Vector3(0, 0, 0), b = new THREE.Vector3(0, HUMAN_M, 0); card.localToWorld(a); card.localToWorld(b); a.project(c); b.project(c); return (b.y - a.y) / 2 * innerHeight * devicePixelRatio; };
+  const sk = (r.SKIN.scale || 1);
+  plane.scale.setScalar(sk);
+  plane.position.set(((AX0 + AX1) / 2 - artCX) * M_PER_PX * sk, (groundY - (AY0 + AY1) / 2) * M_PER_PX * sk, 0);
+  card.visible = true; shadow.visible = true; window.__rigReady = true; window.__fighter = FIGHTER;
+  window.__rigHeightPx = () => { const c = window.__cam; if (!c) return 0; const a = new THREE.Vector3(0, 0, 0), b = new THREE.Vector3(0, HUMAN_M * sk, 0); card.localToWorld(a); card.localToWorld(b); a.project(c); b.project(c); return (b.y - a.y) / 2 * innerHeight * devicePixelRatio; };
 }).catch(e => console.error('rig load failed', e));
 
 function target(f, clock, dt) {

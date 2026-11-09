@@ -2,7 +2,7 @@
 import sys, os, subprocess, time
 from playwright.sync_api import sync_playwright
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-out, secs, fps = sys.argv[1], float(sys.argv[2]), int(sys.argv[3])
+out, secs, fps = sys.argv[1], float(sys.argv[2]), int(sys.argv[3]); q = sys.argv[4] if len(sys.argv)>4 else ''
 os.makedirs(out, exist_ok=True)
 srv = subprocess.Popen([sys.executable, '-m', 'http.server', '8771', '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 time.sleep(0.8)
@@ -27,7 +27,7 @@ try:
         pg = b.new_page(viewport={'width': 390, 'height': 844}, device_scale_factor=2)
         pg.on('pageerror', lambda e: print('pageerror:', e))
         pg.on('console', lambda m: m.type in ('error', 'warning') and print('console:', m.text[:200]))
-        pg.goto('http://127.0.0.1:8771/fight3d.html?auto&cap&speed=1&script=1')
+        pg.goto('http://127.0.0.1:8771/fight3d.html?auto&cap&speed=1&script=1'+q)
         pg.wait_for_function('window.__rigReady === true && typeof window.capStep === "function" && typeof window.__force === "function"', timeout=60000)
         pg.wait_for_timeout(1200)
         # warm into fight mode

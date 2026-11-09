@@ -93,3 +93,11 @@
 - HUD names come from F[i].name (YOU / GAVIN DAWSON).
 - Backdrops load from fighter-art/backgrounds/stages.json: still plate, horizon, fog, and optional moving layers. bg01 ships a procedural steam overlay as the cheap demo. Ring wash + contact disc seat the canvas into the lot.
 - Scripted capture: fight3d/tools/capture_script.py drives walk, hook, upper, kick and knockdown via window.__force.
+
+## Ipo skin (Muse parts test)
+
+- New fighter skin at fighter-art/rig/ipo/ on the shared bvh-punchout-front-v1 skeleton and all 18 animations.json clips.
+- Select with ?cpu=ipo (Gavin remains the default). HUD name becomes IPO.
+- Parts were rescaled from /workspace/muse_zip2 against ipo-full-body-v2.png. Forearm fists trimmed at the wrist. Gi-pant shins built from thigh fabric + full-body lower-leg crop over the bare-shin silhouette (see ipo/BUILD_NOTES.txt).
+- Height: skin.scale 1.0 keeps the same 1.83 m bone height as Gavin. Ipo lore height is unknown; Jessie should confirm.
+- Builder: fighter-art/rig/tools/build_ipo.py and render_ipo_poses.py.

@@ -1,15 +1,15 @@
 // fight3d/main.js: entry point. Round/match flow (start/end round, tick), window.FIGHT test hook,
 // fixed 60Hz loop and adaptive quality.
 import * as THREE from 'three';
-import { $, AUTO, qs } from './util.js?v=v2pol';
-import { DIFF, T } from './moves.js?v=v2pol';
-import { ac, camera, composer, renderer, resize, scene, setPR, setUseBloom, sfx, sun, useBloom } from './stage.js?v=v2pol';
-import { OJ, fists } from './fighters.js?v=v2pol';
-import { showBanner, updateHUD } from './hud.js?v=v2pol';
-import { F, G, canAct, resetPositions, separate, stepFighter, startMove, knockdown } from './combat.js?v=v2pol';
-import { think } from './cpu.js?v=v2pol';
-import { applyPose, curPose, updateVisuals } from './anim.js?v=v2pol';
-import { PI, drawTrails, readPlayer } from './input.js?v=v2pol';
+import { $, AUTO, qs } from './util.js?v=ipo1';
+import { DIFF, T } from './moves.js?v=ipo1';
+import { ac, camera, composer, renderer, resize, scene, setPR, setUseBloom, sfx, sun, useBloom } from './stage.js?v=ipo1';
+import { OJ, fists } from './fighters.js?v=ipo1';
+import { showBanner, updateHUD } from './hud.js?v=ipo1';
+import { F, G, canAct, resetPositions, separate, stepFighter, startMove, knockdown } from './combat.js?v=ipo1';
+import { think } from './cpu.js?v=ipo1';
+import { applyPose, curPose, updateVisuals } from './anim.js?v=ipo1';
+import { PI, drawTrails, readPlayer } from './input.js?v=ipo1';
 const CAP = qs.has('cap'); // capture mode: no rAF loop, the page calls window.capStep(ms) per video frame
 const SCRIPT = qs.has('script'); // scripted capture: window.__force drives moves; AI is muted while a script is active
 let scriptHold = null; // { who, kind, framesLeft, mx, mz }
@@ -47,7 +47,7 @@ function afterRound() {
   if (F[0].wins >= 2 || F[1].wins >= 2 || G.round >= 3) {
     G.mode = 'end'; G.matchesDone++;
     const youWin = F[0].wins > F[1].wins;
-    $('endTxt').textContent = youWin ? 'YOU WIN' : (F[0].wins === F[1].wins ? 'DRAW' : 'GAVIN WINS');
+    $('endTxt').textContent = youWin ? 'YOU WIN' : (F[0].wins === F[1].wins ? 'DRAW' : (F[1].name.split(' ')[0] + ' WINS'));
     $('endSub').textContent = `Rounds ${F[0].wins} to ${F[1].wins}`;
     $('end').classList.remove('hide'); $('banner').classList.remove('show');
     if (AUTO) setTimeout(() => { if (G.mode === 'end') startMatch(); }, 4000);

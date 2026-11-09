@@ -1,12 +1,13 @@
 // fight3d/combat.js: fighter state (F, G), state machine (stepFighter), startMove/dodge, hit resolution,
 // stun, knockdowns (trip sweeps don't count), KO.
 import * as THREE from 'three';
-import { $, clamp, lerp, rnd } from './util.js?v=v2pol';
-import { FLOW, LIGHT, MOVES, T } from './moves.js?v=v2pol';
-import { FLOOR, sfx } from './stage.js?v=v2pol';
-import { dbg, showBanner } from './hud.js?v=v2pol';
-import { spark } from './anim.js?v=v2pol';
-import { endRound } from './main.js?v=v2pol';
+import { $, clamp, lerp, qs, rnd } from './util.js?v=ipo1';
+import { FLOW, LIGHT, MOVES, T } from './moves.js?v=ipo1';
+const CPU_NAME = ({ gavin: 'GAVIN DAWSON', ipo: 'IPO' })[(qs.get('cpu') || 'gavin').toLowerCase()] || 'GAVIN DAWSON';
+import { FLOOR, sfx } from './stage.js?v=ipo1';
+import { dbg, showBanner } from './hud.js?v=ipo1';
+import { spark } from './anim.js?v=ipo1';
+import { endRound } from './main.js?v=ipo1';
 
 // ---------------- fighters + combat ----------------
 function mkFighter(name, isPlayer) {
@@ -14,7 +15,7 @@ function mkFighter(name, isPlayer) {
     blocking: false, dodge: 0, dodgeDir: 0, react: null, meter: 0, superUsed: false, wins: 0, downs: 0, spd: 1, vx: 0, vz: 0,
     inp: { mx: 0, mz: 0, block: false, atk: null, dodge: 0, spd: 1 }, ai: { t: 0, plan: [], strafe: 1, hist: [] } };
 }
-const F = [mkFighter('YOU', true), mkFighter('GAVIN DAWSON', false)];
+const F = [mkFighter('YOU', true), mkFighter(CPU_NAME, false)];
 const G = { mode: 'title', round: 1, timer: T.roundTime, tf: 0, hitstop: 0, shake: 0, banner: '', bannerT: 0, phaseT: 0, diff: 'normal', matchesDone: 0, frames: 0, fps: 60, winner: null };
 
 function resetPositions() {

@@ -1,0 +1,21 @@
+Ipo skin build notes (local, no image gen)
+
+Source: /workspace/muse_zip2/ Muse PNGs (24 files).
+
+Scale: every part was measured against ipo-full-body-v2.png proportions, then sized onto the shared
+bvh-punchout-front-v1 art canvas (534x1265) so the 18 clips in animations.json work unchanged.
+True-scale head/fists/soles were preferred anchors when present.
+
+Forearms: Muse forearm PNGs include a small attached fist. Trimmed at the wrist pinch (alpha width
+minimum in the lower half of the part) and replaced with true-scale fist parts.
+
+Shins: Muse shin PNGs are bare pink fur, but the full body shows white gi pants to the ankle.
+Local fix: take the bare-shin silhouette (widened to ~pant width), fill with fabric sampled from the
+matching thigh gi part, blended with a lower-leg crop from ipo-full-body-v2.png. Bare pink color is
+not used.
+
+Joints: parts placed with intentional overlaps at waist, hips, knees, shoulders, elbows. Pelvis
+transparent headroom was cropped so opaque fabric sits under the torso hem.
+
+Height: skin.scale = 1.0 (same 1.83 m bone height as Gavin). OPEN QUESTION for Jessie: Ipo lore
+height is unknown; large head/ears may read shorter or stockier. Confirm before shipping.
