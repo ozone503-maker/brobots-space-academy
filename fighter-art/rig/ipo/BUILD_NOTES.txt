@@ -1,27 +1,20 @@
-Ipo Muse-part skin v2 (local rebuild, $0, no image gen)
-Fixes vs v1: ankle pivot attachment, pink-only crocs, natural Muse sleeves,
-forearm length (pivot at wrist), belt on torso only (pelvis pink→GI fill),
-shin hem tuck over crocs, solid pelvis hole-fill.
-
-head: -> (350, 290)
-torso: -> (240, 460)
-pelvis: -> (310, 210)
-upperarm_L: -> (150, 300)
-upperarm_R: -> (150, 300)
-forearm_L: -> (125, 270)
-fist_L: -> (92, 110)
-forearm_R: -> (125, 270)
-fist_R: -> (92, 110)
-thigh_L: -> (170, 340)
-shin_L: -> (155, 245)
-thigh_R: -> (170, 340)
-shin_R: -> (155, 245)
-boot_L: -> (170, 130)
-boot_R: -> (170, 130)
-sole_L: -> (176, 380)
-sole_R: -> (176, 380)
-ankle_L: tuck=80 pivot_depth=52
-ankle_R: tuck=80 pivot_depth=52
-boot_L_foreign_dark_px=24
-pelvis_fill=0.68 pelvis_pink_px=0
-parts_bytes=1306548
+Ipo v3: hybrid cut from ipo-full-body-v2.png + Muse arms
+Body (head,torso+belt,pelvis,thighs,shins,crocs) from full-body.
+Arms from Muse limb parts (full-body arms overlap torso; cuts were unusable).
+Forearm oriented wrist-at-top / elbow-at-bottom (matches fist child above pivot).
+Belt on torso only; pelvis pink/dark filled to gi.
+head: -> (340, 302)
+torso: -> (270, 440)
+pelvis: -> (300, 210)
+upperarm_L: -> (145, 275)
+upperarm_R: -> (145, 275)
+forearm_L: -> (120, 175)
+forearm_R: -> (120, 175)
+fist_L: -> (110, 120)
+fist_R: -> (110, 120)
+thigh_L: -> (175, 345)
+thigh_R: -> (175, 345)
+shin_L: -> (155, 230)
+shin_R: -> (155, 230)
+boot_L: -> (175, 135)
+boot_R: -> (175, 135)
