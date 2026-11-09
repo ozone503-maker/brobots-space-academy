@@ -1,0 +1,19 @@
+{
+  "about": "Per-stage backdrop config for fight3d. still = painted plate. horizon = fraction of image height from the bottom where the skyline sits. layers = optional moving overlays (steam/crowd/water/neon) with parallax and scroll speed. A layer may use type:steam for a procedural placeholder, or src for an image under fighter-art/backgrounds/.",
+  "bg01": {
+    "still": "bg01.webp",
+    "horizon": 0.58,
+    "fog": 14269864,
+    "layers": [
+      { "type": "steam", "parallax": 0.25, "opacity": 0.28, "speed": 0.018 }
+    ]
+  },
+  "bg12": { "still": "bg12.webp", "horizon": 0.5, "fog": 13161848, "layers": [] },
+  "bg08": {
+    "still": "bg08.webp",
+    "horizon": 0.52,
+    "fog": 12105944,
+    "layers": [ { "type": "steam", "parallax": 0.2, "opacity": 0.22, "speed": 0.012 } ]
+  },
+  "bg04": { "still": "bg04.webp", "horizon": 0.45, "fog": 11058000, "layers": [] }
+}

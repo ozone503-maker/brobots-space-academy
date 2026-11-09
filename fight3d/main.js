@@ -1,18 +1,33 @@
 // fight3d/main.js: entry point. Round/match flow (start/end round, tick), window.FIGHT test hook,
 // fixed 60Hz loop and adaptive quality.
 import * as THREE from 'three';
-import { $, AUTO, qs } from './util.js?v=894c647';
-import { DIFF, T } from './moves.js?v=894c647';
-import { ac, camera, composer, renderer, resize, scene, setPR, setUseBloom, sfx, sun, useBloom } from './stage.js?v=894c647';
-import { OJ, fists } from './fighters.js?v=894c647';
-import { showBanner, updateHUD } from './hud.js?v=894c647';
-import { F, G, resetPositions, separate, stepFighter } from './combat.js?v=894c647';
-import { think } from './cpu.js?v=894c647';
-import { applyPose, curPose, updateVisuals } from './anim.js?v=894c647';
-import { PI, drawTrails, readPlayer } from './input.js?v=894c647';
+import { $, AUTO, qs } from './util.js?v=v2pol';
+import { DIFF, T } from './moves.js?v=v2pol';
+import { ac, camera, composer, renderer, resize, scene, setPR, setUseBloom, sfx, sun, useBloom } from './stage.js?v=v2pol';
+import { OJ, fists } from './fighters.js?v=v2pol';
+import { showBanner, updateHUD } from './hud.js?v=v2pol';
+import { F, G, canAct, resetPositions, separate, stepFighter, startMove, knockdown } from './combat.js?v=v2pol';
+import { think } from './cpu.js?v=v2pol';
+import { applyPose, curPose, updateVisuals } from './anim.js?v=v2pol';
+import { PI, drawTrails, readPlayer } from './input.js?v=v2pol';
 const CAP = qs.has('cap'); // capture mode: no rAF loop, the page calls window.capStep(ms) per video frame
+const SCRIPT = qs.has('script'); // scripted capture: window.__force drives moves; AI is muted while a script is active
+let scriptHold = null; // { who, kind, framesLeft, mx, mz }
+window.__force = (cmd, who = 1) => {
+  const f = F[who];
+  if (cmd === 'idle') { f.state = 'idle'; f.st = 0; f.move = null; window.__walkBias = 0; scriptHold = { who, kind: 'idle', framesLeft: 9999, mx: 0, mz: 0 }; f.inp.atk = null; return; }
+  if (cmd === 'walk') { f.state = 'idle'; f.st = 0; f.move = null; window.__walkBias = 1; scriptHold = { who, kind: 'walk', framesLeft: 9999, mx: 0.9, mz: 0.35 }; return; }
+  if (cmd === 'hook' || cmd === 'upper' || cmd === 'jab' || cmd === 'kHigh' || cmd === 'kRound') {
+    f.state = 'idle'; f.st = 0; f.move = null; f.blocking = false; window.__walkBias = 0;
+    scriptHold = { who, kind: 'atk', framesLeft: 100, mx: 0, mz: 0 }; f.inp.mx = 0; f.inp.mz = 0; f.inp.block = false; f.inp.atk = null;
+    startMove(f, cmd); return;
+  }
+  if (cmd === 'down') { knockdown(f, false, false); scriptHold = { who, kind: 'down', framesLeft: 220, mx: 0, mz: 0 }; return; }
+  if (cmd === 'clear') { scriptHold = null; return; }
+};
 
 window.FIGHT = { G, F, THREE, camera, get fists() { return fists; }, get PI() { return PI; }, get fps() { return G.fps; } };
+window.__states = () => F.map(f => f.state + ':' + f.mk + ':' + f.st).join('|');
 function startMatch() {
   F.forEach(f => { f.wins = 0; f.meter = 0; f.superUsed = false; });
   G.round = 1; startRound();
@@ -52,8 +67,13 @@ function tick() { // one 60Hz logic frame
   }
   if (G.mode !== 'fight') return;
   if (G.hitstop > 0) { G.hitstop--; return; }
-  if (AUTO) think(F[0], F[1], 10); else readPlayer();
-  if (!qs.has('dummy')) think(F[1], F[0], DIFF[G.diff]); else { F[1].inp.atk = null; F[1].inp.block = qs.get('dummy') === 'block'; F[1].inp.mx = F[1].inp.mz = 0; }
+  if (AUTO && !(scriptHold && scriptHold.who === 0)) think(F[0], F[1], 10); else if (!AUTO) readPlayer();
+  if (scriptHold) {
+    const f = F[scriptHold.who]; f.inp.mx = scriptHold.mx; f.inp.mz = scriptHold.mz; f.inp.block = false; f.inp.atk = null; f.inp.dodge = 0;
+    if (scriptHold.kind !== 'walk' && scriptHold.kind !== 'idle') { f.inp.mx = 0; f.inp.mz = 0; }
+    if (--scriptHold.framesLeft <= 0) scriptHold = null;
+  } else if (!qs.has('dummy')) think(F[1], F[0], DIFF[G.diff]); else { F[1].inp.atk = null; F[1].inp.block = qs.get('dummy') === 'block'; F[1].inp.mx = F[1].inp.mz = 0; }
+  if (scriptHold && scriptHold.who === 1) { /* keep player AI soft so fight continues */ if (AUTO) think(F[0], F[1], 10); }
   stepFighter(F[0], F[1]); stepFighter(F[1], F[0]); separate();
   if (++G.tf >= 60) { G.tf = 0; G.timer--; if (G.timer <= 0) { G.timer = 0; const a = F[0].hp, b = F[1].hp; endRound(a === b ? -1 : a > b ? 0 : 1, 'TIME'); } }
 }

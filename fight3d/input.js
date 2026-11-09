@@ -1,12 +1,12 @@
 // fight3d/input.js: touch/mouse/keyboard input, pad layout + hit-testing, swipe-to-move mapping,
 // input buffer handoff (readPlayer), sweep cooldown, pad + trail drawing.
-import { $, clamp, lerp } from './util.js?v=894c647';
-import { T, flowT } from './moves.js?v=894c647';
-import { ac } from './stage.js?v=894c647';
-import { dbg } from './hud.js?v=894c647';
-import { F, G, canAct } from './combat.js?v=894c647';
-import { P, cock } from './anim.js?v=894c647';
-import { last } from './main.js?v=894c647';
+import { $, clamp, lerp } from './util.js?v=v2pol';
+import { T, flowT } from './moves.js?v=v2pol';
+import { ac } from './stage.js?v=v2pol';
+import { dbg } from './hud.js?v=v2pol';
+import { F, G, canAct } from './combat.js?v=v2pol';
+import { P, cock } from './anim.js?v=v2pol';
+import { last } from './main.js?v=v2pol';
 
 // ---------------- input ----------------
 // Four swipe pads (Jessie's layout): two upper PUNCH pads, two lower KICK pads.
@@ -222,7 +222,7 @@ function drawTrails() {
   if (trailCv.width !== Math.round(w * dpr)) { trailCv.width = Math.round(w * dpr); trailCv.height = Math.round(h * dpr); }
   tctx.setTransform(dpr, 0, 0, dpr, 0, 0); tctx.clearRect(0, 0, w, h);
   drawPads(w, h);
-  const now = performance.now(), COL = { arm: '255,240,210', rail: '160,220,255', chamber: '120,220,255', guard: '140,255,170', super: '255,90,190', roam: '255,255,255' };
+  const now = performance.now(), COL = { arm: '100,220,255', rail: '160,220,255', chamber: '120,220,255', guard: '140,255,170', super: '255,90,190', roam: '255,255,255' };
   for (let i = trails.length - 1; i >= 0; i--) {
     const tr = trails[i], age = tr.dead ? (now - tr.dead) / 260 : 0;
     if (age >= 1) { trails.splice(i, 1); continue; }

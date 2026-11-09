@@ -1,8 +1,8 @@
 // fight3d/fighters.js: mesh builders. Toon ramp + inverted-hull ink outline, Gavin's articulated body (OJ),
 // player ghost body, kick legs (skin shin/foot), first-person fists and forearms.
 import * as THREE from 'three';
-import { rnd } from './util.js?v=894c647';
-import { camera, palm, scene, uTime } from './stage.js?v=894c647';
+import { rnd } from './util.js?v=v2pol';
+import { camera, palm, scene, uTime } from './stage.js?v=v2pol';
 
 // ---------------- opponent: articulated humanoid (photoreal-comic: toon ramp + inverted-hull ink outlines) ----------------
 const toonRamp = (() => { const d = new Uint8Array([70, 140, 205, 255]); const t = new THREE.DataTexture(d, 4, 1, THREE.RedFormat); t.minFilter = t.magFilter = THREE.NearestFilter; t.needsUpdate = true; return t; })();
@@ -140,7 +140,8 @@ const skinMat = new THREE.MeshPhysicalMaterial({ color: 0xd99a6c, roughness: 0.5
 const knuckleMat = new THREE.MeshPhysicalMaterial({ color: 0xe8a77a, roughness: 0.42, sheen: 0.6, sheenColor: new THREE.Color(0xff8060) });
 const creaseMat = new THREE.MeshBasicMaterial({ color: 0x8a4a30 });
 const nailMat = new THREE.MeshPhysicalMaterial({ color: 0xf6d2c0, roughness: 0.25, clearcoat: 0.6 });
-const handSkin = toon(0xc98a62), handShade = toon(0xa86c4a), handKnuck = toon(0xd99a72), handWrap = toon(0xb8b2a6), handNail = toon(0xe8c8b0);
+const kudoMat = (c, a=0.85) => new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: a, blending: THREE.AdditiveBlending, depthWrite: false });
+const handSkin = kudoMat(0x3ad4ff, 0.78), handShade = kudoMat(0x1a8cff, 0.7), handKnuck = kudoMat(0xa8f0ff, 0.9), handWrap = kudoMat(0x66e0ff, 0.75), handNail = kudoMat(0xffffff, 0.95);
 function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward), back of hand +y; thumb on the INNER side
   const g = new THREE.Group(), tIn = -s;
   // back of hand: slightly flattened rounded block, wider at the knuckles
@@ -159,17 +160,17 @@ function buildFist(s) { // s=-1 left, 1 right; fist faces -z (camera forward), b
   const tn = new THREE.Mesh(new THREE.SphereGeometry(0.009, 8, 6), handNail); tn.scale.set(1, 0.5, 1.2); tn.position.set(-tIn * 0.004, -0.05, -0.058); tn.userData.noInk = true; g.add(tn);
   // tapered wrist with hand wraps
   const wrist = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.036, 0.07, 16), handWrap); wrist.rotation.x = Math.PI / 2; wrist.scale.set(1.15, 1, 0.85); wrist.position.set(0, -0.004, 0.06); g.add(wrist);
-  inkOutline(g, 0.0025);
-  g.traverse(o => { if (o.isMesh) o.castShadow = true; });
-  g.scale.setScalar(0.95);
+  g.traverse(o => { if (o.isMesh) { o.userData.noInk = true; o.castShadow = false; } });
+  g.scale.setScalar(0.5); // shrunk Kudoken fists so they clear Gavin at punch-out camera
   camera.add(g); return g;
 }
 // forearms: camera-space tapered limbs from each wrist down/out to off-screen anchors at the bottom corners
 const foreArms = [-1, 1].map(s => { const g = new THREE.Group();
-  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.042, 1, 16), handSkin); m.position.y = 0.5; g.add(m);
-  const bulge = new THREE.Mesh(new THREE.SphereGeometry(0.044, 16, 12), handSkin); bulge.scale.set(1.05, 3.2, 0.95); bulge.position.y = 0.72; g.add(bulge);
-  const wr = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.038, 0.09, 16), handWrap); wr.position.y = 0.05; g.add(wr);
-  inkOutline(g, 0.003); camera.add(g); return g; });
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.032, 1, 16), handSkin); m.position.y = 0.5; g.add(m);
+  const bulge = new THREE.Mesh(new THREE.SphereGeometry(0.034, 16, 12), handShade); bulge.scale.set(1.05, 3.2, 0.95); bulge.position.y = 0.72; g.add(bulge);
+  const wr = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.03, 0.09, 16), handWrap); wr.position.y = 0.05; g.add(wr);
+  const aura = new THREE.Mesh(new THREE.SphereGeometry(0.055, 12, 10), kudoMat(0x3ad4ff, 0.35)); aura.scale.set(1.2, 2.4, 1.2); aura.position.y = 0.55; g.add(aura);
+  camera.add(g); return g; });
 const _wr = new THREE.Vector3(), _an = new THREE.Vector3(), _up = new THREE.Vector3(0, 1, 0);
 function placeForearm(i, h) {
   const fa = foreArms[i], s = i ? 1 : -1; _wr.set(0, 0, 0.085).applyMatrix4(h.matrix); // h is a direct child of camera
@@ -178,6 +179,6 @@ function placeForearm(i, h) {
   fa.quaternion.setFromUnitVectors(_up, _an.clone().sub(_wr).normalize());
 }
 const fists = [buildFist(-1), buildFist(1)];
-const handLight = new THREE.PointLight(0xffd0a0, 1.2, 2.5, 2); camera.add(handLight); handLight.position.set(0, 0.2, 0.1);
+const handLight = new THREE.PointLight(0x66e0ff, 1.6, 3.2, 2); camera.add(handLight); handLight.position.set(0, 0.15, -0.4);
 
 export { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg };

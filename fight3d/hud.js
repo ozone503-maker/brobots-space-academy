@@ -1,8 +1,8 @@
 // fight3d/hud.js: HUD bars/timer/meter (updateHUD), banners, and the ?debug=1 overlay (dbg, window.__dbgLines).
 // The build stamp (#build) is static in fight3d.html.
-import { $, qs } from './util.js?v=894c647';
-import { T } from './moves.js?v=894c647';
-import { F, G } from './combat.js?v=894c647';
+import { $, qs } from './util.js?v=v2pol';
+import { T } from './moves.js?v=v2pol';
+import { F, G } from './combat.js?v=v2pol';
 
 const DEBUG = qs.has('debug'); let dbgEl = null; const dbgLines = [];
 function dbg(t) { if (!DEBUG) return; if (!dbgEl) { dbgEl = document.createElement('pre'); dbgEl.id = 'dbg'; document.getElementById('app').appendChild(dbgEl); }
@@ -13,6 +13,7 @@ window.__dbgLines = dbgLines;
 function showBanner(t, frames) { G.banner = t; G.bannerT = frames; const b = $('banner'); b.textContent = t; b.classList.add('show'); }
 function updateHUD() {
   for (let i = 0; i < 2; i++) {
+    const nm = $('nm' + i); if (nm && nm.textContent !== F[i].name) nm.textContent = F[i].name;
     $('hp' + i).style.width = (F[i].hp / T.hp * 100) + '%'; $('bal' + i).style.width = (Math.max(0, F[i].bal) / T.balMax * 100) + '%';
     $('pip' + i).innerHTML = '<b></b>'.repeat(F[i].wins);
   }

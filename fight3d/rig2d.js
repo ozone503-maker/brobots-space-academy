@@ -1,16 +1,19 @@
-// fight3d/rig2d.js: draws Gavin's 2D cut-out rig (fighter-art/rig) on a camera-facing card in the 3D ring.
-// The card is real size (6 ft human, skull to soles), drawn every frame into a CanvasTexture from the CPU fighter's state.
+// fight3d/rig2d.js: draws Gavin's 2D cut-out rig on a camera-facing card in the 3D ring.
+// Real size (6 ft human). Smooth crossfades, secondary follow-through, walk cycle, hooks/uppercuts, crumple fall.
 // ?rig=0 keeps the old 3D mesh.
 import * as THREE from 'three';
-import { clamp, ease, qs } from './util.js?v=894c647';
-import { FLOOR, scene } from './stage.js?v=894c647';
-import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=894c647';
+import { clamp, ease, qs } from './util.js?v=v2pol';
+import { FLOOR, scene } from './stage.js?v=v2pol';
+import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=v2pol';
 
 const ON = qs.get('rig') !== '0';
-const HUMAN_M = 1.83;           // 6 ft, skull top to soles
-const SKULL_TO_FEET_PX = 1209;  // in Gavin's source art (674 px sprite box : 662 px skull to feet at punch-out scale)
-const AX0 = -330, AX1 = 864, AY0 = -150, AY1 = 1265, K = 0.62;  // art window (room for kicks) and texture px per art px
+const HUMAN_M = 1.83;
+const SKULL_TO_FEET_PX = 1209;
+const AX0 = -330, AX1 = 864, AY0 = -150, AY1 = 1265, K = 0.62;
 const M_PER_PX = HUMAN_M / SKULL_TO_FEET_PX;
+const FADE = 0.16; // longer crossfade so poses ease instead of popping
+const FOLLOW = { head: 0.18, forearm_L: 0.16, forearm_R: 0.16, fist_L: 0.12, fist_R: 0.12, upperarm_L: 0.1, upperarm_R: 0.1, torso: 0.08 };
+
 const cv = document.createElement('canvas'); cv.width = Math.round((AX1 - AX0) * K); cv.height = Math.round((AY1 - AY0) * K);
 const cx = cv.getContext('2d');
 const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
@@ -20,24 +23,29 @@ const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest
 const planeW = (AX1 - AX0) * M_PER_PX, planeH = (AY1 - AY0) * M_PER_PX;
 const plane = new THREE.Mesh(new THREE.PlaneGeometry(planeW, planeH), mat);
 tilt.add(plane);
-const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.42, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.38, depthWrite: false }));
-shadow.rotation.x = -Math.PI / 2; shadow.scale.set(1, 0.55, 1); scene.add(shadow); shadow.visible = false;
+const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.55, 40), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.48, depthWrite: false }));
+shadow.rotation.x = -Math.PI / 2; shadow.scale.set(1, 0.62, 1); scene.add(shadow); shadow.visible = false;
 scene.add(card);
 
-const PEAK = { jab_L: 0.15, jab_R: 0.15, kick_front_L: 0.3, kick_front_R: 0.3, kick_round_L: 0.3, kick_round_R: 0.3 };
-const MOVE_ANIM = { jab: ['jab_L', 'jab_R'], hook: ['jab_R'], upper: ['jab_L'], kHigh: ['kick_front_L', 'kick_front_R'], kMid: ['kick_front_R'], kSide: ['kick_round_R'], kRound: ['kick_round_L', 'kick_round_R'], super: ['kick_round_R'], kSweep: ['kick_round_L'] };
-const st8 = { key: '', anim: 'idle', t: 0, prev: null, fade: 0, n: 0 };
+const PEAK = { jab_L: 0.15, jab_R: 0.15, hook_L: 0.28, hook_R: 0.28, upper_L: 0.32, upper_R: 0.32, kick_front_L: 0.3, kick_front_R: 0.3, kick_round_L: 0.3, kick_round_R: 0.3 };
+const MOVE_ANIM = {
+  jab: ['jab_L', 'jab_R'], hook: ['hook_L', 'hook_R'], upper: ['upper_L', 'upper_R'],
+  kHigh: ['kick_front_L', 'kick_front_R'], kMid: ['kick_front_R'], kSide: ['kick_round_R'],
+  kRound: ['kick_round_L', 'kick_round_R'], super: ['kick_round_R'], kSweep: ['kick_round_L'],
+};
+const st8 = { key: '', anim: 'idle', t: 0, prev: null, fade: 0 };
+let lag = null; // secondary motion: lagged copy of channels
+let lastX = 0, lastZ = 0, walkPh = 0, moveSpd = 0;
+window.__walkBias = 0; // capture/script can force walk blend 0..1
 
 if (ON) loadRig('fighter-art/rig/', 'gavin').then(r => {
   rig = r; groundY = r.SKIN.groundY; artCX = r.SKIN.artSize[0] / 2;
-  // card origin = feet centre: shift plane so art (artCX, groundY) sits at (0,0)
   plane.position.set(((AX0 + AX1) / 2 - artCX) * M_PER_PX, (groundY - (AY0 + AY1) / 2) * M_PER_PX, 0);
   card.visible = true; shadow.visible = true; window.__rigReady = true;
-  window.__rigHeightPx = () => { const c = window.__cam; if (!c) return 0; const a = new THREE.Vector3(0, 0, 0), b = new THREE.Vector3(0, HUMAN_M, 0); card.localToWorld(a); card.localToWorld(b); a.project(c); b.project(c); return (b.y - a.y) / 2 * innerHeight * devicePixelRatio; }; // skull-to-feet in device px
+  window.__rigHeightPx = () => { const c = window.__cam; if (!c) return 0; const a = new THREE.Vector3(0, 0, 0), b = new THREE.Vector3(0, HUMAN_M, 0); card.localToWorld(a); card.localToWorld(b); a.project(c); b.project(c); return (b.y - a.y) / 2 * innerHeight * devicePixelRatio; };
 }).catch(e => console.error('rig load failed', e));
 
-// game state -> [anim, time]
-function target(f, clock, win) {
+function target(f, clock, dt) {
   const sec = f.st / 60;
   switch (f.state) {
     case 'atk': {
@@ -49,38 +57,80 @@ function target(f, clock, win) {
     case 'hit': return ['hit', clamp(f.st / Math.max(1, f.hs), 0, 1) * 0.5, 'hit' + f.hitN];
     case 'stagger': return ['hit', 0.12 + 0.06 * Math.sin(f.st * 0.25), 'stagger'];
     case 'dodge': { const a = f.dodgeDir > 0 ? 'dodge_L' : 'dodge_R'; return [a, clamp(f.st / 18, 0, 1) * 0.94, 'dodge' + f.st0]; }
-    case 'down': case 'ko': return ['hit', 0.06, 'down'];
-    case 'getup': return ['idle', 0, 'getup'];
+    case 'down': case 'ko': {
+      const D = rig.ANIMS.fall.duration;
+      const t = Math.min(D - 0.001, ease(clamp(f.st / 40, 0, 1)) * D);
+      return ['fall', t, 'down'];
+    }
+    case 'getup': {
+      const D = rig.ANIMS.getup.duration;
+      return ['getup', Math.min(D - 0.001, ease(clamp(f.st / 40, 0, 1)) * D), 'getup'];
+    }
   }
   if (f.blocking) return ['block', 0.5, 'block'];
-  return ['idle', clock % 1.6, 'idle'];
+  const walkW = Math.max(window.__walkBias || 0, moveSpd > 0.35 ? clamp((moveSpd - 0.35) / 1.2, 0, 1) : 0);
+  if (walkW > 0.05) {
+    walkPh = (walkPh + (0.4 + moveSpd * 0.35 + (window.__walkBias || 0) * 0.5) * Math.max(dt || 1/60, 1/120)) % 0.9;
+    return ['walk', walkPh, 'walk', walkW];
+  }
+  return ['idle', clock % 1.8, 'idle', 0];
 }
+
+function followThrough(ch, dt) {
+  if (!lag) { lag = {}; for (const n of Object.keys(ch)) if (n !== '_own') lag[n] = { ...ch[n] }; return ch; }
+  const out = { _own: ch._own };
+  for (const n of Object.keys(ch)) {
+    if (n === '_own') continue;
+    const src = ch[n], prev = lag[n] || src, k = FOLLOW[n];
+    if (!k) { out[n] = src; lag[n] = { ...src }; continue; }
+    const a = 1 - Math.pow(1 - (1 - k), Math.max(0.001, dt) * 60); // frame-rate independent lag
+    const o = { ...src };
+    for (const p of ['rot', 'x', 'y']) { // pose lags; scale/flash/z snap so punches still pop
+      const sv = src[p], pv = prev[p] ?? sv;
+      o[p] = pv + (sv - pv) * a;
+    }
+    o._z = src._z; out[n] = o; lag[n] = o;
+  }
+  return out;
+}
+
 let lastState = '', lastSt = 0;
 function update(f, cam, x, z, clock, dt) {
   if (!rig || !card.visible) return;
-  // count move / hit instances so alternating jabs and fresh hits restart cleanly
+  const dx = x - lastX, dz = z - lastZ;
+  moveSpd = Math.hypot(dx, dz) / Math.max(dt, 1 / 120);
+  lastX = x; lastZ = z;
   if (f.state !== lastState || f.st < lastSt) { if (f.state === 'atk') f.atkN = (f.atkN || 0) + 1; if (f.state === 'hit') f.hitN = (f.hitN || 0) + 1; f.st0 = (f.st0 || 0) + 1; }
   lastState = f.state; lastSt = f.st; f.atkN = f.atkN || 0; f.hitN = f.hitN || 0;
-  const [anim, t, key] = target(f, clock);
-  if (key !== st8.key) { // crossfade from the pose we were showing
+  const tgt = target(f, clock, dt), anim = tgt[0], t = tgt[1], key = tgt[2], walkW = tgt[3] || 0;
+  if (key !== st8.key) {
     if (st8.key) { st8.prev = { anim: st8.anim, t: st8.t }; st8.fade = 1; }
     st8.key = key;
   }
   st8.anim = anim; st8.t = t;
-  st8.fade = Math.max(0, st8.fade - dt / 0.09);
+  st8.fade = Math.max(0, st8.fade - dt / FADE);
   let ch = channels(rig, anim, t);
-  if (st8.prev && st8.fade > 0) ch = blend([[ch, 1 - ease(st8.fade)], [channels(rig, st8.prev.anim, st8.prev.t), ease(st8.fade)]]);
+  if (st8.prev && st8.fade > 0) {
+    const w = ease(st8.fade);
+    ch = blend([[ch, 1 - w], [channels(rig, st8.prev.anim, st8.prev.t), w]]);
+  }
+  if (key === 'walk' && walkW < 0.98) {
+    ch = blend([[ch, walkW], [channels(rig, 'idle', clock % 1.8), 1 - walkW]]);
+  }
+  ch = followThrough(ch, dt);
   cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
-  draw(rig, cx, ch, mul(S(K, K), T(-AX0, -AY0)), { flashMul: 0.6 });
+  draw(rig, cx, ch, mul(S(K, K), T(-AX0, -AY0)), { flashMul: 0.55 });
   tex.needsUpdate = true;
-  // place card: feet on the canvas, facing the camera (yaw only)
-  card.position.set(x, FLOOR + (f.hop > 0 ? Math.sin(f.hop / 18 * Math.PI) * 0.28 : 0), z);
+  const hop = f.hop > 0 ? Math.sin(f.hop / 18 * Math.PI) * 0.28 : 0;
+  card.position.set(x, FLOOR + hop, z);
   card.rotation.set(0, Math.atan2(cam.position.x - x, cam.position.z - z), 0);
-  // knockdown: tip over backwards around the feet, then (down only) back up
-  let fall = 0;
-  if (f.state === 'down' || f.state === 'ko') { fall = ease(clamp((f.st - 6) / 26, 0, 1)); const kn = (f.trip ? 90 : 150) - 40; if (f.state === 'down' && f.st > kn) fall *= 1 - ease((f.st - kn) / 40); }
-  else if (f.state === 'getup') fall = 0;
-  tilt.rotation.x = -fall * 1.42; tilt.position.y = 0.02 * fall;
-  shadow.position.set(x, FLOOR + 0.006, z); shadow.scale.set(1 + fall * 0.6, 0.55 + fall * 1.2, 1);
+  // soft tip only late in a fall (crumple anim does the work); getup has none
+  let tip = 0;
+  if (f.state === 'down' || f.state === 'ko') tip = 0;
+  tilt.rotation.x = -tip; tilt.position.y = 0;
+  const fallen = (f.state === 'down' || f.state === 'ko') ? ease(clamp(f.st / 40, 0, 1)) : (f.state === 'getup' ? 1 - ease(clamp(f.st / 40, 0, 1)) : 0);
+  shadow.position.set(x, FLOOR + 0.006, z);
+  shadow.scale.set(1 + fallen * 0.85 + moveSpd * 0.04, 0.62 + fallen * 0.55, 1);
+  shadow.material.opacity = 0.42 + fallen * 0.18;
 }
 export { ON as RIG_ON, update as updateRig, card as rigCard };

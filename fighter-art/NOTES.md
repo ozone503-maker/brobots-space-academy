@@ -83,3 +83,13 @@
 - The player hit flash is softer (DOM flash 0.4, was 0.9). The rig flash is scaled by 0.6.
 - The front kick boot to sole swap is now a clean cut at t 0.185 to 0.19 and 0.535 to 0.54, so there is no frame with both visible. The viewer draws at 0.8 of canvas height, so the right roundhouse no longer touches the edge.
 - Capture: python3 fight3d/tools/capture.py OUTDIR SECONDS FPS uses fight3d.html?auto&cap&speed=1, which steps the game by hand (window.capStep) in headless Chrome at 390x844 @2x.
+
+## Gavin rig: motion polish (v2)
+
+- Idle has stronger breathing, weight shift (feet + pelvis), and a light torso twist. Crossfades last 0.16 s. Head, arms and fists lag a little behind the body for follow-through; punch scale still snaps so hooks and uppercuts pop.
+- Walk cycle (animations.json walk) plays when Gavin moves, blended with idle at low speed. Capture can force it with window.__walkBias.
+- Real hook_L/R and upper_L/R replace the old jab remaps. fall + getup crumple him to the mat instead of tipping the card.
+- Player fists are electric blue Kudoken (additive glow, cyan tracers), scaled to 0.5 and held in a high, wide, far guard so they frame Gavin instead of covering him.
+- HUD names come from F[i].name (YOU / GAVIN DAWSON).
+- Backdrops load from fighter-art/backgrounds/stages.json: still plate, horizon, fog, and optional moving layers. bg01 ships a procedural steam overlay as the cheap demo. Ring wash + contact disc seat the canvas into the lot.
+- Scripted capture: fight3d/tools/capture_script.py drives walk, hook, upper, kick and knockdown via window.__force.

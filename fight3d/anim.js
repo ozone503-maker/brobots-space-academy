@@ -1,14 +1,14 @@
 // fight3d/anim.js: poses + pose mixing, fist keyframes (HP/FK), leg poses, hit sparks, camera,
 // walk cycle, hinged fall, and the per-frame visual update (updateVisuals). Touch-down fist cock state.
 import * as THREE from 'three';
-import { D2R, clamp, ease, lerp, qs, rnd } from './util.js?v=894c647';
-import { FLOW, T } from './moves.js?v=894c647';
-import { FLOOR, camera, flames, ocean, palms, particles, ringSpot, scene, softTex, sun, torchLight, uTime, updateVolcano } from './stage.js?v=894c647';
-import { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg } from './fighters.js?v=894c647';
-import { F, G, dirTo } from './combat.js?v=894c647';
-import { last } from './main.js?v=894c647';
-import { RIG_ON, rigCard, updateRig } from './rig2d.js?v=894c647';
-import { BG_ON, updateBackdrop } from './backdrop.js?v=894c647';
+import { D2R, clamp, ease, lerp, qs, rnd } from './util.js?v=v2pol';
+import { FLOW, T } from './moves.js?v=v2pol';
+import { FLOOR, camera, flames, ocean, palms, particles, ringSpot, scene, softTex, sun, torchLight, uTime, updateVolcano } from './stage.js?v=v2pol';
+import { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg } from './fighters.js?v=v2pol';
+import { F, G, dirTo } from './combat.js?v=v2pol';
+import { last } from './main.js?v=v2pol';
+import { RIG_ON, rigCard, updateRig } from './rig2d.js?v=v2pol';
+import { BG_ON, updateBackdrop } from './backdrop.js?v=v2pol';
 
 function pose(o, base) { const p = { y: 0, rx: 0 }; if (base) Object.assign(p, JSON.parse(JSON.stringify(base))); for (const j of JOINTS) if (!p[j]) p[j] = [0, 0, 0]; for (const k in o) p[k] = Array.isArray(o[k]) ? o[k].slice() : o[k]; return p; }
 const P = {};
@@ -43,22 +43,22 @@ function applyPose(J, p) {
 }
 // fist keyframes for the right hand [x,y,z,rx,ry,rz]; left hand mirrored
 const FK = {
-  jab:   [[0.13, -0.05, -0.8, 0.4, -0.1, -0.5], [0.03, -0.06, -1.25, 0.05, 0, -1.5]],
-  pHigh: [[0.13, -0.03, -0.8, 0.4, -0.1, -0.5], [0.02, 0.02, -1.28, 0.05, 0, -1.5]],
-  pMid:  [[0.13, -0.1, -0.8, 0.3, -0.1, -0.5], [0.03, -0.17, -1.25, 0.15, 0, -1.5]],
-  pLow:  [[0.13, -0.18, -0.78, 0.2, -0.1, -0.5], [0.04, -0.3, -1.15, -0.25, 0, -1.5]],
-  hook:  [[0.38, -0.04, -0.62, 0.0, -0.6, -0.2], [0.36, -0.02, -1.02, 0, -0.9, -1.4], [-0.02, -0.04, -1.18, 0, 0.6, -1.5]],
-  upper: [[0.14, -0.42, -0.68, 1.2, 0, -0.2], [0.05, -0.18, -0.95, 0.4, 0, -0.25], [0.03, 0.06, -1.1, -0.9, 0, -0.3]],
+  jab:   [[0.16, 0.0, -1.45, 0.4, -0.1, -0.5], [0.04, 0.0, -2.05, 0.05, 0, -1.5]],
+  pHigh: [[0.16, 0.02, -1.45, 0.4, -0.1, -0.5], [0.03, 0.05, -2.08, 0.05, 0, -1.5]],
+  pMid:  [[0.16, -0.06, -1.45, 0.3, -0.1, -0.5], [0.04, -0.1, -2.05, 0.15, 0, -1.5]],
+  pLow:  [[0.16, -0.14, -1.4, 0.2, -0.1, -0.5], [0.05, -0.22, -1.95, -0.25, 0, -1.5]],
+  hook:  [[0.4, 0.0, -1.25, 0.0, -0.6, -0.2], [0.34, 0.01, -1.75, 0, -0.9, -1.4], [-0.02, 0.0, -1.95, 0, 0.6, -1.5]],
+  upper: [[0.16, -0.28, -1.3, 1.2, 0, -0.2], [0.05, -0.08, -1.7, 0.4, 0, -0.25], [0.03, 0.08, -1.9, -0.9, 0, -0.3]],
 };
 function mir(q, side) { return side ? q : [-q[0], q[1], q[2], q[3], -q[4], -q[5]]; }
 function legPose(side, a, b, t, h) { for (let i = 0; i < 3; i++) { const A = LEGP[a][i], B = LEGP[b][i]; _v[i].set(lerp(A[0], B[0], t) * (side ? 1 : -1), lerp(A[1], B[1], t) + (i ? (h - 0.5) * 0.25 * (a !== 'rest' || t > 0.3 ? 1 : 0) : 0), lerp(A[2], B[2], t)); } return _v; }
-const HP = { // hand poses in camera space [x,y,z, rx, ry, rz]
-  guardL: [-0.15, -0.035, -0.85, 0.55, -0.15, 0.35], guardR: [0.15, -0.04, -0.83, 0.55, 0.15, -0.35],
-  blockL: [-0.075, -0.05, -0.42, 1.25, 0.3, 0.2], blockR: [0.075, -0.06, -0.43, 1.25, -0.3, -0.2],
-  jabW: [-0.13, -0.27, -0.55, 0.2, 0.1, 0.4], jabS: [-0.04, -0.12, -1.25, 0.05, 0, 1.5],
-  hookW: [0.34, -0.3, -0.5, 0.0, -0.6, -0.2], hookM: [0.3, -0.13, -1.0, 0, -0.9, -1.4], hookS: [-0.02, -0.1, -1.18, 0, 0.6, -1.5],
-  upW: [0.14, -0.55, -0.58, 1.2, 0, -0.2], upS: [0.03, -0.02, -1.12, -0.9, 0, -0.3],
-  supW: [0.22, -0.65, -0.45, 1.3, 0, -0.3], supS: [0.0, 0.05, -1.25, -1.1, 0, -0.2],
+const HP = { // Kudoken high guard: farther from camera (smaller on screen) and higher so fists clear Gavin
+  guardL: [-0.32, 0.08, -1.85, 0.45, -0.12, 0.3], guardR: [0.32, 0.07, -1.82, 0.45, 0.12, -0.3],
+  blockL: [-0.24, 0.1, -1.45, 0.9, 0.2, 0.15], blockR: [0.24, 0.09, -1.46, 0.9, -0.2, -0.15],
+  jabW: [-0.18, -0.12, -1.2, 0.2, 0.1, 0.4], jabS: [-0.05, -0.04, -2.05, 0.05, 0, 1.5],
+  hookW: [0.38, -0.12, -1.15, 0.0, -0.6, -0.2], hookM: [0.32, -0.04, -1.7, 0, -0.9, -1.4], hookS: [-0.02, -0.02, -1.95, 0, 0.6, -1.5],
+  upW: [0.16, -0.35, -1.25, 1.2, 0, -0.2], upS: [0.03, 0.06, -1.9, -0.9, 0, -0.3],
+  supW: [0.22, -0.45, -1.1, 1.3, 0, -0.3], supS: [0.0, 0.08, -2.05, -1.1, 0, -0.2],
 };
 function setFist(f, a, b, t) { const p = []; for (let i = 0; i < 6; i++) p[i] = lerp(a[i], b[i], t); f.position.set(p[0], p[1], p[2]); f.rotation.set(p[3], p[4], p[5]); }
 
@@ -155,7 +155,7 @@ function updateVisuals(dt) {
   lookAt.set(ox, lerp(FLOOR + 1.42, headY - 0.15, 0.4) - camDrop * 0.8, oz);
   if (G.shake > 0.001) { camPos.x += (rnd() - .5) * G.shake * 0.5; camPos.y += (rnd() - .5) * G.shake * 0.5; lookAt.x += (rnd() - .5) * G.shake; lookAt.y += (rnd() - .5) * G.shake; G.shake *= 0.86; }
   camera.position.copy(camPos); camera.up.set(Math.sin(camRoll) * fz, Math.cos(camRoll), -Math.sin(camRoll) * fx); camera.lookAt(lookAt);
-  if (RIG_ON) { window.__cam = camera; OJ.root.visible = !rigCard.visible; camera.updateMatrixWorld(); updateRig(op, camera, ox, oz, animClock, dt); } // 2D cut-out Gavin replaces the mesh once loaded
+  if (RIG_ON) { window.__cam = camera; OJ.root.visible = !rigCard.visible; ghost.visible = false; camera.updateMatrixWorld(); updateRig(op, camera, ox, oz, animClock, dt); } else { ghost.visible = true; } // 2D cut-out Gavin replaces the mesh once loaded
   // fists
   const L = fists[0], R = fists[1];
   const t = animClock * 4;
