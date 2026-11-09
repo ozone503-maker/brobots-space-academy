@@ -1,13 +1,11 @@
 {
- "fighter": "ipo",
- "skeleton": "bvh-punchout-front-v1",
- "about": "Ipo pink dog in white gi. Muse parts rescaled to shared punch-out skeleton. Height scale 1.0 = same bone height as Gavin (1.83 m); Jessie should confirm Ipo lore height.",
+ "name": "ipo",
  "artSize": [
   534,
   1265
  ],
- "scale": 1.0,
  "groundY": 1231,
+ "scale": 1.0,
  "pivots": {
   "root": [
    268,
@@ -23,7 +21,7 @@
   ],
   "head": [
    267,
-   235
+   230
   ],
   "upperarm_L": [
    118,
@@ -74,121 +72,111 @@
    1112
   ]
  },
- "ikTargets": {
-  "foot_L": [
-   130,
-   1095
-  ],
-  "foot_R": [
-   428,
-   1112
-  ]
- },
  "parts": {
   "head": {
    "image": "parts/head.png",
-   "x": -180,
-   "y": -234,
-   "w": 360,
-   "h": 300
+   "x": -175,
+   "y": -237,
+   "w": 350,
+   "h": 290
   },
   "torso": {
    "image": "parts/torso.png",
-   "x": -122,
-   "y": -385,
-   "w": 244,
-   "h": 470
+   "x": -120,
+   "y": -404,
+   "w": 240,
+   "h": 460
   },
   "pelvis": {
    "image": "parts/pelvis.png",
    "x": -155,
-   "y": -75,
+   "y": -79,
    "w": 310,
-   "h": 176
+   "h": 210
   },
   "upperarm_L": {
    "image": "parts/upperarm_L.png",
-   "x": -72,
-   "y": -12,
-   "w": 130,
+   "x": -105,
+   "y": -30,
+   "w": 150,
    "h": 300
   },
   "upperarm_R": {
    "image": "parts/upperarm_R.png",
-   "x": -59,
-   "y": -12,
-   "w": 130,
+   "x": -45,
+   "y": -30,
+   "w": 150,
    "h": 300
   },
   "forearm_L": {
    "image": "parts/forearm_L.png",
-   "x": -55,
-   "y": -176,
-   "w": 110,
-   "h": 220
-  },
-  "forearm_R": {
-   "image": "parts/forearm_R.png",
-   "x": -55,
-   "y": -176,
-   "w": 110,
-   "h": 220
+   "x": -62,
+   "y": -230,
+   "w": 125,
+   "h": 270
   },
   "fist_L": {
    "image": "parts/fist_L.png",
-   "x": -42,
-   "y": -67,
-   "w": 99,
-   "h": 115
+   "x": -46,
+   "y": -55,
+   "w": 92,
+   "h": 110
+  },
+  "forearm_R": {
+   "image": "parts/forearm_R.png",
+   "x": -62,
+   "y": -230,
+   "w": 125,
+   "h": 270
   },
   "fist_R": {
    "image": "parts/fist_R.png",
-   "x": -49,
-   "y": -67,
-   "w": 85,
-   "h": 115
+   "x": -46,
+   "y": -55,
+   "w": 92,
+   "h": 110
   },
   "thigh_L": {
    "image": "parts/thigh_L.png",
-   "x": -77,
-   "y": -106,
-   "w": 140,
-   "h": 360
-  },
-  "thigh_R": {
-   "image": "parts/thigh_R.png",
-   "x": -68,
-   "y": -106,
-   "w": 150,
-   "h": 360
-  },
-  "boot_L": {
-   "image": "parts/boot_L.png",
-   "x": -92,
-   "y": -116,
-   "w": 167,
-   "h": 165
-  },
-  "boot_R": {
-   "image": "parts/boot_R.png",
-   "x": -71,
-   "y": -133,
-   "w": 156,
-   "h": 165
+   "x": -85,
+   "y": -114,
+   "w": 170,
+   "h": 340
   },
   "shin_L": {
    "image": "parts/shin_L.png",
-   "x": -63,
-   "y": -96,
-   "w": 125,
-   "h": 215
+   "x": -77,
+   "y": -47,
+   "w": 155,
+   "h": 245
+  },
+  "thigh_R": {
+   "image": "parts/thigh_R.png",
+   "x": -85,
+   "y": -114,
+   "w": 170,
+   "h": 340
   },
   "shin_R": {
    "image": "parts/shin_R.png",
-   "x": -63,
-   "y": -96,
-   "w": 125,
-   "h": 215
+   "x": -77,
+   "y": -30,
+   "w": 155,
+   "h": 245
+  },
+  "boot_L": {
+   "image": "parts/boot_L.png",
+   "x": -85,
+   "y": -52,
+   "w": 170,
+   "h": 130
+  },
+  "boot_R": {
+   "image": "parts/boot_R.png",
+   "x": -85,
+   "y": -52,
+   "w": 170,
+   "h": 130
   },
   "sole_L": {
    "image": "parts/sole_L.png",
@@ -210,5 +198,37 @@
    "w": 176,
    "h": 380
   }
+ },
+ "drawOrder": [
+  "pelvis",
+  "thigh_L",
+  "thigh_R",
+  "shin_L",
+  "shin_R",
+  "boot_L",
+  "boot_R",
+  "torso",
+  "upperarm_L",
+  "upperarm_R",
+  "forearm_L",
+  "forearm_R",
+  "fist_L",
+  "fist_R",
+  "head",
+  "sole_L",
+  "sole_R"
+ ],
+ "fighter": "ipo",
+ "skeleton": "bvh-punchout-front-v1",
+ "about": "Ipo Muse-part skin v2. Crocs as boots; belt on torso only.",
+ "ikTargets": {
+  "foot_L": [
+   130,
+   1095
+  ],
+  "foot_R": [
+   428,
+   1112
+  ]
  }
 }
