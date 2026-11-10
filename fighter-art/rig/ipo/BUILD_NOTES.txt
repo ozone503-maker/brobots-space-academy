@@ -1,19 +1,19 @@
-Ipo v3: hybrid cut from ipo-full-body-v2.png + Muse arms
-Body (head,torso+belt,pelvis,thighs,shins,crocs) from full-body.
-Arms from Muse limb parts (full-body arms overlap torso; cuts were unusable).
-Forearm oriented wrist-at-top / elbow-at-bottom (matches fist child above pivot).
-Belt on torso only; pelvis pink/dark filled to gi.
-head: -> (340, 302)
+Ipo v4: T-pose arms from ipo-arms-out.jpg (clean sleeve tubes, rotated,
+upscaled uniformly, opaque rounded caps). Full ears from full-body-v2.
+Muse fists color-shifted toward T-pose hand fur. v3 body/legs restored;
+thigh belt tabs inpainted; light corner rounding (no ghost caps).
+parts_bytes=1240369
+head: -> (440, 348)
 torso: -> (270, 440)
 pelvis: -> (300, 210)
-upperarm_L: -> (145, 275)
-upperarm_R: -> (145, 275)
-forearm_L: -> (120, 175)
-forearm_R: -> (120, 175)
+upperarm_L: -> (148, 268)
+upperarm_R: -> (148, 268)
+forearm_L: -> (135, 184)
+forearm_R: -> (135, 184)
 fist_L: -> (110, 120)
 fist_R: -> (110, 120)
-thigh_L: -> (175, 345)
-thigh_R: -> (175, 345)
+thigh_L: -> (172, 345)
+thigh_R: -> (175, 343)
 shin_L: -> (155, 230)
 shin_R: -> (155, 230)
 boot_L: -> (175, 135)

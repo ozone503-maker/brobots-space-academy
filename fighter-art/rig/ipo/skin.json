@@ -1,7 +1,7 @@
 {
  "fighter": "ipo",
  "skeleton": "bvh-punchout-front-v1",
- "about": "Ipo v3: head/torso/pelvis/legs/crocs cut from ipo-full-body-v2.png; arms from Muse limb parts (hanging full-body arms overlap torso and cut poorly). Belt on torso only. Forearm elbow\u2192wrist with paw; fists true-scale for punches.",
+ "about": "Ipo v4: body from ipo-full-body-v2; arms cut from ipo-arms-out T-pose (clean sleeve tube, rotated to hanging/guard bone orientation); full ears; Muse fists color-matched to T-pose fur; rounded joint caps.",
  "artSize": [
   534,
   1265
@@ -87,10 +87,10 @@
  "parts": {
   "head": {
    "image": "parts/head.png",
-   "x": -170,
-   "y": -241,
-   "w": 340,
-   "h": 302
+   "x": -220,
+   "y": -245,
+   "w": 440,
+   "h": 348
   },
   "torso": {
    "image": "parts/torso.png",
@@ -108,31 +108,31 @@
   },
   "upperarm_L": {
    "image": "parts/upperarm_L.png",
-   "x": -80,
-   "y": -28,
-   "w": 145,
-   "h": 275
+   "x": -83,
+   "y": -27,
+   "w": 148,
+   "h": 268
   },
   "upperarm_R": {
    "image": "parts/upperarm_R.png",
-   "x": -66,
-   "y": -28,
-   "w": 145,
-   "h": 275
+   "x": -65,
+   "y": -27,
+   "w": 148,
+   "h": 268
   },
   "forearm_L": {
    "image": "parts/forearm_L.png",
-   "x": -60,
-   "y": -154,
-   "w": 120,
-   "h": 175
+   "x": -68,
+   "y": -158,
+   "w": 135,
+   "h": 184
   },
   "forearm_R": {
    "image": "parts/forearm_R.png",
-   "x": -60,
-   "y": -154,
-   "w": 120,
-   "h": 175
+   "x": -68,
+   "y": -158,
+   "w": 135,
+   "h": 184
   },
   "fist_L": {
    "image": "parts/fist_L.png",
@@ -150,29 +150,29 @@
   },
   "thigh_L": {
    "image": "parts/thigh_L.png",
-   "x": -88,
+   "x": -86,
    "y": -88,
-   "w": 175,
+   "w": 172,
    "h": 345
   },
   "thigh_R": {
    "image": "parts/thigh_R.png",
    "x": -88,
-   "y": -88,
+   "y": -87,
    "w": 175,
-   "h": 345
+   "h": 343
   },
   "shin_L": {
    "image": "parts/shin_L.png",
    "x": -77,
-   "y": -44,
+   "y": -36,
    "w": 155,
    "h": 230
   },
   "shin_R": {
    "image": "parts/shin_R.png",
    "x": -77,
-   "y": -27,
+   "y": -19,
    "w": 155,
    "h": 230
   },
