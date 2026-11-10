@@ -260,7 +260,192 @@ def drop_pink_gi(im):
     return inpaint_pink_tab(im)
 
 
+def shade_inner_edge(im, side='R', strength=0.16, width_frac=0.35):
+    """Darken the torso-facing edge of a sleeve so it separates from the white gi."""
+    a = np.array(im).astype(np.float32)
+    h, w = a.shape[:2]
+    xs = np.arange(w, dtype=np.float32)
+    if side == 'R':
+        # inner edge is the right side of the PNG
+        t = np.clip((xs - w * (1.0 - width_frac)) / max(1, w * width_frac), 0, 1)
+    else:
+        t = np.clip((w * width_frac - xs) / max(1, w * width_frac), 0, 1)
+    # smooth
+    t = t * t
+    mul = 1.0 - strength * t
+    a[..., 0] *= mul
+    a[..., 1] *= mul
+    a[..., 2] *= mul
+    a[..., :3] = np.clip(a[..., :3], 0, 255)
+    return Image.fromarray(a.astype(np.uint8), 'RGBA')
+
+
+def taper_rows(im, top_w=1.0, bot_w=0.80, min_half=0.38):
+    """Scale each row's opaque span toward a tapered tube. Does not fill."""
+    a = np.array(im).astype(np.float32)
+    h, w = a.shape[:2]
+    xs = np.arange(w, dtype=np.float32)
+    cx = (w - 1) / 2.0
+    for y in range(h):
+        t = y / max(1, h - 1)
+        frac = top_w + (bot_w - top_w) * t
+        half = w * 0.5 * frac
+        # also keep a little end rounding via the existing alpha
+        m = np.clip((half - np.abs(xs - cx)) / max(1.0, 2.0), 0, 1)
+        a[y, ..., 3] *= m
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), 'RGBA')
+
+
+def extend_rows(im, target_h, prefer='mid'):
+    """Stretch or clone-extend a short tube to target_h, keeping width."""
+    if im.height >= target_h:
+        return im.resize((im.width, target_h), Image.LANCZOS)
+    a = np.array(im)
+    h, w = a.shape[:2]
+    # resize first to a mid height, then pad with cloned mid-fabric if still short
+    mid = a[max(0, h // 4): min(h, 3 * h // 4)]
+    if mid.shape[0] < 4:
+        mid = a
+    out = np.zeros((target_h, w, 4), np.uint8)
+    # place original, resized, in the center-ish and fill ends with mid clones
+    scaled = np.array(im.resize((w, target_h), Image.LANCZOS))
+    return Image.fromarray(scaled, 'RGBA')
+
+
+def compose_forearm(pink, cuff, target_w, target_h, cuff_frac=0.38):
+    """Pink fur tube from wrist (top) down to a white gi cuff at the elbow (bottom)."""
+    pw = scale_to_solid_width(pink, target_w)
+    # pink occupies the top (1-cuff_frac) of the canvas
+    pink_h = max(8, int(target_h * (1.0 - cuff_frac)))
+    cuff_h = target_h - pink_h
+    pw = extend_rows(pw, pink_h)
+    # fit cuff
+    cw = scale_to_solid_width(cuff, target_w)
+    cw = extend_rows(cw, max(cuff_h + 16, cw.height if cw.height > 4 else cuff_h + 16))
+    if cw.height > cuff_h + 16:
+        cw = cw.resize((cw.width, cuff_h + 16), Image.LANCZOS)
+    canvas = Image.new('RGBA', (target_w, target_h), (0, 0, 0, 0))
+    # center widths
+    def paste_c(dst, src, y):
+        x = (dst.width - src.width) // 2
+        dst.alpha_composite(src, (x, y))
+    paste_c(canvas, pw, 0)
+    # cuff overlaps the pink by ~16px so the opening is soft
+    paste_c(canvas, cw, pink_h - 16)
+    return canvas
+
+
+
+def stamp_along_path(src, canvas_w, canvas_h, top_fx, bot_fx, top_w, bot_w):
+    """Stamp a vertical source tube along a diagonal path in a wider canvas.
+
+    The shared skeleton keeps bone +Y pointing down the screen even when the
+    child joint sits inward or outward, so bind-pose sleeves have to be
+    *drawn* on a diagonal (Gavin's upperarm/forearm PNGs work this way).
+    top_fx/bot_fx are the path-center x as a fraction of canvas width.
+    """
+    src_a = np.array(src.convert('RGBA'))
+    sh, sw = src_a.shape[:2]
+    # precompute each source row's opaque span
+    spans = []
+    for y in range(sh):
+        xs = np.where(src_a[y, :, 3] > 20)[0]
+        if len(xs) >= 2:
+            spans.append((int(xs[0]), int(xs[-1]) + 1))
+        elif len(xs) == 1:
+            spans.append((int(xs[0]), int(xs[0]) + 1))
+        else:
+            spans.append(None)
+    # fill missing spans from nearest
+    last = next((s for s in spans if s), (0, sw))
+    for i, s in enumerate(spans):
+        if s is None:
+            spans[i] = last
+        else:
+            last = s
+    out = np.zeros((canvas_h, canvas_w, 4), np.float32)
+    wgt = np.zeros((canvas_h, canvas_w), np.float32)
+    for y in range(canvas_h):
+        t = y / max(1, canvas_h - 1)
+        cx = (top_fx + (bot_fx - top_fx) * t) * (canvas_w - 1)
+        tw = top_w + (bot_w - top_w) * t
+        sy = min(sh - 1, int(round(t * (sh - 1))))
+        x0, x1 = spans[sy]
+        row = src_a[sy, x0:x1]
+        rw = max(1, row.shape[0])
+        # scale this source span to the tube width
+        dst_w = max(3, int(round(tw)))
+        if rw != dst_w:
+            # resize one row: (1, rw, 4) -> (1, dst_w, 4)
+            tile = Image.fromarray(row[None, ...], 'RGBA').resize((dst_w, 1), Image.Resampling.LANCZOS)
+            row = np.array(tile)[0]
+        # place centered at cx, with a soft 2px edge
+        x_left = cx - (dst_w - 1) / 2.0
+        for i in range(dst_w):
+            xf = x_left + i
+            x_i = int(np.floor(xf))
+            frac = xf - x_i
+            pix = row[i].astype(np.float32)
+            # soft side feather
+            edge = min(i, dst_w - 1 - i)
+            feather = 1.0 if edge >= 2 else (edge + 1) / 3.0
+            pix = pix.copy()
+            pix[3] *= feather
+            for dx, wf in ((0, 1.0 - frac), (1, frac)):
+                xx = x_i + dx
+                if 0 <= xx < canvas_w and wf > 0.001 and pix[3] > 0:
+                    out[y, xx] += pix * wf
+                    wgt[y, xx] += wf
+    # normalize overlapping writes (the bilinear x split)
+    nz = wgt > 1.0
+    out[nz, :3] /= wgt[nz, None]
+    out[nz, 3] = np.clip(out[nz, 3] / np.maximum(wgt[nz], 1e-6), 0, 255)
+    out[~nz, 3] = np.clip(out[~nz, 3], 0, 255)
+    out[..., :3] = np.clip(out[..., :3], 0, 255)
+    # soft-round the path ends so the tube is not a hard rectangle
+    end = max(6, int(canvas_h * 0.08))
+    for i in range(end):
+        fade = (i / end) ** 0.6
+        # only shrink alpha near the sides of the first/last rows; keep the
+        # center of the cap opaque so joints stay covered
+        for y, keep in ((i, fade), (canvas_h - 1 - i, fade)):
+            xs = np.where(out[y, :, 3] > 10)[0]
+            if len(xs) < 4:
+                continue
+            cx = 0.5 * (xs[0] + xs[-1])
+            half = 0.5 * (xs[-1] - xs[0] + 1) * (0.55 + 0.45 * keep)
+            dist = np.abs(np.arange(canvas_w) - cx)
+            out[y, :, 3] *= np.clip((half - dist) / max(2.0, half * 0.3) , 0, 1)
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA')
+
+
+def shade_inward(im, side='R', strength=0.18, width_px=28):
+    """Darken the torso-facing side of a (possibly diagonal) tube, per row."""
+    a = np.array(im).astype(np.float32)
+    h, w = a.shape[:2]
+    for y in range(h):
+        xs = np.where(a[y, :, 3] > 20)[0]
+        if len(xs) < 4:
+            continue
+        x0, x1 = int(xs[0]), int(xs[-1])
+        span = max(1, x1 - x0)
+        ww = min(width_px, span * 0.55)
+        if side == 'R':
+            # inward is the right of this row
+            t = np.clip((np.arange(w) - (x1 - ww)) / max(1, ww), 0, 1)
+        else:
+            t = np.clip(((x0 + ww) - np.arange(w)) / max(1, ww), 0, 1)
+        t = t * t
+        mul = 1.0 - strength * t
+        a[y, :, 0] *= mul
+        a[y, :, 1] *= mul
+        a[y, :, 2] *= mul
+    a[..., :3] = np.clip(a[..., :3], 0, 255)
+    return Image.fromarray(a.astype(np.uint8), 'RGBA')
+
+
 def cut_tpose(tpose, box, rot, kind):
+
 
     x0, y0, x1, y1 = box
     tile = tpose[y0:y1, x0:x1].copy()
@@ -288,9 +473,9 @@ def main():
         print(f'{n}: restored v3 overlay')
 
     skin['about'] = (
-        'Ipo v4: body from ipo-full-body-v2; arms cut from ipo-arms-out T-pose '
-        '(clean sleeve tube, rotated to hanging/guard bone orientation); '
-        'full ears; Muse fists color-matched to T-pose fur; rounded joint caps.'
+        'Ipo v4: body from ipo-full-body-v2; T-pose sleeves rotated and stamped on '
+        'a bind-pose diagonal (shoulder inward, elbow out); pink furry forearm '
+        '+ cuff from elbow to wrist along the same diagonal; Muse fists; full ears.'
     )
     skin['fighter'] = 'ipo'
     skin['skeleton'] = 'bvh-punchout-front-v1'
@@ -340,19 +525,21 @@ def main():
     FUR_TGT = head_a[m, :3].mean(0) if m.any() else np.array([206, 138, 145])
     print('GI_TGT', GI_TGT, 'FUR_TGT', FUR_TGT, 'HAND_TGT', HAND_TGT)
 
-    # ---------- ARMS from T-pose (clean sleeve tubes only) ----------
-    # L/R = screen side. Tight boxes stay on the ear-free sleeve tube.
-    # Upperarm is short in source (~30-34px along the bone before the ear);
-    # we scale uniformly then cap_opaque to bone length + overlap.
+    # ---------- ARMS from T-pose ----------
+    # Bind pose: upperarm hangs down (shoulder at TOP of PNG, elbow at BOTTOM).
+    # Forearm goes UP from the elbow to the fist, so the PNG has the wrist at
+    # the TOP and the elbow at the BOTTOM (fy ~ 0.86).
+    # Previous v4 sleeves were ~148px wide filled rectangles; on a white gi they
+    # read as horizontal shoulder slabs and hid the forearms. Target thickness
+    # matches the torso shoulder (~Gavin median 91px upperarm, 69px forearm).
     specs = {
-        # hands include a sliver of cuff for wrist overlap (used only as color ref;
-        # shipped fists are Muse, color-shifted)
-        'hand_L':     dict(box=(312, 190, 430, 256), rot=-90, kind='hand'),
-        'forearm_L':  dict(box=(408, 190, 522, 260), rot=-90, kind='fore'),
-        'upperarm_L': dict(box=(500, 196, 528, 256), rot=90,  kind='upper'),
-        'hand_R':     dict(box=(846, 190, 968, 256), rot=90,  kind='hand'),
-        'forearm_R':  dict(box=(754, 190, 868, 260), rot=90,  kind='fore'),
-        'upperarm_R': dict(box=(752, 196, 778, 256), rot=-90, kind='upper'),
+        # pink wrist + palm (not the split fingers) -> furry forearm
+        'pink_L':     dict(box=(385, 200, 426, 238), rot=-90, kind='pink'),
+        'cuff_L':     dict(box=(416, 196, 460, 256), rot=-90, kind='cuff'),
+        'upperarm_L': dict(box=(498, 196, 532, 256), rot=90,  kind='upper'),
+        'pink_R':     dict(box=(850, 200, 891, 238), rot=90,  kind='pink'),
+        'cuff_R':     dict(box=(816, 196, 860, 256), rot=90,  kind='cuff'),
+        'upperarm_R': dict(box=(746, 196, 780, 256), rot=-90, kind='upper'),
     }
 
     cuts = {}
@@ -362,55 +549,50 @@ def main():
         im.save(f'/tmp/cut_{name}.png')
         print(f'cut {name} {im.size} fill={(np.array(im)[...,3]>40).mean():.2f}')
 
-    for side in ('L',):
-        # Upperarm: match sleeve width to body, stretch the short clean-tube
-        # texture along the bone (source is only ~30px long before the ear),
-        # then add short opaque caps for shoulder/elbow overlap.
-        # Bone length ~177; fy=0.10; target h ~270 => 243px along the bone.
-        ua = cuts[f'upperarm_{side}']
-        ua = scale_to_solid_width(ua, 150)
-        ua = ua.resize((ua.size[0], 200), Image.LANCZOS)
-        ua = unsharp(sharpen(ua, 1.25), 1.1, 120, 2)
-        ua = drop_pink_gi(ua)
-        ua = fill_side_holes(ua)
-        ua = color_shift(ua, GI_TGT, 0.60, is_gi)
-        ua = cap_opaque(ua, 32, 'top', min_frac=0.40)
-        ua = cap_opaque(ua, 36, 'bot', min_frac=0.40)
-        ua = tube_mask(ua, side_feather=0.06, end_round=0.10, min_half=0.38)
-        ax = 0.56 if side == 'L' else 0.44
-        put(f'upperarm_{side}', ua, ax, 0.10)
+    # The skeleton is Y-down even when the child sits inward, so the art must
+    # be painted on a diagonal like Gavin: upperarm shoulder inward (top-right
+    # for L) to elbow outward (bottom-left); forearm elbow outward (bottom-left)
+    # to wrist inward (top-right). Measured idle bone offsets:
+    #   elbow in upperarm_L space ~ (-56, 169); fist in forearm_L space ~ (63, -114).
+    UA_W, UA_H = 150, 252
+    UA_TOP_FX, UA_BOT_FX, UA_FY = 0.75, 0.38, 0.14
+    FA_SRC_W, FA_SRC_H = 74, 148
+    FA_W, FA_H = 130, 168
+    FA_TOP_FX, FA_BOT_FX, FA_FY = 0.72, 0.24, 0.86
 
-        # Forearm: bone length ~130-138. Must NOT overshoot the fist (v3
-        # "pink posts" were a length/orientation bug). Non-uniform: width
-        # matches the sleeve, height fits the bone + modest overlap.
-        # fy=0.86, h=184 => 158px wrist-to-elbow (20-28px past the bone).
-        fa = cuts[f'forearm_{side}']
-        fa = fa.resize((138, 160), Image.LANCZOS)
-        fa = unsharp(sharpen(fa, 1.25), 1.1, 120, 2)
-        fa = fill_side_holes(fa, min_a=180, end_margin=0.16)
-        fa = color_shift(fa, GI_TGT, 0.55, is_gi)
-        fa = color_shift(fa, FUR_TGT, 0.35, is_fur)
-        fa = cap_opaque(fa, 10, 'top', min_frac=0.40)
-        fa = cap_opaque(fa, 14, 'bot', min_frac=0.40)
-        fa = tube_mask(fa, side_feather=0.05, end_round=0.09, min_half=0.38)
-        put(f'forearm_{side}', fa, 0.50, 0.86)
+    # Build L from the clean T-pose cuts, then mirror for R (R sleeve mattes poorly).
+    ua_src = cuts['upperarm_L']
+    ua_src = drop_pink_gi(ua_src)
+    ua_src = scale_to_solid_width(ua_src, 66)
+    ua_src = extend_rows(ua_src, 200)
+    ua_src = fill_side_holes(ua_src)
+    ua_src = color_shift(ua_src, GI_TGT, 0.50, is_gi)
+    ua = stamp_along_path(ua_src, UA_W, UA_H, UA_TOP_FX, UA_BOT_FX, top_w=66, bot_w=54)
+    ua = unsharp(sharpen(ua, 1.2), 1.1, 120, 2)
+    ua = shade_inward(ua, side='R', strength=0.18, width_px=28)
+    put('upperarm_L', ua, UA_TOP_FX, UA_FY)
 
-    # Mirror the clean L sleeve for R (R T-pose sleeve is near-white and mattes poorly).
-    put('upperarm_R', Image.open(PARTS / 'upperarm_L.png').transpose(Image.FLIP_LEFT_RIGHT), 0.44, 0.10)
-    put('forearm_R', Image.open(PARTS / 'forearm_L.png').transpose(Image.FLIP_LEFT_RIGHT), 0.50, 0.86)
+    pink = cuts['pink_L']
+    cuff = drop_pink_gi(cuts['cuff_L'])
+    fa_src = compose_forearm(pink, cuff, FA_SRC_W, FA_SRC_H, cuff_frac=0.40)
+    fa_src = color_shift(fa_src, FUR_TGT, 0.40, is_fur)
+    fa_src = color_shift(fa_src, GI_TGT, 0.45, is_gi)
+    fa_src = fill_side_holes(fa_src, min_a=180, end_margin=0.08)
+    fa = stamp_along_path(fa_src, FA_W, FA_H, FA_TOP_FX, FA_BOT_FX, top_w=52, bot_w=62)
+    fa = unsharp(sharpen(fa, 1.15), 1.0, 110, 2)
+    put('forearm_L', fa, FA_BOT_FX, FA_FY)
 
-    for side in ('L', 'R'):
-        # Muse true-scale fists, color-shifted toward T-pose / head fur
+    # Muse fists color-matched; fy near the wrist so the pink tube tucks under.
+    for side, fxx in (('L', 0.45), ('R', 0.55)):
         hd = Image.open(V3BODY / f'fist_{side}.png').convert('RGBA')
-        # blend of T-pose hand and head fur
         tgt = 0.55 * np.array(HAND_TGT) + 0.45 * np.array(FUR_TGT)
         hd = color_shift(hd, tgt, 0.55, is_fur)
-        # keep v3 size and placement (110x120, fy≈0.70)
-        v3f = V3SKIN['parts'][f'fist_{side}']
-        # v3 rel y=-84, h=120 => fy=84/120=0.70; rel x=-55, w=110 => fx=0.50
-        fx = abs(v3f['x']) / v3f['w'] if v3f['w'] else 0.50
-        fy = abs(v3f['y']) / v3f['h'] if v3f['h'] else 0.70
-        put(f'fist_{side}', hd, fx, fy)
+        put(f'fist_{side}', hd, fxx, 0.84)
+
+    put('upperarm_R', Image.open(PARTS / 'upperarm_L.png').transpose(Image.FLIP_LEFT_RIGHT),
+        1.0 - UA_TOP_FX, UA_FY)
+    put('forearm_R', Image.open(PARTS / 'forearm_L.png').transpose(Image.FLIP_LEFT_RIGHT),
+        1.0 - FA_BOT_FX, FA_FY)
 
     # ---------- Legs: restore v3 art, drop belt tabs, light corner rounding ----------
     for side in ('L', 'R'):

@@ -1,7 +1,7 @@
 {
  "fighter": "ipo",
  "skeleton": "bvh-punchout-front-v1",
- "about": "Ipo v4: body from ipo-full-body-v2; arms cut from ipo-arms-out T-pose (clean sleeve tube, rotated to hanging/guard bone orientation); full ears; Muse fists color-matched to T-pose fur; rounded joint caps.",
+ "about": "Ipo v4: body from ipo-full-body-v2; T-pose sleeves rotated and stamped on a bind-pose diagonal (shoulder inward, elbow out); pink furry forearm + cuff from elbow to wrist along the same diagonal; Muse fists; full ears.",
  "artSize": [
   534,
   1265
@@ -108,43 +108,43 @@
   },
   "upperarm_L": {
    "image": "parts/upperarm_L.png",
-   "x": -83,
-   "y": -27,
-   "w": 148,
-   "h": 268
+   "x": -80,
+   "y": -35,
+   "w": 107,
+   "h": 252
   },
   "upperarm_R": {
    "image": "parts/upperarm_R.png",
-   "x": -65,
-   "y": -27,
-   "w": 148,
-   "h": 268
+   "x": -27,
+   "y": -35,
+   "w": 107,
+   "h": 252
   },
   "forearm_L": {
    "image": "parts/forearm_L.png",
-   "x": -68,
-   "y": -158,
-   "w": 135,
-   "h": 184
+   "x": -26,
+   "y": -144,
+   "w": 110,
+   "h": 168
   },
   "forearm_R": {
    "image": "parts/forearm_R.png",
-   "x": -68,
-   "y": -158,
-   "w": 135,
-   "h": 184
+   "x": -84,
+   "y": -144,
+   "w": 110,
+   "h": 168
   },
   "fist_L": {
    "image": "parts/fist_L.png",
-   "x": -55,
-   "y": -84,
+   "x": -49,
+   "y": -101,
    "w": 110,
    "h": 120
   },
   "fist_R": {
    "image": "parts/fist_R.png",
-   "x": -55,
-   "y": -84,
+   "x": -60,
+   "y": -101,
    "w": 110,
    "h": 120
   },
