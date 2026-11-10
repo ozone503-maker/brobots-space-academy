@@ -101,3 +101,5 @@
 - Parts were rescaled from /workspace/muse_zip2 against ipo-full-body-v2.png. Forearm fists trimmed at the wrist. Gi-pant shins built from thigh fabric + full-body lower-leg crop over the bare-shin silhouette (see ipo/BUILD_NOTES.txt).
 - Height: skin.scale 1.0 keeps the same 1.83 m bone height as Gavin. Ipo lore height is unknown; Jessie should confirm.
 - Builder: fighter-art/rig/tools/build_ipo.py and render_ipo_poses.py.
+
+- rig/tank (Nov 9 2026): Tank cut-out skin on the shared rig. Body and limbs cut from the T-pose (tank-arms-out.jpg) at one scale, arms rotated into the boxing-guard bone orientation, riveted fists from the 16-panel page (panel 9, mirrored for the right hand). Height is 7 ft (skin.scale 1.17), measured to the top of the skull under the fedora. Select with ?cpu=tank; Gavin stays the default. See rig/tank/BUILD_NOTES.txt.
