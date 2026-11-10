@@ -5,10 +5,10 @@
 ## Main pages
 
 - [Home](https://brobots.space/): what we do, prices, and contact
-- [Search and AI visibility](https://brobots.space/search-visibility.html): our full SEO and AI visibility method, the Muse score, and packages
+- [Search and AI visibility](https://brobots.space/search-visibility.html): our full SEO and AI visibility method, the Space Factory Visibility Score, and packages
 - [Services](https://brobots.space/services.html): website tiers and add-ons
 - [Work](https://brobots.space/work.html): client work
-- [SAO audit](https://brobots.space/sao-audit.html): free Search Answer Optimization audit by Muse, our audit engine
+- [SAO audit](https://brobots.space/sao-audit.html): free Search Answer Optimization audit, a detailed package combining the criteria industry leaders use
 - [FAQ](https://brobots.space/faq.html): common questions
 
 ## Contact

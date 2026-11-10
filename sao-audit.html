@@ -11,7 +11,7 @@
 <meta property="og:description" content="people helping robots helping people">
 <meta property="og:url" content="https://brobots.space/sao-audit.html">
 <meta property="og:image" content="https://brobots.space/media/og-card-flyer.jpg">
-<meta property="og:image:alt" content="Brobots — people helping robots helping people">
+<meta property="og:image:alt" content="Brobots: people helping robots helping people">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Free SAO Audit | Is AI Recommending Your Business?">
 <meta name="twitter:description" content="people helping robots helping people">
@@ -139,7 +139,7 @@ footer.site .tag{color:var(--muted)}
 
   <section class="hero" id="heroSec">
     <h1>Is AI recommending your business?</h1>
-    <p class="sub">We crawl your site, then ask the <strong>30 questions</strong> your customers ask AI — and check whether your website actually answers them. <strong>38 checks. Zero guesswork.</strong> Free.</p>
+    <p class="sub">We crawl your site, then ask the <strong>30 questions</strong> your customers ask AI, and check whether your website actually answers them. <strong>38 checks. Zero guesswork.</strong> Free.</p>
     <form class="audit-form" id="auditForm">
       <div class="form-err" id="formErr"></div>
       <label for="urlInput">Your website</label>
@@ -189,7 +189,7 @@ var form=document.getElementById("auditForm"), urlInput=document.getElementById(
 
 NICHES.forEach(function(n){var o=document.createElement("option");o.value=n[0];o.textContent=n[1];nicheSelect.appendChild(o);});
 
-/* deep-link: /sao-audit.html?url=...&niche=... — vertical pages hand off here */
+/* deep-link: /sao-audit.html?url=...&niche=... : vertical pages hand off here */
 (function(){
   try{
     var q=new URLSearchParams(location.search);
@@ -265,7 +265,7 @@ function pollForResult(resultsUrl){
       .catch(function(){/* transient; keep polling */});
     if(tries>=maxTries){
       clearInterval(pollTimer);
-      resetToForm("The audit took too long. Please try again — it usually finishes in 2–4 minutes.");
+      resetToForm("The audit took too long. Please try again. It usually finishes in 2–4 minutes.");
     }
   },6000);
 }
@@ -296,7 +296,7 @@ function applyBrand(b){
   if(b.name){
     document.getElementById("brandNameTop").textContent=b.name;
     document.getElementById("brandNameFoot").textContent=b.name;
-    document.title="Free SAO Audit — Is AI Recommending Your Business? | "+b.name;
+    document.title="Free SAO Audit: Is AI Recommending Your Business? | "+b.name;
   }
   if(b.tagline) document.getElementById("brandTag").textContent=b.tagline;
   if(b.logo_url) document.getElementById("brandLogo").src=b.logo_url;
@@ -383,7 +383,7 @@ function renderReport(r){
   var ctaUrl=(r.brand&&r.brand.cta_url)||"/services.html";
   var ctaName=(r.brand&&r.brand.name)||"Brobots";
   html+='<div class="cta-band"><h2>Want every fix handled?</h2>'+
-    '<p>'+esc(ctaName)+' builds the pages, the answers, and the AI-proof structure your audit says you\'re missing — starting at $495.</p>'+
+    '<p>'+esc(ctaName)+' builds the pages, the answers, and the AI-proof structure your audit says you\'re missing, starting at $495.</p>'+
     '<a class="btn" href="'+esc(ctaUrl)+'">See what '+esc(ctaName)+' can do</a></div>';
 
   reportSec.innerHTML=html;

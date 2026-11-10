@@ -81,21 +81,21 @@
    <div class="stamp">For the business with zero presence</div>
    <h4 class="blk">A free website</h4>
    <div class="give-price"><s>$495</s> FREE</div>
-   <p>A brand-new Tier 1 site built from scratch — plus a free .space domain and a year of hosting, on us. You bring the business, we put you on the internet.</p>
+   <p>A brand-new Tier 1 site built from scratch, plus a free .space domain and a year of hosting, on us. You bring the business, we put you on the internet.</p>
    <p class="for">For the company with no presence at all.</p>
   </div>
   <div class="give-bay">
    <div class="stamp">For the website that's old</div>
    <h4 class="blk">A free AI search makeover</h4>
    <div class="give-price"><s>$500+</s> FREE</div>
-   <p>AI search + SEO optimization for your old website — the questions your customers ask AI, answered on your pages, plus blog posts and authoritative articles that make AI recommend you.</p>
+   <p>AI search + SEO optimization for your old website: the questions your customers ask AI, answered on your pages, plus blog posts and authoritative articles that make AI recommend you.</p>
    <p class="for">For the site that's been sitting there since 2012.</p>
   </div>
   <div class="give-bay">
    <div class="stamp">For the business ready for robots</div>
    <h4 class="blk">A free custom chatbot</h4>
    <div class="give-price"><s>$650</s> FREE</div>
-   <p>A custom-trained, personality-driven chatbot — trained on your company and the latest knowledge and expertise in your field. Jungle best and jungle tested.</p>
+   <p>A custom-trained, personality-driven chatbot, trained on your company and the latest knowledge and expertise in your field. Jungle best and jungle tested.</p>
    <p class="for">For the business with traffic and no time.</p>
   </div>
  </div>
@@ -111,7 +111,7 @@
  <h3 class="blk" style="font-size:clamp(1.8rem,7vw,3.2rem);margin:8px 0 12px">Three <span class="grad">steps</span></h3>
  <div class="give-steps">
   <div class="give-step"><div class="n blk">1</div><p><strong>Apply below.</strong> Tell us what you do and which giveaway fits your stage. Takes two minutes.</p></div>
-  <div class="give-step"><div class="n blk">2</div><p><strong>We pick the best fit.</strong> One winner per giveaway, every month — the business we can do the most for.</p></div>
+  <div class="give-step"><div class="n blk">2</div><p><strong>We pick the best fit.</strong> One winner per giveaway, every month: the business we can do the most for.</p></div>
   <div class="give-step"><div class="n blk">3</div><p><strong>We build it with you.</strong> Everybody else gets a follow-up offer. Nobody leaves empty-handed.</p></div>
  </div>
 </div></section>
@@ -127,9 +127,9 @@
   <label>Which giveaway?
    <select name="giveaway" required>
     <option value="">Choose one</option>
-    <option value="Free website (no presence)">Free website — no presence at all</option>
-    <option value="Free AI search makeover (old site)">Free AI search makeover — old website</option>
-    <option value="Free custom chatbot">Free custom chatbot — ready for robots</option>
+    <option value="Free website (no presence)">Free website (no presence at all)</option>
+    <option value="Free AI search makeover (old site)">Free AI search makeover (old website)</option>
+    <option value="Free custom chatbot">Free custom chatbot (ready for robots)</option>
    </select>
   </label>
   <label>What do you do? <textarea name="what" rows="3" required></textarea></label>
@@ -156,7 +156,7 @@
  form.addEventListener('submit',function(e){
   e.preventDefault();
   var v=function(n){return (form[n].value||'').trim();};
-  var subject='Giveaway entry — '+v('name')+' ('+v('business')+') — '+v('giveaway');
+  var subject='Giveaway entry: '+v('name')+' ('+v('business')+'): '+v('giveaway');
   var body='Name: '+v('name')+'\nEmail: '+v('email')+'\nBusiness: '+v('business')+'\nCurrent site: '+v('site')+'\nGiveaway: '+v('giveaway')+'\n\nWhat they do:\n'+v('what')+'\n\nWhy pick them:\n'+v('why');
   location.href='mailto:brobots.space@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
  });
