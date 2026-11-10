@@ -1,43 +1,17 @@
-Tank v1: cut from tank-arms-out.jpg (T-pose) + page fists 9/10. Local, $0.
+Tank v2: leather jacket reads, fall/getup stay attached, kick sole is his boot underside. Local, $0.
 src_scale=1.3707  skull_src=92 feet_src=974 fedora_src=11
 art skull_y=22 groundY=1231 skull_to_feet=1209 on-screen scale=1.17 (7 ft)
-Arms rotated from T-pose to boxing-guard orientation (upper shoulder-at-top, forearm wrist-at-top).
-Fists are the riveted panel-9 fist, mirrored for the right hand (panel 10 is a 3/4 view that sat badly in the guard), color-matched to the T-pose metal, larger than Gavin.
-Soles are a local metal/rust construction from boot colors (no new image gen).
-Height is measured to the top of the skull under the fedora, not the hat.
-parts_bytes=1666927
-folder_bytes=1774369 (1.69 MB)
-
-Honest pass after inspecting the 18-clip sheet and a 12s in-game capture:
-Looks good: face, fedora, rust, sleeveless jacket, pelvis, knees, boots, and the
-riveted fists (they read clearly on hooks and uppercuts). Parts stay attached
-on walk, punches, kicks, fall and getup. Skull-to-feet is 7 ft (scale 1.17);
-in-game height measured about 781 device px vs a 775 target. Folder under 2 MB.
-
-What still looks off:
-- Jacket sleeves are a bit boxy in the guard (T-pose sleeves rotated 90 deg).
-- The front-kick sole is a local metal/rust construction and is flatter than
-  the painted body.
-- A little chin/neck metal remains in the open collar (hidden when the head
-  is in place).
-- The left boot slightly overflows the 534-wide art box; it is visible in-game
-  because the fight card is wider.
-- The fall crumple stays together but the jacket/arm silhouette is messy.
-
-head: -> (299, 282)
-torso: -> (463, 550)
-pelvis: -> (433, 258)
-thigh_L: -> (169, 301)
-thigh_R: -> (168, 323)
-shin_L: -> (185, 315)
-shin_R: -> (182, 325)
-boot_L: -> (225, 170)
-boot_R: -> (208, 160)
-upperarm_L: -> (147, 298)
-upperarm_R: -> (147, 298)
-forearm_L: -> (120, 228)
-forearm_R: -> (125, 238)
-fist_L: -> (184, 168)
-fist_R: -> (184, 168)
-sole_L: -> (240, 403)
-sole_R: -> (240, 403)
+Pivots: pelvis/torso/arms use the shared Gavin skeleton (torso-pelvis 30 px apart) so
+shared fall/getup rotations do not tear the body. Head pivot is at Tank's neck so the
+skull top (under the fedora, not the hat) stays on the 7 ft line. Legs keep Tank's
+visual knees and ankles.
+Sleeves recut from the T-pose as leather tubes, shoulder-to-elbow and elbow-to-wrist cuff,
+smooth alpha (no black end-caps, pale JPEG fringe removed). Fists are riveted panel 9,
+mirrored for the right hand.
+Front-kick sole is a boot-footprint (toe plate, chevron tread, heel bars, rivets) painted
+in his boot metal, no drop shadow, so it reads as a foot rather than a dark slab.
+Leftover pixel islands on the pelvis/thighs/torso (the floating fall scraps) were removed.
+Height check: both fighters planted on the same ground; art skull tops are both near y=22
+and skin.scale 1.17 makes Tank's skull-to-ground ~1.17x Gavin's (measured 1.17x).
+parts_bytes=1585831
+folder_bytes=1764453 (1.68 MB)
