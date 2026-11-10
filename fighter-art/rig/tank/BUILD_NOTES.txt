@@ -13,5 +13,7 @@ in his boot metal, no drop shadow, so it reads as a foot rather than a dark slab
 Leftover pixel islands on the pelvis/thighs/torso (the floating fall scraps) were removed.
 Height check: both fighters planted on the same ground; art skull tops are both near y=22
 and skin.scale 1.17 makes Tank's skull-to-ground ~1.17x Gavin's (measured 1.17x).
-parts_bytes=1585831
-folder_bytes=1764453 (1.68 MB)
+parts_bytes=1560103
+folder_bytes=1738949 (1.66 MB)
+
+Opacity: interiors flooded from the outside and set to alpha 255, 1-2px AA edge kept. Fixes see-through from white-bg / luminance-keyed mattes (pale gi, light rust metal).

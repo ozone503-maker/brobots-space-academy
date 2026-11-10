@@ -22,3 +22,5 @@ shin_L: -> (155, 230)
 shin_R: -> (155, 230)
 boot_L: -> (175, 135)
 boot_R: -> (175, 135)
+
+Opacity: interiors flooded from the outside and set to alpha 255, 1-2px AA edge kept. Fixes see-through from white-bg / luminance-keyed mattes (pale gi, light rust metal).
