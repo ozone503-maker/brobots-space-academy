@@ -1,12 +1,12 @@
 // fight3d/input.js: touch/mouse/keyboard input, pad layout + hit-testing, swipe-to-move mapping,
 // input buffer handoff (readPlayer), sweep cooldown, pad + trail drawing.
-import { $, clamp, lerp } from './util.js?v=ipo1';
-import { T, flowT } from './moves.js?v=ipo1';
-import { ac } from './stage.js?v=ipo1';
-import { dbg } from './hud.js?v=ipo1';
-import { F, G, canAct } from './combat.js?v=ipo1';
-import { P, cock } from './anim.js?v=ipo1';
-import { last } from './main.js?v=ipo1';
+import { $, clamp, lerp } from './util.js?v=h3';
+import { T, flowT } from './moves.js?v=h3';
+import { ac } from './stage.js?v=h3';
+import { dbg } from './hud.js?v=h3';
+import { F, G, canAct } from './combat.js?v=h3';
+import { P, cock } from './anim.js?v=h3';
+import { last } from './main.js?v=h3';
 
 // ---------------- input ----------------
 // Four swipe pads (Jessie's layout): two upper PUNCH pads, two lower KICK pads.

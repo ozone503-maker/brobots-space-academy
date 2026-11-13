@@ -1,13 +1,13 @@
 // fight3d/combat.js: fighter state (F, G), state machine (stepFighter), startMove/dodge, hit resolution,
 // stun, knockdowns (trip sweeps don't count), KO.
 import * as THREE from 'three';
-import { $, clamp, lerp, qs, rnd } from './util.js?v=ipo1';
-import { FLOW, LIGHT, MOVES, T } from './moves.js?v=ipo1';
-const CPU_NAME = ({ gavin: 'GAVIN DAWSON', ipo: 'IPO', tank: 'TANK' })[(qs.get('cpu') || 'gavin').toLowerCase()] || 'GAVIN DAWSON';
-import { FLOOR, sfx } from './stage.js?v=ipo1';
-import { dbg, showBanner } from './hud.js?v=ipo1';
-import { spark } from './anim.js?v=ipo1';
-import { endRound } from './main.js?v=ipo1';
+import { $, clamp, lerp, qs, rnd } from './util.js?v=h3';
+import { FLOW, LIGHT, MOVES, T } from './moves.js?v=h3';
+const CPU_NAME = ({ gavin: 'GAVIN DAWSON', ipo: 'IPO', tank: 'TANK', ozone: 'OZONE', ryan: 'RYAN', jeff: 'JEFF' })[(qs.get('cpu') || 'gavin').toLowerCase()] || 'GAVIN DAWSON';
+import { FLOOR, sfx } from './stage.js?v=h3';
+import { dbg, showBanner } from './hud.js?v=h3';
+import { spark } from './anim.js?v=h3';
+import { endRound } from './main.js?v=h3';
 
 // ---------------- fighters + combat ----------------
 function mkFighter(name, isPlayer) {

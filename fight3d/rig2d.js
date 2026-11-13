@@ -2,13 +2,14 @@
 // Real size (6 ft human). Smooth crossfades, secondary follow-through, walk cycle, hooks/uppercuts, crumple fall.
 // ?rig=0 keeps the old 3D mesh.
 import * as THREE from 'three';
-import { clamp, ease, qs } from './util.js?v=ipo1';
-import { FLOOR, scene } from './stage.js?v=ipo1';
-import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=ipo1';
+import { clamp, ease, qs } from './util.js?v=h3';
+import { FLOOR, scene } from './stage.js?v=h3';
+import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=h3';
 
 const ON = qs.get('rig') !== '0';
-const CPU = (qs.get('cpu') || 'gavin').toLowerCase(); // gavin (default) | ipo | tank
-const FIGHTER = (CPU === 'ipo' || CPU === 'tank') ? CPU : 'gavin';
+const CPU = (qs.get('cpu') || 'gavin').toLowerCase(); // gavin (default) | ipo | tank | ozone | ryan | jeff
+const FIGHTERS = new Set(['gavin', 'ipo', 'tank', 'ozone', 'ryan', 'jeff']);
+const FIGHTER = FIGHTERS.has(CPU) ? CPU : 'gavin';
 const HUMAN_M = 1.83; // skeleton bone height; skin.scale may shrink a fighter
 const SKULL_TO_FEET_PX = 1209;
 const AX0 = -330, AX1 = 864, AY0 = -150, AY1 = 1265, K = 0.62;

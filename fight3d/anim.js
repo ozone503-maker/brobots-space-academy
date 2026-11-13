@@ -1,14 +1,14 @@
 // fight3d/anim.js: poses + pose mixing, fist keyframes (HP/FK), leg poses, hit sparks, camera,
 // walk cycle, hinged fall, and the per-frame visual update (updateVisuals). Touch-down fist cock state.
 import * as THREE from 'three';
-import { D2R, clamp, ease, lerp, qs, rnd } from './util.js?v=ipo1';
-import { FLOW, T } from './moves.js?v=ipo1';
-import { FLOOR, camera, flames, ocean, palms, particles, ringSpot, scene, softTex, sun, torchLight, uTime, updateVolcano } from './stage.js?v=ipo1';
-import { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg } from './fighters.js?v=ipo1';
-import { F, G, dirTo } from './combat.js?v=ipo1';
-import { last } from './main.js?v=ipo1';
-import { RIG_ON, rigCard, updateRig } from './rig2d.js?v=ipo1';
-import { BG_ON, updateBackdrop } from './backdrop.js?v=ipo1';
+import { D2R, clamp, ease, lerp, qs, rnd } from './util.js?v=h3';
+import { FLOW, T } from './moves.js?v=h3';
+import { FLOOR, camera, flames, ocean, palms, particles, ringSpot, scene, softTex, sun, torchLight, uTime, updateVolcano } from './stage.js?v=h3';
+import { JOINTS, LEGP, LK, OJ, _fd, _fz, _v, fists, ghost, ghostArms, ghostLegs, legMat, placeForearm, placeSeg } from './fighters.js?v=h3';
+import { F, G, dirTo } from './combat.js?v=h3';
+import { last } from './main.js?v=h3';
+import { RIG_ON, rigCard, updateRig } from './rig2d.js?v=h3';
+import { BG_ON, updateBackdrop } from './backdrop.js?v=h3';
 
 function pose(o, base) { const p = { y: 0, rx: 0 }; if (base) Object.assign(p, JSON.parse(JSON.stringify(base))); for (const j of JOINTS) if (!p[j]) p[j] = [0, 0, 0]; for (const k in o) p[k] = Array.isArray(o[k]) ? o[k].slice() : o[k]; return p; }
 const P = {};

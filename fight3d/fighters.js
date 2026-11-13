@@ -1,8 +1,8 @@
 // fight3d/fighters.js: mesh builders. Toon ramp + inverted-hull ink outline, Gavin's articulated body (OJ),
 // player ghost body, kick legs (skin shin/foot), first-person fists and forearms.
 import * as THREE from 'three';
-import { rnd } from './util.js?v=ipo1';
-import { camera, palm, scene, uTime } from './stage.js?v=ipo1';
+import { rnd } from './util.js?v=h3';
+import { camera, palm, scene, uTime } from './stage.js?v=h3';
 
 // ---------------- opponent: articulated humanoid (photoreal-comic: toon ramp + inverted-hull ink outlines) ----------------
 const toonRamp = (() => { const d = new Uint8Array([70, 140, 205, 255]); const t = new THREE.DataTexture(d, 4, 1, THREE.RedFormat); t.minFilter = t.magFilter = THREE.NearestFilter; t.needsUpdate = true; return t; })();
