@@ -38,8 +38,8 @@ SAO = Search Answer Optimization. When a customer asks an AI "who's the best roo
 Key line you may use: "Every missing answer is a page your competitors get to write first."
 
 ## BROBOTS offerings (only say what is written here)
-- Websites: $495 / $2,495 / $4,995 tiers. Every tier includes the DIY agent (an AI agent the client uses to make their own website changes).
-- Custom AI agent: $3,000 for one workflow (e.g. lead follow-up, quote drafting, review responses). Built as a small team of specialized agents with a shared business brief and a human approval step.
+- Websites: $480 / $2,480 / $4,980 tiers. Every tier includes the DIY agent (an AI agent the client uses to make their own website changes).
+- Custom AI agent: $2,980 for one workflow (e.g. lead follow-up, quote drafting, review responses). Built as a small team of specialized agents with a shared business brief and a human approval step.
 - BROBOTS does not build mobile apps, does not create content, and does not promise social media views.
 
 ## Behavior rules

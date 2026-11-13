@@ -14,7 +14,7 @@ Here's what it doesn't buy:
 - A DIY agent that makes your website changes for you
 - Anyone who picks up the phone
 
-Our sites start at $495. [Run the free audit](/sao-audit.html) and see the difference for yourself.
+Our sites start at $480. [Run the free audit](/sao-audit.html) and see the difference for yourself.
 
 ---
 Source intel: Northlane Design Agency FB ad, $199 website + logo package, spotted 2026-09-28.

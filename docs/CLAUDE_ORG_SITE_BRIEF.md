@@ -84,7 +84,7 @@ Nav: persistent industrial header + footer on every page. 鈥淕o to Outlet Mall鈥
 ### Offer stack (sell what we already do)
 
 1. **Custom Brobots (locked EXP01)**  
-   - Wingman **$497** 路 Sidekick **$1,497** 路 Legend **$4,997**  
+   - Wingman **$480** 路 Sidekick **$1,480** 路 Legend **$4,980**  
    - **50% deposit** to start  
    - CTA: `hello@brobots.space`  
    - Don鈥檛 invent new tiers without Jessie.

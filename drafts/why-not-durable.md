@@ -12,7 +12,7 @@ Here's what it doesn't buy:
 - A DIY agent that makes your website changes for you
 - Anyone who picks up the phone
 
-Our sites start at $495. [Run the free audit](/sao-audit.html) and see the difference for yourself.
+Our sites start at $480. [Run the free audit](/sao-audit.html) and see the difference for yourself.
 
 ---
 Source intel: Durable ("builds a full website with AI in minutes"), spotted in Yik Chan's tool list 2026-09-28.

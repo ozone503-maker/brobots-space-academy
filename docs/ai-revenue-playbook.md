@@ -6,17 +6,17 @@ Source: Austin Armstrong's "25 ways" list, via Jessie 2026-09-28. Filtered throu
 → Content services are OUT. Everything else is fair game.
 
 ## Business-model mapping
-- Direct retail tiers: $495 / $2,495 / $4,995 (DIY agent in every tier)
-- À la carte (draft): chatbot $650, SAO pack $500, custom AI agent (one workflow) $3,000, DIY $99/mo
+- Direct retail tiers: $480 / $2,480 / $4,980 (DIY agent in every tier)
+- À la carte (draft): chatbot $640, SAO pack $480, custom AI agent (one workflow) $2,980, DIY $80/mo
 - White-label dual model: agency partners resell under their own brand; BROBOTS supplies
 
 ---
 
 ## RESELL (white-label — direct fit for partner model)
-1. **Resell AI SEO** — white-label SEO/AEO under your brand, fulfillment by a provider team. → Maps to: SAO pack ($500) is our version, done in-house instead of resold. Partner angle: agencies white-label OUR audit.
+1. **Resell AI SEO** — white-label SEO/AEO under your brand, fulfillment by a provider team. → Maps to: SAO pack ($480) is our version, done in-house instead of resold. Partner angle: agencies white-label OUR audit.
 2. **Branded CRM** — package a CRM with AI follow-up for one niche. → Maps to: white-label playbook we already run. Niche down (one vertical at a time).
-4. **Resell AI chatbots** — white-label chatbots for lead qualification + support. → Maps to: our $650 chatbot, Tier 2+.
-5. **Resell AI receptionists** — AI employees under your brand: answer inquiries, book appointments. → Maps to: custom agent product ($3,000/workflow).
+4. **Resell AI chatbots** — white-label chatbots for lead qualification + support. → Maps to: our $640 chatbot, Tier 2+.
+5. **Resell AI receptionists** — AI employees under your brand: answer inquiries, book appointments. → Maps to: custom agent product ($2,980/workflow).
 
 ## INSTALL & MAINTAIN (services — fits Tier 3 / custom agent)
 6. **AI phone receptionist install** — charge setup + testing + maintenance. → Same as 5, productized as install.
@@ -34,17 +34,17 @@ Source: Austin Armstrong's "25 ways" list, via Jessie 2026-09-28. Filtered throu
 
 ## AI DIGITAL PRODUCTS (fits: build once, sell many)
 16. **Niche workflow templates** with setup instructions → We can sell per-niche SAO packs / audit templates to partners.
-17. **Industry-specific prompt packs** with tested examples → Per-niche prompt packs for the DIY agent. Natural upsell to DIY $99/mo.
+17. **Industry-specific prompt packs** with tested examples → Per-niche prompt packs for the DIY agent. Natural upsell to DIY $80/mo.
 18. **Calculators & interactive tools** for a narrow audience → Lead magnets like the audit. (We already do this.)
 19. **Course + AI study assistant** → Academy curriculum itself. This file is step one.
 20. **AI-assisted workbooks, checklists, implementation kits** → Partner enablement kits for the white-label program.
 
 ## AI CONSULTING & TRAINING (fits: high-margin, human time)
-21. **AI workflow audit** — find repetitive work, prioritize what to automate. → Perfect front-end for the $3,000 custom agent. Audit → build.
+21. **AI workflow audit** — find repetitive work, prioritize what to automate. → Perfect front-end for the $2,980 custom agent. Audit → build.
 22. **Role-specific workshops** (sales/marketing/ops) → Academy live tier, later.
 23. **AI tool selection** — help businesses choose tools, kill overlapping subscriptions. → Consulting offer; also positions OUR stack.
 24. **Test existing AI agents** for errors, unsafe actions, missed handoffs → QA service. Nobody offers this; it's differentiated.
-25. **Monthly optimization retainers** — review results, fix workflows, train team. → Maps to DIY $99/mo + support tiers. Recurring revenue.
+25. **Monthly optimization retainers** — review results, fix workflows, train team. → Maps to DIY $80/mo + support tiers. Recurring revenue.
 
 ## Notes
 - The original post is affiliate-monetized (Ranked.ai, HighLevel, Syllaby links). Take the patterns, not the product picks — we build our own.

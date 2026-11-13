@@ -1,6 +1,6 @@
 # Brobots Space Factory
 
-> Brobots Space Factory (brobots.space) is a web studio in Mountain View, Hawaiʻi, founded by Jessie Sponberg. We build websites, SEO, and AI visibility (Search Answer Optimization) for small businesses, plus custom AI chatbots called BroBots. Custom websites start at $495; website tiers run $495 to $4,995. We also fix sites other people built (De-Slop Pass $350, Launch Audit $250, both $495), and build branded slot machines ($1,000 template, $2,000 custom), digital wallet integration ($1,500), crypto integration ($3,000), HTML cartoons ($500), and AI cartoons ($500 per minute). Not affiliated with the Brobots children's graphic novels, the BroBots podcast, or any student robotics team.
+> Brobots Space Factory (brobots.space) is a web studio in Mountain View, Hawaiʻi, founded by Jessie Sponberg. We build websites, SEO, and AI visibility (Search Answer Optimization) for small businesses, plus custom AI chatbots called BroBots. Custom websites start at $480; website tiers run $480 to $4,980. We also fix sites other people built (De-Slop Pass $340, Launch Audit $240, both $480), and build branded slot machines ($980 template, $1,980 custom), digital wallet integration ($980), crypto systems implementation with security checks ($2,440), HTML cartoons ($480), and AI cartoons ($480 per minute). Not affiliated with the Brobots children's graphic novels, the BroBots podcast, or any student robotics team.
 
 ## Main pages
 
