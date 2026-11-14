@@ -87,14 +87,16 @@ export function solve(rig, ch) {
       continue;
     }
     let dx = tg[0] - Hw[0], dy = tg[1] - Hw[1], d = Math.hypot(dx, dy);
-    d = Math.min(Math.max(d, Math.abs(L1 - L2) + 1e-3), L1 + L2 - 1e-3);
-    const base = Math.atan2(dy, dx), a = Math.acos((L1 * L1 + d * d - L2 * L2) / (2 * L1 * d));
-    const ka = base + ik._side * a, K = [Hw[0] + L1 * Math.cos(ka), Hw[1] + L1 * Math.sin(ka)];
+    // skin.legStraight (0..1, optional): small crouches shorten the leg (down to this scale) instead of bowing the knees out
+    const ls = SKIN.legStraight, c = ls ? Math.min(1, Math.max(ls, d / (L1 + L2))) : 1, l1 = L1 * c, l2 = L2 * c;
+    d = Math.min(Math.max(d, Math.abs(l1 - l2) + 1e-3), l1 + l2 - 1e-3);
+    const base = Math.atan2(dy, dx), a = Math.acos((l1 * l1 + d * d - l2 * l2) / (2 * l1 * d));
+    const ka = base + ik._side * a, K = [Hw[0] + l1 * Math.cos(ka), Hw[1] + l1 * Math.sin(ka)];
     const r1 = ka - Math.atan2(knee[1] - hip[1], knee[0] - hip[0]);
     const Fw = [Hw[0] + Math.cos(base) * d, Hw[1] + Math.sin(base) * d];
     const r2 = Math.atan2(Fw[1] - K[1], Fw[0] - K[0]) - Math.atan2(tgt[1] - knee[1], tgt[0] - knee[0]);
-    W[ub] = mul(mul(T(Hw[0], Hw[1]), R(r1)), S(cu.sx, cu.sy));
-    W[lb] = mul(mul(T(K[0], K[1]), R(r2)), S(cl.sx, cl.sy));
+    W[ub] = mul(mul(T(Hw[0], Hw[1]), R(r1)), S(cu.sx, cu.sy * c));
+    W[lb] = mul(mul(T(K[0], K[1]), R(r2)), S(cl.sx, cl.sy * c));
     if (ik.end) { const ce = ch[ik.end]; W[ik.end] = mul(mul(T(Fw[0] + ce.x, Fw[1] + ce.y), R(ce.rot * D2R + ce.follow * r2)), S(ce.sx, ce.sy)); }
   }
   return W;

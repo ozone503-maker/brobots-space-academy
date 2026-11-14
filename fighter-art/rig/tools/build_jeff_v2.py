@@ -175,7 +175,7 @@ for sd in 'LR':
     hipA = np.array(base(J[f'hip_{sd}'])); hip = np.array(J[f'hip_{sd}'], float)
     ank_rel = (np.array(J[f'an_{sd}'], float) - hip) * S
     a0 = math.atan2(ank_rel[0], ank_rel[1]); a1 = math.atan2(STANCE[sd] - hipA[0], ank_rel[1])
-    th = a1 - a0  # rotate about hip
+    th = (a1 - a0) if os.environ.get('LEG_TURN') else 0.0  # v3: no outward leg turn (natural stance)
     LEGROT[sd] = th
     Rm = np.array([[math.cos(th), math.sin(th)], [-math.sin(th), math.cos(th)]])
     knA = hipA + Rm @ ((np.array(J[f'kn_{sd}'], float) - hip) * S)
@@ -380,6 +380,7 @@ skin = {
     'about': 'Jeff v2: tan shirt, khaki pants, black dress shoes, red fez. Every body part cut from one '
              'full-body source with silhouette masks and ball joints. 6 ft at the skull (fez does not count).',
     'artSize': [ART_W, ART_H], 'scale': 1.0, 'groundY': GROUND_Y,
+    'legStraight': float(os.environ.get('LEG_STRAIGHT', '0.85')),
     'pivots': PIV_I,
     'ikTargets': {'foot_L': PIV_I['boot_L'], 'foot_R': PIV_I['boot_R']},
     'parts': skin_parts,
