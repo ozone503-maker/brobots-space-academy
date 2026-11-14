@@ -7,9 +7,11 @@ import { FLOOR, scene } from './stage.js?v=h3';
 import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=h5';
 
 const ON = qs.get('rig') !== '0';
-const CPU = (qs.get('cpu') || 'gavin').toLowerCase(); // gavin (default) | ipo | tank | ozone | ryan | jeff
-const FIGHTERS = new Set(['gavin', 'ipo', 'tank', 'ozone', 'ryan', 'jeff']);
+const CPU = (qs.get('cpu') || 'gavin').toLowerCase(); // gavin (default) | ipo | tank | ozone | ryan | jeff (drawn frames) | jeffrig (old cut-out Jeff)
+const FIGHTERS = new Set(['gavin', 'ipo', 'tank', 'ozone', 'ryan', 'jeff', 'jeffrig']);
 const FIGHTER = FIGHTERS.has(CPU) ? CPU : 'gavin';
+const SKIN_DIR = ({ jeff: 'jeff_frames', jeffrig: 'jeff' })[FIGHTER] || FIGHTER;
+const FRAME_SKINS = new Set(['jeff_frames']); // skin.json mode "frames": one drawn photo per pose, no bones
 const HUMAN_M = 1.83; // skeleton bone height; skin.scale may shrink a fighter
 const SKULL_TO_FEET_PX = 1209;
 const AX0 = -330, AX1 = 864, AY0 = -150, AY1 = 1265, K = 0.62;
@@ -41,7 +43,35 @@ let lag = null; // secondary motion: lagged copy of channels
 let lastX = 0, lastZ = 0, walkPh = 0, moveSpd = 0;
 window.__walkBias = 0; // capture/script can force walk blend 0..1
 
-if (ON) loadRig('fighter-art/rig/', FIGHTER).then(r => {
+// frames mode: clips map to [frame, start sec, {flip, rot, dx, dy}]; missing clips fall back below
+async function loadFrames(base, dir) {
+  const j = u => fetch(base + u).then(r => r.json());
+  const [A, SKIN] = await Promise.all([j('animations.json'), j(dir + '/skin.json')]);
+  const ANIMS = {}, IMGS = {};
+  for (const [n, a] of Object.entries(A)) if (a && a.duration) ANIMS[n] = { duration: a.duration, loop: a.loop };
+  await Promise.all(Object.entries(SKIN.frames).map(([n, f]) => new Promise((res, rej) => { const i = new Image(); i.onload = () => { IMGS[n] = i; res(); }; i.onerror = rej; i.src = base + dir + '/' + f.src; })));
+  return { ANIMS, SKIN, IMGS, FR: true };
+}
+const FR_FALLBACK = [[/^(hook|upper)_/, 'jab_'], [/^kick_round_/, 'kick_front_'], [/^dodge_.*/, 'walk'], [/^getup$/, 'idle']];
+function pickFrame(anim, t) {
+  const C = rig.SKIN.clips; let n = anim, tt = t;
+  if (!C[n]) for (const [re, to] of FR_FALLBACK) { const m = n.replace(re, to); if (m !== n && C[m]) { tt = t * (rig.ANIMS[m]?.duration || 1) / (rig.ANIMS[n]?.duration || 1); n = m; break; } }
+  if (!C[n]) n = 'idle';
+  let e = C[n][0]; for (const k of C[n]) if (k[1] <= tt + 1e-6) e = k;
+  return e;
+}
+function drawFrame(e, breathe) {
+  const fn = e[0], o = e[2] || {}, f = rig.SKIN.frames[fn], im = rig.IMGS[fn], s = 1 / (rig.SKIN.store || 1);
+  cx.save(); cx.setTransform(K, 0, 0, K, -AX0 * K, -AY0 * K); // art space, same as the cut-out rig
+  cx.translate(artCX + (o.dx || 0), groundY + (o.dy || 0));
+  if (o.rot) cx.rotate(o.rot * Math.PI / 180);
+  if (o.flip) cx.scale(-1, 1);
+  if (breathe) cx.scale(1, 1 + 0.007 * breathe);
+  cx.drawImage(im, -f.ax * s, -f.ay * s, f.w * s, f.h * s);
+  cx.restore();
+}
+
+if (ON) (FRAME_SKINS.has(SKIN_DIR) ? loadFrames : loadRig)('fighter-art/rig/', SKIN_DIR).then(r => {
   rig = r; groundY = r.SKIN.groundY; artCX = r.SKIN.artSize[0] / 2;
   const sk = (r.SKIN.scale || 1);
   plane.scale.setScalar(sk);
@@ -114,6 +144,10 @@ function update(f, cam, x, z, clock, dt) {
   }
   st8.anim = anim; st8.t = t;
   st8.fade = Math.max(0, st8.fade - dt / FADE);
+  if (rig.FR) { // drawn frames: hard cuts like a classic sprite fighter
+    cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
+    drawFrame(pickFrame(key === 'walk' && walkW < 0.5 ? 'idle' : anim, t), anim === 'idle' ? Math.sin(t / 1.8 * Math.PI * 2) : 0);
+  } else {
   let ch = channels(rig, anim, t);
   if (st8.prev && st8.fade > 0) {
     const w = ease(st8.fade);
@@ -125,6 +159,7 @@ function update(f, cam, x, z, clock, dt) {
   ch = followThrough(ch, dt);
   cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
   draw(rig, cx, ch, mul(S(K, K), T(-AX0, -AY0)), { flashMul: 0.55 });
+  }
   tex.needsUpdate = true;
   const hop = f.hop > 0 ? Math.sin(f.hop / 18 * Math.PI) * 0.28 : 0;
   card.position.set(x, FLOOR + hop, z);

@@ -1,0 +1,272 @@
+{
+ "fighter": "jeff",
+ "mode": "frames",
+ "about": "Jeff drawn pose frames test: 8 full-body photos (one per pose) instead of bent parts. Stored at 0.62 of art px; anchor = ground under the fez. Clips map to [frame, start sec, opts]; opts: flip, rot (deg about the feet), dx, dy (art px). Missing clips fall back in rig2d.js (hook/upper -> jab, round kick -> front kick).",
+ "artSize": [
+  534,
+  1265
+ ],
+ "groundY": 1231,
+ "scale": 1.0,
+ "store": 0.62,
+ "frames": {
+  "stance": {
+   "src": "stance.webp",
+   "w": 289,
+   "h": 765,
+   "ax": 140.4,
+   "ay": 762.1
+  },
+  "walk": {
+   "src": "walk.webp",
+   "w": 277,
+   "h": 761,
+   "ax": 128.6,
+   "ay": 757.5
+  },
+  "jab": {
+   "src": "jab.webp",
+   "w": 260,
+   "h": 781,
+   "ax": 127.0,
+   "ay": 777.5
+  },
+  "chamber": {
+   "src": "chamber.webp",
+   "w": 302,
+   "h": 796,
+   "ax": 147.4,
+   "ay": 793.0
+  },
+  "kick": {
+   "src": "kick.webp",
+   "w": 326,
+   "h": 781,
+   "ax": 175.1,
+   "ay": 777.8
+  },
+  "block": {
+   "src": "block.webp",
+   "w": 285,
+   "h": 735,
+   "ax": 146.9,
+   "ay": 732.2
+  },
+  "hit": {
+   "src": "hit.webp",
+   "w": 459,
+   "h": 767,
+   "ax": 145.8,
+   "ay": 763.4
+  },
+  "down": {
+   "src": "down.webp",
+   "w": 718,
+   "h": 169,
+   "ax": 358.9,
+   "ay": 166.3
+  }
+ },
+ "clips": {
+  "idle": [
+   [
+    "stance",
+    0
+   ]
+  ],
+  "walk": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "walk",
+    0.22
+   ],
+   [
+    "stance",
+    0.45
+   ],
+   [
+    "walk",
+    0.67,
+    {
+     "flip": true
+    }
+   ]
+  ],
+  "jab_L": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "jab",
+    0.07
+   ],
+   [
+    "stance",
+    0.42
+   ]
+  ],
+  "jab_R": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "jab",
+    0.07,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.42
+   ]
+  ],
+  "block": [
+   [
+    "block",
+    0
+   ]
+  ],
+  "dodge_L": [
+   [
+    "walk",
+    0,
+    {
+     "dx": -70,
+     "rot": -6
+    }
+   ],
+   [
+    "stance",
+    0.75
+   ]
+  ],
+  "dodge_R": [
+   [
+    "walk",
+    0,
+    {
+     "dx": 70,
+     "rot": 6,
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.75
+   ]
+  ],
+  "hit": [
+   [
+    "hit",
+    0
+   ]
+  ],
+  "kick_front_L": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "chamber",
+    0.06,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "kick",
+    0.2,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "chamber",
+    0.5,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.68
+   ]
+  ],
+  "kick_front_R": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "chamber",
+    0.06
+   ],
+   [
+    "kick",
+    0.2
+   ],
+   [
+    "chamber",
+    0.5
+   ],
+   [
+    "stance",
+    0.68
+   ]
+  ],
+  "fall": [
+   [
+    "hit",
+    0
+   ],
+   [
+    "hit",
+    0.18,
+    {
+     "rot": -16,
+     "dx": 70
+    }
+   ],
+   [
+    "hit",
+    0.3,
+    {
+     "rot": -40,
+     "dx": 300
+    }
+   ],
+   [
+    "down",
+    0.42
+   ]
+  ],
+  "getup": [
+   [
+    "down",
+    0
+   ],
+   [
+    "hit",
+    0.4,
+    {
+     "rot": -35,
+     "dx": 260
+    }
+   ],
+   [
+    "block",
+    0.62
+   ],
+   [
+    "stance",
+    0.84
+   ]
+  ]
+ }
+}

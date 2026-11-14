@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { $, clamp, lerp, qs, rnd } from './util.js?v=h3';
 import { FLOW, LIGHT, MOVES, T } from './moves.js?v=h3';
-const CPU_NAME = ({ gavin: 'GAVIN DAWSON', ipo: 'IPO', tank: 'TANK', ozone: 'OZONE', ryan: 'RYAN', jeff: 'JEFF' })[(qs.get('cpu') || 'gavin').toLowerCase()] || 'GAVIN DAWSON';
+const CPU_NAME = ({ gavin: 'GAVIN DAWSON', ipo: 'IPO', tank: 'TANK', ozone: 'OZONE', ryan: 'RYAN', jeff: 'JEFF', jeffrig: 'JEFF' })[(qs.get('cpu') || 'gavin').toLowerCase()] || 'GAVIN DAWSON';
 import { FLOOR, sfx } from './stage.js?v=h3';
 import { dbg, showBanner } from './hud.js?v=h3';
 import { spark } from './anim.js?v=h3';
