@@ -1,4 +1,4 @@
-# DRAFT — Custom AI Agent product spec (Tier 3 / à la carte $3,000)
+# DRAFT — Custom AI Agent product spec (Tier 3 / à la carte $2,980)
 
 ## What it is
 One workflow, handled by a small team of AI agents that never clock out.
@@ -21,7 +21,7 @@ Example workflows: lead follow-up, quote drafting, review responses, inbox triag
 - We don't build apps and we don't promise social media views. This is a workflow platform, not magic.
 
 ## Price
-$3,000 one workflow. Included in Tier 3 ($4,995).
+$2,980 one workflow. Included in Tier 3 ($4,980).
 
 ---
 Source pattern: "7-person AI team" multi-agent workflow (shared brief → specialized agents → handoffs → ops review), adapted to BROBOTS scope.

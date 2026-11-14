@@ -99,7 +99,7 @@ Source: Yik Chan's categorized tool lists, via Jessie 2026-09-28. Transcribed ve
 ---
 
 ## Strategic notes
-- **Durable** ("builds a full website with AI in minutes") is a direct competitor to the $495 tier. Our answer is the same as the $199 block: done-for-you + human QA + SAO + DIY agent beats a raw AI dump. Consider a "why we're not Durable" note later.
+- **Durable** ("builds a full website with AI in minutes") is a direct competitor to the $480 tier. Our answer is the same as the $199 block: done-for-you + human QA + SAO + DIY agent beats a raw AI dump. Consider a "why we're not Durable" note later.
 - **Scribehow** is useful for US: screen-record any process → step-by-step academy lessons for free.
 - **Gamma** is useful for US: academy slide decks and partner kits from plain text.
 - **Perplexity** is a research tool for the audit pipeline (competitor lookups), not a product.

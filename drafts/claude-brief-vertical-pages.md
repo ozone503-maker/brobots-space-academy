@@ -1,7 +1,7 @@
 # Brief for Claude — 20 vertical SAO-audit landing pages
 
 ## Context
-BROBOTS (brobots.space) sells websites ($495 / $2,495 / $4,995) plus AI services. Our lead magnet is a **free SAO audit** (SAO = Search Answer Optimization): we crawl a business's website, run **38 checks** across 6 categories (Clarity, Authority, Relevance, Consistency, AI Readability, Question Coverage), ask the **30 questions** customers ask AI about that business type, and score whether the site answers them. The main audit page lives at brobots.space/sao-audit.html.
+BROBOTS (brobots.space) sells websites ($480 / $2,480 / $4,980) plus AI services. Our lead magnet is a **free SAO audit** (SAO = Search Answer Optimization): we crawl a business's website, run **38 checks** across 6 categories (Clarity, Authority, Relevance, Consistency, AI Readability, Question Coverage), ask the **30 questions** customers ask AI about that business type, and score whether the site answers them. The main audit page lives at brobots.space/sao-audit.html.
 
 ## Deliverable
 Copy for **20 niche-specific landing pages**, one per niche below. Each page sells the same free audit, tuned to that niche. Output as **one markdown file**, with one section per niche, in this exact order:
