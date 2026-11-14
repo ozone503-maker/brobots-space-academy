@@ -1,24 +1,22 @@
-jeff: kit parts on the shared rig, 6 ft at the skull. Local, $0.
-src_scale=0.8202 skull_src=80 feet_src=1554 neck_src=290
-art skull_y=22 groundY=1231 scale=1.0 (6 ft)
-Pivots: pelvis/torso/arms/legs use the shared Gavin skeleton so fall/getup stay attached.
-Head pivot is at the neck. Kit left = fighter left = screen-right bones.
-parts_bytes=981936
-folder_bytes=1075907 (1.03 MB) ok
-head: 134x290
-torso: 276x386
-pelvis: 294x271
-thigh_L: 234x439
-shin_L: 160x263
-boot_L: 260x107
-thigh_R: 214x442
-shin_R: 170x268
-boot_R: 260x100
-upperarm_L: 115x240
-forearm_L: 135x186
-fist_L: 115x139
-upperarm_R: 128x237
-forearm_R: 138x178
-fist_R: 102x130
+jeff v2: all body parts cut from jeff-full-body.png with silhouette masks + ball joints. Local, $0.
+S=0.8202 skull_src=80 feet_src=1554 CX=405.0
+fists: kit fists color-matched to the full-body hands, 1.15x true scale
+pivots: Jeff own joints (shoulders, waist, hips, knees, ankles); arms bound on the Gavin guard diagonal
+folder_bytes=827789 (0.79 MB)
+head: 142x251
+torso: 318x338
+pelvis: 286x245
+thigh_L: 156x335
+shin_L: 123x297
+boot_L: 154x91
+thigh_R: 168x337
+shin_R: 122x296
+boot_R: 93x96
+upperarm_L: 106x234
+forearm_L: 131x228
+upperarm_R: 121x238
+forearm_R: 156x223
+fist_L: 71x86
+fist_R: 63x80
 sole_L: 65x160
 sole_R: 65x160

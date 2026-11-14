@@ -1,7 +1,7 @@
 {
  "fighter": "jeff",
  "skeleton": "bvh-punchout-front-v1",
- "about": "Jeff from Jessie parts kit. Tan shirt, khaki pants, black dress shoes, red fez. 6 ft at the skull (fez does not count).",
+ "about": "Jeff v2: tan shirt, khaki pants, black dress shoes, red fez. Every body part cut from one full-body source with silhouette masks and ball joints. 6 ft at the skull (fez does not count).",
  "artSize": [
   534,
   1265
@@ -18,177 +18,177 @@
    640
   ],
   "torso": [
-   268,
-   610
+   267,
+   522
   ],
   "head": [
    267,
-   194
+   202
   ],
   "upperarm_L": [
-   118,
-   272
+   132,
+   278
   ],
   "forearm_L": [
-   62,
-   440
+   77,
+   441
   ],
   "fist_L": [
-   125,
-   326
+   136,
+   292
   ],
   "upperarm_R": [
-   416,
-   272
+   406,
+   278
   ],
   "forearm_R": [
-   486,
-   440
+   473,
+   437
   ],
   "fist_R": [
-   408,
-   326
+   402,
+   292
   ],
   "thigh_L": [
-   185,
+   192,
    715
   ],
   "shin_L": [
-   140,
-   925
+   168,
+   915
   ],
   "boot_L": [
-   130,
-   1095
+   142,
+   1160
   ],
   "thigh_R": [
-   352,
+   337,
    715
   ],
   "shin_R": [
-   395,
-   925
+   376,
+   914
   ],
   "boot_R": [
-   428,
-   1112
+   409,
+   1156
   ]
  },
  "ikTargets": {
   "foot_L": [
-   130,
-   1095
+   142,
+   1160
   ],
   "foot_R": [
-   428,
-   1112
+   409,
+   1156
   ]
  },
  "parts": {
   "head": {
    "image": "parts/head.png",
-   "x": -75,
-   "y": -193,
-   "w": 134,
-   "h": 290
+   "x": -76,
+   "y": -201,
+   "w": 142,
+   "h": 251
   },
   "torso": {
    "image": "parts/torso.png",
-   "x": -139,
-   "y": -449,
-   "w": 276,
-   "h": 386
+   "x": -154,
+   "y": -333,
+   "w": 318,
+   "h": 338
   },
   "pelvis": {
    "image": "parts/pelvis.png",
-   "x": -148,
-   "y": -151,
-   "w": 294,
-   "h": 271
+   "x": -147,
+   "y": -142,
+   "w": 286,
+   "h": 245
   },
   "thigh_L": {
    "image": "parts/thigh_L.png",
-   "x": -129,
-   "y": -70,
-   "w": 234,
-   "h": 439
+   "x": -78,
+   "y": -78,
+   "w": 156,
+   "h": 335
   },
   "shin_L": {
    "image": "parts/shin_L.png",
-   "x": -88,
-   "y": -37,
-   "w": 160,
-   "h": 263
+   "x": -70,
+   "y": -59,
+   "w": 123,
+   "h": 297
   },
   "boot_L": {
    "image": "parts/boot_L.png",
-   "x": -187,
-   "y": -9,
-   "w": 260,
-   "h": 107
+   "x": -106,
+   "y": -19,
+   "w": 154,
+   "h": 91
   },
   "thigh_R": {
    "image": "parts/thigh_R.png",
-   "x": -96,
-   "y": -71,
-   "w": 214,
-   "h": 442
+   "x": -77,
+   "y": -79,
+   "w": 168,
+   "h": 337
   },
   "shin_R": {
    "image": "parts/shin_R.png",
-   "x": -77,
-   "y": -38,
-   "w": 170,
-   "h": 268
+   "x": -55,
+   "y": -56,
+   "w": 122,
+   "h": 296
   },
   "boot_R": {
    "image": "parts/boot_R.png",
-   "x": -73,
-   "y": -8,
-   "w": 260,
-   "h": 100
+   "x": -34,
+   "y": -20,
+   "w": 93,
+   "h": 96
   },
   "upperarm_L": {
    "image": "parts/upperarm_L.png",
-   "x": -76,
-   "y": -14,
-   "w": 115,
-   "h": 240
+   "x": -97,
+   "y": -28,
+   "w": 106,
+   "h": 234
   },
   "forearm_L": {
    "image": "parts/forearm_L.png",
-   "x": -68,
-   "y": -175,
-   "w": 135,
-   "h": 186
-  },
-  "fist_L": {
-   "image": "parts/fist_L.png",
-   "x": -57,
-   "y": -114,
-   "w": 115,
-   "h": 139
+   "x": -42,
+   "y": -179,
+   "w": 131,
+   "h": 228
   },
   "upperarm_R": {
    "image": "parts/upperarm_R.png",
-   "x": -44,
-   "y": -14,
-   "w": 128,
-   "h": 237
+   "x": -7,
+   "y": -37,
+   "w": 121,
+   "h": 238
   },
   "forearm_R": {
    "image": "parts/forearm_R.png",
-   "x": -69,
-   "y": -164,
-   "w": 138,
-   "h": 178
+   "x": -109,
+   "y": -174,
+   "w": 156,
+   "h": 223
+  },
+  "fist_L": {
+   "image": "parts/fist_L.png",
+   "x": -36,
+   "y": -69,
+   "w": 71,
+   "h": 86
   },
   "fist_R": {
    "image": "parts/fist_R.png",
-   "x": -51,
-   "y": -107,
-   "w": 102,
-   "h": 130
+   "x": -31,
+   "y": -64,
+   "w": 63,
+   "h": 80
   },
   "sole_L": {
    "image": "parts/sole_L.png",
