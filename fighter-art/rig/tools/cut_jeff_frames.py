@@ -18,7 +18,7 @@ SRC, OUT = sys.argv[1], sys.argv[2]
 REF_H, REF_FEZ, ART_H, K = 1474.0, 91.7, 1209.0, 0.62
 CAL = 1.06  # fez area reads ~6% big on the 1592 px kit photo; calibrated so the straight standing leg in 'chamber' is 6 ft to the skull
 # per-frame overrides: fez size is unreliable when the head is tilted or lying down
-FEZ_OVERRIDE = {'hit': 72.0}           # head tilted back: area undercounts; match by face size
+FEZ_OVERRIDE = {'hit': 72.0, 'midfall': 92.0}  # tilted fez reads ~10% small           # head tilted back: area undercounts; match by face size
 DOWN_LEN_ART = 1150.0                   # lying: fez top to heel spans this many art px
 X_NUDGE = {}                            # art px nudges after eyeballing the sheet
 
@@ -29,12 +29,17 @@ def fez(a):
     i = 1 + int(np.argmax(st[1:, 4]))
     return st[i], cen[i]
 
-def cut(a):
+def cut(a, floor=False):
     border = np.concatenate([a[:8].reshape(-1, 3), a[-8:].reshape(-1, 3), a[:, :8].reshape(-1, 3), a[:, -8:].reshape(-1, 3)])
     bg = np.median(border, 0).astype(np.float32)
     af = a.astype(np.float32)
     diff = np.abs(af - bg).max(-1)
     alpha = np.clip((diff - 14) / 30.0, 0, 1)
+    if floor:  # frames on the floor: drop the grey contact shadow (light, unsaturated) in the lower part
+        hsv = cv2.cvtColor(a, cv2.COLOR_RGB2HSV)
+        sh = (hsv[..., 1] < 26) & (hsv[..., 2] > 135)
+        sh[:int(a.shape[0] * 0.55)] = False
+        alpha[sh] = 0
     # keep only the largest blob (+ anything big), drop specks and faint floor shadow
     m = (alpha > 0.5).astype(np.uint8)
     n, lab, st, _ = cv2.connectedComponentsWithStats(m, 8)
@@ -48,13 +53,20 @@ def cut(a):
     a3 = alpha[..., None]
     rgb = np.where(a3 > 0.02, (af - (1 - a3) * bg) / np.maximum(a3, 0.02), af)
     rgba = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
-    return harden(rgba, edge_px=1.5)
+    out = harden(rgba, edge_px=1.5)
+    # harden() fills every enclosed hole; reopen real background gaps (arm-to-body loops), keep pinholes filled
+    empty = (alpha < 0.04).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(empty, 4)
+    for i in range(1, n):
+        if st[i, 4] > 600:
+            out[lab == i, 3] = 0
+    return out
 
 meta = {}
-for name in ['stance', 'walk', 'jab', 'chamber', 'kick', 'block', 'hit', 'down']:
+for name in ['stance', 'walk', 'walk2', 'jab', 'hook', 'upper', 'chamber', 'kick', 'rchamber', 'rkick', 'block', 'dodge', 'hit', 'midfall', 'down', 'getup']:
     a = np.array(Image.open(os.path.join(SRC, name + '.jpg')).convert('RGB'))
     st, cen = fez(a)
-    rgba = cut(a)
+    rgba = cut(a, floor=name in ('midfall', 'getup', 'down'))
     al = rgba[..., 3]
     ys, xs = np.nonzero(al > 128)
     if name == 'down':
@@ -64,7 +76,7 @@ for name in ['stance', 'walk', 'jab', 'chamber', 'kick', 'block', 'hit', 'down']
     else:
         f = FEZ_OVERRIDE.get(name, float(np.sqrt(st[4])))
         s_art = CAL * ART_H / (REF_H * f / REF_FEZ)
-        anc_x = cen[0]
+        anc_x = (xs.max() + xs.min()) / 2 if name in ('midfall',) else cen[0]  # sprawled: center the body
     anc_y = ys.max()
     s = s_art * K  # stored px per src px
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
