@@ -241,6 +241,66 @@ footer a:hover{border-bottom-color:var(--paper)}
     </div>
   </section>
 
+  <section class="pricing" id="more-offers">
+    <style>
+    .more-grid{display:grid}
+    @media(min-width:700px){.more-grid{grid-template-columns:1fr 1fr}}
+    @media(min-width:1000px){.more-grid{grid-template-columns:1fr 1fr 1fr}}
+    .pricing .more-offer{display:block;text-decoration:none;color:inherit;border-bottom:4px solid var(--ink);border-right:0;box-shadow:none}
+    @media(min-width:700px){.pricing .more-offer{border-right:4px solid var(--ink)}}
+    @media(min-width:700px) and (max-width:999px){.pricing .more-offer:nth-child(2n){border-right:0}.pricing .more-offer:last-child{grid-column:1 / -1;border-right:0}}
+    @media(min-width:1000px){.pricing .more-offer:nth-child(3n){border-right:0}.pricing .more-offer:last-child{grid-column:1 / -1;border-right:0}}
+    .more-offer h3{font-size:1.2rem;margin:.3em 0 0}
+    .more-offer p{font-size:.95rem;max-width:40ch}
+    .more-offer:hover h3,.more-offer:focus-visible h3{text-decoration:underline}
+    .more-offer:focus-visible{outline:3px solid #4FE3AE;outline-offset:-6px}
+    </style>
+    <div class="pricing__head">
+      <h2 class="blk" style="font-size:clamp(1.6rem,4vw,2.6rem);margin:.2em 0">We build more<br>than websites</h2>
+      <p class="lede">Fix-ups, slot machines, wallets, cartoons and video, priced the same as on the Services page. Tap any one for the details.</p>
+    </div>
+    <div class="more-grid">
+      <a class="tier more-offer" href="services.html#fixups">
+        <h3 class="blk">Fix-ups</h3>
+        <div class="blk price">$240</div>
+        <p>Launch Audit $240, De-Slop Pass $340, or both for $480. For the site somebody else built.</p>
+      </a>
+      <a class="tier more-offer" href="services.html#slots">
+        <h3 class="blk">Slot machines</h3>
+        <div class="blk price">$980</div>
+        <p>A branded 5-reel arcade machine that runs in the browser. Template $980, custom build $1,980.</p>
+      </a>
+      <a class="tier more-offer" href="services.html#wallets">
+        <span class="tag">New</span> <h3 class="blk">Digital wallets</h3>
+        <div class="blk price">$980</div>
+        <p>Visitors connect a browser wallet on your site to see a balance, tip, or pay. Built to order.</p>
+      </a>
+      <a class="tier more-offer" href="services.html#wallets">
+        <span class="tag">New</span> <h3 class="blk">Crypto systems</h3>
+        <div class="blk price">$2,440</div>
+        <p>Your token wired into your site or game, with security check systems. Built to order.</p>
+      </a>
+      <a class="tier more-offer" href="services.html#cartoons">
+        <h3 class="blk">Cartoons</h3>
+        <div class="blk price">$480</div>
+        <p>An HTML cartoon made from your notes for $480, or AI cartoons at $480 per finished minute.</p>
+      </a>
+      <a class="tier more-offer" href="services.html#cartoons">
+        <h3 class="blk">You shoot, we chop</h3>
+        <div class="blk price">$240</div>
+        <p>One edit up to 60 seconds from your footage. Three edits with platform cutdowns for $580.</p>
+      </a>
+      <a class="tier more-offer" href="services.html#starter-pack-install">
+        <h3 class="blk">Starter Pack Install</h3>
+        <div class="blk price">$480</div>
+        <p>We set up all five starter agents and tune them to your business so they work on day one.</p>
+      </a>
+    </div>
+    <div style="padding:22px;border-top:4px solid var(--ink)">
+      <a class="btn btn-plain" href="services.html">See every service and price</a>
+    </div>
+  </section>
+
   <!-- ChatGPT: wire absolute Outlet Mall URL when live host is final -->
   <aside class="mall" id="outlet-mall">
     <p class="stamp" style="margin-bottom:8px">Also in the mall</p>
