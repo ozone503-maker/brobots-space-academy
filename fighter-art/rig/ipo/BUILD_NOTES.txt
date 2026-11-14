@@ -1,0 +1,26 @@
+Ipo v4 (arm fix after b92962a): T-pose sleeve/cuff/pink crops are rotated
+so shoulder is at the top, then stamped on a bind-pose diagonal (the
+shared skeleton keeps bone +Y down the screen; Gavin sleeves are also
+diagonal in the PNG). Upperarm: shoulder inward, elbow out. Forearm:
+pink fur + white cuff from elbow (out) to wrist (in), fist at the wrist.
+R arms are a flip of the clean L cuts. Fall/getup stay attached by
+overlap (animations.json unchanged). v3 body/legs restored; full ears.
+thigh belt tabs inpainted; light corner rounding (no ghost caps).
+parts_bytes=1222437
+head: -> (440, 348)
+torso: -> (270, 440)
+pelvis: -> (300, 210)
+upperarm_L: -> (107, 252)
+upperarm_R: -> (107, 252)
+forearm_L: -> (110, 168)
+forearm_R: -> (110, 168)
+fist_L: -> (110, 120)
+fist_R: -> (110, 120)
+thigh_L: -> (172, 345)
+thigh_R: -> (175, 343)
+shin_L: -> (155, 230)
+shin_R: -> (155, 230)
+boot_L: -> (175, 135)
+boot_R: -> (175, 135)
+
+Opacity: interiors flooded from the outside and set to alpha 255, 1-2px AA edge kept. Fixes see-through from white-bg / luminance-keyed mattes (pale gi, light rust metal).

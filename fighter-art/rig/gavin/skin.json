@@ -1,0 +1,214 @@
+{
+ "fighter": "gavin",
+ "skeleton": "bvh-punchout-front-v1",
+ "about": "Per-fighter skin. parts: image per bone, x/y = image top-left relative to the bone pivot (art px). pivots/ikTargets override the skeleton reference values for this art. scale = on-screen size multiplier vs the 662 px human reference (Tank would be about 1.17).",
+ "artSize": [
+  534,
+  1265
+ ],
+ "scale": 1.0,
+ "groundY": 1231,
+ "pivots": {
+  "root": [
+   268,
+   640
+  ],
+  "pelvis": [
+   268,
+   640
+  ],
+  "torso": [
+   268,
+   610
+  ],
+  "head": [
+   256,
+   252
+  ],
+  "upperarm_L": [
+   118,
+   272
+  ],
+  "forearm_L": [
+   62,
+   440
+  ],
+  "fist_L": [
+   125,
+   326
+  ],
+  "upperarm_R": [
+   416,
+   272
+  ],
+  "forearm_R": [
+   486,
+   440
+  ],
+  "fist_R": [
+   408,
+   326
+  ],
+  "thigh_L": [
+   185,
+   715
+  ],
+  "shin_L": [
+   140,
+   925
+  ],
+  "boot_L": [
+   130,
+   1095
+  ],
+  "thigh_R": [
+   352,
+   715
+  ],
+  "shin_R": [
+   395,
+   925
+  ],
+  "boot_R": [
+   428,
+   1112
+  ]
+ },
+ "ikTargets": {
+  "foot_L": [
+   130,
+   1095
+  ],
+  "foot_R": [
+   428,
+   1112
+  ]
+ },
+ "parts": {
+  "fist_L": {
+   "image": "parts/fist_L.png",
+   "x": -34,
+   "y": -122,
+   "w": 111,
+   "h": 137
+  },
+  "fist_R": {
+   "image": "parts/fist_R.png",
+   "x": -87,
+   "y": -122,
+   "w": 112,
+   "h": 137
+  },
+  "forearm_L": {
+   "image": "parts/forearm_L.png",
+   "x": -28,
+   "y": -146,
+   "w": 119,
+   "h": 179
+  },
+  "forearm_R": {
+   "image": "parts/forearm_R.png",
+   "x": -112,
+   "y": -146,
+   "w": 134,
+   "h": 179
+  },
+  "head": {
+   "image": "parts/head.png",
+   "x": -124,
+   "y": -252,
+   "w": 218,
+   "h": 259
+  },
+  "upperarm_L": {
+   "image": "parts/upperarm_L.png",
+   "x": -105,
+   "y": -66,
+   "w": 140,
+   "h": 273
+  },
+  "upperarm_R": {
+   "image": "parts/upperarm_R.png",
+   "x": -33,
+   "y": -65,
+   "w": 151,
+   "h": 296
+  },
+  "torso": {
+   "image": "parts/torso.png",
+   "x": -169,
+   "y": -404,
+   "w": 345,
+   "h": 483
+  },
+  "pelvis": {
+   "image": "parts/pelvis.png",
+   "x": -169,
+   "y": -81,
+   "w": 344,
+   "h": 201
+  },
+  "thigh_L": {
+   "image": "parts/thigh_L.png",
+   "x": -103,
+   "y": -87,
+   "w": 171,
+   "h": 345
+  },
+  "thigh_R": {
+   "image": "parts/thigh_R.png",
+   "x": -72,
+   "y": -87,
+   "w": 188,
+   "h": 347
+  },
+  "shin_L": {
+   "image": "parts/shin_L.png",
+   "x": -68,
+   "y": -68,
+   "w": 137,
+   "h": 202
+  },
+  "shin_R": {
+   "image": "parts/shin_R.png",
+   "x": -70,
+   "y": -72,
+   "w": 157,
+   "h": 234
+  },
+  "boot_L": {
+   "image": "parts/boot_L.png",
+   "x": -130,
+   "y": -70,
+   "w": 189,
+   "h": 190
+  },
+  "boot_R": {
+   "image": "parts/boot_R.png",
+   "x": -66,
+   "y": -63,
+   "w": 142,
+   "h": 216
+  },
+  "sole_L": {
+   "image": "parts/sole_L.png",
+   "bone": "boot_L",
+   "scale": 0.4166666666666667,
+   "x": -56.25,
+   "y": -179.0,
+   "shadow": true,
+   "w": 270,
+   "h": 420
+  },
+  "sole_R": {
+   "image": "parts/sole_R.png",
+   "bone": "boot_R",
+   "scale": 0.4166666666666667,
+   "x": -56.25,
+   "y": -179.0,
+   "shadow": true,
+   "w": 270,
+   "h": 420
+  }
+ }
+}

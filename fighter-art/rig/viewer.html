@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BROBOTS vs HUMANS vs ALIENS: rig viewer</title>
+<style>
+ html,body{margin:0;background:#0c0d12;color:#e8e8ee;font:14px/1.3 system-ui,sans-serif}
+ #wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px}
+ canvas{background:#111;max-width:100%;height:auto;border-radius:10px;box-shadow:0 0 30px #0008}
+ #bar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px}
+ button{background:#232634;color:#fff;border:1px solid #3a3f55;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer}
+ button.on{background:#c2382b;border-color:#ff6a55}
+ label{font-size:12px;opacity:.8}
+</style></head><body>
+<div id="wrap">
+ <canvas id="cv" width="540" height="960"></canvas>
+ <div id="bar"></div>
+ <div><label><input type="checkbox" id="bones"> show bones</label>
+  <label style="margin-left:10px"><input type="checkbox" id="slow"> slow motion</label>
+  <label style="margin-left:10px">fighter <select id="fighter"></select></label></div>
+</div>
+<!-- skeleton + animations + skins are embedded by tools/build_skin.py so the page also runs from file://.
+     When served over http it re-reads skeleton.json / animations.json / <fighter>/skin.json if present. -->
+<script id="embedded" type="application/json">{"skeleton":{"name":"bvh-punchout-front-v1","about":"Generic 2D cut-out skeleton for front-facing (Punch-Out style) fighters. L/R mean SCREEN left/right (L is the fighter's own right hand). Pivots here are reference values in a 534x1265 reference frame (Gavin); each skin.json may override pivots for its own art. Rotations in degrees, positive is clockwise on screen. Bone transform = parent * translate(pivot - parentPivot + anim.xy) * rotate(anim.rot) * scale(anim.sx, anim.sy). Bones with worldRotation ignore their parent's rotation (boots stay flat). Any bone track may carry z (1 to 9): a part with z > 0 is drawn in a raised-leg layer above every other leg part and below the pelvis, ordered by z (front kick uses thigh 3, shin 2, boot 1). This stays correct for mirrored anims. Boot tracks may carry follow (0 to 1): 0 keeps the boot level, 1 turns it with the shin (roundhouse). z of 10 or more draws the part in front of the whole fighter (front kick shin and boot at the peak). A foot track with fk 1 switches that leg from IK to plain FK (front kick: thigh and shin sy foreshorten, a negative shin sy points the shin up at the camera).","refSize":[534,1265],"groundY":1231,"bones":[{"name":"root","parent":null,"pivot":[268,640]},{"name":"pelvis","parent":"root","pivot":[268,640]},{"name":"torso","parent":"pelvis","pivot":[268,610]},{"name":"head","parent":"torso","pivot":[256,252]},{"name":"upperarm_L","parent":"torso","pivot":[118,272]},{"name":"forearm_L","parent":"upperarm_L","pivot":[62,440]},{"name":"fist_L","parent":"forearm_L","pivot":[125,326]},{"name":"upperarm_R","parent":"torso","pivot":[416,272]},{"name":"forearm_R","parent":"upperarm_R","pivot":[486,440]},{"name":"fist_R","parent":"forearm_R","pivot":[408,326]},{"name":"thigh_L","parent":"pelvis","pivot":[185,715]},{"name":"shin_L","parent":"thigh_L","pivot":[140,925]},{"name":"boot_L","parent":"shin_L","pivot":[130,1095],"worldRotation":true},{"name":"thigh_R","parent":"pelvis","pivot":[352,715]},{"name":"shin_R","parent":"thigh_R","pivot":[395,925]},{"name":"boot_R","parent":"shin_R","pivot":[428,1112],"worldRotation":true}],"ikTargets":{"foot_L":[130,1095],"foot_R":[428,1112]},"ik":[{"chain":["thigh_L","shin_L"],"target":"foot_L","end":"boot_L","note":"2-bone IK puts the ankle (boot pivot) on the target; thigh/shin sy tracks foreshorten the leg (lengths scale with them)"},{"chain":["thigh_R","shin_R"],"target":"foot_R","end":"boot_R"}],"drawOrder":["boot_L","boot_R","shin_L","shin_R","thigh_L","thigh_R","pelvis","torso","upperarm_L","upperarm_R","head","forearm_L","forearm_R","fist_L","fist_R"],"slots":{"head":"head incl. hat and beard, cut just under the beard","torso":"jacket and shirt, waist to collar, shoulders filled under the arms","pelvis":"belt to crotch, filled up under the jacket hem","upperarm_L":"shoulder to elbow sleeve","upperarm_R":"shoulder to elbow sleeve","forearm_L":"elbow to wrist sleeve (the forearm+fist limb is two layers so the fist can scale toward the camera on punches)","forearm_R":"elbow to wrist sleeve (the forearm+fist limb is two layers so the fist can scale toward the camera on punches)","thigh_L":"hip to knee","thigh_R":"hip to knee","shin_L":"knee to pant cuff","shin_R":"knee to pant cuff","fist_L":"fist incl. wraps/gloves and wrist, pivot at the wrist","fist_R":"fist incl. wraps/gloves and wrist, pivot at the wrist","boot_L":"boot, pivot at the ankle; worldRotation: stays level on the floor unless its own track rotates it","boot_R":"boot, pivot at the ankle; worldRotation: stays level on the floor unless its own track rotates it"}},"animations":{"about":"Shared keyframe animations for skeleton bvh-punchout-front-v1. Each key: t (s), rot (deg), x, y (reference px), sx, sy; missing values mean rest (0 or 1). Easing is smooth in-out between keys. root may also carry flash (0..1 white hit flash). IK target tracks (foot_L, foot_R) take x/y to slide a planted boot.","idle":{"duration":1.8,"loop":true,"tracks":{"root":[{"t":0},{"t":0.9,"y":9},{"t":1.8}],"pelvis":[{"t":0,"rot":-1.2,"x":-3},{"t":0.9,"rot":1.2,"x":3},{"t":1.8,"rot":-1.2,"x":-3}],"torso":[{"t":0,"sy":1.0,"rot":-1.0},{"t":0.45,"sy":1.014,"rot":0.4},{"t":0.9,"sy":1.0,"rot":1.0},{"t":1.35,"sy":1.012,"rot":-0.3},{"t":1.8,"sy":1.0,"rot":-1.0}],"head":[{"t":0,"rot":1.2,"y":0},{"t":0.6,"rot":-1.6,"y":2},{"t":1.2,"rot":0.8,"y":1},{"t":1.8,"rot":1.2,"y":0}],"upperarm_L":[{"t":0,"rot":-2},{"t":0.9,"rot":2.5},{"t":1.8,"rot":-2}],"upperarm_R":[{"t":0,"rot":2},{"t":0.9,"rot":-2.5},{"t":1.8,"rot":2}],"forearm_L":[{"t":0,"rot":1.5,"y":1},{"t":0.7,"rot":3.5,"y":3},{"t":1.4,"rot":0.5,"y":1},{"t":1.8,"rot":1.5,"y":1}],"forearm_R":[{"t":0,"rot":-1.5,"y":1},{"t":0.8,"rot":-3.5,"y":3},{"t":1.5,"rot":-0.5,"y":1},{"t":1.8,"rot":-1.5,"y":1}],"foot_L":[{"t":0,"x":4,"y":0},{"t":0.9,"x":-2,"y":2},{"t":1.8,"x":4,"y":0}],"foot_R":[{"t":0,"x":-4,"y":0},{"t":0.9,"x":2,"y":2},{"t":1.8,"x":-4,"y":0}]}},"jab_L":{"duration":0.62,"loop":true,"tracks":{"root":[{"t":0},{"t":0.07,"x":-4,"y":3},{"t":0.15,"x":12,"y":6},{"t":0.28,"x":12,"y":6},{"t":0.62}],"torso":[{"t":0},{"t":0.07,"rot":-2},{"t":0.15,"rot":5},{"t":0.28,"rot":5},{"t":0.62}],"head":[{"t":0},{"t":0.15,"rot":-4,"x":10,"y":5},{"t":0.28,"rot":-4,"x":10,"y":5},{"t":0.62}],"upperarm_L":[{"t":0},{"t":0.07,"rot":3},{"t":0.15,"rot":-12},{"t":0.28,"rot":-12},{"t":0.62}],"forearm_L":[{"t":0},{"t":0.07,"rot":-5},{"t":0.15,"rot":34,"sx":0.85,"sy":0.85},{"t":0.28,"rot":34,"sx":0.85,"sy":0.85},{"t":0.62}],"fist_L":[{"t":0},{"t":0.07,"sx":0.95,"sy":0.95},{"t":0.15,"rot":-26,"sx":2.0,"sy":2.0,"x":18,"y":4},{"t":0.28,"rot":-26,"sx":2.0,"sy":2.0,"x":18,"y":4},{"t":0.62}],"upperarm_R":[{"t":0},{"t":0.15,"rot":3},{"t":0.28,"rot":3},{"t":0.62}],"forearm_R":[{"t":0},{"t":0.15,"rot":-4},{"t":0.28,"rot":-4},{"t":0.62}],"fist_R":[{"t":0},{"t":0.15,"sx":0.95,"sy":0.95},{"t":0.28,"sx":0.95,"sy":0.95},{"t":0.62}]}},"jab_R":{"duration":0.62,"loop":true,"mirrorOf":"jab_L"},"block":{"duration":1.1,"loop":true,"tracks":{"root":[{"t":0},{"t":0.15,"y":10},{"t":0.85,"y":10},{"t":1.1}],"torso":[{"t":0},{"t":0.15,"sy":0.985},{"t":0.85,"sy":0.985},{"t":1.1}],"head":[{"t":0},{"t":0.15,"y":12},{"t":0.85,"y":12},{"t":1.1}],"upperarm_L":[{"t":0},{"t":0.15,"rot":-9},{"t":0.85,"rot":-9},{"t":1.1}],"upperarm_R":[{"t":0},{"t":0.15,"rot":9},{"t":0.85,"rot":9},{"t":1.1}],"forearm_L":[{"t":0},{"t":0.15,"rot":13,"sx":1.12,"sy":1.12},{"t":0.5,"rot":12,"sx":1.12,"sy":1.12,"y":2},{"t":0.85,"rot":13,"sx":1.12,"sy":1.12},{"t":1.1}],"forearm_R":[{"t":0},{"t":0.15,"rot":-13,"sx":1.12,"sy":1.12},{"t":0.5,"rot":-12,"sx":1.12,"sy":1.12,"y":2},{"t":0.85,"rot":-13,"sx":1.12,"sy":1.12},{"t":1.1}]}},"dodge_L":{"duration":0.95,"loop":true,"tracks":{"root":[{"t":0},{"t":0.18,"x":-58,"y":22},{"t":0.55,"x":-58,"y":22},{"t":0.95}],"torso":[{"t":0},{"t":0.18,"rot":-9},{"t":0.55,"rot":-9},{"t":0.95}],"head":[{"t":0},{"t":0.2,"rot":-5},{"t":0.55,"rot":-5},{"t":0.95}],"upperarm_L":[{"t":0},{"t":0.18,"rot":4},{"t":0.55,"rot":4},{"t":0.95}],"upperarm_R":[{"t":0},{"t":0.18,"rot":3},{"t":0.55,"rot":3},{"t":0.95}],"forearm_L":[{"t":0},{"t":0.18,"rot":-3},{"t":0.55,"rot":-3},{"t":0.95}],"forearm_R":[{"t":0},{"t":0.18,"rot":-4},{"t":0.55,"rot":-4},{"t":0.95}]}},"dodge_R":{"duration":0.95,"loop":true,"mirrorOf":"dodge_L"},"hit":{"duration":0.85,"loop":true,"tracks":{"root":[{"t":0},{"t":0.06,"x":14,"y":5,"flash":0.1},{"t":0.2,"x":10,"y":6},{"t":0.5,"x":-2},{"t":0.85}],"torso":[{"t":0},{"t":0.06,"rot":6},{"t":0.2,"rot":4},{"t":0.5,"rot":-1},{"t":0.85}],"head":[{"t":0},{"t":0.06,"rot":9,"x":4,"y":-4},{"t":0.2,"rot":6,"x":3,"y":-3},{"t":0.5,"rot":-1.5},{"t":0.85}],"upperarm_L":[{"t":0},{"t":0.06,"rot":5},{"t":0.25,"rot":3.5},{"t":0.85}],"upperarm_R":[{"t":0},{"t":0.06,"rot":-4},{"t":0.25,"rot":-3},{"t":0.85}],"forearm_L":[{"t":0},{"t":0.06,"rot":-18},{"t":0.25,"rot":-12},{"t":0.55,"rot":2},{"t":0.85}],"forearm_R":[{"t":0},{"t":0.06,"rot":14},{"t":0.25,"rot":10},{"t":0.55,"rot":-2},{"t":0.85}]}},"kick_front_L":{"duration":0.85,"loop":true,"tracks":{"root":[{"t":0},{"t":0.12,"y":-6},{"t":0.3,"y":-4,"x":4},{"t":0.42,"y":-4,"x":4},{"t":0.66,"y":-6},{"t":0.85}],"pelvis":[{"t":0},{"t":0.12,"rot":3},{"t":0.3,"rot":4},{"t":0.42,"rot":4},{"t":0.66,"rot":3},{"t":0.85}],"torso":[{"t":0},{"t":0.12,"rot":1},{"t":0.3,"rot":-2,"sy":0.97},{"t":0.42,"rot":-2,"sy":0.97},{"t":0.66,"rot":1},{"t":0.85}],"head":[{"t":0},{"t":0.3,"y":8,"rot":1},{"t":0.42,"y":8,"rot":1},{"t":0.85}],"upperarm_L":[{"t":0},{"t":0.3,"rot":-3},{"t":0.42,"rot":-3},{"t":0.85}],"upperarm_R":[{"t":0},{"t":0.3,"rot":3},{"t":0.42,"rot":3},{"t":0.85}],"forearm_L":[{"t":0},{"t":0.3,"rot":3},{"t":0.42,"rot":3},{"t":0.85}],"forearm_R":[{"t":0},{"t":0.3,"rot":-3},{"t":0.42,"rot":-3},{"t":0.85}],"foot_L":[{"t":0,"fk":1},{"t":0.85,"fk":1}],"thigh_L":[{"t":0},{"t":0.12,"rot":-10,"sy":0.45,"sx":1.04,"z":3},{"t":0.2,"rot":-18,"sy":0.4,"sx":1.0,"z":3},{"t":0.3,"rot":-25,"sy":0.35,"sx":1.0,"z":3},{"t":0.42,"rot":-25,"sy":0.35,"sx":1.0,"z":3},{"t":0.55,"rot":-18,"sy":0.4,"sx":1.0,"z":3},{"t":0.66,"rot":-10,"sy":0.45,"sx":1.04,"z":3},{"t":0.85}],"shin_L":[{"t":0},{"t":0.12,"rot":8,"sy":0.6,"sx":1.12,"z":2},{"t":0.19,"rot":20,"sy":0.2,"sx":1.2,"z":2},{"t":0.2,"rot":24,"sy":0.12,"sx":1.22,"z":13},{"t":0.3,"rot":66,"sy":-0.86,"sx":1.3,"z":13},{"t":0.42,"rot":66,"sy":-0.86,"sx":1.3,"z":13},{"t":0.55,"rot":24,"sy":0.12,"sx":1.22,"z":13},{"t":0.56,"rot":20,"sy":0.2,"sx":1.2,"z":2},{"t":0.66,"rot":8,"sy":0.6,"sx":1.12,"z":2},{"t":0.85}],"boot_L":[{"t":0},{"t":0.12,"sx":1.25,"sy":1.1,"z":1},{"t":0.17,"sx":1.4,"sy":1.1,"z":1},{"t":0.185,"sx":1.47,"sy":1.04,"z":12,"alpha":1},{"t":0.19,"sx":1.5,"sy":1.0,"z":12,"alpha":0},{"t":0.3,"sx":2.0,"sy":2.0,"z":12,"alpha":0},{"t":0.42,"sx":2.0,"sy":2.0,"z":12,"alpha":0},{"t":0.535,"sx":1.5,"sy":1.0,"z":12,"alpha":0},{"t":0.54,"sx":1.47,"sy":1.04,"z":12,"alpha":1},{"t":0.57,"sx":1.4,"sy":1.1,"z":1},{"t":0.66,"sx":1.25,"sy":1.1,"z":1},{"t":0.85}],"sole_L":[{"t":0,"alpha":0,"z":14},{"t":0.185,"alpha":0,"z":14,"y":88,"sx":0.76,"sy":0.6},{"t":0.19,"alpha":1,"z":14,"y":86,"sx":0.77,"sy":0.61},{"t":0.3,"alpha":1,"z":14},{"t":0.42,"alpha":1,"z":14},{"t":0.535,"alpha":1,"z":14,"y":86,"sx":0.77,"sy":0.61},{"t":0.54,"alpha":0,"z":14,"y":88,"sx":0.76,"sy":0.6},{"t":0.85,"alpha":0,"z":14}]}},"kick_front_R":{"duration":0.85,"loop":true,"mirrorOf":"kick_front_L"},"kick_round_L":{"duration":0.95,"loop":true,"tracks":{"root":[{"t":0},{"t":0.15,"x":22},{"t":0.3,"x":62,"y":-6},{"t":0.45,"x":62,"y":-6},{"t":0.6,"x":22},{"t":0.95}],"pelvis":[{"t":0},{"t":0.15,"rot":6},{"t":0.3,"rot":12},{"t":0.45,"rot":12},{"t":0.6,"rot":6},{"t":0.95}],"torso":[{"t":0},{"t":0.15,"rot":4},{"t":0.3,"rot":9},{"t":0.45,"rot":9},{"t":0.6,"rot":4},{"t":0.95}],"head":[{"t":0},{"t":0.15,"rot":-3},{"t":0.3,"rot":-8},{"t":0.45,"rot":-8},{"t":0.95}],"upperarm_L":[{"t":0},{"t":0.3,"rot":-6},{"t":0.45,"rot":-6},{"t":0.95}],"upperarm_R":[{"t":0},{"t":0.3,"rot":4},{"t":0.45,"rot":4},{"t":0.95}],"forearm_L":[{"t":0},{"t":0.3,"rot":6},{"t":0.45,"rot":6},{"t":0.95}],"forearm_R":[{"t":0},{"t":0.3,"rot":-4},{"t":0.45,"rot":-4},{"t":0.95}],"boot_L":[{"t":0},{"t":0.15,"rot":10,"follow":1},{"t":0.3,"rot":15,"follow":1},{"t":0.45,"rot":15,"follow":1},{"t":0.6,"rot":10,"follow":1},{"t":0.95}],"foot_L":[{"t":0},{"t":0.15,"x":-30,"y":-220},{"t":0.3,"x":-165,"y":-318},{"t":0.45,"x":-165,"y":-318},{"t":0.6,"x":-30,"y":-220},{"t":0.95}],"thigh_L":[{"t":0},{"t":0.15,"sy":0.92},{"t":0.3,"sy":0.86},{"t":0.45,"sy":0.86},{"t":0.6,"sy":0.92},{"t":0.95}],"shin_L":[{"t":0},{"t":0.3,"sy":0.84},{"t":0.45,"sy":0.84},{"t":0.95}]}},"kick_round_R":{"duration":0.95,"loop":true,"mirrorOf":"kick_round_L"},"walk":{"duration":0.9,"loop":true,"tracks":{"root":[{"t":0,"y":4},{"t":0.22,"y":16},{"t":0.45,"y":4},{"t":0.67,"y":16},{"t":0.9,"y":4}],"pelvis":[{"t":0,"rot":-3,"x":-6},{"t":0.45,"rot":3,"x":6},{"t":0.9,"rot":-3,"x":-6}],"torso":[{"t":0,"rot":-4},{"t":0.45,"rot":4},{"t":0.9,"rot":-4}],"head":[{"t":0,"rot":2},{"t":0.45,"rot":-2},{"t":0.9,"rot":2}],"upperarm_L":[{"t":0,"rot":8},{"t":0.45,"rot":-10},{"t":0.9,"rot":8}],"upperarm_R":[{"t":0,"rot":-8},{"t":0.45,"rot":10},{"t":0.9,"rot":-8}],"forearm_L":[{"t":0,"rot":6},{"t":0.45,"rot":-4},{"t":0.9,"rot":6}],"forearm_R":[{"t":0,"rot":-6},{"t":0.45,"rot":4},{"t":0.9,"rot":-6}],"foot_L":[{"t":0,"y":0,"x":10},{"t":0.12,"y":-80,"x":6},{"t":0.22,"y":-140,"x":0},{"t":0.35,"y":-50,"x":-6},{"t":0.45,"y":0,"x":-10},{"t":0.9,"y":0,"x":10}],"foot_R":[{"t":0,"y":0,"x":-10},{"t":0.45,"y":0,"x":10},{"t":0.57,"y":-80,"x":6},{"t":0.67,"y":-140,"x":0},{"t":0.8,"y":-50,"x":-6},{"t":0.9,"y":0,"x":-10}],"boot_L":[{"t":0},{"t":0.12,"rot":12,"follow":0.4},{"t":0.22,"rot":18,"follow":0.6},{"t":0.35,"rot":6,"follow":0.2},{"t":0.45},{"t":0.9}],"boot_R":[{"t":0},{"t":0.45},{"t":0.57,"rot":12,"follow":0.4},{"t":0.67,"rot":18,"follow":0.6},{"t":0.8,"rot":6,"follow":0.2},{"t":0.9}]}},"hook_L":{"duration":0.85,"loop":true,"tracks":{"root":[{"t":0},{"t":0.12,"x":-10,"y":4},{"t":0.28,"x":18,"y":8},{"t":0.42,"x":14,"y":6},{"t":0.85}],"pelvis":[{"t":0},{"t":0.12,"rot":-4},{"t":0.28,"rot":10},{"t":0.42,"rot":8},{"t":0.85}],"torso":[{"t":0},{"t":0.12,"rot":-8},{"t":0.28,"rot":14},{"t":0.42,"rot":10},{"t":0.85}],"head":[{"t":0},{"t":0.28,"rot":-6,"x":12},{"t":0.42,"rot":-4,"x":8},{"t":0.85}],"upperarm_L":[{"t":0},{"t":0.12,"rot":22},{"t":0.28,"rot":-28},{"t":0.42,"rot":-22},{"t":0.85}],"forearm_L":[{"t":0},{"t":0.12,"rot":22,"sx":1.08},{"t":0.28,"rot":55,"sx":0.82,"sy":0.82,"x":-12},{"t":0.42,"rot":42,"sx":0.9,"sy":0.9},{"t":0.85}],"fist_L":[{"t":0},{"t":0.12,"sx":1.15,"sy":1.15,"rot":12},{"t":0.28,"rot":-48,"sx":2.6,"sy":2.6,"x":36,"y":-8},{"t":0.42,"rot":-28,"sx":1.9,"sy":1.9,"x":20},{"t":0.85}],"upperarm_R":[{"t":0},{"t":0.28,"rot":6},{"t":0.42,"rot":4},{"t":0.85}],"forearm_R":[{"t":0},{"t":0.28,"rot":-8},{"t":0.42,"rot":-5},{"t":0.85}],"fist_R":[{"t":0},{"t":0.28,"sx":0.92,"sy":0.92},{"t":0.85}]}},"hook_R":{"duration":0.85,"loop":true,"mirrorOf":"hook_L"},"upper_L":{"duration":0.95,"loop":true,"tracks":{"root":[{"t":0},{"t":0.14,"y":-12,"x":-4},{"t":0.32,"y":14,"x":10},{"t":0.48,"y":10,"x":8},{"t":0.95}],"pelvis":[{"t":0},{"t":0.14,"rot":-2,"y":4},{"t":0.32,"rot":4},{"t":0.95}],"torso":[{"t":0},{"t":0.14,"rot":8,"sy":0.96},{"t":0.32,"rot":-10,"sy":1.04},{"t":0.48,"rot":-6},{"t":0.95}],"head":[{"t":0},{"t":0.14,"rot":8,"y":-6},{"t":0.32,"rot":-8,"y":10,"x":8},{"t":0.48,"rot":-4,"y":6},{"t":0.95}],"upperarm_L":[{"t":0},{"t":0.14,"rot":18},{"t":0.32,"rot":-18},{"t":0.48,"rot":-12},{"t":0.95}],"forearm_L":[{"t":0},{"t":0.14,"rot":-22,"y":30},{"t":0.32,"rot":50,"sx":0.88,"sy":0.88,"y":-20},{"t":0.48,"rot":36,"sx":0.92,"sy":0.92},{"t":0.95}],"fist_L":[{"t":0},{"t":0.14,"sx":0.85,"sy":0.85,"y":22,"rot":24},{"t":0.32,"rot":-55,"sx":2.8,"sy":2.8,"x":14,"y":-55},{"t":0.48,"rot":-28,"sx":1.85,"sy":1.85,"y":-20},{"t":0.95}],"upperarm_R":[{"t":0},{"t":0.32,"rot":5},{"t":0.95}],"forearm_R":[{"t":0},{"t":0.14,"rot":8},{"t":0.32,"rot":-6},{"t":0.95}],"foot_L":[{"t":0},{"t":0.14,"y":8},{"t":0.32,"y":-4},{"t":0.95}],"foot_R":[{"t":0},{"t":0.14,"y":4},{"t":0.95}]}},"upper_R":{"duration":0.95,"loop":true,"mirrorOf":"upper_L"},"fall":{"duration":1.1,"loop":false,"tracks":{"root":[{"t":0},{"t":0.1,"y":15,"x":8,"flash":0.08},{"t":0.3,"y":80,"x":12},{"t":0.55,"y":160,"x":10},{"t":0.85,"y":210,"x":6},{"t":1.1,"y":230,"x":4}],"pelvis":[{"t":0},{"t":0.25,"rot":12},{"t":0.55,"rot":22},{"t":1.1,"rot":28}],"torso":[{"t":0},{"t":0.12,"rot":14},{"t":0.35,"rot":32},{"t":0.55,"rot":48},{"t":1.1,"rot":55,"sy":0.92}],"head":[{"t":0},{"t":0.12,"rot":16,"x":8},{"t":0.35,"rot":30,"x":12,"y":10},{"t":0.55,"rot":40,"y":18},{"t":1.1,"rot":48,"y":22}],"upperarm_L":[{"t":0},{"t":0.2,"rot":30},{"t":0.55,"rot":70},{"t":1.1,"rot":95}],"upperarm_R":[{"t":0},{"t":0.2,"rot":-35},{"t":0.55,"rot":-75},{"t":1.1,"rot":-100}],"forearm_L":[{"t":0},{"t":0.2,"rot":-25},{"t":0.55,"rot":-45},{"t":1.1,"rot":-55}],"forearm_R":[{"t":0},{"t":0.2,"rot":30},{"t":0.55,"rot":50},{"t":1.1,"rot":60}],"fist_L":[{"t":0},{"t":0.4,"sx":0.85,"sy":0.85},{"t":1.1,"sx":0.75,"sy":0.75}],"fist_R":[{"t":0},{"t":0.4,"sx":0.85,"sy":0.85},{"t":1.1,"sx":0.75,"sy":0.75}],"foot_L":[{"t":0},{"t":0.2,"x":25,"y":-40},{"t":0.45,"x":55,"y":-110},{"t":0.7,"x":70,"y":-40},{"t":1.1,"x":80,"y":20}],"foot_R":[{"t":0},{"t":0.2,"x":-35,"y":-30},{"t":0.45,"x":-70,"y":-100},{"t":0.7,"x":-85,"y":-30},{"t":1.1,"x":-95,"y":30}]}},"getup":{"duration":1.0,"loop":false,"tracks":{"root":[{"t":0,"y":230,"x":4},{"t":0.25,"y":160},{"t":0.55,"y":70},{"t":0.8,"y":15},{"t":1.0}],"pelvis":[{"t":0,"rot":28},{"t":0.4,"rot":12},{"t":0.7,"rot":3},{"t":1.0}],"torso":[{"t":0,"rot":55,"sy":0.92},{"t":0.3,"rot":30},{"t":0.6,"rot":10},{"t":1.0}],"head":[{"t":0,"rot":48,"y":22},{"t":0.4,"rot":14,"y":6},{"t":0.7,"rot":2},{"t":1.0}],"upperarm_L":[{"t":0,"rot":95},{"t":0.5,"rot":25},{"t":1.0}],"upperarm_R":[{"t":0,"rot":-100},{"t":0.5,"rot":-28},{"t":1.0}],"forearm_L":[{"t":0,"rot":-55},{"t":0.5,"rot":-10},{"t":1.0}],"forearm_R":[{"t":0,"rot":60},{"t":0.5,"rot":12},{"t":1.0}],"foot_L":[{"t":0,"x":80,"y":20},{"t":0.35,"x":40,"y":-30},{"t":0.65,"x":12,"y":-10},{"t":1.0}],"foot_R":[{"t":0,"x":-95,"y":30},{"t":0.35,"x":-45,"y":-25},{"t":0.65,"x":-14,"y":-8},{"t":1.0}]}}},"skins":{"gavin":{"fighter":"gavin","skeleton":"bvh-punchout-front-v1","about":"Per-fighter skin. parts: image per bone, x/y = image top-left relative to the bone pivot (art px). pivots/ikTargets override the skeleton reference values for this art. scale = on-screen size multiplier vs the 662 px human reference (Tank would be about 1.17).","artSize":[534,1265],"scale":1.0,"groundY":1231,"pivots":{"root":[268,640],"pelvis":[268,640],"torso":[268,610],"head":[256,252],"upperarm_L":[118,272],"forearm_L":[62,440],"fist_L":[125,326],"upperarm_R":[416,272],"forearm_R":[486,440],"fist_R":[408,326],"thigh_L":[185,715],"shin_L":[140,925],"boot_L":[130,1095],"thigh_R":[352,715],"shin_R":[395,925],"boot_R":[428,1112]},"ikTargets":{"foot_L":[130,1095],"foot_R":[428,1112]},"parts":{"fist_L":{"image":"parts/fist_L.png","x":-34,"y":-122,"w":111,"h":137},"fist_R":{"image":"parts/fist_R.png","x":-87,"y":-122,"w":112,"h":137},"forearm_L":{"image":"parts/forearm_L.png","x":-28,"y":-146,"w":119,"h":179},"forearm_R":{"image":"parts/forearm_R.png","x":-112,"y":-146,"w":134,"h":179},"head":{"image":"parts/head.png","x":-124,"y":-252,"w":218,"h":259},"upperarm_L":{"image":"parts/upperarm_L.png","x":-105,"y":-66,"w":140,"h":273},"upperarm_R":{"image":"parts/upperarm_R.png","x":-33,"y":-65,"w":151,"h":296},"torso":{"image":"parts/torso.png","x":-169,"y":-404,"w":345,"h":483},"pelvis":{"image":"parts/pelvis.png","x":-169,"y":-81,"w":344,"h":201},"thigh_L":{"image":"parts/thigh_L.png","x":-103,"y":-87,"w":171,"h":345},"thigh_R":{"image":"parts/thigh_R.png","x":-72,"y":-87,"w":188,"h":347},"shin_L":{"image":"parts/shin_L.png","x":-68,"y":-68,"w":137,"h":202},"shin_R":{"image":"parts/shin_R.png","x":-70,"y":-72,"w":157,"h":234},"boot_L":{"image":"parts/boot_L.png","x":-130,"y":-70,"w":189,"h":190},"boot_R":{"image":"parts/boot_R.png","x":-66,"y":-63,"w":142,"h":216},"sole_L":{"image":"parts/sole_L.png","bone":"boot_L","scale":0.4166666666666667,"x":-56.25,"y":-179.0,"shadow":true,"w":270,"h":420},"sole_R":{"image":"parts/sole_R.png","bone":"boot_R","scale":0.4166666666666667,"x":-56.25,"y":-179.0,"shadow":true,"w":270,"h":420}}}}}</script>
+<script>
+'use strict';
+const EMB = JSON.parse(document.getElementById('embedded').textContent || '{}');
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const off = document.createElement('canvas'); off.width = cv.width; off.height = cv.height;
+const octx = off.getContext('2d');
+let SK, ANIMS, SKIN, IMGS = {}, BONES = {}, ORDER = [], cur = 'idle', t0 = performance.now(), slow = false;
+const qs = new URLSearchParams(location.search);
+
+async function tryJSON(url, fallback) {
+  if (location.protocol.startsWith('http')) { try { const r = await fetch(url, {cache: 'no-store'}); if (r.ok) return await r.json(); } catch (e) {} }
+  return fallback;
+}
+const loadImg = s => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = s; });
+
+// ---------- math (2D affine [a,b,c,d,e,f]) ----------
+const mul = (m, n) => [m[0]*n[0]+m[2]*n[1], m[1]*n[0]+m[3]*n[1], m[0]*n[2]+m[2]*n[3], m[1]*n[2]+m[3]*n[3], m[0]*n[4]+m[2]*n[5]+m[4], m[1]*n[4]+m[3]*n[5]+m[5]];
+const T = (x, y) => [1,0,0,1,x,y], R = a => { const c = Math.cos(a), s = Math.sin(a); return [c,s,-s,c,0,0]; }, S = (x, y) => [x,0,0,y,0,0];
+const ap = (m, x, y) => [m[0]*x+m[2]*y+m[4], m[1]*x+m[3]*y+m[5]];
+const D2R = Math.PI / 180;
+
+// ---------- animation sampling ----------
+const ease = u => u * u * (3 - 2 * u);
+function mirrorAnim(src) {
+  const sw = n => n.endsWith('_L') ? n.slice(0, -2) + '_R' : n.endsWith('_R') ? n.slice(0, -2) + '_L' : n;
+  const tr = {};
+  for (const [b, keys] of Object.entries(src.tracks)) tr[sw(b)] = keys.map(k => ({...k, rot: -(k.rot || 0), x: -(k.x || 0)}));
+  return {...src, tracks: tr};
+}
+function prepAnims(A) {
+  const out = {};
+  for (const [n, a] of Object.entries(A)) if (n !== 'about' && !a.mirrorOf) out[n] = a;
+  for (const [n, a] of Object.entries(A)) if (a && a.mirrorOf) out[n] = {...mirrorAnim(out[a.mirrorOf]), duration: a.duration, loop: a.loop};
+  return out;
+}
+const DEF = {rot: 0, x: 0, y: 0, sx: 1, sy: 1, flash: 0, z: 0, follow: 0, fk: 0, alpha: 1};
+function sample(keys, t) {
+  const o = {...DEF};
+  if (!keys || !keys.length) return o;
+  let i = 0; while (i < keys.length - 1 && keys[i + 1].t <= t) i++;
+  const a = keys[i], b = keys[Math.min(i + 1, keys.length - 1)];
+  const u = b.t > a.t ? ease(Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t)))) : 0;
+  for (const k in DEF) { const va = a[k] ?? DEF[k], vb = b[k] ?? DEF[k]; o[k] = va + (vb - va) * u; }
+  return o;
+}
+
+// ---------- pose ----------
+function pose(animName, t) {
+  const A = ANIMS[animName], tt = A.loop ? t % A.duration : Math.min(t, A.duration);
+  const P = SKIN.pivots, W = {}, ch = {};
+  for (const b of SK.bones) ch[b.name] = sample(A.tracks[b.name], tt);
+  for (const b of SK.bones) {
+    const p = P[b.name], c = ch[b.name];
+    const pp = b.parent ? P[b.parent] : [0, 0];
+    const parent = b.parent ? W[b.parent] : [1,0,0,1,0,0];
+    W[b.name] = mul(mul(mul(parent, T(p[0] - pp[0] + c.x, p[1] - pp[1] + c.y)), R(c.rot * D2R)), S(c.sx, c.sy));
+  }
+  // 2-bone IK for legs: ankle (boot pivot) goes to its target; boots keep a level world rotation
+  const parentOf = n => SK.bones.find(b => b.name === n).parent;
+  for (const ik of SK.ik) {
+    const [ub, lb] = ik.chain, tgt = SKIN.ikTargets[ik.target];  // tracks named foot_L/foot_R move the target
+    const hip = P[ub], knee = P[lb], cu = ch[ub], cl = ch[lb];
+    const par = W[parentOf(ub)], pv = P[parentOf(ub)];
+    const Hw = ap(par, hip[0] - pv[0], hip[1] - pv[1]);
+    const L1 = Math.hypot(knee[0] - hip[0], knee[1] - hip[1]) * cu.sy, L2 = Math.hypot(tgt[0] - knee[0], tgt[1] - knee[1]) * cl.sy;
+    const tk = sample(A.tracks[ik.target], tt), tg = [tgt[0] + tk.x, tgt[1] + tk.y];
+    if (tk.fk > 0.5) {  // fk 1 on a foot track: leg follows its thigh/shin tracks (no IK), boot sits at the shin's ankle point
+      // rebuild the shin without the thigh's non-uniform scale (a foreshortened thigh must not squash or shear the shin)
+      const Kw = ap(W[ub], knee[0] - hip[0], knee[1] - hip[1]), tha = Math.atan2(W[ub][1], W[ub][0]);
+      W[lb] = mul(mul(T(Kw[0], Kw[1]), R(tha + cl.rot * D2R)), S(cl.sx, cl.sy));
+      const Fa = ap(W[lb], tgt[0] - knee[0], tgt[1] - knee[1]);
+      if (ik.end) { const ce = ch[ik.end]; W[ik.end] = mul(mul(T(Fa[0] + ce.x, Fa[1] + ce.y), R(ce.rot * D2R)), S(ce.sx, ce.sy)); }
+      continue;
+    }
+    let dx = tg[0] - Hw[0], dy = tg[1] - Hw[1], d = Math.hypot(dx, dy);
+    d = Math.min(Math.max(d, Math.abs(L1 - L2) + 1e-3), L1 + L2 - 1e-3);
+    const base = Math.atan2(dy, dx), a = Math.acos((L1 * L1 + d * d - L2 * L2) / (2 * L1 * d));
+    const ka = base + ik._side * a, K = [Hw[0] + L1 * Math.cos(ka), Hw[1] + L1 * Math.sin(ka)];
+    const r1 = ka - Math.atan2(knee[1] - hip[1], knee[0] - hip[0]);
+    const Fw = [Hw[0] + Math.cos(base) * d, Hw[1] + Math.sin(base) * d];
+    const r2 = Math.atan2(Fw[1] - K[1], Fw[0] - K[0]) - Math.atan2(tgt[1] - knee[1], tgt[0] - knee[0]);
+    W[ub] = mul(mul(T(Hw[0], Hw[1]), R(r1)), S(cu.sx, cu.sy));
+    W[lb] = mul(mul(T(K[0], K[1]), R(r2)), S(cl.sx, cl.sy));
+    if (ik.end) { const ce = ch[ik.end]; W[ik.end] = mul(mul(T(Fw[0] + ce.x, Fw[1] + ce.y), R(ce.rot * D2R + ce.follow * r2)), S(ce.sx, ce.sy)); }  // follow 0: level boot, 1: turns with the shin
+  }
+  const Z = {}; for (const b of SK.bones) Z[b.name] = ch[b.name].z;
+  for (const n of Object.keys(SKIN.parts)) if (!ch[n]) ch[n] = A.tracks[n] ? sample(A.tracks[n], tt) : null;  // overlay parts (e.g. sole_L) may have own tracks
+  return {W, flash: ch.root.flash, Z, ch, A};
+}
+function calibrateIK() {
+  const P = SKIN.pivots;
+  for (const ik of SK.ik) {
+    const [ub, lb] = ik.chain, h = P[ub], k = P[lb], f = SKIN.ikTargets[ik.target];
+    const L1 = Math.hypot(k[0] - h[0], k[1] - h[1]), L2 = Math.hypot(f[0] - k[0], f[1] - k[1]), d = Math.hypot(f[0] - h[0], f[1] - h[1]);
+    const base = Math.atan2(f[1] - h[1], f[0] - h[0]), a = Math.acos(Math.min(1, (L1 * L1 + d * d - L2 * L2) / (2 * L1 * d)));
+    const err = s => Math.hypot(h[0] + L1 * Math.cos(base + s * a) - k[0], h[1] + L1 * Math.sin(base + s * a) - k[1]);
+    ik._side = err(1) < err(-1) ? 1 : -1;
+  }
+}
+// ---------- draw ----------
+function drawBG(c) {
+  const g = c.createLinearGradient(0, 0, 0, cv.height);
+  g.addColorStop(0, '#1b2140'); g.addColorStop(0.55, '#2a1f33'); g.addColorStop(1, '#0d0b10');
+  c.fillStyle = g; c.fillRect(0, 0, cv.width, cv.height);
+  c.fillStyle = '#3a2a2a'; c.fillRect(0, cv.height * 0.78, cv.width, cv.height * 0.22);
+  c.strokeStyle = '#ffffff22'; c.lineWidth = 3;
+  for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(0, cv.height * (0.55 + i * 0.06)); c.lineTo(cv.width, cv.height * (0.55 + i * 0.06)); c.stroke(); }
+}
+function globalM() {
+  const sc = (cv.height * 0.8 / SKIN.artSize[1]) * (SKIN.scale || 1);
+  const gy = cv.height * 0.93;
+  return mul(T(cv.width / 2, gy), mul(S(sc, sc), T(-SKIN.artSize[0] / 2, -SKIN.groundY)));
+}
+function render(animName, t) {
+  const {W, flash, Z, ch, A} = pose(animName, t), G = globalM();
+  const PELV = SK.drawOrder.indexOf('pelvis');  // z > 0: raised-leg layer just under the pelvis; z >= 10: in front of the whole fighter
+  const key = (i, z) => z >= 10 ? 100 + z : z > 0.05 ? PELV - 1 + z / 10 : i;
+  const items = [];
+  for (const [n, part] of Object.entries(SKIN.parts)) {
+    const bone = part.bone || n, bi = SK.drawOrder.indexOf(bone) + (part.bone ? 0.5 : 0);
+    const own = A.tracks[n] && ch[n];
+    const z = own && A.tracks[n].some(k => 'z' in k) ? ch[n].z : Z[bone];
+    const alpha = own ? ch[n].alpha : (part.bone ? 0 : 1);   // overlay parts are hidden unless their track shows them
+    if (alpha > 0.003) items.push({n, bone, part, alpha, k: key(bi, z) + (part.bone ? 0.01 : 0)});
+  }
+  items.sort((p, q) => p.k - q.k);
+  drawBG(ctx);
+  // floor shadow
+  const sh = ap(G, SKIN.artSize[0] / 2 + (W.root[4] - SKIN.pivots.root[0]) * 0.6, SKIN.groundY);
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.beginPath(); ctx.ellipse(sh[0], sh[1] - 4, 170 * G[0], 26 * G[0], 0, 0, 7); ctx.fill();
+  octx.setTransform(1,0,0,1,0,0); octx.clearRect(0, 0, off.width, off.height);
+  octx.imageSmoothingEnabled = true; octx.imageSmoothingQuality = 'high';
+  for (const it of items) {
+    if (!IMGS[it.n]) continue;
+    const ps = it.part.scale || 1, c = it.part.bone && ch[it.n];  // overlay tracks may also move/scale the overlay on its bone
+    const m = c ? mul(mul(mul(G, W[it.bone]), mul(T(c.x, c.y), S(c.sx, c.sy))), S(ps, ps)) : mul(mul(G, W[it.bone]), S(ps, ps));
+    octx.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]); octx.globalAlpha = it.alpha;
+    if (it.part.shadow) { octx.shadowColor = `rgba(0,0,0,${0.5 * it.alpha})`; octx.shadowBlur = 22 * G[0]; octx.shadowOffsetX = 8 * G[0]; octx.shadowOffsetY = 14 * G[0]; }
+    octx.drawImage(IMGS[it.n], it.part.x / ps, it.part.y / ps);
+    octx.shadowColor = 'transparent'; octx.shadowBlur = 0; octx.shadowOffsetX = 0; octx.shadowOffsetY = 0;
+  }
+  octx.globalAlpha = 1;
+  if (flash > 0.01) {
+    octx.setTransform(1,0,0,1,0,0); octx.globalCompositeOperation = 'source-atop';
+    octx.fillStyle = `rgba(255,255,255,${flash})`; octx.fillRect(0, 0, off.width, off.height);
+    octx.globalCompositeOperation = 'source-over';
+  }
+  ctx.drawImage(off, 0, 0);
+  if (document.getElementById('bones').checked) {
+    ctx.lineWidth = 2;
+    for (const b of SK.bones) {
+      const p = ap(mul(G, W[b.name]), 0, 0);
+      if (b.parent) { const q = ap(mul(G, W[b.parent]), 0, 0); ctx.strokeStyle = '#0ff'; ctx.beginPath(); ctx.moveTo(q[0], q[1]); ctx.lineTo(p[0], p[1]); ctx.stroke(); }
+      ctx.fillStyle = '#ff0'; ctx.beginPath(); ctx.arc(p[0], p[1], 4, 0, 7); ctx.fill();
+    }
+  }
+  ctx.fillStyle = '#fff9'; ctx.font = '600 16px system-ui'; ctx.fillText(animName.toUpperCase().replace('_', ' '), 14, 26);
+}
+
+// ---------- ui ----------
+const LABELS = {idle: 'Idle', jab_L: 'Jab left', jab_R: 'Jab right', block: 'Block', dodge_L: 'Dodge left', dodge_R: 'Dodge right', hit: 'Hit',
+  kick_front_L: 'Front kick left', kick_front_R: 'Front kick right', kick_round_L: 'Roundhouse left', kick_round_R: 'Roundhouse right'};
+function buildUI() {
+  const bar = document.getElementById('bar'); bar.innerHTML = '';
+  const names = [...Object.keys(LABELS).filter(n => ANIMS[n]), ...Object.keys(ANIMS).filter(n => !LABELS[n])];
+  for (const n of names) {
+    const b = document.createElement('button'); b.textContent = LABELS[n] || n; b.dataset.a = n;
+    b.onclick = () => setAnim(n); bar.appendChild(b);
+  }
+  setAnim(cur);
+  document.getElementById('slow').onchange = e => { slow = e.target.checked; t0 = performance.now(); };
+}
+function setAnim(n) { cur = n; t0 = performance.now(); for (const b of document.querySelectorAll('#bar button')) b.classList.toggle('on', b.dataset.a === n); }
+async function loadFighter(name) {
+  SKIN = await tryJSON(name + '/skin.json', EMB.skins && EMB.skins[name]);
+  IMGS = {};
+  await Promise.all(Object.entries(SKIN.parts).map(async ([n, p]) => { IMGS[n] = await loadImg(name + '/' + p.image); }));
+  calibrateIK();
+}
+(async function main() {
+  SK = await tryJSON('skeleton.json', EMB.skeleton);
+  ANIMS = prepAnims(await tryJSON('animations.json', EMB.animations));
+  const sel = document.getElementById('fighter');
+  for (const f of Object.keys(EMB.skins || {gavin: 1})) { const o = document.createElement('option'); o.textContent = f; sel.appendChild(o); }
+  sel.onchange = async () => { await loadFighter(sel.value); };
+  await loadFighter(qs.get('fighter') || 'gavin');
+  buildUI();
+  // headless hook: window.renderAt('jab_L', 0.18)
+  window.renderAt = (a, t) => { render(a, t); return true; };
+  window.rigReady = true;
+  if (qs.has('still')) return;
+  (function loop() { const t = (performance.now() - t0) / 1000 * (slow ? 0.25 : 1); render(cur, t); requestAnimationFrame(loop); })();
+})();
+</script>
+</body></html>

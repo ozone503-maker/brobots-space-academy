@@ -1,0 +1,204 @@
+{
+ "name": "bvh-punchout-front-v1",
+ "about": "Generic 2D cut-out skeleton for front-facing (Punch-Out style) fighters. L/R mean SCREEN left/right (L is the fighter's own right hand). Pivots here are reference values in a 534x1265 reference frame (Gavin); each skin.json may override pivots for its own art. Rotations in degrees, positive is clockwise on screen. Bone transform = parent * translate(pivot - parentPivot + anim.xy) * rotate(anim.rot) * scale(anim.sx, anim.sy). Bones with worldRotation ignore their parent's rotation (boots stay flat). Any bone track may carry z (1 to 9): a part with z > 0 is drawn in a raised-leg layer above every other leg part and below the pelvis, ordered by z (front kick uses thigh 3, shin 2, boot 1). This stays correct for mirrored anims. Boot tracks may carry follow (0 to 1): 0 keeps the boot level, 1 turns it with the shin (roundhouse). z of 10 or more draws the part in front of the whole fighter (front kick shin and boot at the peak). A foot track with fk 1 switches that leg from IK to plain FK (front kick: thigh and shin sy foreshorten, a negative shin sy points the shin up at the camera).",
+ "refSize": [
+  534,
+  1265
+ ],
+ "groundY": 1231,
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "pivot": [
+    268,
+    640
+   ]
+  },
+  {
+   "name": "pelvis",
+   "parent": "root",
+   "pivot": [
+    268,
+    640
+   ]
+  },
+  {
+   "name": "torso",
+   "parent": "pelvis",
+   "pivot": [
+    268,
+    610
+   ]
+  },
+  {
+   "name": "head",
+   "parent": "torso",
+   "pivot": [
+    256,
+    252
+   ]
+  },
+  {
+   "name": "upperarm_L",
+   "parent": "torso",
+   "pivot": [
+    118,
+    272
+   ]
+  },
+  {
+   "name": "forearm_L",
+   "parent": "upperarm_L",
+   "pivot": [
+    62,
+    440
+   ]
+  },
+  {
+   "name": "fist_L",
+   "parent": "forearm_L",
+   "pivot": [
+    125,
+    326
+   ]
+  },
+  {
+   "name": "upperarm_R",
+   "parent": "torso",
+   "pivot": [
+    416,
+    272
+   ]
+  },
+  {
+   "name": "forearm_R",
+   "parent": "upperarm_R",
+   "pivot": [
+    486,
+    440
+   ]
+  },
+  {
+   "name": "fist_R",
+   "parent": "forearm_R",
+   "pivot": [
+    408,
+    326
+   ]
+  },
+  {
+   "name": "thigh_L",
+   "parent": "pelvis",
+   "pivot": [
+    185,
+    715
+   ]
+  },
+  {
+   "name": "shin_L",
+   "parent": "thigh_L",
+   "pivot": [
+    140,
+    925
+   ]
+  },
+  {
+   "name": "boot_L",
+   "parent": "shin_L",
+   "pivot": [
+    130,
+    1095
+   ],
+   "worldRotation": true
+  },
+  {
+   "name": "thigh_R",
+   "parent": "pelvis",
+   "pivot": [
+    352,
+    715
+   ]
+  },
+  {
+   "name": "shin_R",
+   "parent": "thigh_R",
+   "pivot": [
+    395,
+    925
+   ]
+  },
+  {
+   "name": "boot_R",
+   "parent": "shin_R",
+   "pivot": [
+    428,
+    1112
+   ],
+   "worldRotation": true
+  }
+ ],
+ "ikTargets": {
+  "foot_L": [
+   130,
+   1095
+  ],
+  "foot_R": [
+   428,
+   1112
+  ]
+ },
+ "ik": [
+  {
+   "chain": [
+    "thigh_L",
+    "shin_L"
+   ],
+   "target": "foot_L",
+   "end": "boot_L",
+   "note": "2-bone IK puts the ankle (boot pivot) on the target; thigh/shin sy tracks foreshorten the leg (lengths scale with them)"
+  },
+  {
+   "chain": [
+    "thigh_R",
+    "shin_R"
+   ],
+   "target": "foot_R",
+   "end": "boot_R"
+  }
+ ],
+ "drawOrder": [
+  "boot_L",
+  "boot_R",
+  "shin_L",
+  "shin_R",
+  "thigh_L",
+  "thigh_R",
+  "pelvis",
+  "torso",
+  "upperarm_L",
+  "upperarm_R",
+  "head",
+  "forearm_L",
+  "forearm_R",
+  "fist_L",
+  "fist_R"
+ ],
+ "slots": {
+  "head": "head incl. hat and beard, cut just under the beard",
+  "torso": "jacket and shirt, waist to collar, shoulders filled under the arms",
+  "pelvis": "belt to crotch, filled up under the jacket hem",
+  "upperarm_L": "shoulder to elbow sleeve",
+  "upperarm_R": "shoulder to elbow sleeve",
+  "forearm_L": "elbow to wrist sleeve (the forearm+fist limb is two layers so the fist can scale toward the camera on punches)",
+  "forearm_R": "elbow to wrist sleeve (the forearm+fist limb is two layers so the fist can scale toward the camera on punches)",
+  "thigh_L": "hip to knee",
+  "thigh_R": "hip to knee",
+  "shin_L": "knee to pant cuff",
+  "shin_R": "knee to pant cuff",
+  "fist_L": "fist incl. wraps/gloves and wrist, pivot at the wrist",
+  "fist_R": "fist incl. wraps/gloves and wrist, pivot at the wrist",
+  "boot_L": "boot, pivot at the ankle; worldRotation: stays level on the floor unless its own track rotates it",
+  "boot_R": "boot, pivot at the ankle; worldRotation: stays level on the floor unless its own track rotates it"
+ }
+}

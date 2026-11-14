@@ -1,0 +1,19 @@
+Tank v2: leather jacket reads, fall/getup stay attached, kick sole is his boot underside. Local, $0.
+src_scale=1.3707  skull_src=92 feet_src=974 fedora_src=11
+art skull_y=22 groundY=1231 skull_to_feet=1209 on-screen scale=1.17 (7 ft)
+Pivots: pelvis/torso/arms use the shared Gavin skeleton (torso-pelvis 30 px apart) so
+shared fall/getup rotations do not tear the body. Head pivot is at Tank's neck so the
+skull top (under the fedora, not the hat) stays on the 7 ft line. Legs keep Tank's
+visual knees and ankles.
+Sleeves recut from the T-pose as leather tubes, shoulder-to-elbow and elbow-to-wrist cuff,
+smooth alpha (no black end-caps, pale JPEG fringe removed). Fists are riveted panel 9,
+mirrored for the right hand.
+Front-kick sole is a boot-footprint (toe plate, chevron tread, heel bars, rivets) painted
+in his boot metal, no drop shadow, so it reads as a foot rather than a dark slab.
+Leftover pixel islands on the pelvis/thighs/torso (the floating fall scraps) were removed.
+Height check: both fighters planted on the same ground; art skull tops are both near y=22
+and skin.scale 1.17 makes Tank's skull-to-ground ~1.17x Gavin's (measured 1.17x).
+parts_bytes=1560103
+folder_bytes=1738949 (1.66 MB)
+
+Opacity: interiors flooded from the outside and set to alpha 255, 1-2px AA edge kept. Fixes see-through from white-bg / luminance-keyed mattes (pale gi, light rust metal).

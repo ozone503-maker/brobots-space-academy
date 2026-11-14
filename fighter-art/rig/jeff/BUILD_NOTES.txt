@@ -1,0 +1,22 @@
+jeff v2: all body parts cut from jeff-full-body.png with silhouette masks + ball joints. Local, $0.
+S=0.8202 skull_src=80 feet_src=1554 CX=405.0
+fists: kit fists color-matched to the full-body hands, 1.15x true scale
+pivots: Jeff own joints (shoulders, waist, hips, knees, ankles); arms bound on the Gavin guard diagonal
+folder_bytes=822992 (0.78 MB)
+head: 142x251
+torso: 318x338
+pelvis: 286x245
+thigh_L: 147x335
+shin_L: 111x297
+boot_L: 154x91
+thigh_R: 151x339
+shin_R: 105x290
+boot_R: 93x96
+upperarm_L: 106x234
+forearm_L: 131x228
+upperarm_R: 121x238
+forearm_R: 156x223
+fist_L: 71x86
+fist_R: 63x80
+sole_L: 65x160
+sole_R: 65x160

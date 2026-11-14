@@ -1,0 +1,24 @@
+ryan: kit parts on the shared rig, 6 ft at the skull. Local, $0.
+src_scale=0.8224 skull_src=58 feet_src=1528 neck_src=280
+art skull_y=22 groundY=1231 scale=1.0 (6 ft)
+Pivots: pelvis/torso/arms/legs use the shared Gavin skeleton so fall/getup stay attached.
+Head pivot is at the neck. Kit left = fighter left = screen-right bones.
+parts_bytes=1050190
+folder_bytes=1142667 (1.09 MB) ok
+head: 169x276
+torso: 276x435
+pelvis: 288x280
+thigh_L: 230x440
+shin_L: 158x262
+boot_L: 260x117
+thigh_R: 230x446
+shin_R: 167x264
+boot_R: 260x117
+upperarm_L: 136x245
+forearm_L: 121x186
+fist_L: 112x139
+upperarm_R: 141x239
+forearm_R: 137x178
+fist_R: 103x128
+sole_L: 88x215
+sole_R: 88x215

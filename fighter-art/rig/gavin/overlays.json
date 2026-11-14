@@ -1,0 +1,22 @@
+{
+ "sole_L": {
+  "image": "parts/sole_L.png",
+  "bone": "boot_L",
+  "scale": 0.4166666666666667,
+  "x": -56.25,
+  "y": -179.0,
+  "shadow": true,
+  "w": 270,
+  "h": 420
+ },
+ "sole_R": {
+  "image": "parts/sole_R.png",
+  "bone": "boot_R",
+  "scale": 0.4166666666666667,
+  "x": -56.25,
+  "y": -179.0,
+  "shadow": true,
+  "w": 270,
+  "h": 420
+ }
+}

@@ -1,0 +1,527 @@
+{
+ "fighter": "jeff",
+ "mode": "frames",
+ "about": "Jeff drawn pose frames: 16 full-body photos, one per pose, instead of bent parts. Stored at 0.62 of art px; anchor = ground under the fez. Clips map to [frame, start sec, opts]; opts: flip, rot (deg about the feet), dx, dy (art px). Every clip has its own frames; _R clips mirror _L.",
+ "artSize": [
+  534,
+  1265
+ ],
+ "groundY": 1231,
+ "scale": 1.0,
+ "store": 0.62,
+ "frames": {
+  "stance": {
+   "src": "stance.webp",
+   "w": 289,
+   "h": 765,
+   "ax": 140.4,
+   "ay": 762.1
+  },
+  "walk": {
+   "src": "walk.webp",
+   "w": 277,
+   "h": 761,
+   "ax": 128.6,
+   "ay": 757.5
+  },
+  "walk2": {
+   "src": "walk2.webp",
+   "w": 277,
+   "h": 763,
+   "ax": 129.4,
+   "ay": 759.8
+  },
+  "jab": {
+   "src": "jab.webp",
+   "w": 261,
+   "h": 786,
+   "ax": 127.3,
+   "ay": 783.0
+  },
+  "hook": {
+   "src": "hook.webp",
+   "w": 312,
+   "h": 757,
+   "ax": 133.2,
+   "ay": 753.8
+  },
+  "upper": {
+   "src": "upper.webp",
+   "w": 271,
+   "h": 828,
+   "ax": 123.2,
+   "ay": 824.4
+  },
+  "chamber": {
+   "src": "chamber.webp",
+   "w": 301,
+   "h": 798,
+   "ax": 146.8,
+   "ay": 794.5
+  },
+  "kick": {
+   "src": "kick.webp",
+   "w": 326,
+   "h": 784,
+   "ax": 174.8,
+   "ay": 780.5
+  },
+  "rchamber": {
+   "src": "rchamber.webp",
+   "w": 362,
+   "h": 752,
+   "ax": 219.4,
+   "ay": 748.8
+  },
+  "rkick": {
+   "src": "rkick.webp",
+   "w": 535,
+   "h": 741,
+   "ax": 412.6,
+   "ay": 736.8
+  },
+  "block": {
+   "src": "block.webp",
+   "w": 285,
+   "h": 735,
+   "ax": 146.9,
+   "ay": 732.2
+  },
+  "dodge": {
+   "src": "dodge.webp",
+   "w": 319,
+   "h": 766,
+   "ax": 153.9,
+   "ay": 762.8
+  },
+  "hit": {
+   "src": "hit.webp",
+   "w": 459,
+   "h": 767,
+   "ax": 145.8,
+   "ay": 763.4
+  },
+  "midfall": {
+   "src": "midfall.webp",
+   "w": 524,
+   "h": 455,
+   "ax": 261.7,
+   "ay": 451.9
+  },
+  "down": {
+   "src": "down.webp",
+   "w": 718,
+   "h": 169,
+   "ax": 358.9,
+   "ay": 166.4
+  },
+  "getup": {
+   "src": "getup.webp",
+   "w": 324,
+   "h": 458,
+   "ax": 135.8,
+   "ay": 456.0
+  }
+ },
+ "clips": {
+  "idle": [
+   [
+    "stance",
+    0
+   ]
+  ],
+  "walk": [
+   [
+    "walk",
+    0
+   ],
+   [
+    "stance",
+    0.225
+   ],
+   [
+    "walk2",
+    0.45
+   ],
+   [
+    "stance",
+    0.675
+   ]
+  ],
+  "jab_L": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "jab",
+    0.07
+   ],
+   [
+    "stance",
+    0.45
+   ]
+  ],
+  "jab_R": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "jab",
+    0.07,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.45
+   ]
+  ],
+  "hook_L": [
+   [
+    "stance",
+    0,
+    {
+     "rot": 4,
+     "dx": -12
+    }
+   ],
+   [
+    "hook",
+    0.16
+   ],
+   [
+    "hook",
+    0.4,
+    {
+     "rot": -3
+    }
+   ],
+   [
+    "stance",
+    0.6
+   ]
+  ],
+  "hook_R": [
+   [
+    "stance",
+    0,
+    {
+     "rot": -4,
+     "dx": 12
+    }
+   ],
+   [
+    "hook",
+    0.16,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "hook",
+    0.4,
+    {
+     "rot": 3,
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.6
+   ]
+  ],
+  "upper_L": [
+   [
+    "dodge",
+    0,
+    {
+     "dy": 18
+    }
+   ],
+   [
+    "upper",
+    0.2
+   ],
+   [
+    "upper",
+    0.48,
+    {
+     "dy": 10
+    }
+   ],
+   [
+    "stance",
+    0.68
+   ]
+  ],
+  "upper_R": [
+   [
+    "dodge",
+    0,
+    {
+     "dy": 18,
+     "flip": true
+    }
+   ],
+   [
+    "upper",
+    0.2,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "upper",
+    0.48,
+    {
+     "dy": 10,
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.68
+   ]
+  ],
+  "kick_front_L": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "chamber",
+    0.06,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "kick",
+    0.2,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "chamber",
+    0.5,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.68
+   ]
+  ],
+  "kick_front_R": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "chamber",
+    0.06
+   ],
+   [
+    "kick",
+    0.2
+   ],
+   [
+    "chamber",
+    0.5
+   ],
+   [
+    "stance",
+    0.68
+   ]
+  ],
+  "kick_round_L": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "rchamber",
+    0.08,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "rkick",
+    0.22,
+    {
+     "dx": -90,
+     "flip": true
+    }
+   ],
+   [
+    "rchamber",
+    0.55,
+    {
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.75
+   ]
+  ],
+  "kick_round_R": [
+   [
+    "stance",
+    0
+   ],
+   [
+    "rchamber",
+    0.08
+   ],
+   [
+    "rkick",
+    0.22,
+    {
+     "dx": 90
+    }
+   ],
+   [
+    "rchamber",
+    0.55
+   ],
+   [
+    "stance",
+    0.75
+   ]
+  ],
+  "block": [
+   [
+    "block",
+    0
+   ]
+  ],
+  "dodge_L": [
+   [
+    "dodge",
+    0,
+    {
+     "rot": -7,
+     "dx": -40
+    }
+   ],
+   [
+    "dodge",
+    0.12,
+    {
+     "rot": -14,
+     "dx": -80
+    }
+   ],
+   [
+    "dodge",
+    0.6,
+    {
+     "rot": -7,
+     "dx": -40
+    }
+   ],
+   [
+    "stance",
+    0.8
+   ]
+  ],
+  "dodge_R": [
+   [
+    "dodge",
+    0,
+    {
+     "rot": 7,
+     "dx": 40,
+     "flip": true
+    }
+   ],
+   [
+    "dodge",
+    0.12,
+    {
+     "rot": 14,
+     "dx": 80,
+     "flip": true
+    }
+   ],
+   [
+    "dodge",
+    0.6,
+    {
+     "rot": 7,
+     "dx": 40,
+     "flip": true
+    }
+   ],
+   [
+    "stance",
+    0.8
+   ]
+  ],
+  "hit": [
+   [
+    "hit",
+    0
+   ]
+  ],
+  "fall": [
+   [
+    "hit",
+    0
+   ],
+   [
+    "hit",
+    0.14,
+    {
+     "rot": -12,
+     "dx": 40
+    }
+   ],
+   [
+    "midfall",
+    0.26,
+    {
+     "flip": true,
+     "dx": 60
+    }
+   ],
+   [
+    "down",
+    0.5
+   ]
+  ],
+  "getup": [
+   [
+    "down",
+    0
+   ],
+   [
+    "midfall",
+    0.25,
+    {
+     "flip": true,
+     "dx": 60
+    }
+   ],
+   [
+    "getup",
+    0.45
+   ],
+   [
+    "block",
+    0.7
+   ],
+   [
+    "stance",
+    0.88
+   ]
+  ]
+ }
+}

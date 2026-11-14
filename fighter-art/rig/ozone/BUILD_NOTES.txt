@@ -1,0 +1,24 @@
+ozone: kit parts on the shared rig, 6 ft at the skull. Local, $0.
+src_scale=0.8490 skull_src=120 feet_src=1544 neck_src=380
+art skull_y=22 groundY=1231 scale=1.0 (6 ft)
+Pivots: pelvis/torso/arms/legs use the shared Gavin skeleton so fall/getup stay attached.
+Head pivot is at the neck. Kit left = fighter left = screen-right bones.
+parts_bytes=1214579
+folder_bytes=1336440 (1.27 MB) ok
+head: 222x313
+torso: 337x387
+pelvis: 413x286
+thigh_L: 199x418
+shin_L: 126x263
+boot_L: 218x148
+thigh_R: 223x418
+shin_R: 182x262
+boot_R: 260x119
+upperarm_L: 133x233
+forearm_L: 128x186
+fist_L: 93x113
+upperarm_R: 144x235
+forearm_R: 139x181
+fist_R: 93x113
+sole_L: 87x208
+sole_R: 87x208
