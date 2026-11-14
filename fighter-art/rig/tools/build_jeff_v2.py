@@ -385,6 +385,8 @@ skin = {
     'ikTargets': {'foot_L': PIV_I['boot_L'], 'foot_R': PIV_I['boot_R']},
     'parts': skin_parts,
 }
+from jeff_kicks import overrides as _kick_overrides
+skin['animOverrides'] = _kick_overrides()
 json.dump(skin, open(os.path.join(OUT, 'skin.json'), 'w'), indent=1)
 json.dump(meta, open(os.path.join(OUT, 'parts_meta.json'), 'w'), indent=1)
 

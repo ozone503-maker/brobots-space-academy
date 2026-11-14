@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { clamp, ease, qs } from './util.js?v=h3';
 import { FLOOR, scene } from './stage.js?v=h3';
-import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=h4';
+import { loadRig, channels, blend, draw, mul, T, S } from '../fighter-art/rig/rig.js?v=h5';
 
 const ON = qs.get('rig') !== '0';
 const CPU = (qs.get('cpu') || 'gavin').toLowerCase(); // gavin (default) | ipo | tank | ozone | ryan | jeff

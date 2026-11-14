@@ -33,7 +33,10 @@ const loadImg = s => new Promise((res, rej) => { const i = new Image(); i.onload
 export async function loadRig(base, fighter = 'gavin') {
   const j = u => fetch(base + u).then(r => r.json());
   const [SK, A, SKIN] = await Promise.all([j('skeleton.json'), j('animations.json'), j(fighter + '/skin.json')]);
-  const rig = { SK, ANIMS: prepAnims(A), SKIN, IMGS: {} };
+  // skin.animOverrides (optional): { anim: { tracks: { track: keys | null } } } replaces whole tracks for this skin; mirrors follow
+  const O = SKIN.animOverrides, A2 = O ? {...A} : A;
+  if (O) for (const [n, o] of Object.entries(O)) { const tr = {...A[n].tracks}; for (const [k, v] of Object.entries(o.tracks || {})) { if (v) tr[k] = v; else delete tr[k]; } A2[n] = {...A[n], tracks: tr}; }
+  const rig = { SK, ANIMS: prepAnims(A2), SKIN, IMGS: {} };
   await Promise.all(Object.entries(SKIN.parts).map(async ([n, p]) => { rig.IMGS[n] = await loadImg(base + fighter + '/' + p.image); }));
   for (const ik of SK.ik) { // which way each knee bends
     const P = SKIN.pivots, [ub, lb] = ik.chain, h = P[ub], k = P[lb], f = SKIN.ikTargets[ik.target];
