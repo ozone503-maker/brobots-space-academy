@@ -5,11 +5,46 @@
 ## Main pages
 
 - [Home](https://brobots.space/): what we do, prices, and contact
-- [Search and AI visibility](https://brobots.space/search-visibility.html): our full SEO and AI visibility method, the Space Factory Visibility Score, and packages
+- [Search and AI visibility](https://brobots.space/search-visibility): our full SEO and AI visibility method, the Space Factory Visibility Score, and packages
 - [Services](https://brobots.space/services.html): every service and price: BroBots, website tiers and add-ons, fix-ups for existing sites, slot machines, wallet and crypto integration, cartoons, video edits, care plans
 - [Work](https://brobots.space/work.html): client work
+- [Social Media](https://brobots.space/social-media.html): we connect TikTok, Facebook, X, and Instagram and keep them posting with your real photos and real info ($240 setup, then $80 a month)
 - [SAO audit](https://brobots.space/sao-audit.html): free Search Answer Optimization audit, a detailed package combining the criteria industry leaders use
 - [FAQ](https://brobots.space/faq.html): common questions
+- [Bots](https://brobots.space/bots): five Grok Bot templates you can copy and make your own
+- [Dossiers](https://brobots.space/dossiers.html): all BroBot graduates in one scroll of dossier cards
+- [Free agents](https://brobots.space/free-agents.html): five free starter agents for Claude and ChatGPT, each with a system prompt and a first-run test
+- [Free every month](https://brobots.space/free_tech.html): monthly giveaway of a website, an AI search makeover, and a custom chatbot
+- [Retail](https://brobots.space/retail.html): the Space Factory retail floor for custom BroBots, graduates for hire, and the shop
+- [SPOTS](https://brobots.space/spots.html): Brobots Space Factory commercials, shot and cut in Hawaiʻi
+- [Multimedia](https://brobots.space/multimedia.html): creation tools for audio, video, paste-up design, and AI render
+- [UFO Pilot](https://brobots.space/ufo-pilot.html): a cockpit prototype where you look out the UFO windows at Earth
+- [Console](https://brobots.space/console.html): seat a BroBot graduate and talk; sessions ghost when you leave
+
+## SAO audit industry pages
+
+Free Search Answer Optimization audits for specific kinds of businesses. Each page explains the audit and lets you run one.
+
+- [HVAC](https://brobots.space/sao-audit-hvac.html): free SAO audit for HVAC companies
+- [Plumbing](https://brobots.space/sao-audit-plumbing.html): free SAO audit for plumbers
+- [Roofing](https://brobots.space/sao-audit-roofing.html): free SAO audit for roofers
+- [Electricians](https://brobots.space/sao-audit-electrician.html): free SAO audit for electricians
+- [Landscaping](https://brobots.space/sao-audit-landscaping.html): free SAO audit for landscapers
+- [Pest control](https://brobots.space/sao-audit-pest-control.html): free SAO audit for pest control companies
+- [Cleaning](https://brobots.space/sao-audit-cleaning.html): free SAO audit for cleaning services
+- [Painting](https://brobots.space/sao-audit-painting.html): free SAO audit for painters
+- [General contractors](https://brobots.space/sao-audit-general-contractor.html): free SAO audit for general contractors
+- [Real estate agents](https://brobots.space/sao-audit-real-estate-agent.html): free SAO audit for real estate agents
+- [Mortgage brokers](https://brobots.space/sao-audit-mortgage-broker.html): free SAO audit for mortgage brokers
+- [Law firms](https://brobots.space/sao-audit-law-firm.html): free SAO audit for law firms
+- [Accountants](https://brobots.space/sao-audit-accountant.html): free SAO audit for accountants
+- [Consultants](https://brobots.space/sao-audit-consultant.html): free SAO audit for consultants
+- [Dentists](https://brobots.space/sao-audit-dentist.html): free SAO audit for dentists
+- [Chiropractors](https://brobots.space/sao-audit-chiropractor.html): free SAO audit for chiropractors
+- [Med spas](https://brobots.space/sao-audit-med-spa.html): free SAO audit for med spas
+- [Auto repair](https://brobots.space/sao-audit-auto-repair.html): free SAO audit for auto repair shops
+- [Salons](https://brobots.space/sao-audit-salon.html): free SAO audit for salons
+- [Personal trainers](https://brobots.space/sao-audit-personal-trainer.html): free SAO audit for personal trainers
 
 ## Contact
 
