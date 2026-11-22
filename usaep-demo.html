@@ -222,5 +222,6 @@ vs.forEach(function(v){io.observe(v)});
 function unlock(){if(unlocked)return;unlocked=true;pick();['click','touchend','keydown'].forEach(function(t){removeEventListener(t,unlock,true)})}
 ['click','touchend','keydown'].forEach(function(t){addEventListener(t,unlock,true)});
 })();</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

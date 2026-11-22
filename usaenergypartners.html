@@ -405,5 +405,6 @@ el.textContent='$0';var done=false;
 new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting&&!done){done=true;o.disconnect();var t0=performance.now(),d=1600;
 (function f(t){var k=Math.min(1,(t-t0)/d),v=Math.round(to*(1-Math.pow(1-k,3)));el.textContent='$'+v.toLocaleString('en-US');if(k<1)requestAnimationFrame(f)})(t0)}})},{threshold:.5}).observe(el)})();
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
